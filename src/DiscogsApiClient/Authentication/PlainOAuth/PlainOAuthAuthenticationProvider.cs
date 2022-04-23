@@ -2,9 +2,9 @@
 using System.Net.Http.Headers;
 using System.Web;
 
-namespace DiscogsApiClient.Authorization.PlainOAuth;
+namespace DiscogsApiClient.Authentication.PlainOAuth;
 
-public class PlainOAuthAuthorizationProvider : IAuthorizationProvider
+public class PlainOAuthAuthenticationProvider : IAuthenticationProvider
 {
     private readonly string _userAgent;
     private readonly string _consumerKey;
@@ -12,10 +12,10 @@ public class PlainOAuthAuthorizationProvider : IAuthorizationProvider
     private string _accessToken;
     private string _accessTokenSecret;
 
-    public bool IsAuthorized => !String.IsNullOrWhiteSpace(_accessToken) && !String.IsNullOrWhiteSpace(_accessTokenSecret);
+    public bool IsAuthenticated => !String.IsNullOrWhiteSpace(_accessToken) && !String.IsNullOrWhiteSpace(_accessTokenSecret);
 
 
-    public PlainOAuthAuthorizationProvider(string userAgent, string consumerKey, string consumerSecret, string accessToken = "", string accessTokenSecret = "")
+    public PlainOAuthAuthenticationProvider(string userAgent, string consumerKey, string consumerSecret, string accessToken = "", string accessTokenSecret = "")
     {
         _userAgent = userAgent;
         _consumerKey = consumerKey;
@@ -24,9 +24,9 @@ public class PlainOAuthAuthorizationProvider : IAuthorizationProvider
         _accessTokenSecret = accessTokenSecret;
     }
 
-    public async Task<IAuthorizationResponse> AuthorizeAsync(IAuthorizationRequest authorizationRequest, CancellationToken cancellationToken)
+    public async Task<IAuthenticationResponse> AuthenticateAsync(IAuthenticationRequest authenticationRequest, CancellationToken cancellationToken)
     {
-        if (authorizationRequest is PlainOAuthAuthorizationRequest authAuthorizationRequest
+        if (authenticationRequest is PlainOAuthAuthenticationRequest authAuthenticationRequest
             && (String.IsNullOrWhiteSpace(_accessToken) || String.IsNullOrWhiteSpace(_accessTokenSecret)))
         {
             using var httpClient = new HttpClient();
@@ -38,31 +38,31 @@ public class PlainOAuthAuthorizationProvider : IAuthorizationProvider
             if (String.IsNullOrWhiteSpace(_consumerKey) && String.IsNullOrWhiteSpace(_consumerSecret))
                 throw new InvalidOperationException("No consumer token or secret provided.");
 
-            var (requestToken, requestTokenSecret) = await GetRequestToken(httpClient, authAuthorizationRequest.VerifierCallbackUrl, cancellationToken);
+            var (requestToken, requestTokenSecret) = await GetRequestToken(httpClient, authAuthenticationRequest.VerifierCallbackUrl, cancellationToken);
             if (String.IsNullOrWhiteSpace(requestToken) || String.IsNullOrWhiteSpace(requestTokenSecret))
-                return new PlainOAuthAuthorizationResponse("Getting request token failed.");
+                return new PlainOAuthAuthenticationResponse("Getting request token failed.");
 
 
-            var verifier = await GetVerifier(requestToken, authAuthorizationRequest.VerifierCallbackUrl, authAuthorizationRequest.GetVerifierCallback, cancellationToken);
+            var verifier = await GetVerifier(requestToken, authAuthenticationRequest.VerifierCallbackUrl, authAuthenticationRequest.GetVerifierCallback, cancellationToken);
             if (String.IsNullOrWhiteSpace(verifier))
-                return new PlainOAuthAuthorizationResponse("Failed getting verifier token.");
+                return new PlainOAuthAuthenticationResponse("Failed getting verifier token.");
 
 
             var (accessToken, accessTokenSecret) = await GetAccessToken(httpClient, requestToken, requestTokenSecret, verifier, cancellationToken);
             if (String.IsNullOrWhiteSpace(accessToken) || String.IsNullOrWhiteSpace(accessTokenSecret))
-                return new PlainOAuthAuthorizationResponse("Failed getting access token.");
+                return new PlainOAuthAuthenticationResponse("Failed getting access token.");
 
             _accessToken = accessToken;
             _accessTokenSecret = accessTokenSecret;
         }
 
-        return new PlainOAuthAuthorizationResponse(_accessToken, _accessTokenSecret);
+        return new PlainOAuthAuthenticationResponse(_accessToken, _accessTokenSecret);
     }
 
-    public HttpRequestMessage CreateAuthorizedRequest(HttpMethod httpMethod, string url)
+    public HttpRequestMessage CreateAuthenticatedRequest(HttpMethod httpMethod, string url)
     {
         var request = new HttpRequestMessage(httpMethod, url);
-        request.Headers.Add("Authorization", CreateAuthorizationHeader());
+        request.Headers.Add("Authorization", CreateAuthenticationHeader());
 
         return request;
     }
@@ -180,7 +180,7 @@ public class PlainOAuthAuthorizationProvider : IAuthorizationProvider
     }
 
 
-    private string CreateAuthorizationHeader()
+    private string CreateAuthenticationHeader()
     {
         (string timestamp, string nonce) = CreateTimestampAndNonce();
 

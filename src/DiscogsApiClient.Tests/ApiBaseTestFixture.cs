@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using DiscogsApiClient.Authorization.UserToken;
+using DiscogsApiClient.Authentication.UserToken;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 
@@ -15,8 +15,8 @@ public abstract class ApiBaseTestFixture
 
     public ApiBaseTestFixture()
     {
-        UserTokenAuthorizationProvider authorizationProvider = new UserTokenAuthorizationProvider();
-        ApiClient = new DiscogsApiClient(authorizationProvider, UserAgent);
+        UserTokenAuthenticationProvider authenticationProvider = new UserTokenAuthenticationProvider();
+        ApiClient = new DiscogsApiClient(authenticationProvider, UserAgent);
 
         Configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", false)
@@ -29,8 +29,8 @@ public abstract class ApiBaseTestFixture
     public virtual async Task Initialize()
     {
         var userToken = Configuration["ApiSettings:UserToken"];
-        UserTokenAuthorizationRequest authorizationRequest = new UserTokenAuthorizationRequest(userToken);
-        var authorizationResponse = await ApiClient.AuthorizeAsync(authorizationRequest, default);
+        UserTokenAuthenticationRequest authenticationRequest = new UserTokenAuthenticationRequest(userToken);
+        var authenticationResponse = await ApiClient.AuthenticateAsync(authenticationRequest, default);
     }
 
     [OneTimeTearDown]

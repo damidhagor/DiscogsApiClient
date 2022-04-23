@@ -1,15 +1,15 @@
-﻿namespace DiscogsApiClient.Authorization.PlainOAuth;
+﻿namespace DiscogsApiClient.Authentication.PlainOAuth;
 
 public delegate Task<string> GetVerifierCallback(string authorizeUrl, string verifierCallbackUrl, CancellationToken cancellationToken);
 
-public class PlainOAuthAuthorizationRequest : IAuthorizationRequest
+public class PlainOAuthAuthenticationRequest : IAuthenticationRequest
 {
     public string VerifierCallbackUrl { get; init; }
 
     public GetVerifierCallback GetVerifierCallback { get; init; }
 
 
-    public PlainOAuthAuthorizationRequest(string verifierCallbackUrl, GetVerifierCallback getVerifierCallback)
+    public PlainOAuthAuthenticationRequest(string verifierCallbackUrl, GetVerifierCallback getVerifierCallback)
     {
         VerifierCallbackUrl = verifierCallbackUrl;
         GetVerifierCallback = getVerifierCallback;

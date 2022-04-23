@@ -1,6 +1,6 @@
-﻿namespace DiscogsApiClient.Authorization.PlainOAuth;
+﻿namespace DiscogsApiClient.Authentication.PlainOAuth;
 
-public class PlainOAuthAuthorizationResponse : IAuthorizationResponse
+public class PlainOAuthAuthenticationResponse : IAuthenticationResponse
 {
     public bool Success { get; init; }
 
@@ -11,7 +11,7 @@ public class PlainOAuthAuthorizationResponse : IAuthorizationResponse
     public string? AccessSecret { get; init; }
 
 
-    public PlainOAuthAuthorizationResponse(string accessToken, string accessSecret)
+    public PlainOAuthAuthenticationResponse(string accessToken, string accessSecret)
     {
         Success = true;
         Error = null;
@@ -19,7 +19,7 @@ public class PlainOAuthAuthorizationResponse : IAuthorizationResponse
         AccessSecret = accessSecret;
     }
 
-    public PlainOAuthAuthorizationResponse(string error)
+    public PlainOAuthAuthenticationResponse(string error)
     {
         Success = false;
         Error = error;
