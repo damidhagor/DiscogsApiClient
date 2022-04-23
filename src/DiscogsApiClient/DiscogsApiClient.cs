@@ -7,7 +7,7 @@ using DiscogsApiClient.Serialization;
 
 namespace DiscogsApiClient;
 
-public class DiscogsApiClient
+public class DiscogsApiClient : IDisposable
 {
     private readonly HttpClient _httpClient;
     private readonly IAuthenticationProvider _authenticationProvider;
