@@ -5,8 +5,23 @@ using DiscogsApiClient.Serialization;
 
 namespace DiscogsApiClient;
 
+/// <summary>
+/// Contains extension methods for dealing with Http messages.
+/// </summary>
 internal static class HttpHelperExtensions
 {
+    /// <summary>
+    /// Checks a <see cref="HttpResponseMessage"/> for errors.
+    /// If the <see cref="HttpResponseMessage.StatusCode"/> doesn't indicate a successfull call,
+    /// the helper function attempts to extract the error message from the body
+    /// and throws a corresponding <see cref="DiscogsException"/> for the <see cref="HttpResponseMessage.StatusCode"/> with the extracted message.
+    /// </summary>
+    /// <param name="response">The <see cref="HttpResponseMessage.StatusCode"/> to check.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Awaitable Task which returns when the <see cref="HttpResponseMessage.StatusCode"/> doesn't contain an error.</returns>
+    /// <exception cref="UnauthorizedDiscogsException">The Http request wasn't authenticated.</exception>
+    /// <exception cref="ResourceNotFoundDiscogsException">The requested resource was not found.</exception>
+    /// <exception cref="DiscogsException">The request returned a general error.</exception>
     public static async Task CheckAndHandleHttpErrorCodes(this HttpResponseMessage response, CancellationToken cancellationToken)
     {
         if (response.IsSuccessStatusCode)
@@ -20,14 +35,11 @@ internal static class HttpHelperExtensions
         }
         catch { }
 
-        switch (response.StatusCode)
+        throw response.StatusCode switch
         {
-            case HttpStatusCode.Unauthorized:
-                throw new UnauthorizedDiscogsException(message);
-            case HttpStatusCode.NotFound:
-                throw new ResourceNotFoundDiscogsException(message);
-            default:
-                throw new DiscogsException(message);
-        }
+            HttpStatusCode.Unauthorized => new UnauthorizedDiscogsException(message),
+            HttpStatusCode.NotFound => new ResourceNotFoundDiscogsException(message),
+            _ => new DiscogsException(message),
+        };
     }
 }

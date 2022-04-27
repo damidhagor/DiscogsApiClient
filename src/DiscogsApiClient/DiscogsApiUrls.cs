@@ -1,7 +1,8 @@
-﻿using System.Net;
+﻿namespace DiscogsApiClient;
 
-namespace DiscogsApiClient;
-
+/// <summary>
+/// Static class for holding all the necessary Discogs Api's enpont Urls.
+/// </summary>
 internal static class DiscogsApiUrls
 {
     public static readonly string BaseUrl = "https://api.discogs.com";
@@ -30,5 +31,5 @@ internal static class DiscogsApiUrls
     public static readonly string LabelsUrl = $"{BaseUrl}/labels/{{0}}";
     public static readonly string LabelReleasesUrl = $"{BaseUrl}/labels/{{0}}/releases";
 
-    public static readonly string SearchUrl= $"{BaseUrl}/database/search";
+    public static readonly string SearchUrl = $"{BaseUrl}/database/search";
 }
