@@ -1,11 +1,16 @@
-﻿using System.Text.Json;
-using System.Text;
+﻿using System.Text;
+using System.Text.Json;
 
 namespace DiscogsApiClient.Serialization;
 
+/// <summary>
+/// A <see cref="JsonNamingPolicy"/> to convert the C# property names from PascalCase to snake_case which the Discogs Api uses.
+/// The converted names are cached.
+/// Example: ResourceUrl => resource_url
+/// </summary>
 internal class DiscogsJsonNamingPolicy : JsonNamingPolicy
 {
-    private static readonly Dictionary<string, string> _cachedNames = new Dictionary<string, string>();
+    private static readonly Dictionary<string, string> _cachedNames = new();
 
     public override string ConvertName(string name)
     {
@@ -23,7 +28,7 @@ internal class DiscogsJsonNamingPolicy : JsonNamingPolicy
         {
             if (Char.IsUpper(c))
             {
-                stringBuilder.Append("_");
+                stringBuilder.Append('_');
                 stringBuilder.Append(Char.ToLower(c));
             }
             else

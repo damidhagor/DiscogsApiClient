@@ -4,6 +4,9 @@ using DiscogsApiClient.Exceptions;
 
 namespace DiscogsApiClient.Serialization;
 
+/// <summary>
+/// Contains extension methods for (de-)serializing Discogs Api messages using the <see cref="DiscogsJsonNamingPolicy"/>.
+/// </summary>
 internal static class SerializationExtensions
 {
     private static readonly DiscogsJsonNamingPolicy _jsonNamingPolicy = new();
