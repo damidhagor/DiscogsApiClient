@@ -1,8 +1,8 @@
 ﻿namespace DiscogsApiClient.Authentication;
 
 /// <summary>
-/// The response of the <see cref="IAuthenticationProvider"/>'s AuthenticateAsync method.
-/// Specific implementations my return more response properties depending on the authentication type.
+/// The response of the <see cref="IAuthenticationProvider.AuthenticateAsync"/> method.
+/// Specific implementations may return more response properties depending on the authentication type.
 /// </summary>
 public interface IAuthenticationResponse
 {
