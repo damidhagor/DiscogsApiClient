@@ -3,8 +3,6 @@
 /// <summary>
 /// The response of the <see cref="UserTokenAuthenticationProvider.AuthenticateAsync"/> method.
 /// If the <see cref="UserTokenAuthenticationProvider"/> is used then this <see cref="UserTokenAuthenticationResponse"/> is returned by the <see cref="DiscogsApiClient.AuthenticateAsync"/> method.
-/// 
-/// <inheritdoc/>
 /// </summary>
 public class UserTokenAuthenticationResponse : IAuthenticationResponse
 {

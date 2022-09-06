@@ -1,5 +1,27 @@
 ﻿namespace DiscogsApiClient.Contract;
 
+public record MasterRelease(
+    int Id,
+    int MainRelease,
+    int MostRecentRelease,
+    string ResourceUrl,
+    string Uri,
+    string VersionsUrl,
+    string MainReleaseUrl,
+    string MostRecentReleaseUrl,
+    int NumForSale,
+    float LowestPrice,
+    List<Image> Images,
+    List<string> Genres,
+    List<string> Styles,
+    int Year,
+    List<TracklistItem> Tracklist,
+    List<ReleaseArtist> Artists,
+    string Title,
+    string DataQuality,
+    List<Video> Videos);
+
+
 /**
 {
     "id":156551,
@@ -83,24 +105,3 @@
     ]
 }
 */
-
-public record MasterRelease(
-    int Id,
-    int MainRelease,
-    int MostRecentRelease,
-    string ResourceUrl,
-    string Uri,
-    string VersionsUrl,
-    string MainReleaseUrl,
-    string MostRecentReleaseUrl,
-    int NumForSale,
-    float LowestPrice,
-    List<Image> Images,
-    List<string> Genres,
-    List<string> Styles,
-    int Year,
-    List<TracklistItem> Tracklist,
-    List<ReleaseArtist> Artists,
-    string Title,
-    string DataQuality,
-    List<Video> Videos);

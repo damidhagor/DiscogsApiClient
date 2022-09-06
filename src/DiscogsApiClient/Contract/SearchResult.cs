@@ -1,5 +1,50 @@
 ﻿namespace DiscogsApiClient.Contract;
 
+public record SearchResultsResponse(
+    Pagination Pagination,
+    List<SearchResult> Results);
+
+public record SearchResult(
+    int Id,
+    string Title,
+    string ResourceUrl,
+    SearchResultType Type,
+    string Uri,
+    string Thumb,
+    string Catno,
+    string Year,
+    string Country,
+    string CoverImage,
+    int? MasterId,
+    string MasterUrl,
+    List<string> Format,
+    List<string> Genre,
+    List<string> Style,
+    List<string> Label,
+    List<string> Barcode,
+    int FormatQuantity,
+    List<ReleaseFormat> Formats,
+    SearchResultCommunityStats Community,
+    SearchResultUserData UserData);
+
+public enum SearchResultType : int
+{
+    None = 0,
+    Artist = 1,
+    Master = 2,
+    Release = 3,
+    Label = 4
+}
+
+public record SearchResultCommunityStats(
+    int Want,
+    int Have);
+
+public record SearchResultUserData(
+    bool InWantlist,
+    bool InCollection);
+
+
 /**
 RELEASE
 
@@ -190,48 +235,3 @@ LABEL
     ]
 }
 */
-
-
-public record SearchResultsResponse(
-    Pagination Pagination,
-    List<SearchResult> Results);
-
-public record SearchResult(
-    int Id,
-    string Title,
-    string ResourceUrl,
-    SearchResultType Type,
-    string Uri,
-    string Thumb,
-    string Catno,
-    string Year,
-    string Country,
-    string CoverImage,
-    int? MasterId,
-    string MasterUrl,
-    List<string> Format,
-    List<string> Genre,
-    List<string> Style,
-    List<string> Label,
-    List<string> Barcode,
-    int FormatQuantity,
-    List<ReleaseFormat> Formats,
-    SearchResultCommunityStats Community,
-    SearchResultUserData UserData);
-
-public enum SearchResultType : int
-{
-    None = 0,
-    Artist = 1,
-    Master = 2,
-    Release = 3,
-    Label = 4
-}
-
-public record SearchResultCommunityStats(
-    int Want,
-    int Have);
-
-public record SearchResultUserData(
-    bool InWantlist,
-    bool InCollection);

@@ -26,11 +26,14 @@ public class UserTokenAuthenticationProvider : IAuthenticationProvider
 
 
     /// <summary>
+    /// Authenticates the client with a user token which is appended to the api requests.
+    /// <para/>
+    /// This method always returns true since the token is stored for the <see cref="UserTokenAuthenticationProvider.CreateAuthenticatedRequest"/> method
+    /// and no actual authentication flow with Discogs is needed.
     /// </summary>
-    /// <param name="authenticationRequest"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
+    /// <param name="authenticationRequest">The <see cref="UserTokenAuthenticationRequest"/> providing the user token to the provider.</param>
+    /// <returns>The <see cref="UserTokenAuthenticationResponse"/> indicating if the authentication was successful.</returns>
+    /// <exception cref="ArgumentException">Fires this exception if the provided <see cref="IAuthenticationRequest"/> is not a <see cref="UserTokenAuthenticationRequest"/>.</exception>
     public Task<IAuthenticationResponse> AuthenticateAsync(IAuthenticationRequest authenticationRequest, CancellationToken cancellationToken)
     {
         if (authenticationRequest is not UserTokenAuthenticationRequest userTokenAuthenticationRequest)

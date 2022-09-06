@@ -1,5 +1,64 @@
 ﻿namespace DiscogsApiClient.Contract;
 
+public record Release(
+    int Id,
+    string ResourceUrl,
+    string Uri,
+    List<ReleaseArtist> Artists,
+    string ArtistsSort,
+    List<ReleaseLabel> Labels,
+    List<ReleaseFormat> Formats,
+    ReleaseCommunity Community,
+    int FormatQuantity,
+    DateTime DateAdded,
+    DateTime DateChanged,
+    int NumForSale,
+    float LowestPrice,
+    int MasterId,
+    string MasterUrl,
+    string Title,
+    string Country,
+    string Released,
+    string Notes,
+    string ReleasedFormatted,
+    List<ReleaseIdentifiers> Identifiers,
+    List<Video> Videos,
+    List<string> Genres,
+    List<string> Styles,
+    List<TracklistItem> Tracklist,
+    List<ReleaseArtist> Extraartists,
+    List<Image> Images,
+    string Thumb,
+    float EstimatedWeight,
+    bool BlockedFromSale,
+    string DataQuality);
+
+public record ReleaseLabel(
+    int Id,
+    string Name,
+    string Catno,
+    string ResourceUrl,
+    string ThumbnailUrl,
+    string EntityType,
+    string EntityTypeName);
+
+public record ReleaseFormat(
+    string Name,
+    string Qty,
+    List<string> Descriptions);
+
+public record ReleaseCommunity(
+    int Have,
+    int Want,
+    ReleaseCommunityRating Rating,
+    string DataQuality,
+    string Status);
+
+public record ReleaseIdentifiers(
+    string Type,
+    string Value);
+
+
 /**
 {
     "id":5134861,
@@ -152,61 +211,3 @@
     "blocked_from_sale":false
 }
 */
-
-public record Release(
-    int Id,
-    string ResourceUrl,
-    string Uri,
-    List<ReleaseArtist> Artists,
-    string ArtistsSort,
-    List<ReleaseLabel> Labels,
-    List<ReleaseFormat> Formats,
-    ReleaseCommunity Community,
-    int FormatQuantity,
-    DateTime DateAdded,
-    DateTime DateChanged,
-    int NumForSale,
-    float LowestPrice,
-    int MasterId,
-    string MasterUrl,
-    string Title,
-    string Country,
-    string Released,
-    string Notes,
-    string ReleasedFormatted,
-    List<ReleaseIdentifiers> Identifiers,
-    List<Video> Videos,
-    List<string> Genres,
-    List<string> Styles,
-    List<TracklistItem> Tracklist,
-    List<ReleaseArtist> Extraartists,
-    List<Image> Images,
-    string Thumb,
-    float EstimatedWeight,
-    bool BlockedFromSale,
-    string DataQuality);
-
-public record ReleaseLabel(
-    int Id,
-    string Name,
-    string Catno,
-    string ResourceUrl,
-    string ThumbnailUrl,
-    string EntityType,
-    string EntityTypeName);
-
-public record ReleaseFormat(
-    string Name,
-    string Qty,
-    List<string> Descriptions);
-
-public record ReleaseCommunity(
-    int Have,
-    int Want,
-    ReleaseCommunityRating Rating,
-    string DataQuality,
-    string Status);
-
-public record ReleaseIdentifiers(
-    string Type,
-    string Value);

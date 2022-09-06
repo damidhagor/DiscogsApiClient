@@ -1,5 +1,33 @@
 ﻿namespace DiscogsApiClient.Contract;
 
+public record Artist(
+    int Id,
+    string Name,
+    string Profile,
+    string ResourceUrl,
+    string Uri,
+    string ReleasesUrl,
+    List<Image> Images,
+    List<string> Urls,
+    List<string> Namevariations,
+    List<ArtistMember> Members,
+    string DataQuality);
+
+public record ArtistMember(
+    int Id,
+    string Name,
+    bool Active,
+    string ResourceUrl,
+    string ThumbnailUrl);
+
+public enum ArtistImageType : int
+{
+    None = 0,
+    Primary = 1,
+    Secondary = 2
+}
+
+
 /**
 {
     "name":"HammerFall",
@@ -58,30 +86,3 @@
     "data_quality":"Needs Vote"
 }
 */
-
-public record Artist(
-    int Id,
-    string Name,
-    string Profile,
-    string ResourceUrl,
-    string Uri,
-    string ReleasesUrl,
-    List<Image> Images,
-    List<string> Urls,
-    List<string> Namevariations,
-    List<ArtistMember> Members,
-    string DataQuality);
-
-public record ArtistMember(
-    int Id,
-    string Name,
-    bool Active,
-    string ResourceUrl,
-    string ThumbnailUrl);
-
-public enum ArtistImageType : int
-{
-    None = 0,
-    Primary = 1,
-    Secondary = 2
-}

@@ -1,5 +1,50 @@
 ﻿namespace DiscogsApiClient.Contract;
 
+public record WantlistReleasesResponse(
+    Pagination Pagination,
+    List<WantlistRelease> Wants);
+
+public record WantlistRelease(
+    int Id,
+    string ResourceUrl,
+    int Rating,
+    DateTime DateAdded,
+    WantlistReleaseInformation BasicInformation,
+    string Notes);
+
+public record WantlistReleaseInformation(
+    int Id,
+    int MasterId,
+    string MasterUrl,
+    string ResourceUrl,
+    string Title,
+    int Year,
+    List<ReleaseFormat> Formats,
+    List<WantlistReleaseLabel> Labels,
+    List<WantlistReleaseArtist> Artists,
+    string Thumb,
+    string CoverImage,
+    List<string> Genres,
+    List<string> Styles);
+
+public record WantlistReleaseLabel(
+    int Id,
+    string Name,
+    string Catno,
+    string ResourceUrl,
+    string EntityType,
+    string EntityTypeName);
+
+public record WantlistReleaseArtist(
+    int Id,
+    string Name,
+    string ResourceUrl,
+    string Anv,
+    string Join,
+    string Role,
+    string Tracks);
+
+
 /**
 {
     "id":5134861,
@@ -56,47 +101,3 @@
     "notes":""
 }
 */
-
-public record WantlistReleasesResponse(
-    Pagination Pagination,
-    List<WantlistRelease> Wants);
-
-public record WantlistRelease(
-    int Id,
-    string ResourceUrl,
-    int Rating,
-    DateTime DateAdded,
-    WantlistReleaseInformation BasicInformation,
-    string Notes);
-
-public record WantlistReleaseInformation(
-    int Id,
-    int MasterId,
-    string MasterUrl,
-    string ResourceUrl,
-    string Title,
-    int Year,
-    List<ReleaseFormat> Formats,
-    List<WantlistReleaseLabel> Labels,
-    List<WantlistReleaseArtist> Artists,
-    string Thumb,
-    string CoverImage,
-    List<string> Genres,
-    List<string> Styles);
-
-public record WantlistReleaseLabel(
-    int Id,
-    string Name,
-    string Catno,
-    string ResourceUrl,
-    string EntityType,
-    string EntityTypeName);
-
-public record WantlistReleaseArtist(
-    int Id,
-    string Name,
-    string ResourceUrl,
-    string Anv,
-    string Join,
-    string Role,
-    string Tracks);

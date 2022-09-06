@@ -1,5 +1,30 @@
 ﻿namespace DiscogsApiClient.Contract;
 
+public record LabelReleasesResponse(
+    Pagination Pagination,
+    List<LabelRelease> Releases);
+
+public record LabelRelease(
+    string Status,
+    string Format,
+    string Catno,
+    string Thumb,
+    string ResourceUrl,
+    string Title,
+    int Id,
+    int Year,
+    string Artist,
+    LabelReleaseStats Stats);
+
+public record LabelReleaseStats(
+    LabelReleaseStatValues Community,
+    LabelReleaseStatValues User);
+
+public record LabelReleaseStatValues(
+    int InWantlist,
+    int InCollection);
+
+
 /*
 {
     "pagination":{
@@ -58,28 +83,3 @@
     ]
 }
  */
-
-
-public record LabelReleasesResponse(
-    Pagination Pagination,
-    List<LabelRelease> Releases);
-
-public record LabelRelease(
-    string Status,
-    string Format,
-    string Catno,
-    string Thumb,
-    string ResourceUrl,
-    string Title,
-    int Id,
-    int Year,
-    string Artist,
-    LabelReleaseStats Stats);
-
-public record LabelReleaseStats(
-    LabelReleaseStatValues Community,
-    LabelReleaseStatValues User);
-
-public record LabelReleaseStatValues(
-    int InWantlist,
-    int InCollection);

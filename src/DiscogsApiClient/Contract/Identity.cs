@@ -1,5 +1,12 @@
 ﻿namespace DiscogsApiClient.Contract;
 
+public record Identity(
+    int Id,
+    string Username,
+    string ResourceUrl,
+    string ConsumerName);
+
+
 /**
  {
   "id": 1,
@@ -8,9 +15,3 @@
   "consumer_name": "Your Application Name"
  }
 */
-
-public record Identity(
-    int Id,
-    string Username,
-    string ResourceUrl,
-    string ConsumerName);

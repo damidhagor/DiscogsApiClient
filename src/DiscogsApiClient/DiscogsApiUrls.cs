@@ -1,7 +1,7 @@
 ﻿namespace DiscogsApiClient;
 
 /// <summary>
-/// Static class for holding all the necessary Discogs Api's enpont Urls.
+/// Static class for holding all the necessary Discogs Api's endpoint Urls.
 /// </summary>
 internal static class DiscogsApiUrls
 {

@@ -1,5 +1,15 @@
 ﻿namespace DiscogsApiClient.Contract;
 
+public record CollectionFolder(
+    int Id,
+    int Count,
+    string Name,
+    string ResourceUrl);
+
+public record CollectionFoldersResponse(
+    List<CollectionFolder> Folders);
+
+
 /**
 {
  "folders":[
@@ -18,13 +28,3 @@
  ]
 }
 */
-
-
-public record CollectionFolder(
-    int Id,
-    int Count,
-    string Name,
-    string ResourceUrl);
-
-public record CollectionFoldersResponse(
-    List<CollectionFolder> Folders);

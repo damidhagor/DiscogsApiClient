@@ -4,6 +4,11 @@ using System.Web;
 
 namespace DiscogsApiClient.Authentication.PlainOAuth;
 
+/// <summary>
+/// This <see cref="IAuthenticationProvider"/> implementation authenticates against the Discogs Api
+/// using the OAuth 1.0a flow described <a href="https://www.discogs.com/developers#page:authentication,header:authentication-discogs-auth-flow">here</a>
+/// and should be provided to the <see cref="DiscogsApiClient"/>'s constructor.
+/// </summary>
 public class PlainOAuthAuthenticationProvider : IAuthenticationProvider
 {
     private readonly string _userAgent;
@@ -12,9 +17,23 @@ public class PlainOAuthAuthenticationProvider : IAuthenticationProvider
     private string _accessToken;
     private string _accessTokenSecret;
 
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
     public bool IsAuthenticated => !String.IsNullOrWhiteSpace(_accessToken) && !String.IsNullOrWhiteSpace(_accessTokenSecret);
 
 
+    /// <summary>
+    /// Creates a new <see cref="PlainOAuthAuthenticationProvider"/>.
+    /// <para/>
+    /// If the app was already authenticated the previously obtained access token and secret can be provided
+    /// so that the user is kept login.
+    /// </summary>
+    /// <param name="userAgent">The client's user agent string used for authentication.</param>
+    /// <param name="consumerKey">The app's consumer key provided by Discogs.</param>
+    /// <param name="consumerSecret">The app's consumer secret provided by Discogs.</param>
+    /// <param name="accessToken">The app's access token if the app was authenticated before.</param>
+    /// <param name="accessTokenSecret">The app's access token secret if the app was authenticated before.</param>
     public PlainOAuthAuthenticationProvider(string userAgent, string consumerKey, string consumerSecret, string accessToken = "", string accessTokenSecret = "")
     {
         _userAgent = userAgent;
@@ -24,10 +43,22 @@ public class PlainOAuthAuthenticationProvider : IAuthenticationProvider
         _accessTokenSecret = accessTokenSecret;
     }
 
+    /// <summary>
+    /// Authenticates the client by requesting him to log in with his Discogs account.
+    /// <para/>
+    /// This method returns the obtained access token and secret if successful
+    /// which should be persisted and reused by the app.
+    /// </summary>
+    /// <param name="authenticationRequest">The <see cref="PlainOAuthAuthenticationRequest"/> providing the callback delegate and url.</param>
+    /// <returns>The <see cref="PlainOAuthAuthenticationResponse"/> indicating if the authentication was successful.</returns>
+    /// <exception cref="ArgumentException">Fires this exception if the provided <see cref="IAuthenticationRequest"/> is not a <see cref="PlainOAuthAuthenticationRequest"/>.</exception>
+    /// <exception cref="InvalidOperationException">Fires this exception if no consumer key or secret are provided.</exception>
     public async Task<IAuthenticationResponse> AuthenticateAsync(IAuthenticationRequest authenticationRequest, CancellationToken cancellationToken)
     {
-        if (authenticationRequest is PlainOAuthAuthenticationRequest authAuthenticationRequest
-            && (String.IsNullOrWhiteSpace(_accessToken) || String.IsNullOrWhiteSpace(_accessTokenSecret)))
+        if (authenticationRequest is not PlainOAuthAuthenticationRequest authAuthenticationRequest)
+            throw new ArgumentException($"The provided authentication request must be of type {typeof(PlainOAuthAuthenticationRequest).Name}", nameof(authenticationRequest));
+
+        if (String.IsNullOrWhiteSpace(_accessToken) || String.IsNullOrWhiteSpace(_accessTokenSecret))
         {
             using var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(_userAgent);
@@ -59,6 +90,12 @@ public class PlainOAuthAuthenticationProvider : IAuthenticationProvider
         return new PlainOAuthAuthenticationResponse(_accessToken, _accessTokenSecret);
     }
 
+    /// <summary>
+    /// Creates an authenticated <see cref="HttpRequestMessage"/> with an added OAuth authorization header.
+    /// </summary>
+    /// <param name="httpMethod"><inheritdoc/></param>
+    /// <param name="url"><inheritdoc/></param>
+    /// <returns><inheritdoc/></returns>
     public HttpRequestMessage CreateAuthenticatedRequest(HttpMethod httpMethod, string url)
     {
         var request = new HttpRequestMessage(httpMethod, url);
@@ -68,6 +105,12 @@ public class PlainOAuthAuthenticationProvider : IAuthenticationProvider
     }
 
 
+    /// <summary>
+    /// Gets the request token from the Discogs api.
+    /// </summary>
+    /// <param name="httpClient">The <see cref="HttpClient"/> used by the authentication flow.</param>
+    /// <param name="callback">The callback url the Discogs login page redirects the browser to to return the request token to the app.</param>
+    /// <returns>Returns the obtained request token and secret.</returns>
     private async Task<(string requestToken, string requestTokenSecret)> GetRequestToken(HttpClient httpClient, string callback, CancellationToken cancellationToken)
     {
         var requestToken = "";
@@ -91,6 +134,14 @@ public class PlainOAuthAuthenticationProvider : IAuthenticationProvider
         return (requestToken, requestTokenSecret);
     }
 
+    /// <summary>
+    /// Gets the verifier token from the app by notifying the app via the provided <see cref="GetVerifierCallback"/>
+    /// which login url should be opened and at which redirect url the verifier token is returned.
+    /// </summary>
+    /// <param name="requestToken">The request token obtained earlier in the flow.</param>
+    /// <param name="callback">The callback url at which to return the verifier token.</param>
+    /// <param name="getVerifier">The callback for the app to implement the login process.</param>
+    /// <returns>The veriefier token.</returns>
     private async Task<string> GetVerifier(string requestToken, string callback, GetVerifierCallback getVerifier, CancellationToken cancellationToken)
     {
         var verifier = "";
@@ -112,6 +163,14 @@ public class PlainOAuthAuthenticationProvider : IAuthenticationProvider
         return verifier;
     }
 
+    /// <summary>
+    /// Gets the access token and secret from the Discogs api with the request token nd secret obtained earlier in the flow.
+    /// </summary>
+    /// <param name="httpClient">The <see cref="HttpClient"/> used by the authentication flow.</param>
+    /// <param name="requestToken">The request token obtained earlier in the flow.</param>
+    /// <param name="requestTokenSecret">The request secret obtained earlier in the flow.</param>
+    /// <param name="verifier">The verifier token obtained earlier in the flow.</param>
+    /// <returns>The access token and secret which authenticate the logged in user.</returns>
     private async Task<(string accessToken, string accessTokenSecret)> GetAccessToken(HttpClient httpClient, string requestToken, string requestTokenSecret, string verifier, CancellationToken cancellationToken)
     {
         var accessToken = "";
@@ -136,9 +195,13 @@ public class PlainOAuthAuthenticationProvider : IAuthenticationProvider
     }
 
 
+    /// <summary>
+    /// Creates the <see cref="HttpRequestMessage"/> for getting the request token from the Discogs api.
+    /// </summary>
+    /// <param name="callback">The callback url at which the reqtest token is returned later.</param>
     private HttpRequestMessage CreateRequestTokenRequest(string callback)
     {
-        HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, DiscogsApiUrls.OAuthRequestTokenUrl);
+        var request = new HttpRequestMessage(HttpMethod.Get, DiscogsApiUrls.OAuthRequestTokenUrl);
 
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
 
@@ -157,9 +220,15 @@ public class PlainOAuthAuthenticationProvider : IAuthenticationProvider
         return request;
     }
 
+    /// <summary>
+    /// Creates the <see cref="HttpRequestMessage"/> for getting the access token and secret from the Discogs api.
+    /// </summary>
+    /// <param name="requestToken">The obtained request token.</param>
+    /// <param name="requestTokenSecret">The obtained request token secret.</param>
+    /// <param name="verifier">The obtained verifier token.</param>
     private HttpRequestMessage CreateAccessTokenRequest(string requestToken, string requestTokenSecret, string verifier)
     {
-        HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, DiscogsApiUrls.OAuthAccessTokenUrl);
+        var request = new HttpRequestMessage(HttpMethod.Post, DiscogsApiUrls.OAuthAccessTokenUrl);
 
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
 
@@ -180,6 +249,9 @@ public class PlainOAuthAuthenticationProvider : IAuthenticationProvider
     }
 
 
+    /// <summary>
+    /// Creates the value needed for the authentication header for an authenticated request to the Discogs Api.
+    /// </summary>
     private string CreateAuthenticationHeader()
     {
         (string timestamp, string nonce) = CreateTimestampAndNonce();
@@ -195,6 +267,9 @@ public class PlainOAuthAuthenticationProvider : IAuthenticationProvider
         return header;
     }
 
+    /// <summary>
+    /// Created the timestamp and nonce used by the <see cref="PlainOAuthAuthenticationProvider.CreateAuthenticationHeader"/> method.
+    /// </summary>
     private (string timestamp, string nonce) CreateTimestampAndNonce()
     {
         TimeSpan ellapsedTimeSince1970 = DateTime.UtcNow - new DateTime(1970, 1, 1);

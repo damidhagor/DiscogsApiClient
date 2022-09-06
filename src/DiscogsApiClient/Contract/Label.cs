@@ -1,5 +1,25 @@
 ﻿namespace DiscogsApiClient.Contract;
 
+public record Label(
+    int Id,
+    string Name,
+    string ContactInfo,
+    string Profile,
+    string ResourceUrl,
+    string Uri,
+    string ReleasesUrl,
+    List<Image> Images,
+    LabelShortInfo ParentLabel,
+    List<LabelShortInfo> Sublabels,
+    List<string> Urls,
+    string DataQuality);
+
+public record LabelShortInfo(
+    int Id,
+    string Name,
+    string ResourceUrl);
+
+
 /*
 {
     "id":11499,
@@ -44,23 +64,3 @@
     ]
 }
  */
-
-
-public record Label(
-    int Id,
-    string Name,
-    string ContactInfo,
-    string Profile,
-    string ResourceUrl,
-    string Uri,
-    string ReleasesUrl,
-    List<Image> Images,
-    LabelShortInfo ParentLabel,
-    List<LabelShortInfo> Sublabels,
-    List<string> Urls,
-    string DataQuality);
-
-public record LabelShortInfo(
-    int Id,
-    string Name,
-    string ResourceUrl);
