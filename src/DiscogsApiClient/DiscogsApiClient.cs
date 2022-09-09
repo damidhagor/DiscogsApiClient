@@ -13,15 +13,13 @@ namespace DiscogsApiClient;
 /// It needs an <see cref="IAuthenticationProvider"/> and an initial call to <see cref="DiscogsApiClient.AuthenticateAsync"/>
 /// with the corresponding <see cref="IAuthenticationRequest"/> to make the authenticated requests.
 /// </summary>
-public class DiscogsApiClient : IDisposable
+public class DiscogsApiClient : IDiscogsApiClient, IDisposable
 {
     private readonly HttpClient _httpClient;
     private readonly IAuthenticationProvider _authenticationProvider;
     private readonly string _userAgent;
 
-    /// <summary>
-    /// Indicates if the <see cref="DiscogsApiClient"/> has been authenticated and is ready to use.
-    /// </summary>
+    /// <inheritdoc/>
     public bool IsAuthenticated => _authenticationProvider.IsAuthenticated;
 
     /// <summary>
@@ -40,11 +38,7 @@ public class DiscogsApiClient : IDisposable
     }
 
 
-    /// <summary>
-    /// Authenticates the <see cref="DiscogsApiClient"/> against the Discogs api by using the chosen <see cref="IAuthenticationProvider"/>.
-    /// </summary>
-    /// <param name="authenticationRequest">The <see cref="IAuthenticationRequest"/> implementation corresponding to the chosen <see cref="IAuthenticationProvider"/>.</param>
-    /// <returns>The <see cref="IAuthenticationResponse"/> implementation corresponding to the chosen <see cref="IAuthenticationProvider"/>.</returns>
+    /// <inheritdoc/>
     public async Task<IAuthenticationResponse> AuthenticateAsync(IAuthenticationRequest authenticationRequest, CancellationToken cancellationToken)
     {
         return await _authenticationProvider.AuthenticateAsync(authenticationRequest, cancellationToken);
@@ -53,9 +47,7 @@ public class DiscogsApiClient : IDisposable
 
 
     #region User
-    /// <summary>
-    /// Queries the <see cref="Identity"/> of the currently authenticated user.
-    /// </summary>
+    /// <inheritdoc/>
     public async Task<Identity> GetIdentityAsync(CancellationToken cancellationToken)
     {
         if (!IsAuthenticated)
@@ -71,9 +63,7 @@ public class DiscogsApiClient : IDisposable
         return identity;
     }
 
-    /// <summary>
-    /// Queries the <see cref="User"/> object of the currently authenticated user.
-    /// </summary>
+    /// <inheritdoc/>
     public async Task<User> GetUserAsync(string username, CancellationToken cancellationToken)
     {
         if (!IsAuthenticated)
@@ -94,11 +84,7 @@ public class DiscogsApiClient : IDisposable
 
 
     #region Collection Folders
-    /// <summary>
-    /// Gets the collection folders of the user.
-    /// </summary>
-    /// <param name="username">The name of the user.</param>
-    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    /// <inheritdoc/>
     public async Task<List<CollectionFolder>> GetCollectionFoldersAsync(string username, CancellationToken cancellationToken)
     {
         if (!IsAuthenticated)
@@ -116,12 +102,7 @@ public class DiscogsApiClient : IDisposable
         return collectionFoldersResponse.Folders;
     }
 
-    /// <summary>
-    /// Gets a specific collection folder of the user.
-    /// </summary>
-    /// <param name="username">The name of the user.</param>
-    /// <param name="folderId">The id of the folder.</param>
-    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    /// <inheritdoc/>
     public async Task<CollectionFolder> GetCollectionFolderAsync(string username, int folderId, CancellationToken cancellationToken)
     {
         if (!IsAuthenticated)
@@ -139,12 +120,7 @@ public class DiscogsApiClient : IDisposable
         return collectionFolder;
     }
 
-    /// <summary>
-    /// Creates a new collection folder for the user.
-    /// </summary>
-    /// <param name="username">The name of the user.</param>
-    /// <param name="folderName">The new folder's name.</param>
-    /// <exception cref="ArgumentException">Fires this exception if no username or folder name is provided.</exception>
+    /// <inheritdoc/>
     public async Task<CollectionFolder> CreateCollectionFolderAsync(string username, string folderName, CancellationToken cancellationToken)
     {
         if (!IsAuthenticated)
@@ -167,13 +143,7 @@ public class DiscogsApiClient : IDisposable
         return collectionFolder;
     }
 
-    /// <summary>
-    /// Changes a collection folder's name for the user.
-    /// </summary>
-    /// <param name="username">The name of the user.</param>
-    /// <param name="folderId">The folder's id.</param>
-    /// <param name="folderName">The new folder name.</param>
-    /// <exception cref="ArgumentException">Fires this exception if no username or folder name is provided.</exception>
+    /// <inheritdoc/>
     public async Task<CollectionFolder> UpdateCollectionFolderAsync(string username, int folderId, string folderName, CancellationToken cancellationToken)
     {
         if (!IsAuthenticated)
@@ -196,12 +166,7 @@ public class DiscogsApiClient : IDisposable
         return collectionFolder;
     }
 
-    /// <summary>
-    /// Deletes a collection folder for the user.
-    /// </summary>
-    /// <param name="username">The name of the user.</param>
-    /// <param name="folderId">The folder's id.</param>
-    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    /// <inheritdoc/>
     public async Task<bool> DeleteCollectionFolderAsync(string username, int folderId, CancellationToken cancellationToken)
     {
         if (!IsAuthenticated)
@@ -220,12 +185,7 @@ public class DiscogsApiClient : IDisposable
 
 
     #region Collection Items
-    /// <summary>
-    /// Gets the releases in a collection folder of the user.
-    /// </summary>
-    /// <param name="username">The name of the user.</param>
-    /// <param name="folderId">The folder's id.</param>
-    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    /// <inheritdoc/>
     public async Task<CollectionFolderReleasesResponse> GetCollectionFolderReleasesByFolderIdAsync(string username, int folderId, CancellationToken cancellationToken)
     {
         if (!IsAuthenticated)
@@ -243,13 +203,7 @@ public class DiscogsApiClient : IDisposable
         return collectionFolderReleasesResponse;
     }
 
-    /// <summary>
-    /// Adds a release to the collection folder of the user.
-    /// </summary>
-    /// <param name="username">The name of the user.</param>
-    /// <param name="folderId">The folder's id.</param>
-    /// <param name="releaseId">The release's id.</param>
-    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    /// <inheritdoc/>
     public async Task<CollectionFolderRelease> AddReleaseToCollectionFolderAsync(string username, int folderId, int releaseId, CancellationToken cancellationToken)
     {
         if (!IsAuthenticated)
@@ -267,14 +221,7 @@ public class DiscogsApiClient : IDisposable
         return collectionFolderRelease;
     }
 
-    /// <summary>
-    /// Removes a release from a collection folder of the user.
-    /// </summary>
-    /// <param name="username">The name of the user.</param>
-    /// <param name="folderId">The folder's id.</param>
-    /// <param name="releaseId">The release's id.</param>
-    /// <param name="instanceId">The release's instance id in the folder.</param>
-    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    /// <inheritdoc/>
     public async Task<bool> DeleteReleaseFromCollectionFolderAsync(string username, int folderId, int releaseId, int instanceId, CancellationToken cancellationToken)
     {
         if (!IsAuthenticated)
@@ -293,12 +240,7 @@ public class DiscogsApiClient : IDisposable
 
 
     #region Wantlist
-    /// <summary>
-    /// Gets the releases on the wantlist of the user.
-    /// </summary>
-    /// <param name="username">The name of the user.</param>
-    /// <param name="paginationQueryParameters">Pagination parameters for the results.</param>
-    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    /// <inheritdoc/>
     public async Task<WantlistReleasesResponse> GetWantlistReleasesAsync(string username, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken)
     {
         if (!IsAuthenticated)
@@ -318,12 +260,7 @@ public class DiscogsApiClient : IDisposable
         return releasesResponse;
     }
 
-    /// <summary>
-    /// Adds a release to the wantlist of the user.
-    /// </summary>
-    /// <param name="username">The name of the user.</param>
-    /// <param name="releaseId">The release's id.</param>
-    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    /// <inheritdoc/>
     public async Task<WantlistRelease> AddWantlistReleaseAsync(string username, int releaseId, CancellationToken cancellationToken)
     {
         if (!IsAuthenticated)
@@ -341,12 +278,7 @@ public class DiscogsApiClient : IDisposable
         return release;
     }
 
-    /// <summary>
-    /// Removes a release from the wantlist of the user.
-    /// </summary>
-    /// <param name="username">The name of the user.</param>
-    /// <param name="releaseId">The release's id.</param>
-    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    /// <inheritdoc/>
     public async Task<bool> DeleteWantlistReleaseAsync(string username, int releaseId, CancellationToken cancellationToken)
     {
         if (!IsAuthenticated)
@@ -365,10 +297,7 @@ public class DiscogsApiClient : IDisposable
 
 
     #region Database
-    /// <summary>
-    /// Gets an artist from the Discog database.
-    /// </summary>
-    /// <param name="artistId">The artist's id.</param>
+    /// <inheritdoc/>
     public async Task<Artist> GetArtistAsync(int artistId, CancellationToken cancellationToken)
     {
         using var request = _authenticationProvider.CreateAuthenticatedRequest(HttpMethod.Get, String.Format(DiscogsApiUrls.ArtistsUrl, artistId));
@@ -381,11 +310,7 @@ public class DiscogsApiClient : IDisposable
         return artist;
     }
 
-    /// <summary>
-    /// Gets the releases of an artist from the Discog database.
-    /// </summary>
-    /// <param name="artistId">The artist's id.</param>
-    /// <param name="paginationQueryParameters">Pagination parameters.</param>
+    /// <inheritdoc/>
     public async Task<ArtistReleasesResponse> GetArtistReleasesAsync(int artistId, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken)
     {
         string url = QueryParameterHelper.AppendPaginationQuery(String.Format(DiscogsApiUrls.ArtistReleasesUrl, artistId), paginationQueryParameters);
@@ -400,10 +325,7 @@ public class DiscogsApiClient : IDisposable
         return releasesResponse;
     }
 
-    /// <summary>
-    /// Gets a master release from the Discog database.
-    /// </summary>
-    /// <param name="masterReleaseId">The master release's id.</param>
+    /// <inheritdoc/>
     public async Task<MasterRelease> GetMasterReleaseAsync(int masterReleaseId, CancellationToken cancellationToken)
     {
         using var request = _authenticationProvider.CreateAuthenticatedRequest(HttpMethod.Get, String.Format(DiscogsApiUrls.MasterReleasesUrl, masterReleaseId));
@@ -416,10 +338,7 @@ public class DiscogsApiClient : IDisposable
         return masterRelease;
     }
 
-    /// <summary>
-    /// Gets a release from the Discog database.
-    /// </summary>
-    /// <param name="releaseId">The release's id.</param>
+    /// <inheritdoc/>
     public async Task<Release> GetReleaseAsync(int releaseId, CancellationToken cancellationToken)
     {
         using var request = _authenticationProvider.CreateAuthenticatedRequest(HttpMethod.Get, String.Format(DiscogsApiUrls.ReleasesUrl, releaseId));
@@ -432,10 +351,7 @@ public class DiscogsApiClient : IDisposable
         return release;
     }
 
-    /// <summary>
-    /// Gets the community rating of a release from the Discog database.
-    /// </summary>
-    /// <param name="releaseId">The release's id.</param>
+    /// <inheritdoc/>
     public async Task<ReleaseCommunityRatingResponse> GetReleaseCommunityRatingAsync(int releaseId, CancellationToken cancellationToken)
     {
         using var request = _authenticationProvider.CreateAuthenticatedRequest(HttpMethod.Get, String.Format(DiscogsApiUrls.ReleaseCommunityRatingsUrl, releaseId));
@@ -448,10 +364,7 @@ public class DiscogsApiClient : IDisposable
         return rating;
     }
 
-    /// <summary>
-    /// Gets a label from the Discog database.
-    /// </summary>
-    /// <param name="labelId">The label's id.</param>
+    /// <inheritdoc/>
     public async Task<Label> GetLabelAsync(int labelId, CancellationToken cancellationToken)
     {
         using var request = _authenticationProvider.CreateAuthenticatedRequest(HttpMethod.Get, String.Format(DiscogsApiUrls.LabelsUrl, labelId));
@@ -464,11 +377,7 @@ public class DiscogsApiClient : IDisposable
         return label;
     }
 
-    /// <summary>
-    /// Gets the releases of a label from the Discog database.
-    /// </summary>
-    /// <param name="labelId">The label's id.</param>
-    /// <param name="paginationQueryParameters">Pagination parameters.</param>
+    /// <inheritdoc/>
     public async Task<LabelReleasesResponse> GetLabelReleasesAsync(int labelId, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken)
     {
         string url = QueryParameterHelper.AppendPaginationQuery(String.Format(DiscogsApiUrls.LabelReleasesUrl, labelId), paginationQueryParameters);
@@ -483,11 +392,7 @@ public class DiscogsApiClient : IDisposable
         return releasesResponse;
     }
 
-    /// <summary>
-    /// Queries the Discogs database for entries.
-    /// </summary>
-    /// <param name="searchQueryParameters">The search parameters to query for.</param>
-    /// <param name="paginationQueryParameters">Pagination parameters.</param>
+    /// <inheritdoc/>
     public async Task<SearchResultsResponse> SearchDatabaseAsync(SearchQueryParameters searchQueryParameters, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken)
     {
         string url = QueryParameterHelper.AppendSearchQueryWithPagination(DiscogsApiUrls.SearchUrl, searchQueryParameters, paginationQueryParameters);
