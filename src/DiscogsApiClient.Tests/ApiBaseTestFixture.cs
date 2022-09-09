@@ -1,3 +1,4 @@
+using System.Net.Http;
 using System.Threading.Tasks;
 using DiscogsApiClient.Authentication.UserToken;
 using Microsoft.Extensions.Configuration;
@@ -11,12 +12,14 @@ public abstract class ApiBaseTestFixture
     public static readonly string UserAgent = "MusicLibraryManager.Tests/1.0.0";
     protected DiscogsApiClient ApiClient;
     protected IConfiguration Configuration;
+    private readonly HttpClient _httpClient;
 
 
     public ApiBaseTestFixture()
     {
+        _httpClient = new HttpClient();
         UserTokenAuthenticationProvider authenticationProvider = new UserTokenAuthenticationProvider();
-        ApiClient = new DiscogsApiClient(authenticationProvider, UserAgent);
+        ApiClient = new DiscogsApiClient(_httpClient, authenticationProvider, UserAgent);
 
         Configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", false)
@@ -36,6 +39,6 @@ public abstract class ApiBaseTestFixture
     [OneTimeTearDown]
     public virtual void Cleanup()
     {
-        ApiClient.Dispose();
+        _httpClient.Dispose();
     }
 }
