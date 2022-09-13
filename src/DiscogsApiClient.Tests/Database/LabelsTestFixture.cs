@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace DiscogsApiClient.Tests.Database;
 
-public class LabelsTestFixture : ApiBaseTestFixture
+public sealed class LabelsTestFixture : ApiBaseTestFixture
 {
     [Test]
     public async Task GetLabel_Success()

@@ -1,6 +1,6 @@
 ﻿namespace DiscogsApiClient.Contract;
 
-public record ReleaseArtist(
+public sealed record ReleaseArtist(
     int Id,
     string Name,
     string ResourceUrl,

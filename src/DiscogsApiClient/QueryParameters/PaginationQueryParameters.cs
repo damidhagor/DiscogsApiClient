@@ -4,7 +4,7 @@
 /// <summary>
 /// Pagination parameters used by paginated requests to the Discogs Api.
 /// </summary>
-public record PaginationQueryParameters()
+public sealed record PaginationQueryParameters()
 {
     private int? _page;
     /// <summary>

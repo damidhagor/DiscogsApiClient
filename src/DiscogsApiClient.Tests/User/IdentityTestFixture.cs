@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace DiscogsApiClient.Tests.User;
 
 [TestFixture]
-public class IdentityTestFixture : ApiBaseTestFixture
+public sealed class IdentityTestFixture : ApiBaseTestFixture
 {
     [Test]
     public async Task GetIdentity_Success()

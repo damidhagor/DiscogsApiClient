@@ -1,12 +1,12 @@
 ﻿namespace DiscogsApiClient.Contract;
 
-public record CollectionFolder(
+public sealed record CollectionFolder(
     int Id,
     int Count,
     string Name,
     string ResourceUrl);
 
-public record CollectionFoldersResponse(
+public sealed record CollectionFoldersResponse(
     List<CollectionFolder> Folders);
 
 

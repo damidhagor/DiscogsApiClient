@@ -1,6 +1,6 @@
 ﻿namespace DiscogsApiClient.Contract;
 
-public record MasterRelease(
+public sealed record MasterRelease(
     int Id,
     int MainRelease,
     int MostRecentRelease,

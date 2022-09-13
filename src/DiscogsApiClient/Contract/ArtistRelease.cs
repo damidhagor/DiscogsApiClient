@@ -1,10 +1,10 @@
 ﻿namespace DiscogsApiClient.Contract;
 
-public record ArtistReleasesResponse(
+public sealed record ArtistReleasesResponse(
     Pagination Pagination,
     List<ArtistRelease> Releases);
 
-public record ArtistRelease(
+public sealed record ArtistRelease(
     int Id,
     string Title,
     string Type,
@@ -16,11 +16,11 @@ public record ArtistRelease(
     string Thumb,
     ArtistReleaseStats Stats);
 
-public record ArtistReleaseStats(
+public sealed record ArtistReleaseStats(
     ArtistReleaseStatValues Community,
     ArtistReleaseStatValues User);
 
-public record ArtistReleaseStatValues(
+public sealed record ArtistReleaseStatValues(
     int InWantlist,
     int InCollection);
 

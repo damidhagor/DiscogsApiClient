@@ -13,7 +13,7 @@
 /// <param name="Year">Search by release year.</param>
 /// <param name="Format">Search by release format.</param>
 /// <param name="Barcode">Search by barcode.</param>
-public record SearchQueryParameters(
+public sealed record SearchQueryParameters(
     string? Query,
     string? Type,
     string? Title,

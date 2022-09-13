@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace DiscogsApiClient.Tests.Collection;
 
-public class CollectionFoldersTestFixture : ApiBaseTestFixture
+public sealed class CollectionFoldersTestFixture : ApiBaseTestFixture
 {
     [Test]
     public async Task GetCollectionFolders_Success()

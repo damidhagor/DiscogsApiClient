@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace DiscogsApiClient.Tests.Database;
 
-public class ArtistsTestFixture : ApiBaseTestFixture
+public sealed class ArtistsTestFixture : ApiBaseTestFixture
 {
     [Test]
     public async Task GetArtist_Success()

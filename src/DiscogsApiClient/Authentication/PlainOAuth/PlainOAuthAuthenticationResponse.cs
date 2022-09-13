@@ -6,7 +6,7 @@
 /// <para/>
 /// It also returns the access token and secret if authentication was successful so they can be stored and reused by the client.
 /// </summary>
-public class PlainOAuthAuthenticationResponse : IAuthenticationResponse
+public sealed class PlainOAuthAuthenticationResponse : IAuthenticationResponse
 {
     /// <summary>
     /// <inheritdoc/>

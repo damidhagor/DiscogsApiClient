@@ -1,10 +1,10 @@
 ﻿namespace DiscogsApiClient.Contract;
 
-public record SearchResultsResponse(
+public sealed record SearchResultsResponse(
     Pagination Pagination,
     List<SearchResult> Results);
 
-public record SearchResult(
+public sealed record SearchResult(
     int Id,
     string Title,
     string ResourceUrl,
@@ -36,11 +36,11 @@ public enum SearchResultType : int
     Label = 4
 }
 
-public record SearchResultCommunityStats(
+public sealed record SearchResultCommunityStats(
     int Want,
     int Have);
 
-public record SearchResultUserData(
+public sealed record SearchResultUserData(
     bool InWantlist,
     bool InCollection);
 

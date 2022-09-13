@@ -1,6 +1,6 @@
 ﻿namespace DiscogsApiClient.Contract;
 
-public record Video(
+public sealed record Video(
     string Uri,
     string Title,
     string Description,

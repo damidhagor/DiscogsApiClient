@@ -1,6 +1,6 @@
 ﻿namespace DiscogsApiClient.Contract;
 
-public record Artist(
+public sealed record Artist(
     int Id,
     string Name,
     string Profile,
@@ -13,7 +13,7 @@ public record Artist(
     List<ArtistMember> Members,
     string DataQuality);
 
-public record ArtistMember(
+public sealed record ArtistMember(
     int Id,
     string Name,
     bool Active,

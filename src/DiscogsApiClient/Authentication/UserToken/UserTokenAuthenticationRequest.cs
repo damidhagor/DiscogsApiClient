@@ -4,7 +4,7 @@
 /// Parameters needed by the <see cref="UserTokenAuthenticationProvider"/> to authenticate against the Discogs Api with the user's personal access token.
 /// If the <see cref="UserTokenAuthenticationProvider"/> is used then this <see cref="UserTokenAuthenticationRequest"/> must be passed to the <see cref="DiscogsApiClient.AuthenticateAsync"/> method.
 /// </summary>
-public class UserTokenAuthenticationRequest : IAuthenticationRequest
+public sealed class UserTokenAuthenticationRequest : IAuthenticationRequest
 {
     /// <summary>
     /// The user's personal access token.

@@ -13,7 +13,7 @@ namespace DiscogsApiClient;
 /// It needs an <see cref="IAuthenticationProvider"/> and an initial call to <see cref="DiscogsApiClient.AuthenticateAsync"/>
 /// with the corresponding <see cref="IAuthenticationRequest"/> to make the authenticated requests.
 /// </summary>
-public class DiscogsApiClient : IDiscogsApiClient
+public sealed class DiscogsApiClient : IDiscogsApiClient
 {
     private readonly HttpClient _httpClient;
     private readonly IAuthenticationProvider _authenticationProvider;

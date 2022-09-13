@@ -1,3 +1,3 @@
 ﻿namespace DiscogsApiClient.Contract;
 
-public record ErrorMessage(string Message);
+public sealed record ErrorMessage(string Message);

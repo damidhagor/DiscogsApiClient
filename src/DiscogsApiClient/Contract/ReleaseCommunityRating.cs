@@ -1,10 +1,10 @@
 ﻿namespace DiscogsApiClient.Contract;
 
-public record ReleaseCommunityRating(
+public sealed record ReleaseCommunityRating(
     int Count,
     float Average);
 
-public record ReleaseCommunityRatingResponse(
+public sealed record ReleaseCommunityRatingResponse(
     int ReleaseId,
     ReleaseCommunityRating Rating);
 

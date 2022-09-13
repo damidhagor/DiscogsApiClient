@@ -1,13 +1,13 @@
 ﻿namespace DiscogsApiClient.Contract;
 
-public record Pagination(
+public sealed record Pagination(
     int Page,
     int Pages,
     int PerPage,
     int Items,
     PaginationUrls Urls);
 
-public record PaginationUrls(
+public sealed record PaginationUrls(
     string Next,
     string Last);
 

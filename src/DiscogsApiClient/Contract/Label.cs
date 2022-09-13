@@ -1,6 +1,6 @@
 ﻿namespace DiscogsApiClient.Contract;
 
-public record Label(
+public sealed record Label(
     int Id,
     string Name,
     string ContactInfo,
@@ -14,7 +14,7 @@ public record Label(
     List<string> Urls,
     string DataQuality);
 
-public record LabelShortInfo(
+public sealed record LabelShortInfo(
     int Id,
     string Name,
     string ResourceUrl);

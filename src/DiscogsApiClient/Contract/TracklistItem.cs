@@ -1,6 +1,6 @@
 ﻿namespace DiscogsApiClient.Contract;
 
-public record TracklistItem(
+public sealed record TracklistItem(
     string Position,
     string Type_,
     string Title,

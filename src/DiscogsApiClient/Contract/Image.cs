@@ -1,6 +1,6 @@
 ﻿namespace DiscogsApiClient.Contract;
 
-public record Image(
+public sealed record Image(
     ArtistImageType Type,
     string Uri,
     string ResourceUrl,

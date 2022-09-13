@@ -8,7 +8,7 @@ namespace DiscogsApiClient.Serialization;
 /// The converted names are cached.
 /// Example: ResourceUrl => resource_url
 /// </summary>
-internal class DiscogsJsonNamingPolicy : JsonNamingPolicy
+internal sealed class DiscogsJsonNamingPolicy : JsonNamingPolicy
 {
     private static readonly Dictionary<string, string> _cachedNames = new();
 

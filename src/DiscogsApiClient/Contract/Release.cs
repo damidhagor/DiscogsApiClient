@@ -1,6 +1,6 @@
 ﻿namespace DiscogsApiClient.Contract;
 
-public record Release(
+public sealed record Release(
     int Id,
     string ResourceUrl,
     string Uri,
@@ -33,7 +33,7 @@ public record Release(
     bool BlockedFromSale,
     string DataQuality);
 
-public record ReleaseLabel(
+public sealed record ReleaseLabel(
     int Id,
     string Name,
     string Catno,
@@ -42,19 +42,19 @@ public record ReleaseLabel(
     string EntityType,
     string EntityTypeName);
 
-public record ReleaseFormat(
+public sealed record ReleaseFormat(
     string Name,
     string Qty,
     List<string> Descriptions);
 
-public record ReleaseCommunity(
+public sealed record ReleaseCommunity(
     int Have,
     int Want,
     ReleaseCommunityRating Rating,
     string DataQuality,
     string Status);
 
-public record ReleaseIdentifiers(
+public sealed record ReleaseIdentifiers(
     string Type,
     string Value);
 

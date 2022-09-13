@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace DiscogsApiClient.Tests.Collection;
 
-public class WantlistTestFixture : ApiBaseTestFixture
+public sealed class WantlistTestFixture : ApiBaseTestFixture
 {
     [Test]
     public async Task GetAllWantlistReleases_Success()

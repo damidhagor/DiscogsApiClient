@@ -1,10 +1,10 @@
 ﻿namespace DiscogsApiClient.Contract;
 
-public record WantlistReleasesResponse(
+public sealed record WantlistReleasesResponse(
     Pagination Pagination,
     List<WantlistRelease> Wants);
 
-public record WantlistRelease(
+public sealed record WantlistRelease(
     int Id,
     string ResourceUrl,
     int Rating,
@@ -12,7 +12,7 @@ public record WantlistRelease(
     WantlistReleaseInformation BasicInformation,
     string Notes);
 
-public record WantlistReleaseInformation(
+public sealed record WantlistReleaseInformation(
     int Id,
     int MasterId,
     string MasterUrl,
@@ -27,7 +27,7 @@ public record WantlistReleaseInformation(
     List<string> Genres,
     List<string> Styles);
 
-public record WantlistReleaseLabel(
+public sealed record WantlistReleaseLabel(
     int Id,
     string Name,
     string Catno,
@@ -35,7 +35,7 @@ public record WantlistReleaseLabel(
     string EntityType,
     string EntityTypeName);
 
-public record WantlistReleaseArtist(
+public sealed record WantlistReleaseArtist(
     int Id,
     string Name,
     string ResourceUrl,

@@ -9,7 +9,7 @@ namespace DiscogsApiClient.Authentication.PlainOAuth;
 /// using the OAuth 1.0a flow described <a href="https://www.discogs.com/developers#page:authentication,header:authentication-discogs-auth-flow">here</a>
 /// and should be provided to the <see cref="DiscogsApiClient"/>'s constructor.
 /// </summary>
-public class PlainOAuthAuthenticationProvider : IAuthenticationProvider
+public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
 {
     private string _userAgent = "";
     private string _consumerKey = "";

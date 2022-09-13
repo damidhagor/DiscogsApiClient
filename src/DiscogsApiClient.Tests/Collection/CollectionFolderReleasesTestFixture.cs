@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace DiscogsApiClient.Tests.Collection;
 
-public class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
+public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
 {
     [Test]
     public void GetCollectionFolderReleases_EmptyUsername()

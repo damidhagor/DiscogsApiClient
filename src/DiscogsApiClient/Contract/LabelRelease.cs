@@ -1,10 +1,10 @@
 ﻿namespace DiscogsApiClient.Contract;
 
-public record LabelReleasesResponse(
+public sealed record LabelReleasesResponse(
     Pagination Pagination,
     List<LabelRelease> Releases);
 
-public record LabelRelease(
+public sealed record LabelRelease(
     string Status,
     string Format,
     string Catno,
@@ -16,11 +16,11 @@ public record LabelRelease(
     string Artist,
     LabelReleaseStats Stats);
 
-public record LabelReleaseStats(
+public sealed record LabelReleaseStats(
     LabelReleaseStatValues Community,
     LabelReleaseStatValues User);
 
-public record LabelReleaseStatValues(
+public sealed record LabelReleaseStatValues(
     int InWantlist,
     int InCollection);
 

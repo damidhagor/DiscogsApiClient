@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace DiscogsApiClient.Tests.Database;
 
-public class ReleasesTestFixture : ApiBaseTestFixture
+public sealed class ReleasesTestFixture : ApiBaseTestFixture
 {
     [Test]
     public async Task GetMasterRelease_Success()

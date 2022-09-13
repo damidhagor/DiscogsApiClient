@@ -5,7 +5,7 @@
 /// using the user's personal access token as described <a href="https://www.discogs.com/developers#page:authentication,header:authentication-discogs-auth-flow">here</a>
 /// and should be provided to the <see cref="DiscogsApiClient"/>'s constructor.
 /// </summary>
-public class UserTokenAuthenticationProvider : IAuthenticationProvider
+public sealed class UserTokenAuthenticationProvider : IAuthenticationProvider
 {
     /// <summary>
     /// The user's personal access token used for authentication.

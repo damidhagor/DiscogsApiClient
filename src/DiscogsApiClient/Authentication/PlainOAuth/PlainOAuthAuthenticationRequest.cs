@@ -13,7 +13,7 @@ public delegate Task<string> GetVerifierCallback(string authorizeUrl, string ver
 /// Parameters needed by the <see cref="PlainOAuthAuthenticationProvider"/> to authenticate against the Discogs Api with the OAuth 1.0a flow.
 /// If the <see cref="PlainOAuthAuthenticationProvider"/> is used then this <see cref="PlainOAuthAuthenticationRequest"/> must be passed to the <see cref="DiscogsApiClient.AuthenticateAsync"/> method.
 /// </summary>
-public class PlainOAuthAuthenticationRequest : IAuthenticationRequest
+public sealed class PlainOAuthAuthenticationRequest : IAuthenticationRequest
 {
     /// <summary>
     /// The user agent used by the DiscogsApiClient.

@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace DiscogsApiClient.Tests.Database;
 
-public class SearchTestFixture : ApiBaseTestFixture
+public sealed class SearchTestFixture : ApiBaseTestFixture
 {
     [Test]
     public async Task Search_Success()
