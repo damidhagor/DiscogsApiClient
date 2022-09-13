@@ -11,11 +11,11 @@ namespace DiscogsApiClient.Authentication.PlainOAuth;
 /// </summary>
 public class PlainOAuthAuthenticationProvider : IAuthenticationProvider
 {
-    private readonly string _userAgent;
-    private readonly string _consumerKey;
-    private readonly string _consumerSecret;
-    private string _accessToken;
-    private string _accessTokenSecret;
+    private string _userAgent = "";
+    private string _consumerKey = "";
+    private string _consumerSecret = "";
+    private string _accessToken = "";
+    private string _accessTokenSecret = "";
 
     /// <summary>
     /// <inheritdoc/>
@@ -24,32 +24,12 @@ public class PlainOAuthAuthenticationProvider : IAuthenticationProvider
 
 
     /// <summary>
-    /// Creates a new <see cref="PlainOAuthAuthenticationProvider"/>.
-    /// <para/>
-    /// If the app was already authenticated the previously obtained access token and secret can be provided
-    /// so that the user is kept login.
-    /// </summary>
-    /// <param name="userAgent">The client's user agent string used for authentication.</param>
-    /// <param name="consumerKey">The app's consumer key provided by Discogs.</param>
-    /// <param name="consumerSecret">The app's consumer secret provided by Discogs.</param>
-    /// <param name="accessToken">The app's access token if the app was authenticated before.</param>
-    /// <param name="accessTokenSecret">The app's access token secret if the app was authenticated before.</param>
-    public PlainOAuthAuthenticationProvider(string userAgent, string consumerKey, string consumerSecret, string accessToken = "", string accessTokenSecret = "")
-    {
-        _userAgent = userAgent;
-        _consumerKey = consumerKey;
-        _consumerSecret = consumerSecret;
-        _accessToken = accessToken;
-        _accessTokenSecret = accessTokenSecret;
-    }
-
-    /// <summary>
     /// Authenticates the client by requesting him to log in with his Discogs account.
     /// <para/>
     /// This method returns the obtained access token and secret if successful
     /// which should be persisted and reused by the app.
     /// </summary>
-    /// <param name="authenticationRequest">The <see cref="PlainOAuthAuthenticationRequest"/> providing the callback delegate and url.</param>
+    /// <param name="authenticationRequest">The <see cref="PlainOAuthAuthenticationRequest"/> providing the callback delegate, url and OAuth parameters.</param>
     /// <returns>The <see cref="PlainOAuthAuthenticationResponse"/> indicating if the authentication was successful.</returns>
     /// <exception cref="ArgumentException">Fires this exception if the provided <see cref="IAuthenticationRequest"/> is not a <see cref="PlainOAuthAuthenticationRequest"/>.</exception>
     /// <exception cref="InvalidOperationException">Fires this exception if no consumer key or secret are provided.</exception>
@@ -57,6 +37,12 @@ public class PlainOAuthAuthenticationProvider : IAuthenticationProvider
     {
         if (authenticationRequest is not PlainOAuthAuthenticationRequest authAuthenticationRequest)
             throw new ArgumentException($"The provided authentication request must be of type {typeof(PlainOAuthAuthenticationRequest).Name}", nameof(authenticationRequest));
+
+        _userAgent = authAuthenticationRequest.UserAgent;
+        _consumerKey = authAuthenticationRequest.ConsumerKey;
+        _consumerSecret = authAuthenticationRequest.ConsumerSecret;
+        _accessToken = authAuthenticationRequest.AccessToken;
+        _accessTokenSecret = authAuthenticationRequest.AccessTokenSecret;
 
         if (String.IsNullOrWhiteSpace(_accessToken) || String.IsNullOrWhiteSpace(_accessTokenSecret))
         {

@@ -16,6 +16,35 @@ public delegate Task<string> GetVerifierCallback(string authorizeUrl, string ver
 public class PlainOAuthAuthenticationRequest : IAuthenticationRequest
 {
     /// <summary>
+    /// The user agent used by the DiscogsApiClient.
+    /// </summary>
+    public string UserAgent { get; init; }
+
+    /// <summary>
+    /// The app's consumer key from Discogs.
+    /// </summary>
+    public string ConsumerKey { get; init; }
+
+    /// <summary>
+    /// The app's consumer secret from Discogs.
+    /// </summary>
+    public string ConsumerSecret { get; init; }
+
+    /// <summary>
+    /// The user's access token.
+    /// The token should be persisted after the first successful authentication
+    /// and provided/reused here to keep the user logged in when the application restarts.
+    /// </summary>
+    public string AccessToken { get; init; }
+
+    /// <summary>
+    /// The user's access token secret.
+    /// The secret should be persisted after the first successful authentication
+    /// and provided/reused here to keep the user logged in when the application restarts.
+    /// </summary>
+    public string AccessTokenSecret { get; init; }
+
+    /// <summary>
     /// The Url the login page will be redirected to to pass the OAuth verifier key back to the client.
     /// </summary>
     public string VerifierCallbackUrl { get; init; }
@@ -26,10 +55,18 @@ public class PlainOAuthAuthenticationRequest : IAuthenticationRequest
     public GetVerifierCallback GetVerifierCallback { get; init; }
 
 
+    /// <param name="userAgent">The app's consumer secret from Discogs.</param>
+    /// <param name="consumerKey">The app's consumer key from Discogs.</param>
+    /// <param name="consumerSecret">The app's consumer secret from Discogs.</param>
     /// <param name="verifierCallbackUrl">The Url the login page will be redirected to to pass the OAuth verifier key back to the client.</param>
     /// <param name="getVerifierCallback">The method which will be called by the <see cref="PlainOAuthAuthenticationProvider"/> to let the client open the Discogs login page and obtain the verifier key.</param>
-    public PlainOAuthAuthenticationRequest(string verifierCallbackUrl, GetVerifierCallback getVerifierCallback)
+    public PlainOAuthAuthenticationRequest(string userAgent, string consumerKey, string consumerSecret, string verifierCallbackUrl, GetVerifierCallback getVerifierCallback)
     {
+        UserAgent = userAgent;
+        ConsumerKey = consumerKey;
+        ConsumerSecret = consumerSecret;
+        AccessToken = "";
+        AccessTokenSecret = "";
         VerifierCallbackUrl = verifierCallbackUrl;
         GetVerifierCallback = getVerifierCallback;
     }

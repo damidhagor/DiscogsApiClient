@@ -17,24 +17,20 @@ public class DiscogsApiClient : IDiscogsApiClient
 {
     private readonly HttpClient _httpClient;
     private readonly IAuthenticationProvider _authenticationProvider;
-    private readonly string _userAgent;
 
     /// <inheritdoc/>
     public bool IsAuthenticated => _authenticationProvider.IsAuthenticated;
 
+
     /// <summary>
-    /// Creates a new <see cref="DiscogsApiClient"/>.
+    /// Creates a new <see cref="DiscogsApiClient"/> with injectable options.
     /// </summary>
+    /// <param name="httpClient">The HttpClient to be used for the requests.</param>
     /// <param name="authenticationProvider">An implementation of the <see cref="IAuthenticationProvider"/> for the authentication method to be used.</param>
-    /// <param name="userAgent">The user agent string used by the client to identify itself to the Discogs api.</param>
-    public DiscogsApiClient(HttpClient httpClient, IAuthenticationProvider authenticationProvider, string userAgent)
+    public DiscogsApiClient(HttpClient httpClient, IAuthenticationProvider authenticationProvider)
     {
-        _userAgent = userAgent;
-
-        _authenticationProvider = authenticationProvider;
-
         _httpClient = httpClient;
-        _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(_userAgent);
+        _authenticationProvider = authenticationProvider;
     }
 
 

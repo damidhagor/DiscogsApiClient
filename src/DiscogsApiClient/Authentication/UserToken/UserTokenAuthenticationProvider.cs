@@ -10,19 +10,12 @@ public class UserTokenAuthenticationProvider : IAuthenticationProvider
     /// <summary>
     /// The user's personal access token used for authentication.
     /// </summary>
-    private string? _userToken;
+    private string _userToken = "";
 
     /// <summary>
     /// <inheritdoc/>
     /// </summary>
-    public bool IsAuthenticated { get; private set; }
-
-
-    public UserTokenAuthenticationProvider()
-    {
-        _userToken = null;
-        IsAuthenticated = false;
-    }
+    public bool IsAuthenticated => !String.IsNullOrWhiteSpace(_userToken);
 
 
     /// <summary>
@@ -40,7 +33,6 @@ public class UserTokenAuthenticationProvider : IAuthenticationProvider
             throw new ArgumentException($"The provided authentication request must be of type {typeof(UserTokenAuthenticationRequest).Name}", nameof(authenticationRequest));
 
         _userToken = userTokenAuthenticationRequest.UserToken;
-        IsAuthenticated = true;
 
         return Task.FromResult<IAuthenticationResponse>(new UserTokenAuthenticationResponse(true));
     }

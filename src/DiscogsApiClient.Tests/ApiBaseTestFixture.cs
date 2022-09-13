@@ -9,7 +9,6 @@ namespace DiscogsApiClient.Tests;
 [TestFixture]
 public abstract class ApiBaseTestFixture
 {
-    public static readonly string UserAgent = "MusicLibraryManager.Tests/1.0.0";
     protected DiscogsApiClient ApiClient;
     protected IConfiguration Configuration;
     private readonly HttpClient _httpClient;
@@ -17,23 +16,27 @@ public abstract class ApiBaseTestFixture
 
     public ApiBaseTestFixture()
     {
-        _httpClient = new HttpClient();
-        UserTokenAuthenticationProvider authenticationProvider = new UserTokenAuthenticationProvider();
-        ApiClient = new DiscogsApiClient(_httpClient, authenticationProvider, UserAgent);
-
         Configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", false)
-            .AddJsonFile($"appsettings.development.json", true)
+            .AddJsonFile($"appsettings.Development.json", true)
             .Build();
+
+        var userAgent = Configuration["DiscogsApiOptions:UserAgent"];
+
+        _httpClient = new HttpClient();
+        _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent);
+
+        var authenticationProvider = new UserTokenAuthenticationProvider();
+        ApiClient = new DiscogsApiClient(_httpClient, authenticationProvider);
     }
 
 
     [OneTimeSetUp]
     public virtual async Task Initialize()
     {
-        var userToken = Configuration["ApiSettings:UserToken"];
-        UserTokenAuthenticationRequest authenticationRequest = new UserTokenAuthenticationRequest(userToken);
-        var authenticationResponse = await ApiClient.AuthenticateAsync(authenticationRequest, default);
+        var userToken = Configuration["DiscogsApiOptions:UserToken"];
+        var authenticationRequest = new UserTokenAuthenticationRequest(userToken);
+        await ApiClient.AuthenticateAsync(authenticationRequest, default);
     }
 
     [OneTimeTearDown]
