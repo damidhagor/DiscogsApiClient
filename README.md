@@ -28,8 +28,6 @@ Doing it this way is even recommended by the Discogs documentation.
 
 ## Getting Started
 
-There is no Nuget package yet for this library so for now to use it you have to download the project and build and reference the library manually.
-
 The easiest way to get started is using a personal access token instead of the full OAuth flow:
 
 ```csharp
@@ -104,10 +102,25 @@ var response = await apiClient.SearchDatabaseAsync(queryParams, paginationParams
 ```
 
 
+## Changelog
+
+- ### 1.0.0
+  - Initial release.
+  - Support for User Token & OAuth 1.0a authentication flows.
+  - Implementation of Api functions for user information, collection & wantlist and database queries.
+
+- ### 2.0.0
+    - Refactored the library for Dependency Injection support:
+        - Added IServiceCollection extension methods to support easy dependency injection.
+        - Added IDiscogsApiClient interface for mocking or Dependency Injection.
+        - The DiscogsApiClient's HttpClient is now injectable via the constructor.
+        - If configured via the IServiceCollection the HttpClient will be injected via the IHttpClientFactory.
+        - Needed parameters for the IAuthenticationProviders are moved from their constructors into their IAuthenticationRequest implementations.
+    - Sealed all classes for performance.
+
 ## Roadmap
 
 - More granular authentication requirements for requests (not all requests need it)
-- Nuget Package
 - Rate limiting support
 - CI/CD
 
