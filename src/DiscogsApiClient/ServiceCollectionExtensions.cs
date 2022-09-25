@@ -27,7 +27,7 @@ public static class ServiceCollectionExtensions
     /// </summary>
     public static IServiceCollection AddDiscogsUserTokenAuthentication(this IServiceCollection services)
     {
-        services.AddTransient<IAuthenticationProvider, UserTokenAuthenticationProvider>();
+        services.AddSingleton<IAuthenticationProvider, UserTokenAuthenticationProvider>();
         return services;
     }
 
@@ -36,7 +36,7 @@ public static class ServiceCollectionExtensions
     /// </summary>
     public static IServiceCollection AddDiscogsPlainOAuthAuthentication(this IServiceCollection services)
     {
-        services.AddTransient<IAuthenticationProvider, PlainOAuthAuthenticationProvider>();
+        services.AddSingleton<IAuthenticationProvider, PlainOAuthAuthenticationProvider>();
         return services;
     }
 }
