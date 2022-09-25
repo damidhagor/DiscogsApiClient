@@ -28,17 +28,72 @@ Doing it this way is even recommended by the Discogs documentation.
 
 ## Getting Started
 
-The easiest way to get started is using a personal access token instead of the full OAuth flow:
+The easiest way to use the library now is using it with Dependency Injection
+with either a user token
+
+```csharp
+// At startup register the DiscogsApiClient and the authentication provider.
+services.AddDiscogsApiClient("YourAwesomeApp/1.0.0");
+services.AddDiscogsUserTokenAuthentication();
+
+// Inject the IDiscogsApiClient and authenticate with the user token.
+var authRequest = new UserTokenAuthenticationRequest("PersonalAccessTokenFromDiscogs");
+var authResponse = await discogsApiClient.AuthenticateAsync(authRequest, default);
+
+// Use the authenticated client.
+var response = await discogsApiClient.GetIdentityAsync(default);
+```
+
+or the OAuth flow:
+
+```csharp
+// At startup register the DiscogsApiClient and the authentication provider.
+services.AddDiscogsApiClient("YourAwesomeApp/1.0.0");
+services.AddDiscogsPlainOAuthAuthentication();
+
+// Inject the IDiscogsApiClient and authenticate with the OAuth flow.
+var authRequest = new PlainOAuthAuthenticationRequest("YourAwesomeApp/1.0.0",
+    "ConsumerKeyFromDiscogs", "ConsumerSecretFromDiscogs",
+    "http://localhost/verifier", GetVerifierKey)
+{
+    AccessToken = "StoredAccessTokenIfPreviouslyAuthenticated",
+    AccessTokenSecret = "StoredAccessTokenSecretIfPreviouslyAuthenticated"
+};
+
+var authResponse = await discogsApiClient.AuthenticateAsync(authRequest, default);
+
+// Use the authenticated client.
+var response = await discogsApiClient.GetIdentityAsync(default);
+
+// Demo method which handles the user login & returns the verifier token 
+public Task<string> GetVerifierKey(string authUrl, string callbackUrl, CancellationToken token)
+{
+    // Open browser with authUrl
+    // Detect redirect to callbackUrl
+    // Verifier Token will be appended to the url with  a '?': http://localhost/verifier?verifierkey
+    // Parse token from url and return it
+}
+```
+
+The client can still be constructed and used without Dependency Injection.
+Instantiation and handling of the Httpclient then needs to happen manually.
+
+Following is example code for using the DiscogsApiClient without using Dependency Injection.
+
+With user token:
 
 ```csharp
 var userAgent = "YourAwesomeApp/1.0.0";
 var userToken = "PersonalAccessTokenFromDiscogs";
 
-var authProvider = new UserTokenAuthorizationProvider();
-var apiClient = new DiscogsApiClient(authProvider, userAgent);
+var httpClient = new HttpClient();
+httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent);
 
-var authRequest = new UserTokenAuthorizationRequest(userToken);
-var authResponse = await apiClient.AuthorizeAsync(authRequest, CancellationToken.None);
+var authProvider = new UserTokenAuthenticationProvider();
+var apiClient = new DiscogsApiClient(httpClient, authProvider);
+
+var authRequest = new UserTokenAuthenticationRequest(userToken);
+var authResponse = await apiClient.AuthenticateAsync(authRequest, CancellationToken.None);
 
 if (authResponse.Success)
 {
@@ -51,23 +106,30 @@ else
 }
 ```
 
-For the full OAuth flow a callback function needs to be provided which handles the user login via a browser and passes back the retrieved **Verifier Key** to the DiscogsApiClient:
+With OAuth flow:
 
 ```csharp
-
 var userAgent = "YourAwesomeApp/1.0.0";
-var callbackUrl = "http://localhost/verifier"
+var callbackUrl = "http://localhost/verifier";
 var consumerKey = "ConsumerKeyFromDiscogs";
 var consumerSecret = "ConsumerSecretFromDiscogs";
 
 var accessToken = "StoredAccessTokenIfPreviouslyAuthorized";
 var accessTokenSecret = "StoredAccessTokenSecretIfPreviouslyAuthorized";
 
-var authProvider = new PlainOAuthAuthorizationProvider(userAgent, consumerKey, consumerSecret, accessToken, accessTokenSecret);
-var apiClient = new DiscogsApiClient(authProvider, userAgent);
+var httpClient = new HttpClient();
+httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent);
 
-var authRequest = new PlainOAuthAuthorizationRequest(callbackUrl, GetVerifierKey);
-var authResponse = await apiClient.AuthorizeAsync(authRequest, CancellationToken.None);
+var authProvider = new PlainOAuthAuthenticationProvider();
+var apiClient = new DiscogsApiClient.DiscogsApiClient(httpClient, authProvider);
+
+var authRequest = new PlainOAuthAuthenticationRequest(userAgent, consumerKey, consumerSecret, callbackUrl, GetVerifierKey)
+{
+    AccessToken = accessToken,
+    AccessTokenSecret = accessTokenSecret
+};
+
+var authResponse = await apiClient.AuthenticateAsync(authRequest, CancellationToken.None);
 
 if (authResponse.Success)
 {
@@ -83,7 +145,7 @@ else
     log.Error(authResponse.Error);
 }
 
-public Task<string> GetVerifierKey(authUrl, callbackUrl, CancellationToken token)
+public Task<string> GetVerifierKey(string authUrl, string callbackUrl, CancellationToken token)
 {
     // Open browser with authUrl
     // Detect redirect to callbackUrl
@@ -92,7 +154,7 @@ public Task<string> GetVerifierKey(authUrl, callbackUrl, CancellationToken token
 }
 ```
 
-After being successfully authenticated you can make e.g. a database query:
+After successfully setting the client up and being authenticated you can make e.g. a database query:
 
 ```csharp
 var queryParams = new SearchQueryParameters { Query = "hammerfall", Type = "artist" };
@@ -112,7 +174,7 @@ var response = await apiClient.SearchDatabaseAsync(queryParams, paginationParams
 - ### 2.0.0
     - Refactored the library for Dependency Injection support:
         - Added IServiceCollection extension methods to support easy dependency injection.
-        - Added IDiscogsApiClient interface for mocking or Dependency Injection.
+        - Added IDiscogsApiClient interface for mocking and Dependency Injection.
         - The DiscogsApiClient's HttpClient is now injectable via the constructor.
         - If configured via the IServiceCollection the HttpClient will be injected via the IHttpClientFactory.
         - Needed parameters for the IAuthenticationProviders are moved from their constructors into their IAuthenticationRequest implementations.
