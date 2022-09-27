@@ -34,8 +34,3 @@ public partial class App : Application
         await _host.StopAsync();
     }
 }
-
-
-
-
-

@@ -44,6 +44,10 @@ public partial class MainWindow : Window
                 var identityResponse = await _discogsApiClient.GetIdentityAsync(cancellationToken);
                 UserName = identityResponse.Username;
             }
+            else
+            {
+                UserName = "";
+            }
         }
         catch (Exception ex)
         {
