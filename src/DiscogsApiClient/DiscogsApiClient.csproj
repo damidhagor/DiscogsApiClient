@@ -14,16 +14,10 @@
     <PackageTags>discogs</PackageTags>
     <PackageLicenseExpression> MIT</PackageLicenseExpression>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <AssemblyVersion>2.0.0</AssemblyVersion>
-    <FileVersion>2.0.0</FileVersion>
+    <AssemblyVersion>2.1.0</AssemblyVersion>
+    <FileVersion>2.1.0</FileVersion>
     <Version>$(AssemblyVersion)</Version>
-    <PackageReleaseNotes>- Refactored the library for Dependency Injection support:
-    - Added IServiceCollection extension methods to support easy dependency injection.
-    - Added IDiscogsApiClient interface for mocking and Dependency Injection.
-    - The DiscogsApiClient's HttpClient is now injectable via the constructor.
-    - If configured via the IServiceCollection the HttpClient will be injected via the IHttpClientFactory.
-    - Needed parameters for the IAuthenticationProviders are moved from their constructors into their IAuthenticationRequest implementations.
-- Sealed all classes for performance.</PackageReleaseNotes>
+    <PackageReleaseNotes>Added missing pagination parameter</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
