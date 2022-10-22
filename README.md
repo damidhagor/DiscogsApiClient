@@ -180,6 +180,9 @@ var response = await apiClient.SearchDatabaseAsync(queryParams, paginationParams
         - Needed parameters for the IAuthenticationProviders are moved from their constructors into their IAuthenticationRequest implementations.
     - Sealed all classes for performance.
 
+- ### 2.1.0
+    - Added missing pagination parameter to *GetCollectionFolderReleasesByFolderIdAsync*
+
 ## Roadmap
 
 - More granular authentication requirements for requests (not all requests need it)
