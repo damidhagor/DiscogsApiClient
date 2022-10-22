@@ -75,8 +75,9 @@ public interface IDiscogsApiClient
     /// </summary>
     /// <param name="username">The name of the user.</param>
     /// <param name="folderId">The folder's id.</param>
+    /// <param name="paginationQueryParameters">Pagination parameters.</param>
     /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
-    Task<CollectionFolderReleasesResponse> GetCollectionFolderReleasesByFolderIdAsync(string username, int folderId, CancellationToken cancellationToken);
+    Task<CollectionFolderReleasesResponse> GetCollectionFolderReleasesByFolderIdAsync(string username, int folderId, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken);
 
     /// <summary>
     /// Adds a release to the collection folder of the user.

@@ -181,14 +181,16 @@ public sealed class DiscogsApiClient : IDiscogsApiClient
 
     #region Collection Items
     /// <inheritdoc/>
-    public async Task<CollectionFolderReleasesResponse> GetCollectionFolderReleasesByFolderIdAsync(string username, int folderId, CancellationToken cancellationToken)
+    public async Task<CollectionFolderReleasesResponse> GetCollectionFolderReleasesByFolderIdAsync(string username, int folderId, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken)
     {
         if (!IsAuthenticated)
             throw new UnauthorizedDiscogsException();
         if (String.IsNullOrWhiteSpace(username))
             throw new ArgumentException(nameof(username));
 
-        using var request = _authenticationProvider.CreateAuthenticatedRequest(HttpMethod.Get, String.Format(DiscogsApiUrls.CollectionFolderReleasesUrl, username, folderId));
+        string url = QueryParameterHelper.AppendPaginationQuery(DiscogsApiUrls.CollectionFolderReleasesUrl, paginationQueryParameters);
+
+        using var request = _authenticationProvider.CreateAuthenticatedRequest(HttpMethod.Get, url);
         using var response = await _httpClient.SendAsync(request, cancellationToken);
 
         await response.CheckAndHandleHttpErrorCodes(cancellationToken);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DiscogsApiClient.Exceptions;
+using DiscogsApiClient.QueryParameters;
 using NUnit.Framework;
 
 namespace DiscogsApiClient.Tests.Collection;
@@ -12,8 +13,9 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     {
         var username = "";
         var folderId = 0;
+        var paginationParams = new PaginationQueryParameters(1, 50);
 
-        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.GetCollectionFolderReleasesByFolderIdAsync(username, folderId, default), "username");
+        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.GetCollectionFolderReleasesByFolderIdAsync(username, folderId, paginationParams, default), "username");
     }
 
     [Test]
@@ -21,8 +23,9 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     {
         var username = "awrbaerhnqw54";
         var folderId = 0;
+        var paginationParams = new PaginationQueryParameters(1, 50);
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetCollectionFolderReleasesByFolderIdAsync(username, folderId, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetCollectionFolderReleasesByFolderIdAsync(username, folderId, paginationParams, default));
     }
 
     [Test]
@@ -30,8 +33,9 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     {
         var username = "damidhagor";
         var folderId = -1;
+        var paginationParams = new PaginationQueryParameters(1, 50);
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetCollectionFolderReleasesByFolderIdAsync(username, folderId, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetCollectionFolderReleasesByFolderIdAsync(username, folderId, paginationParams, default));
     }
 
     [Test]
@@ -39,8 +43,9 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     {
         var username = "damidhagor";
         var folderId = 42;
+        var paginationParams = new PaginationQueryParameters(1, 50);
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetCollectionFolderReleasesByFolderIdAsync(username, folderId, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetCollectionFolderReleasesByFolderIdAsync(username, folderId, paginationParams, default));
     }
 
 
