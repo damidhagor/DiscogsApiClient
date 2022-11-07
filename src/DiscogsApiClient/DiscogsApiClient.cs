@@ -188,7 +188,7 @@ public sealed class DiscogsApiClient : IDiscogsApiClient
         if (String.IsNullOrWhiteSpace(username))
             throw new ArgumentException(nameof(username));
 
-        string url = QueryParameterHelper.AppendPaginationQuery(DiscogsApiUrls.CollectionFolderReleasesUrl, paginationQueryParameters);
+        string url = QueryParameterHelper.AppendPaginationQuery(String.Format(DiscogsApiUrls.CollectionFolderReleasesUrl, username, folderId), paginationQueryParameters);
 
         using var request = _authenticationProvider.CreateAuthenticatedRequest(HttpMethod.Get, url);
         using var response = await _httpClient.SendAsync(request, cancellationToken);
