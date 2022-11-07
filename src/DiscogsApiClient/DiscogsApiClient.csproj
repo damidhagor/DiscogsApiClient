@@ -14,10 +14,10 @@
     <PackageTags>discogs</PackageTags>
     <PackageLicenseExpression> MIT</PackageLicenseExpression>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <AssemblyVersion>2.1.0</AssemblyVersion>
-    <FileVersion>2.1.0</FileVersion>
+    <AssemblyVersion>2.1.1</AssemblyVersion>
+    <FileVersion>2.1.1</FileVersion>
     <Version>$(AssemblyVersion)</Version>
-    <PackageReleaseNotes>Added missing pagination parameter</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixed URL not being formatted correctly</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

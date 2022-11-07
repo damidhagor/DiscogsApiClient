@@ -183,7 +183,10 @@ var response = await apiClient.SearchDatabaseAsync(queryParams, paginationParams
     - Sealed all classes for performance.
 
 - ### 2.1.0
-    - Added missing pagination parameter to *GetCollectionFolderReleasesByFolderIdAsync*
+    - Added missing pagination parameter to *GetCollectionFolderReleasesByFolderIdAsync* method.
+
+- ### 2.1.1
+    - Fixed URL not being formatted correctly for *GetCollectionFolderReleasesByFolderIdAsync* method.
 
 ## Roadmap
 

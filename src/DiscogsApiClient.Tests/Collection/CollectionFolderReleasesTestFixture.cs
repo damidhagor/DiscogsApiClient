@@ -216,6 +216,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var username = "damidhagor";
         var folderName = "CreateDeleteReleaseFromCollectionFolder_Success";
         var releaseId = 5134861;
+        var paginationParams = new PaginationQueryParameters(1, 50);
 
 
         // Create test folder
@@ -223,6 +224,9 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
 
         // Add release to folder
         var collectionFolderRelease = await ApiClient.AddReleaseToCollectionFolderAsync(username, collectionFolder.Id, releaseId, default);
+
+        // Get release from folder
+        var collectionFolderReleaseResponse = await ApiClient.GetCollectionFolderReleasesByFolderIdAsync(username, collectionFolder.Id, paginationParams, default);
 
         // Delete release from folder
         var wasReleaseDeleted = await ApiClient.DeleteReleaseFromCollectionFolderAsync(username, collectionFolder.Id, collectionFolderRelease.Id, collectionFolderRelease.InstanceId, default);
@@ -233,6 +237,9 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
 
         Assert.IsNotNull(collectionFolderRelease);
         Assert.AreEqual(releaseId, collectionFolderRelease.Id);
+        Assert.IsNotNull(collectionFolderReleaseResponse);
+        Assert.AreEqual(1, collectionFolderReleaseResponse.Pagination.Items);
+        Assert.AreEqual(releaseId, collectionFolderReleaseResponse.Releases[0].Id);
         Assert.IsTrue(wasReleaseDeleted);
         Assert.IsTrue(wasFolderDeleted);
     }
