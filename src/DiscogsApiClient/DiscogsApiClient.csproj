@@ -17,7 +17,7 @@
     <AssemblyVersion>2.1.1</AssemblyVersion>
     <FileVersion>2.1.1</FileVersion>
     <Version>$(AssemblyVersion)</Version>
-    <PackageReleaseNotes>Added missing pagination parameter</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixed URL not being formatted correctly</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
