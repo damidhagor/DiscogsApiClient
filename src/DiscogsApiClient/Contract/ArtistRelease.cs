@@ -14,15 +14,7 @@ public sealed record ArtistRelease(
     string ResourceUrl,
     int Year,
     string Thumb,
-    ArtistReleaseStats Stats);
-
-public sealed record ArtistReleaseStats(
-    ArtistReleaseStatValues Community,
-    ArtistReleaseStatValues User);
-
-public sealed record ArtistReleaseStatValues(
-    int InWantlist,
-    int InCollection);
+    ReleaseStats Stats);
 
 
 /*

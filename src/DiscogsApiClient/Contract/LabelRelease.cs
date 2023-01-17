@@ -14,15 +14,7 @@ public sealed record LabelRelease(
     int Id,
     int Year,
     string Artist,
-    LabelReleaseStats Stats);
-
-public sealed record LabelReleaseStats(
-    LabelReleaseStatValues Community,
-    LabelReleaseStatValues User);
-
-public sealed record LabelReleaseStatValues(
-    int InWantlist,
-    int InCollection);
+    ReleaseStats Stats);
 
 
 /*

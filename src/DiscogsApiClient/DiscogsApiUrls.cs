@@ -26,6 +26,7 @@ internal static class DiscogsApiUrls
     public static readonly string ArtistsUrl = $"{BaseUrl}/artists/{{0}}";
     public static readonly string ArtistReleasesUrl = $"{BaseUrl}/artists/{{0}}/releases";
     public static readonly string MasterReleasesUrl = $"{BaseUrl}/masters/{{0}}";
+    public static readonly string MasterReleaseVersionsUrl = $"{BaseUrl}/masters/{{0}}/versions";
     public static readonly string ReleasesUrl = $"{BaseUrl}/releases/{{0}}";
     public static readonly string ReleaseCommunityRatingsUrl = $"{BaseUrl}/releases/{{0}}/rating";
     public static readonly string LabelsUrl = $"{BaseUrl}/labels/{{0}}";

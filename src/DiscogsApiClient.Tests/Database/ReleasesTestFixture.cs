@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DiscogsApiClient.Exceptions;
+using DiscogsApiClient.QueryParameters;
 using NUnit.Framework;
 
 namespace DiscogsApiClient.Tests.Database;
@@ -46,6 +47,51 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
         var masterReleaseId = -1;
 
         Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetReleaseAsync(masterReleaseId, default));
+    }
+
+    [Test]
+    public async Task GetMasterReleaseVersions_Success()
+    {
+        var masterReleaseId = 156551;
+        var paginationParams = new PaginationQueryParameters(1, 50);
+
+        var response = await ApiClient.GetMasterReleaseVersionsAsync(masterReleaseId, paginationParams, default);
+
+        Assert.IsNotNull(response.Pagination);
+        Assert.AreEqual(1, response.Pagination.Page);
+        Assert.AreEqual(50, response.Pagination.PerPage);
+        Assert.Less(0, response.Pagination.Items);
+        Assert.Less(0, response.Pagination.Pages);
+        Assert.IsNotNull(response.Pagination.Urls);
+        Assert.IsFalse(String.IsNullOrWhiteSpace(response.Pagination.Urls.Next));
+        Assert.IsFalse(String.IsNullOrWhiteSpace(response.Pagination.Urls.Last));
+
+        Assert.IsNotNull(response.Versions);
+
+        //Assert.IsNotNull(masterRelease);
+        //Assert.AreEqual(masterReleaseId, masterRelease.Id);
+        //Assert.AreEqual(1, masterRelease.Artists.Count);
+        //Assert.AreEqual("HammerFall", masterRelease.Artists[0].Name);
+        //Assert.Less(0, masterRelease.Genres.Count);
+        //Assert.Less(0, masterRelease.Images.Count);
+        //Assert.Less(0, masterRelease.LowestPrice);
+        //Assert.Less(0, masterRelease.MainRelease);
+        //Assert.IsFalse(String.IsNullOrWhiteSpace(masterRelease.MainReleaseUrl));
+        //Assert.Less(0, masterRelease.MostRecentRelease);
+        //Assert.IsFalse(String.IsNullOrWhiteSpace(masterRelease.MostRecentReleaseUrl));
+        //Assert.Less(0, masterRelease.NumForSale);
+        //Assert.IsFalse(String.IsNullOrWhiteSpace(masterRelease.ResourceUrl));
+        //Assert.AreEqual("Glory To The Brave", masterRelease.Title);
+        //Assert.AreEqual(9, masterRelease.Tracklist.Count);
+        //Assert.AreEqual("1", masterRelease.Tracklist[0].Position);
+        //Assert.AreEqual("The Dragon Lies Bleeding", masterRelease.Tracklist[0].Title);
+        //Assert.AreEqual("4:23", masterRelease.Tracklist[0].Duration);
+        //Assert.AreEqual("track", masterRelease.Tracklist[0].Type_);
+        //Assert.IsFalse(String.IsNullOrWhiteSpace(masterRelease.Uri));
+        //Assert.IsFalse(String.IsNullOrWhiteSpace(masterRelease.VersionsUrl));
+        //Assert.Less(0, masterRelease.Videos.Count);
+        //Assert.AreEqual(1997, masterRelease.Year);
+        //Assert.Less(0, masterRelease.Styles.Count);
     }
 
 

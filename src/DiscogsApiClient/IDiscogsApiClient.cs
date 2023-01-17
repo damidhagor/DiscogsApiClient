@@ -157,6 +157,13 @@ public interface IDiscogsApiClient
     Task<MasterRelease> GetMasterReleaseAsync(int masterReleaseId, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Gets the release versions of a master release from the Discog database.
+    /// </summary>
+    /// <param name="masterReleaseId">The master release's id.</param>
+    /// <param name="paginationQueryParameters">Pagination parameters.</param>
+    Task<MasterReleaseVersionsResponse> GetMasterReleaseVersionsAsync(int masterReleaseId, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Gets a release from the Discog database.
     /// </summary>
     /// <param name="releaseId">The release's id.</param>

@@ -336,6 +336,23 @@ public sealed class DiscogsApiClient : IDiscogsApiClient
     }
 
     /// <inheritdoc/>
+    public async Task<MasterReleaseVersionsResponse> GetMasterReleaseVersionsAsync(int masterReleaseId, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken)
+    {
+        string url = QueryParameterHelper.AppendPaginationQuery(String.Format(DiscogsApiUrls.MasterReleaseVersionsUrl, masterReleaseId), paginationQueryParameters);
+
+        using var request = _authenticationProvider.CreateAuthenticatedRequest(HttpMethod.Get, url);
+        using var response = await _httpClient.SendAsync(request, cancellationToken);
+
+        await response.CheckAndHandleHttpErrorCodes(cancellationToken);
+
+        var resp = await response.Content.ReadAsStringAsync();
+
+        var masterReleasesResponse = await response.Content.DeserializeAsJsonAsync<MasterReleaseVersionsResponse>(cancellationToken);
+
+        return masterReleasesResponse;
+    }
+
+    /// <inheritdoc/>
     public async Task<Release> GetReleaseAsync(int releaseId, CancellationToken cancellationToken)
     {
         using var request = _authenticationProvider.CreateAuthenticatedRequest(HttpMethod.Get, String.Format(DiscogsApiUrls.ReleasesUrl, releaseId));
