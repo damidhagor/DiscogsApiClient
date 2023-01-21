@@ -51,24 +51,10 @@ public sealed record MasterReleaseVersionFilterQueryParameters(
             parameters.Add($"country={Country}");
 
         if (SortProperty is not null)
-            parameters.Add($"sort={SortProperty switch
-            {
-                SortableProperty.Released => "released",
-                SortableProperty.Title => "title",
-                SortableProperty.Format => "format",
-                SortableProperty.Label => "label",
-                SortableProperty.Catno => "catno",
-                SortableProperty.Country => "country",
-                _ => throw new NotImplementedException()
-            }}");
+            parameters.Add($"sort={SortProperty.Value.GetSortablePropertyString()}");
 
         if (SortOrder is not null)
-            parameters.Add($"sort_order={SortOrder switch
-            {
-                QueryParameters.SortOrder.Ascending => "asc",
-                QueryParameters.SortOrder.Descending => "desc",
-                _ => throw new InvalidOperationException()
-            }}");
+            parameters.Add($"sort_order={SortOrder.Value.GetSortOrderString()}");
 
         return string.Join("&", parameters);
     }

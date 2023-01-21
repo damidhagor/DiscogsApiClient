@@ -33,26 +33,10 @@ public sealed record CollectionFolderReleaseSortQueryParameters(
         var parameters = new List<string>();
 
         if (SortProperty is not null)
-            parameters.Add($"sort={SortProperty switch
-            {
-                SortableProperty.Label => "label",
-                SortableProperty.Artist => "artist",
-                SortableProperty.Title => "title",
-                SortableProperty.Catno => "catno",
-                SortableProperty.Format => "format",
-                SortableProperty.Rating => "rating",
-                SortableProperty.Added => "added",
-                SortableProperty.Year => "year",
-                _ => throw new InvalidOperationException()
-            }}");
+            parameters.Add($"sort={SortProperty.Value.GetSortablePropertyString()}");
 
         if (SortOrder is not null)
-            parameters.Add($"sort_order={SortOrder switch
-            {
-                QueryParameters.SortOrder.Ascending => "asc",
-                QueryParameters.SortOrder.Descending => "desc",
-                _ => throw new InvalidOperationException()
-            }}");
+            parameters.Add($"sort_order={SortOrder.Value.GetSortOrderString()}");
 
         return string.Join("&", parameters);
     }

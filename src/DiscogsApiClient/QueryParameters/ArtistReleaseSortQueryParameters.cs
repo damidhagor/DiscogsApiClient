@@ -28,21 +28,10 @@ public sealed record ArtistReleaseSortQueryParameters(
         var parameters = new List<string>();
 
         if (SortProperty is not null)
-            parameters.Add($"sort={SortProperty switch
-            {
-                SortableProperty.Year => "year",
-                SortableProperty.Title => "title",
-                SortableProperty.Format => "format",
-                _ => throw new InvalidOperationException()
-            }}");
+            parameters.Add($"sort={SortProperty.Value.GetSortablePropertyString()}");
 
         if (SortOrder is not null)
-            parameters.Add($"sort_order={SortOrder switch
-            {
-                QueryParameters.SortOrder.Ascending => "asc",
-                QueryParameters.SortOrder.Descending => "desc",
-                _ => throw new InvalidOperationException()
-            }}");
+            parameters.Add($"sort_order={SortOrder.Value.GetSortOrderString()}");
 
         return string.Join("&", parameters);
     }
