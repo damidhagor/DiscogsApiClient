@@ -1,4 +1,8 @@
-﻿namespace DiscogsApiClient.QueryParameters;
+﻿using ArtistQP = DiscogsApiClient.QueryParameters.ArtistReleaseSortQueryParameters;
+using CollectionQP = DiscogsApiClient.QueryParameters.CollectionFolderReleaseSortQueryParameters;
+using MasterQP = DiscogsApiClient.QueryParameters.MasterReleaseVersionFilterQueryParameters;
+
+namespace DiscogsApiClient.QueryParameters;
 
 /// <summary>
 /// Contains helper methods for appending query parameters in any combination to a request Url.
@@ -22,4 +26,67 @@ internal static class QueryParameterHelper
 
         return string.IsNullOrWhiteSpace(query) ? url : $"{url}?{query}";
     }
+
+    /// <summary>
+    /// Converts a <see cref="ArtistReleaseSortQueryParameters.SortableProperty"/> into its Discogs API representation.
+    /// </summary>
+    /// <returns>Discogs API string representation</returns>
+    /// <exception cref="InvalidOperationException">If value is not in the enum's range</exception>
+    public static string GetSortablePropertyString(this ArtistQP.SortableProperty sortableProperty)
+        => sortableProperty switch
+        {
+            ArtistQP.SortableProperty.Year => "year",
+            ArtistQP.SortableProperty.Title => "title",
+            ArtistQP.SortableProperty.Format => "format",
+            _ => throw new InvalidOperationException()
+        };
+
+    /// <summary>
+    /// Converts a <see cref="MasterReleaseVersionFilterQueryParameters.SortableProperty"/> into its Discogs API representation.
+    /// </summary>
+    /// <returns>Discogs API string representation</returns>
+    /// <exception cref="InvalidOperationException">If value is not in the enum's range</exception>
+    public static string GetSortablePropertyString(this MasterQP.SortableProperty sortableProperty)
+        => sortableProperty switch
+        {
+            MasterQP.SortableProperty.Released => "released",
+            MasterQP.SortableProperty.Title => "title",
+            MasterQP.SortableProperty.Format => "format",
+            MasterQP.SortableProperty.Label => "label",
+            MasterQP.SortableProperty.Catno => "catno",
+            MasterQP.SortableProperty.Country => "country",
+            _ => throw new NotImplementedException()
+        };
+
+    /// <summary>
+    /// Converts a <see cref="CollectionFolderReleaseSortQueryParameters.SortableProperty"/> into its Discogs API representation.
+    /// </summary>
+    /// <returns>Discogs API string representation</returns>
+    /// <exception cref="InvalidOperationException">If value is not in the enum's range</exception>
+    public static string GetSortablePropertyString(this CollectionQP.SortableProperty sortableProperty)
+        => sortableProperty switch
+        {
+            CollectionQP.SortableProperty.Label => "label",
+            CollectionQP.SortableProperty.Artist => "artist",
+            CollectionQP.SortableProperty.Title => "title",
+            CollectionQP.SortableProperty.Catno => "catno",
+            CollectionQP.SortableProperty.Format => "format",
+            CollectionQP.SortableProperty.Rating => "rating",
+            CollectionQP.SortableProperty.Added => "added",
+            CollectionQP.SortableProperty.Year => "year",
+            _ => throw new InvalidOperationException()
+        };
+
+    /// <summary>
+    /// Converts a <see cref="SortOrder"/> into its Discogs API representation.
+    /// </summary>
+    /// <returns>Discogs API string representation</returns>
+    /// <exception cref="InvalidOperationException">If value is not in the enum's range</exception>
+    public static string GetSortOrderString(this SortOrder sortOrder)
+        => sortOrder switch
+        {
+            QueryParameters.SortOrder.Ascending => "asc",
+            QueryParameters.SortOrder.Descending => "desc",
+            _ => throw new InvalidOperationException()
+        };
 }
