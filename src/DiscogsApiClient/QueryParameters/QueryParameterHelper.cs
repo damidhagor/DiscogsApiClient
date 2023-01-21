@@ -5,6 +5,13 @@
 /// </summary>
 internal static class QueryParameterHelper
 {
+    /// <summary>
+    /// Appends one or more <see cref="IQueryParameters"/> to the given url string.
+    /// </summary>
+    /// <param name="url">The url to append to.</param>
+    /// <param name="queryParameters">The query parameters to append.</param>
+    /// <returns>The url with appended query parameters.</returns>
+    /// <exception cref="ArgumentNullException">If the url is null or whitespace.</exception>
     public static string AppendQueryParameters(this string url, params IQueryParameters[] queryParameters)
     {
         if (string.IsNullOrWhiteSpace(url))

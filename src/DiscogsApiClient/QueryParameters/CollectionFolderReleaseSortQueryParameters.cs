@@ -13,7 +13,7 @@ public sealed record CollectionFolderReleaseSortQueryParameters(
     : IQueryParameters
 {
     /// <summary>
-    /// Release's properties which can be used to sort the results with.
+    /// Release properties which can be used to sort the results with.
     /// </summary>
     public enum SortableProperty
     {

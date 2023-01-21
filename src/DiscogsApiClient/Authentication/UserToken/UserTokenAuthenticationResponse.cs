@@ -6,14 +6,10 @@
 /// </summary>
 public sealed class UserTokenAuthenticationResponse : IAuthenticationResponse
 {
-    /// <summary>
     /// <inheritdoc/>
-    /// </summary>
     public bool Success { get; init; }
 
-    /// <summary>
     /// <inheritdoc/>
-    /// </summary>
     public string? Error { get; init; }
 
 

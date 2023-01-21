@@ -8,14 +8,10 @@
 /// </summary>
 public sealed class PlainOAuthAuthenticationResponse : IAuthenticationResponse
 {
-    /// <summary>
     /// <inheritdoc/>
-    /// </summary>
     public bool Success { get; init; }
 
-    /// <summary>
     /// <inheritdoc/>
-    /// </summary>
     public string? Error { get; init; }
 
     /// <summary>

@@ -17,9 +17,7 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
     private string _accessToken = "";
     private string _accessTokenSecret = "";
 
-    /// <summary>
     /// <inheritdoc/>
-    /// </summary>
     public bool IsAuthenticated => !string.IsNullOrWhiteSpace(_accessToken) && !string.IsNullOrWhiteSpace(_accessTokenSecret);
 
 
