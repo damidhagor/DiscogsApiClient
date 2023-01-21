@@ -14,56 +14,49 @@
 /// <param name="Format">Search by release format.</param>
 /// <param name="Barcode">Search by barcode.</param>
 public sealed record SearchQueryParameters(
-    string? Query,
-    string? Type,
-    string? Title,
-    string? ReleaseTitle,
-    string? Artist,
-    string? Country,
-    string? Year,
-    string? Format,
-    string? Barcode)
+    string? Query = default,
+    string? Type = default,
+    string? Title = default,
+    string? ReleaseTitle = default,
+    string? Artist = default,
+    string? Country = default,
+    string? Year = default,
+    string? Format = default,
+    string? Barcode = default)
+    : IQueryParameters
 {
-    public SearchQueryParameters()
-        : this(null, null, null, null, null, null, null, null, null)
-    { }
-
-    /// <summary>
-    /// Creates the Url query representation of the search parameters.
-    /// The starting '?' query indicator is not included.
-    /// </summary>
-    /// <returns>Url query representation of the search parameters without '?'.</returns>
+    /// <inheritdoc/>
     public string CreateQueryParameterString()
     {
         var parameters = new List<string>();
 
-        if (!String.IsNullOrWhiteSpace(Query))
+        if (!string.IsNullOrWhiteSpace(Query))
             parameters.Add($"q={Query}");
 
-        if (!String.IsNullOrWhiteSpace(Type))
+        if (!string.IsNullOrWhiteSpace(Type))
             parameters.Add($"type={Type}");
 
-        if (!String.IsNullOrWhiteSpace(Title))
+        if (!string.IsNullOrWhiteSpace(Title))
             parameters.Add($"title={Title}");
 
-        if (!String.IsNullOrWhiteSpace(ReleaseTitle))
+        if (!string.IsNullOrWhiteSpace(ReleaseTitle))
             parameters.Add($"release_title={ReleaseTitle}");
 
-        if (!String.IsNullOrWhiteSpace(Artist))
+        if (!string.IsNullOrWhiteSpace(Artist))
             parameters.Add($"artist={Artist}");
 
-        if (!String.IsNullOrWhiteSpace(Country))
+        if (!string.IsNullOrWhiteSpace(Country))
             parameters.Add($"country={Country}");
 
-        if (!String.IsNullOrWhiteSpace(Year))
+        if (!string.IsNullOrWhiteSpace(Year))
             parameters.Add($"year={Year}");
 
-        if (!String.IsNullOrWhiteSpace(Format))
+        if (!string.IsNullOrWhiteSpace(Format))
             parameters.Add($"format={Format}");
 
-        if (!String.IsNullOrWhiteSpace(Barcode))
+        if (!string.IsNullOrWhiteSpace(Barcode))
             parameters.Add($"barcode={Barcode}");
 
-        return String.Join('&', parameters);
+        return string.Join('&', parameters);
     }
 }

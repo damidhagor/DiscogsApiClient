@@ -20,7 +20,7 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
     /// <summary>
     /// <inheritdoc/>
     /// </summary>
-    public bool IsAuthenticated => !String.IsNullOrWhiteSpace(_accessToken) && !String.IsNullOrWhiteSpace(_accessTokenSecret);
+    public bool IsAuthenticated => !string.IsNullOrWhiteSpace(_accessToken) && !string.IsNullOrWhiteSpace(_accessTokenSecret);
 
 
     /// <summary>
@@ -44,7 +44,7 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
         _accessToken = authAuthenticationRequest.AccessToken;
         _accessTokenSecret = authAuthenticationRequest.AccessTokenSecret;
 
-        if (String.IsNullOrWhiteSpace(_accessToken) || String.IsNullOrWhiteSpace(_accessTokenSecret))
+        if (string.IsNullOrWhiteSpace(_accessToken) || string.IsNullOrWhiteSpace(_accessTokenSecret))
         {
             using var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(_userAgent);
@@ -52,21 +52,21 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
             _accessToken = "";
             _accessTokenSecret = "";
 
-            if (String.IsNullOrWhiteSpace(_consumerKey) && String.IsNullOrWhiteSpace(_consumerSecret))
+            if (string.IsNullOrWhiteSpace(_consumerKey) && string.IsNullOrWhiteSpace(_consumerSecret))
                 throw new InvalidOperationException("No consumer token or secret provided.");
 
             var (requestToken, requestTokenSecret) = await GetRequestToken(httpClient, authAuthenticationRequest.VerifierCallbackUrl, cancellationToken);
-            if (String.IsNullOrWhiteSpace(requestToken) || String.IsNullOrWhiteSpace(requestTokenSecret))
+            if (string.IsNullOrWhiteSpace(requestToken) || string.IsNullOrWhiteSpace(requestTokenSecret))
                 return new PlainOAuthAuthenticationResponse("Getting request token failed.");
 
 
             var verifier = await GetVerifier(requestToken, authAuthenticationRequest.VerifierCallbackUrl, authAuthenticationRequest.GetVerifierCallback, cancellationToken);
-            if (String.IsNullOrWhiteSpace(verifier))
+            if (string.IsNullOrWhiteSpace(verifier))
                 return new PlainOAuthAuthenticationResponse("Failed getting verifier token.");
 
 
             var (accessToken, accessTokenSecret) = await GetAccessToken(httpClient, requestToken, requestTokenSecret, verifier, cancellationToken);
-            if (String.IsNullOrWhiteSpace(accessToken) || String.IsNullOrWhiteSpace(accessTokenSecret))
+            if (string.IsNullOrWhiteSpace(accessToken) || string.IsNullOrWhiteSpace(accessTokenSecret))
                 return new PlainOAuthAuthenticationResponse("Failed getting access token.");
 
             _accessToken = accessToken;
@@ -134,7 +134,7 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
 
         try
         {
-            var url = String.Format(DiscogsApiUrls.VerifierTokenUrl, requestToken);
+            var url = string.Format(DiscogsApiUrls.VerifierTokenUrl, requestToken);
             var verifierResult = await getVerifier(url, callback, cancellationToken);
 
             if (verifierResult != null)

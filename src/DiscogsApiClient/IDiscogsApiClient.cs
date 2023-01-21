@@ -35,7 +35,7 @@ public interface IDiscogsApiClient
     /// </summary>
     /// <param name="username">The name of the user.</param>
     /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
-    Task<List<CollectionFolder>> GetCollectionFoldersAsync(string username, CancellationToken cancellationToken);
+    Task<CollectionFoldersResponse> GetCollectionFoldersAsync(string username, CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets a specific collection folder of the user.
@@ -77,7 +77,7 @@ public interface IDiscogsApiClient
     /// <param name="folderId">The folder's id.</param>
     /// <param name="paginationQueryParameters">Pagination parameters.</param>
     /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
-    Task<CollectionFolderReleasesResponse> GetCollectionFolderReleasesByFolderIdAsync(string username, int folderId, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken);
+    Task<CollectionFolderReleasesResponse> GetCollectionFolderReleasesAsync(string username, int folderId, PaginationQueryParameters paginationQueryParameters, CollectionFolderReleaseSortQueryParameters collectionFolderReleaseSortQueryParameters, CancellationToken cancellationToken);
 
     /// <summary>
     /// Adds a release to the collection folder of the user.
@@ -98,6 +98,13 @@ public interface IDiscogsApiClient
     /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
     Task<bool> DeleteReleaseFromCollectionFolderAsync(string username, int folderId, int releaseId, int instanceId, CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Gets the estimated value of the user's collection.
+    /// </summary>
+    /// <param name="username">The name of the user.</param>
+    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    Task<CollectionValue> GetCollectionValueAsync(string username, CancellationToken cancellationToken);
+
 
     /// <summary>
     /// Gets the releases on the wantlist of the user.
@@ -113,7 +120,7 @@ public interface IDiscogsApiClient
     /// <param name="username">The name of the user.</param>
     /// <param name="releaseId">The release's id.</param>
     /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
-    Task<WantlistRelease> AddWantlistReleaseAsync(string username, int releaseId, CancellationToken cancellationToken);
+    Task<WantlistRelease> AddReleaseToWantlistAsync(string username, int releaseId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Removes a release from the wantlist of the user.
@@ -121,7 +128,7 @@ public interface IDiscogsApiClient
     /// <param name="username">The name of the user.</param>
     /// <param name="releaseId">The release's id.</param>
     /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
-    Task<bool> DeleteWantlistReleaseAsync(string username, int releaseId, CancellationToken cancellationToken);
+    Task<bool> DeleteReleaseFromWantlistAsync(string username, int releaseId, CancellationToken cancellationToken);
 
 
     /// <summary>
@@ -135,7 +142,7 @@ public interface IDiscogsApiClient
     /// </summary>
     /// <param name="artistId">The artist's id.</param>
     /// <param name="paginationQueryParameters">Pagination parameters.</param>
-    Task<ArtistReleasesResponse> GetArtistReleasesAsync(int artistId, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken);
+    Task<ArtistReleasesResponse> GetArtistReleasesAsync(int artistId, PaginationQueryParameters paginationQueryParameters, ArtistReleaseSortQueryParameters artistReleaseSortQueryParameters, CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets a label from the Discog database.
@@ -161,7 +168,7 @@ public interface IDiscogsApiClient
     /// </summary>
     /// <param name="masterReleaseId">The master release's id.</param>
     /// <param name="paginationQueryParameters">Pagination parameters.</param>
-    Task<MasterReleaseVersionsResponse> GetMasterReleaseVersionsAsync(int masterReleaseId, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken);
+    Task<MasterReleaseVersionsResponse> GetMasterReleaseVersionsAsync(int masterReleaseId, PaginationQueryParameters paginationQueryParameters, MasterReleaseVersionFilterQueryParameters masterReleaseVersionQueryParameters, CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets a release from the Discog database.

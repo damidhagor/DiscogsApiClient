@@ -15,7 +15,7 @@ public sealed class UserTokenAuthenticationProvider : IAuthenticationProvider
     /// <summary>
     /// <inheritdoc/>
     /// </summary>
-    public bool IsAuthenticated => !String.IsNullOrWhiteSpace(_userToken);
+    public bool IsAuthenticated => !string.IsNullOrWhiteSpace(_userToken);
 
 
     /// <summary>

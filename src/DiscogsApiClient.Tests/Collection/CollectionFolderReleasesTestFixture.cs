@@ -13,9 +13,10 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     {
         var username = "";
         var folderId = 0;
-        var paginationParams = new PaginationQueryParameters(1, 50);
+        var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
+        var sortParameters = new CollectionFolderReleaseSortQueryParameters();
 
-        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.GetCollectionFolderReleasesByFolderIdAsync(username, folderId, paginationParams, default), "username");
+        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.GetCollectionFolderReleasesAsync(username, folderId, paginationParams, sortParameters, default), "username");
     }
 
     [Test]
@@ -23,9 +24,10 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     {
         var username = "awrbaerhnqw54";
         var folderId = 0;
-        var paginationParams = new PaginationQueryParameters(1, 50);
+        var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
+        var sortParameters = new CollectionFolderReleaseSortQueryParameters();
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetCollectionFolderReleasesByFolderIdAsync(username, folderId, paginationParams, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetCollectionFolderReleasesAsync(username, folderId, paginationParams, sortParameters, default));
     }
 
     [Test]
@@ -33,9 +35,10 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     {
         var username = "damidhagor";
         var folderId = -1;
-        var paginationParams = new PaginationQueryParameters(1, 50);
+        var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
+        var sortParameters = new CollectionFolderReleaseSortQueryParameters();
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetCollectionFolderReleasesByFolderIdAsync(username, folderId, paginationParams, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetCollectionFolderReleasesAsync(username, folderId, paginationParams, sortParameters, default));
     }
 
     [Test]
@@ -43,9 +46,10 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     {
         var username = "damidhagor";
         var folderId = 42;
-        var paginationParams = new PaginationQueryParameters(1, 50);
+        var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
+        var sortParameters = new CollectionFolderReleaseSortQueryParameters();
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetCollectionFolderReleasesByFolderIdAsync(username, folderId, paginationParams, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetCollectionFolderReleasesAsync(username, folderId, paginationParams, sortParameters, default));
     }
 
 
@@ -115,7 +119,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     {
         var username = "damidhagor";
         var folderId = 1;
-        var releaseId = Int32.MaxValue;
+        var releaseId = int.MaxValue;
 
         Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.AddReleaseToCollectionFolderAsync(username, folderId, releaseId, default));
     }
@@ -181,7 +185,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     {
         var username = "damidhagor";
         var folderId = 1;
-        var releaseId = Int32.MaxValue;
+        var releaseId = int.MaxValue;
         var instanceId = -1;
 
         Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromCollectionFolderAsync(username, folderId, releaseId, instanceId, default));
@@ -204,7 +208,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var username = "damidhagor";
         var folderId = 1;
         var releaseId = 5134861;
-        var instanceId = Int32.MaxValue;
+        var instanceId = int.MaxValue;
 
         Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromCollectionFolderAsync(username, folderId, releaseId, instanceId, default));
     }
@@ -216,8 +220,8 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var username = "damidhagor";
         var folderName = "CreateDeleteReleaseFromCollectionFolder_Success";
         var releaseId = 5134861;
-        var paginationParams = new PaginationQueryParameters(1, 50);
-
+        var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
+        var sortParameters = new CollectionFolderReleaseSortQueryParameters();
 
         // Create test folder
         var collectionFolder = await ApiClient.CreateCollectionFolderAsync(username, folderName, default);
@@ -226,7 +230,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var collectionFolderRelease = await ApiClient.AddReleaseToCollectionFolderAsync(username, collectionFolder.Id, releaseId, default);
 
         // Get release from folder
-        var collectionFolderReleaseResponse = await ApiClient.GetCollectionFolderReleasesByFolderIdAsync(username, collectionFolder.Id, paginationParams, default);
+        var collectionFolderReleaseResponse = await ApiClient.GetCollectionFolderReleasesAsync(username, collectionFolder.Id, paginationParams, sortParameters, default);
 
         // Delete release from folder
         var wasReleaseDeleted = await ApiClient.DeleteReleaseFromCollectionFolderAsync(username, collectionFolder.Id, collectionFolderRelease.Id, collectionFolderRelease.InstanceId, default);
