@@ -28,6 +28,8 @@ Doing it this way is even recommended by the Discogs documentation.
 
 ## Getting Started
 
+Download the [Nuget Package](https://www.nuget.org/packages/DiscogsApiClient/) or compile the library from source.
+
 The easiest way to use the library now is using it with Dependency Injection
 with either a user token
 
