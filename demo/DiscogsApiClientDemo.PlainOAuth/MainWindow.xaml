@@ -20,11 +20,11 @@
         </Grid.ColumnDefinitions>
 
         <Label Grid.Row="0" Grid.Column="0" Content="Consumer Key:"/>
-        <TextBox Grid.Row="0" Grid.Column="1" Width="300" VerticalAlignment="Center"
+        <TextBox Grid.Row="0" Grid.Column="1" VerticalAlignment="Center"
                  Text="{Binding ConsumerKey}"/>
 
         <Label Grid.Row="1" Grid.Column="0" Content="Consumer Secret:"/>
-        <TextBox Grid.Row="1" Grid.Column="1" Width="300" VerticalAlignment="Center"
+        <TextBox Grid.Row="1" Grid.Column="1" VerticalAlignment="Center"
                  Text="{Binding ConsumerSecret}"/>
 
         <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
@@ -32,13 +32,13 @@
                 Content="Login"
                 Command="{Binding LoginCommand}"/>
 
-        <Label Grid.Row="3" Grid.Column="0" Content="Access Token:"/>
-        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding AccessToken}"/>
+        <Label Grid.Row="3" Grid.Column="0" Content="Access Token:" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding AccessToken}" VerticalAlignment="Center"/>
 
-        <Label Grid.Row="4" Grid.Column="0" Content="Access Token Secret:"/>
-        <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding AccessTokenSecret}"/>
+        <Label Grid.Row="4" Grid.Column="0" Content="Access Token Secret:" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding AccessTokenSecret}" VerticalAlignment="Center"/>
 
-        <Label Grid.Row="5" Grid.Column="0" Content="Username:"/>
-        <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding Username}"/>
+        <Label Grid.Row="5" Grid.Column="0" Content="Username:" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding Username}" VerticalAlignment="Center"/>
     </Grid>
 </Window>

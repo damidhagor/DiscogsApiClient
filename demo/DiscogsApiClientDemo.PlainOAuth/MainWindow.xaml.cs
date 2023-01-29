@@ -58,7 +58,7 @@ public partial class MainWindow : Window
                 var identityResponse = await _discogsApiClient.GetIdentityAsync(cancellationToken);
                 Username = identityResponse.Username;
                 AccessToken = oauthResponse.AccessToken ?? "";
-                AccessTokenSecret = oauthResponse.AccessSecret ?? "";
+                AccessTokenSecret = oauthResponse.AccessTokenSecret ?? "";
             }
             else
             {
@@ -82,4 +82,3 @@ public partial class MainWindow : Window
         return Task.FromResult(loginWindow.Result);
     }
 }
-S

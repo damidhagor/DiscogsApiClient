@@ -30,9 +30,9 @@ public partial class LoginWindow : Window
     {
         if (e.Uri.StartsWith(_callbackUrl))
         {
-            int index = e.Uri.IndexOf("?");
+            int index = e.Uri.IndexOf("oauth_verifier");
 
-            Result = index > -1 ? e.Uri[(index + 1)..] : "";
+            Result = index > -1 ? e.Uri[(index + 15)..] : "";
 
             Close();
         }
