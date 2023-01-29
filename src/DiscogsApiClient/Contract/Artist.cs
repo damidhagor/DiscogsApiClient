@@ -20,13 +20,6 @@ public sealed record ArtistMember(
     string ResourceUrl,
     string ThumbnailUrl);
 
-public enum ArtistImageType : int
-{
-    None = 0,
-    Primary = 1,
-    Secondary = 2
-}
-
 
 /**
 {

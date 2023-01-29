@@ -136,7 +136,7 @@ var authResponse = await apiClient.AuthenticateAsync(authRequest, CancellationTo
 if (authResponse.Success)
 {
     var accessToken = authResponse.AccessToken;
-    var accessTokenSecret = authResponse.AccessSecret;
+    var accessTokenSecret = authResponse.AccessTokenSecret;
     // Store token & secret
 
     // Test call retrieves the identity of the authenticated user
@@ -181,6 +181,12 @@ var response = await apiClient.SearchDatabaseAsync(queryParams, paginationParams
         - If configured via the IServiceCollection the HttpClient will be injected via the IHttpClientFactory.
         - Needed parameters for the IAuthenticationProviders are moved from their constructors into their IAuthenticationRequest implementations.
     - Sealed all classes for performance.
+
+- ### 2.1.0
+    - Added missing pagination parameter to *GetCollectionFolderReleasesByFolderIdAsync* method.
+
+- ### 2.1.1
+    - Fixed URL not being formatted correctly for *GetCollectionFolderReleasesByFolderIdAsync* method.
 
 ## Roadmap
 

@@ -33,6 +33,15 @@ public sealed record Release(
     bool BlockedFromSale,
     string DataQuality);
 
+public sealed record ReleaseArtist(
+    int Id,
+    string Name,
+    string ResourceUrl,
+    string Anv,
+    string Join,
+    string Role,
+    string Tracks);
+
 public sealed record ReleaseLabel(
     int Id,
     string Name,

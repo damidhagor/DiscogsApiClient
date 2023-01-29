@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Web;
 
@@ -17,10 +18,8 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
     private string _accessToken = "";
     private string _accessTokenSecret = "";
 
-    /// <summary>
     /// <inheritdoc/>
-    /// </summary>
-    public bool IsAuthenticated => !String.IsNullOrWhiteSpace(_accessToken) && !String.IsNullOrWhiteSpace(_accessTokenSecret);
+    public bool IsAuthenticated => !string.IsNullOrWhiteSpace(_accessToken) && !string.IsNullOrWhiteSpace(_accessTokenSecret);
 
 
     /// <summary>
@@ -44,7 +43,7 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
         _accessToken = authAuthenticationRequest.AccessToken;
         _accessTokenSecret = authAuthenticationRequest.AccessTokenSecret;
 
-        if (String.IsNullOrWhiteSpace(_accessToken) || String.IsNullOrWhiteSpace(_accessTokenSecret))
+        if (string.IsNullOrWhiteSpace(_accessToken) || string.IsNullOrWhiteSpace(_accessTokenSecret))
         {
             using var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(_userAgent);
@@ -52,21 +51,21 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
             _accessToken = "";
             _accessTokenSecret = "";
 
-            if (String.IsNullOrWhiteSpace(_consumerKey) && String.IsNullOrWhiteSpace(_consumerSecret))
+            if (string.IsNullOrWhiteSpace(_consumerKey) && string.IsNullOrWhiteSpace(_consumerSecret))
                 throw new InvalidOperationException("No consumer token or secret provided.");
 
             var (requestToken, requestTokenSecret) = await GetRequestToken(httpClient, authAuthenticationRequest.VerifierCallbackUrl, cancellationToken);
-            if (String.IsNullOrWhiteSpace(requestToken) || String.IsNullOrWhiteSpace(requestTokenSecret))
+            if (string.IsNullOrWhiteSpace(requestToken) || string.IsNullOrWhiteSpace(requestTokenSecret))
                 return new PlainOAuthAuthenticationResponse("Getting request token failed.");
 
 
             var verifier = await GetVerifier(requestToken, authAuthenticationRequest.VerifierCallbackUrl, authAuthenticationRequest.GetVerifierCallback, cancellationToken);
-            if (String.IsNullOrWhiteSpace(verifier))
+            if (string.IsNullOrWhiteSpace(verifier))
                 return new PlainOAuthAuthenticationResponse("Failed getting verifier token.");
 
 
             var (accessToken, accessTokenSecret) = await GetAccessToken(httpClient, requestToken, requestTokenSecret, verifier, cancellationToken);
-            if (String.IsNullOrWhiteSpace(accessToken) || String.IsNullOrWhiteSpace(accessTokenSecret))
+            if (string.IsNullOrWhiteSpace(accessToken) || string.IsNullOrWhiteSpace(accessTokenSecret))
                 return new PlainOAuthAuthenticationResponse("Failed getting access token.");
 
             _accessToken = accessToken;
@@ -82,7 +81,13 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
     /// <param name="httpMethod"><inheritdoc/></param>
     /// <param name="url"><inheritdoc/></param>
     /// <returns><inheritdoc/></returns>
-    public HttpRequestMessage CreateAuthenticatedRequest(HttpMethod httpMethod, string url)
+    public HttpRequestMessage CreateAuthenticatedRequest(
+        HttpMethod httpMethod,
+#if NET7_0
+        [StringSyntax(StringSyntaxAttribute.Uri)] string url)
+#else
+        string url)
+#endif
     {
         var request = new HttpRequestMessage(httpMethod, url);
         request.Headers.Add("Authorization", CreateAuthenticationHeader());
@@ -97,7 +102,14 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
     /// <param name="httpClient">The <see cref="HttpClient"/> used by the authentication flow.</param>
     /// <param name="callback">The callback url the Discogs login page redirects the browser to to return the request token to the app.</param>
     /// <returns>Returns the obtained request token and secret.</returns>
-    private async Task<(string requestToken, string requestTokenSecret)> GetRequestToken(HttpClient httpClient, string callback, CancellationToken cancellationToken)
+    private async Task<(string requestToken, string requestTokenSecret)> GetRequestToken(
+        HttpClient httpClient,
+#if NET7_0
+        [StringSyntax(StringSyntaxAttribute.Uri)] string callback,
+#else
+        string callback,
+#endif
+        CancellationToken cancellationToken)
     {
         var requestToken = "";
         var requestTokenSecret = "";
@@ -128,25 +140,17 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
     /// <param name="callback">The callback url at which to return the verifier token.</param>
     /// <param name="getVerifier">The callback for the app to implement the login process.</param>
     /// <returns>The veriefier token.</returns>
-    private async Task<string> GetVerifier(string requestToken, string callback, GetVerifierCallback getVerifier, CancellationToken cancellationToken)
+    private async Task<string?> GetVerifier(string requestToken, string callback, GetVerifierCallback getVerifier, CancellationToken cancellationToken)
     {
-        var verifier = "";
-
         try
         {
-            var url = String.Format(DiscogsApiUrls.VerifierTokenUrl, requestToken);
-            var verifierResult = await getVerifier(url, callback, cancellationToken);
-
-            if (verifierResult != null)
-            {
-                var parameters = HttpUtility.ParseQueryString(verifierResult);
-
-                verifier = parameters.Get("oauth_verifier") ?? "";
-            }
+            var url = string.Format(DiscogsApiUrls.VerifierTokenUrl, requestToken);
+            return await getVerifier(url, callback, cancellationToken);
         }
-        catch (Exception) { }
-
-        return verifier;
+        catch (Exception)
+        {
+            return null;
+        }
     }
 
     /// <summary>
@@ -185,7 +189,12 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
     /// Creates the <see cref="HttpRequestMessage"/> for getting the request token from the Discogs api.
     /// </summary>
     /// <param name="callback">The callback url at which the reqtest token is returned later.</param>
-    private HttpRequestMessage CreateRequestTokenRequest(string callback)
+    private HttpRequestMessage CreateRequestTokenRequest(
+#if NET7_0
+        [StringSyntax(StringSyntaxAttribute.Uri)] string callback)
+#else
+        string callback)
+#endif
     {
         var request = new HttpRequestMessage(HttpMethod.Get, DiscogsApiUrls.OAuthRequestTokenUrl);
 

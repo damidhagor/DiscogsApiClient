@@ -1,4 +1,8 @@
-﻿namespace DiscogsApiClient.QueryParameters;
+﻿using ArtistQP = DiscogsApiClient.QueryParameters.ArtistReleaseSortQueryParameters;
+using CollectionQP = DiscogsApiClient.QueryParameters.CollectionFolderReleaseSortQueryParameters;
+using MasterQP = DiscogsApiClient.QueryParameters.MasterReleaseVersionFilterQueryParameters;
+
+namespace DiscogsApiClient.QueryParameters;
 
 /// <summary>
 /// Contains helper methods for appending query parameters in any combination to a request Url.
@@ -6,64 +10,83 @@
 internal static class QueryParameterHelper
 {
     /// <summary>
-    /// Appends <see cref="PaginationQueryParameters"/> to the Url.
+    /// Appends one or more <see cref="IQueryParameters"/> to the given url string.
     /// </summary>
-    /// <param name="url">The Url top append the parameters to.</param>
-    /// <param name="paginationQueryParameters">The <see cref="PaginationQueryParameters"/> to append to the Url.</param>
-    /// <returns>The Url with the appended query.</returns>
-    /// <exception cref="ArgumentNullException">The passed in Url is null or empty.</exception>
-    public static string AppendPaginationQuery(string url, PaginationQueryParameters paginationQueryParameters)
+    /// <param name="url">The url to append to.</param>
+    /// <param name="queryParameters">The query parameters to append.</param>
+    /// <returns>The url with appended query parameters.</returns>
+    /// <exception cref="ArgumentNullException">If the url is null or whitespace.</exception>
+    public static string AppendQueryParameters(this string url, params IQueryParameters[] queryParameters)
     {
         if (string.IsNullOrWhiteSpace(url))
             throw new ArgumentNullException(nameof(url));
 
-        string query = paginationQueryParameters.CreateQueryParameterString();
+        var queryParts = queryParameters.Select(p => p.CreateQueryParameterString());
+        var query = string.Join("&", queryParts);
 
         return string.IsNullOrWhiteSpace(query) ? url : $"{url}?{query}";
     }
 
     /// <summary>
-    /// Appends <see cref="SearchQueryParameters"/> to the Url.
+    /// Converts a <see cref="ArtistReleaseSortQueryParameters.SortableProperty"/> into its Discogs API representation.
     /// </summary>
-    /// <param name="url">The Url top append the parameters to.</param>
-    /// <param name="searchQueryParameters">The <see cref="SearchQueryParameters"/> to append to the Url.</param>
-    /// <returns>The Url with the appended query.</returns>
-    /// <exception cref="ArgumentNullException">The passed in Url is null or empty.</exception>
-    public static string AppendSearchQuery(string url, SearchQueryParameters searchQueryParameters)
-    {
-        if (string.IsNullOrWhiteSpace(url))
-            throw new ArgumentNullException(nameof(url));
-
-        string query = searchQueryParameters.CreateQueryParameterString();
-
-        return string.IsNullOrWhiteSpace(query) ? url : $"{url}?{query}";
-    }
+    /// <returns>Discogs API string representation</returns>
+    /// <exception cref="InvalidOperationException">If value is not in the enum's range</exception>
+    public static string GetSortablePropertyString(this ArtistQP.SortableProperty sortableProperty)
+        => sortableProperty switch
+        {
+            ArtistQP.SortableProperty.Year => "year",
+            ArtistQP.SortableProperty.Title => "title",
+            ArtistQP.SortableProperty.Format => "format",
+            _ => throw new InvalidOperationException()
+        };
 
     /// <summary>
-    /// Appends both <see cref="SearchQueryParameters"/> and <see cref="PaginationQueryParameters"/> to the Url.
+    /// Converts a <see cref="MasterReleaseVersionFilterQueryParameters.SortableProperty"/> into its Discogs API representation.
     /// </summary>
-    /// <param name="url">The Url top append the parameters to.</param>
-    /// <param name="searchQueryParameters">The <see cref="SearchQueryParameters"/> to append to the Url.</param>
-    /// <param name="paginationQueryParameters">The <see cref="PaginationQueryParameters"/> to append to the Url.</param>
-    /// <returns>The Url with the appended query parameters.</returns>
-    /// <exception cref="ArgumentNullException">The passed in Url is null or empty.</exception>
-    public static string AppendSearchQueryWithPagination(string url, SearchQueryParameters searchQueryParameters, PaginationQueryParameters paginationQueryParameters)
-    {
-        if (string.IsNullOrWhiteSpace(url))
-            throw new ArgumentNullException(nameof(url));
+    /// <returns>Discogs API string representation</returns>
+    /// <exception cref="InvalidOperationException">If value is not in the enum's range</exception>
+    public static string GetSortablePropertyString(this MasterQP.SortableProperty sortableProperty)
+        => sortableProperty switch
+        {
+            MasterQP.SortableProperty.Released => "released",
+            MasterQP.SortableProperty.Title => "title",
+            MasterQP.SortableProperty.Format => "format",
+            MasterQP.SortableProperty.Label => "label",
+            MasterQP.SortableProperty.Catno => "catno",
+            MasterQP.SortableProperty.Country => "country",
+            _ => throw new NotImplementedException()
+        };
 
-        string searchQuery = searchQueryParameters.CreateQueryParameterString();
-        string paginationQuery = paginationQueryParameters.CreateQueryParameterString();
+    /// <summary>
+    /// Converts a <see cref="CollectionFolderReleaseSortQueryParameters.SortableProperty"/> into its Discogs API representation.
+    /// </summary>
+    /// <returns>Discogs API string representation</returns>
+    /// <exception cref="InvalidOperationException">If value is not in the enum's range</exception>
+    public static string GetSortablePropertyString(this CollectionQP.SortableProperty sortableProperty)
+        => sortableProperty switch
+        {
+            CollectionQP.SortableProperty.Label => "label",
+            CollectionQP.SortableProperty.Artist => "artist",
+            CollectionQP.SortableProperty.Title => "title",
+            CollectionQP.SortableProperty.Catno => "catno",
+            CollectionQP.SortableProperty.Format => "format",
+            CollectionQP.SortableProperty.Rating => "rating",
+            CollectionQP.SortableProperty.Added => "added",
+            CollectionQP.SortableProperty.Year => "year",
+            _ => throw new InvalidOperationException()
+        };
 
-        if (!String.IsNullOrWhiteSpace(searchQuery) && !String.IsNullOrWhiteSpace(paginationQuery))
-            return $"{url}?{searchQuery}&{paginationQuery}";
-
-        if (!String.IsNullOrWhiteSpace(searchQuery) && String.IsNullOrWhiteSpace(paginationQuery))
-            return $"{url}?{searchQuery}";
-
-        if (String.IsNullOrWhiteSpace(searchQuery) && !String.IsNullOrWhiteSpace(paginationQuery))
-            return $"{url}?{paginationQuery}";
-
-        return url;
-    }
+    /// <summary>
+    /// Converts a <see cref="SortOrder"/> into its Discogs API representation.
+    /// </summary>
+    /// <returns>Discogs API string representation</returns>
+    /// <exception cref="InvalidOperationException">If value is not in the enum's range</exception>
+    public static string GetSortOrderString(this SortOrder sortOrder)
+        => sortOrder switch
+        {
+            QueryParameters.SortOrder.Ascending => "asc",
+            QueryParameters.SortOrder.Descending => "desc",
+            _ => throw new InvalidOperationException()
+        };
 }

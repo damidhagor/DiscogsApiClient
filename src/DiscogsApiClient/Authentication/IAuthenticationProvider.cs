@@ -1,4 +1,6 @@
-﻿namespace DiscogsApiClient.Authentication;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace DiscogsApiClient.Authentication;
 
 /// <summary>
 /// Interface representing a class that handles a certain type of authentication for the <see cref="DiscogsApiClient"/>.
@@ -27,5 +29,11 @@ public interface IAuthenticationProvider
     /// <param name="httpMethod">The <see cref="HttpMethod"/> for the created <see cref="HttpRequestMessage"/>.</param>
     /// <param name="url">The Url of the created <see cref="HttpRequestMessage"/>.</param>
     /// <returns>An authenticated <see cref="HttpRequestMessage"/>.</returns>
-    HttpRequestMessage CreateAuthenticatedRequest(HttpMethod httpMethod, string url);
+    HttpRequestMessage CreateAuthenticatedRequest(
+        HttpMethod httpMethod,
+#if NET7_0
+        [StringSyntax(StringSyntaxAttribute.Uri)] string url);
+#else
+        string url);
+#endif
 }

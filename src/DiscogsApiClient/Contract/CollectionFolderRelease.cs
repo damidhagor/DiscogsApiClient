@@ -1,49 +1,17 @@
 ﻿namespace DiscogsApiClient.Contract;
 
-public sealed record CollectionFolderReleasesResponse(
-    Pagination Pagination,
-    List<CollectionFolderRelease> Releases);
-
 public sealed record CollectionFolderRelease(
     int Id,
     int InstanceId,
     DateTime DateAdded,
     int Rating,
     string ResourceUrl,
-    CollectionFolderReleaseInformation BasicInformation,
+    UserListReleaseInformation BasicInformation,
     int FolderId);
 
-public sealed record CollectionFolderReleaseInformation(
-    int Id,
-    int MasterId,
-    string MasterUrl,
-    string ResourceUrl,
-    string Title,
-    int Year,
-    List<ReleaseFormat> Formats,
-    List<CollectionFolderReleaseLabel> Labels,
-    List<CollectionFolderReleaseArtist> Artists,
-    string Thumb,
-    string CoverImage,
-    List<string> Genres,
-    List<string> Styles);
-
-public sealed record CollectionFolderReleaseLabel(
-    int Id,
-    string Name,
-    string Catno,
-    string ResourceUrl,
-    string EntityType,
-    string EntityTypeName);
-
-public sealed record CollectionFolderReleaseArtist(
-    int Id,
-    string Name,
-    string ResourceUrl,
-    string Anv,
-    string Join,
-    string Role,
-    string Tracks);
+public sealed record CollectionFolderReleasesResponse(
+    Pagination Pagination,
+    List<CollectionFolderRelease> Releases);
 
 
 /**

@@ -1,16 +1,19 @@
 ﻿namespace DiscogsApiClient.Contract;
 
-public sealed record WantlistRelease(
+public sealed record UserListReleaseInformation(
     int Id,
+    int MasterId,
+    string MasterUrl,
     string ResourceUrl,
-    DateTime DateAdded,
-    int Rating,
-    UserListReleaseInformation BasicInformation,
-    string Notes);
-
-public sealed record WantlistReleasesResponse(
-    Pagination Pagination,
-    List<WantlistRelease> Wants);
+    string Title,
+    int Year,
+    List<ReleaseFormat> Formats,
+    List<ReleaseLabel> Labels,
+    List<ReleaseArtist> Artists,
+    string Thumb,
+    string CoverImage,
+    List<string> Genres,
+    List<string> Styles);
 
 
 /**

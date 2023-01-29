@@ -1,4 +1,6 @@
-﻿namespace DiscogsApiClient.Authentication.UserToken;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace DiscogsApiClient.Authentication.UserToken;
 
 /// <summary>
 /// Parameters needed by the <see cref="UserTokenAuthenticationProvider"/> to authenticate against the Discogs Api with the user's personal access token.
@@ -9,10 +11,16 @@ public sealed class UserTokenAuthenticationRequest : IAuthenticationRequest
     /// <summary>
     /// The user's personal access token.
     /// </summary>
+#if NET7_0
+    required
+#endif
     public string UserToken { get; init; }
 
 
     /// <param name="userToken">The user's personal access token.</param>
+#if NET7_0
+    [SetsRequiredMembers]
+#endif
     public UserTokenAuthenticationRequest(string userToken)
     {
         UserToken = userToken;

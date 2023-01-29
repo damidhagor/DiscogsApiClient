@@ -1,4 +1,6 @@
-﻿namespace DiscogsApiClient.Authentication.UserToken;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace DiscogsApiClient.Authentication.UserToken;
 
 /// <summary>
 /// This <see cref="IAuthenticationProvider"/> implementation authenticates against the Discogs Api
@@ -12,10 +14,8 @@ public sealed class UserTokenAuthenticationProvider : IAuthenticationProvider
     /// </summary>
     private string _userToken = "";
 
-    /// <summary>
     /// <inheritdoc/>
-    /// </summary>
-    public bool IsAuthenticated => !String.IsNullOrWhiteSpace(_userToken);
+    public bool IsAuthenticated => !string.IsNullOrWhiteSpace(_userToken);
 
 
     /// <summary>
@@ -43,7 +43,13 @@ public sealed class UserTokenAuthenticationProvider : IAuthenticationProvider
     /// <param name="httpMethod"><inheritdoc/></param>
     /// <param name="url"><inheritdoc/></param>
     /// <returns><inheritdoc/></returns>
-    public HttpRequestMessage CreateAuthenticatedRequest(HttpMethod httpMethod, string url)
+    public HttpRequestMessage CreateAuthenticatedRequest(
+        HttpMethod httpMethod,
+#if NET7_0
+        [StringSyntax(StringSyntaxAttribute.Uri)] string url)
+#else
+        string url)
+#endif
     {
         var request = new HttpRequestMessage(httpMethod, url);
         request.Headers.Add("Authorization", $"Discogs token={_userToken}");

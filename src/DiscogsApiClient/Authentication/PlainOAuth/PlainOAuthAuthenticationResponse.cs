@@ -1,4 +1,6 @@
-﻿namespace DiscogsApiClient.Authentication.PlainOAuth;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace DiscogsApiClient.Authentication.PlainOAuth;
 
 /// <summary>
 /// The response of the <see cref="PlainOAuthAuthenticationProvider.AuthenticateAsync"/> method.
@@ -8,14 +10,13 @@
 /// </summary>
 public sealed class PlainOAuthAuthenticationResponse : IAuthenticationResponse
 {
-    /// <summary>
     /// <inheritdoc/>
-    /// </summary>
+#if NET7_0
+    required
+#endif
     public bool Success { get; init; }
 
-    /// <summary>
     /// <inheritdoc/>
-    /// </summary>
     public string? Error { get; init; }
 
     /// <summary>
@@ -27,34 +28,40 @@ public sealed class PlainOAuthAuthenticationResponse : IAuthenticationResponse
     public string? AccessToken { get; init; }
 
     /// <summary>
-    /// The obtained access secret if authentication was successful.
+    /// The obtained access token secret if authentication was successful.
     /// <para/>
     /// Store this secret with the access token to pass it to the <see cref="PlainOAuthAuthenticationProvider"/>
     /// next time a <see cref="DiscogsApiClient"/> with a <see cref="PlainOAuthAuthenticationProvider"/> is constructed be authenticated immediately.
     /// </summary>
-    public string? AccessSecret { get; init; }
+    public string? AccessTokenSecret { get; init; }
 
 
     /// <summary>
     /// Constructor for when authentication was successful.
     /// </summary>
-    public PlainOAuthAuthenticationResponse(string accessToken, string accessSecret)
+#if NET7_0
+    [SetsRequiredMembers]
+#endif
+    public PlainOAuthAuthenticationResponse(string accessToken, string accessTokenSecret)
     {
         Success = true;
         Error = null;
         AccessToken = accessToken;
-        AccessSecret = accessSecret;
+        AccessTokenSecret = accessTokenSecret;
     }
 
 
     /// <summary>
     /// Constructor for when authentication failed.
     /// </summary>
+#if NET7_0
+    [SetsRequiredMembers]
+#endif
     public PlainOAuthAuthenticationResponse(string error)
     {
         Success = false;
         Error = error;
         AccessToken = null;
-        AccessSecret = null;
+        AccessTokenSecret = null;
     }
 }

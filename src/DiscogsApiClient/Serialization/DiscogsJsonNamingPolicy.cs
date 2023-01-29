@@ -22,14 +22,14 @@ internal sealed class DiscogsJsonNamingPolicy : JsonNamingPolicy
 
         StringBuilder stringBuilder = new();
 
-        stringBuilder.Append(Char.ToLower(name[0]));
+        stringBuilder.Append(char.ToLower(name[0]));
 
         foreach (var c in name.Skip(1))
         {
-            if (Char.IsUpper(c))
+            if (char.IsUpper(c))
             {
                 stringBuilder.Append('_');
-                stringBuilder.Append(Char.ToLower(c));
+                stringBuilder.Append(char.ToLower(c));
             }
             else
             {

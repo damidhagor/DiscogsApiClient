@@ -20,8 +20,8 @@ public sealed class UserTestFixture : ApiBaseTestFixture
         Assert.AreEqual("alexander.jurk@outlook.com", user.Email);
         Assert.AreEqual("https://api.discogs.com/users/DamIDhagor", user.ResourceUrl);
         Assert.IsTrue(user.Activated);
-        Assert.IsFalse(String.IsNullOrWhiteSpace(user.AvatarUrl));
-        Assert.IsFalse(String.IsNullOrWhiteSpace(user.CollectionFoldersUrl));
+        Assert.IsFalse(string.IsNullOrWhiteSpace(user.AvatarUrl));
+        Assert.IsFalse(string.IsNullOrWhiteSpace(user.CollectionFoldersUrl));
     }
 
     [Test]
