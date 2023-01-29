@@ -1,4 +1,6 @@
-﻿namespace DiscogsApiClient.Authentication.PlainOAuth;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace DiscogsApiClient.Authentication.PlainOAuth;
 
 /// <summary>
 /// Defines the method signature for the callback the <see cref="PlainOAuthAuthenticationProvider.AuthenticateAsync"/> method invokes
@@ -47,6 +49,9 @@ public sealed class PlainOAuthAuthenticationRequest : IAuthenticationRequest
     /// <summary>
     /// The Url the login page will be redirected to to pass the OAuth verifier key back to the client.
     /// </summary>
+#if NET7_0
+    [StringSyntax(StringSyntaxAttribute.Uri)]
+#endif
     public string VerifierCallbackUrl { get; init; }
 
     /// <summary>
@@ -60,7 +65,16 @@ public sealed class PlainOAuthAuthenticationRequest : IAuthenticationRequest
     /// <param name="consumerSecret">The app's consumer secret from Discogs.</param>
     /// <param name="verifierCallbackUrl">The Url the login page will be redirected to to pass the OAuth verifier key back to the client.</param>
     /// <param name="getVerifierCallback">The method which will be called by the <see cref="PlainOAuthAuthenticationProvider"/> to let the client open the Discogs login page and obtain the verifier key.</param>
-    public PlainOAuthAuthenticationRequest(string userAgent, string consumerKey, string consumerSecret, string verifierCallbackUrl, GetVerifierCallback getVerifierCallback)
+    public PlainOAuthAuthenticationRequest(
+        string userAgent,
+        string consumerKey,
+        string consumerSecret,
+#if NET7_0
+        [StringSyntax(StringSyntaxAttribute.Uri)] string verifierCallbackUrl,
+#else
+        string verifierCallbackUrl,
+#endif
+        GetVerifierCallback getVerifierCallback)
     {
         UserAgent = userAgent;
         ConsumerKey = consumerKey;

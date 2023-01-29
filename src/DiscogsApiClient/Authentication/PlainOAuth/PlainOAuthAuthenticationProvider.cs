@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Web;
 
@@ -80,7 +81,13 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
     /// <param name="httpMethod"><inheritdoc/></param>
     /// <param name="url"><inheritdoc/></param>
     /// <returns><inheritdoc/></returns>
-    public HttpRequestMessage CreateAuthenticatedRequest(HttpMethod httpMethod, string url)
+    public HttpRequestMessage CreateAuthenticatedRequest(
+        HttpMethod httpMethod,
+#if NET7_0
+        [StringSyntax(StringSyntaxAttribute.Uri)] string url)
+#else
+        string url)
+#endif
     {
         var request = new HttpRequestMessage(httpMethod, url);
         request.Headers.Add("Authorization", CreateAuthenticationHeader());
@@ -95,7 +102,14 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
     /// <param name="httpClient">The <see cref="HttpClient"/> used by the authentication flow.</param>
     /// <param name="callback">The callback url the Discogs login page redirects the browser to to return the request token to the app.</param>
     /// <returns>Returns the obtained request token and secret.</returns>
-    private async Task<(string requestToken, string requestTokenSecret)> GetRequestToken(HttpClient httpClient, string callback, CancellationToken cancellationToken)
+    private async Task<(string requestToken, string requestTokenSecret)> GetRequestToken(
+        HttpClient httpClient,
+#if NET7_0
+        [StringSyntax(StringSyntaxAttribute.Uri)] string callback,
+#else
+        string callback,
+#endif
+        CancellationToken cancellationToken)
     {
         var requestToken = "";
         var requestTokenSecret = "";
@@ -183,7 +197,12 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
     /// Creates the <see cref="HttpRequestMessage"/> for getting the request token from the Discogs api.
     /// </summary>
     /// <param name="callback">The callback url at which the reqtest token is returned later.</param>
-    private HttpRequestMessage CreateRequestTokenRequest(string callback)
+    private HttpRequestMessage CreateRequestTokenRequest(
+#if NET7_0
+        [StringSyntax(StringSyntaxAttribute.Uri)] string callback)
+#else
+        string callback)
+#endif
     {
         var request = new HttpRequestMessage(HttpMethod.Get, DiscogsApiUrls.OAuthRequestTokenUrl);
 

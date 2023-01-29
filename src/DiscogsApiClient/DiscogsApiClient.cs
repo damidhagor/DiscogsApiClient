@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using DiscogsApiClient.Authentication;
 using DiscogsApiClient.Serialization;
 
@@ -36,7 +37,13 @@ public sealed partial class DiscogsApiClient : IDiscogsApiClient
         return await _authenticationProvider.AuthenticateAsync(authenticationRequest, cancellationToken);
     }
 
-    private async Task<T> GetAsync<T>(string url, CancellationToken cancellationToken)
+    private async Task<T> GetAsync<T>(
+#if NET7_0
+        [StringSyntax(StringSyntaxAttribute.Uri)] string url,
+#else
+        string url,
+#endif
+        CancellationToken cancellationToken)
     {
         using var request = _authenticationProvider.CreateAuthenticatedRequest(HttpMethod.Get, url);
         using var response = await _httpClient.SendAsync(request, cancellationToken);
@@ -47,7 +54,14 @@ public sealed partial class DiscogsApiClient : IDiscogsApiClient
         return result;
     }
 
-    private async Task<T> PostAsync<T>(string url, object? content, CancellationToken cancellationToken)
+    private async Task<T> PostAsync<T>(
+#if NET7_0
+        [StringSyntax(StringSyntaxAttribute.Uri)] string url,
+#else
+        string url,
+#endif
+        object? content,
+        CancellationToken cancellationToken)
     {
         using var request = _authenticationProvider.CreateAuthenticatedRequest(HttpMethod.Post, url);
 
@@ -64,7 +78,14 @@ public sealed partial class DiscogsApiClient : IDiscogsApiClient
         return result;
     }
 
-    private async Task<T> PutAsync<T>(string url, object? content, CancellationToken cancellationToken)
+    private async Task<T> PutAsync<T>(
+#if NET7_0
+        [StringSyntax(StringSyntaxAttribute.Uri)] string url,
+#else
+        string url,
+#endif
+        object? content,
+        CancellationToken cancellationToken)
     {
         using var request = _authenticationProvider.CreateAuthenticatedRequest(HttpMethod.Put, url);
 
@@ -81,7 +102,13 @@ public sealed partial class DiscogsApiClient : IDiscogsApiClient
         return result;
     }
 
-    private async Task<bool> DeleteAsync(string url, CancellationToken cancellationToken)
+    private async Task<bool> DeleteAsync(
+#if NET7_0
+        [StringSyntax(StringSyntaxAttribute.Uri)] string url,
+#else
+        string url,
+#endif
+        CancellationToken cancellationToken)
     {
         using var request = _authenticationProvider.CreateAuthenticatedRequest(HttpMethod.Delete, url);
         using var response = await _httpClient.SendAsync(request, cancellationToken);
