@@ -1,4 +1,6 @@
-﻿namespace DiscogsApiClient.Authentication.PlainOAuth;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace DiscogsApiClient.Authentication.PlainOAuth;
 
 /// <summary>
 /// The response of the <see cref="PlainOAuthAuthenticationProvider.AuthenticateAsync"/> method.
@@ -37,6 +39,9 @@ public sealed class PlainOAuthAuthenticationResponse : IAuthenticationResponse
     /// <summary>
     /// Constructor for when authentication was successful.
     /// </summary>
+#if NET7_0
+    [SetsRequiredMembers]
+#endif
     public PlainOAuthAuthenticationResponse(string accessToken, string accessSecret)
     {
         Success = true;
@@ -49,6 +54,9 @@ public sealed class PlainOAuthAuthenticationResponse : IAuthenticationResponse
     /// <summary>
     /// Constructor for when authentication failed.
     /// </summary>
+#if NET7_0
+    [SetsRequiredMembers]
+#endif
     public PlainOAuthAuthenticationResponse(string error)
     {
         Success = false;

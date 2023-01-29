@@ -78,6 +78,9 @@ public sealed class PlainOAuthAuthenticationRequest : IAuthenticationRequest
     /// <param name="consumerSecret">The app's consumer secret from Discogs.</param>
     /// <param name="verifierCallbackUrl">The Url the login page will be redirected to to pass the OAuth verifier key back to the client.</param>
     /// <param name="getVerifierCallback">The method which will be called by the <see cref="PlainOAuthAuthenticationProvider"/> to let the client open the Discogs login page and obtain the verifier key.</param>
+#if NET7_0
+    [SetsRequiredMembers]
+#endif
     public PlainOAuthAuthenticationRequest(
         string userAgent,
         string consumerKey,
