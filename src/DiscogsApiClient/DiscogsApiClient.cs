@@ -1,7 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Net;
-using DiscogsApiClient.Authentication;
-using DiscogsApiClient.Serialization;
 
 namespace DiscogsApiClient;
 

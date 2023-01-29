@@ -1,7 +1,4 @@
 ﻿using System.Net;
-using DiscogsApiClient.Contract;
-using DiscogsApiClient.Exceptions;
-using DiscogsApiClient.Serialization;
 
 namespace DiscogsApiClient;
 

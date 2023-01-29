@@ -1,8 +1,4 @@
-﻿using DiscogsApiClient.Authentication;
-using DiscogsApiClient.Contract;
-using DiscogsApiClient.QueryParameters;
-
-namespace DiscogsApiClient;
+﻿namespace DiscogsApiClient;
 
 public interface IDiscogsApiClient
 {

@@ -1,5 +1,4 @@
-﻿using DiscogsApiClient.Authentication;
-using DiscogsApiClient.Authentication.PlainOAuth;
+﻿using DiscogsApiClient.Authentication.PlainOAuth;
 using DiscogsApiClient.Authentication.UserToken;
 using Microsoft.Extensions.DependencyInjection;
 
