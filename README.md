@@ -134,7 +134,7 @@ var authResponse = await apiClient.AuthenticateAsync(authRequest, CancellationTo
 if (authResponse.Success)
 {
     var accessToken = authResponse.AccessToken;
-    var accessTokenSecret = authResponse.AccessSecret;
+    var accessTokenSecret = authResponse.AccessTokenSecret;
     // Store token & secret
 
     // Test call retrieves the identity of the authenticated user
