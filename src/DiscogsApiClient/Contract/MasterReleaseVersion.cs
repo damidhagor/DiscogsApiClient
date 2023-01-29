@@ -1,11 +1,5 @@
 ﻿namespace DiscogsApiClient.Contract;
 
-public sealed record MasterReleaseVersionsResponse(
-    Pagination Pagination,
-    MasterReleaseVersionFilters Filters,
-    List<MasterReleaseVersionFilterFacet> FilterFacets,
-    List<MasterReleaseVersion> Versions);
-
 public sealed record MasterReleaseVersion(
     int Id,
     string Label,
@@ -19,6 +13,12 @@ public sealed record MasterReleaseVersion(
     string ResourceUrl,
     string Thumb,
     ReleaseStats Stats);
+
+public sealed record MasterReleaseVersionsResponse(
+    Pagination Pagination,
+    MasterReleaseVersionFilters Filters,
+    List<MasterReleaseVersionFilterFacet> FilterFacets,
+    List<MasterReleaseVersion> Versions);
 
 public sealed record MasterReleaseVersionFilters(
     MasterReleaseVersionFilter Available);

@@ -1,20 +1,20 @@
 ﻿namespace DiscogsApiClient.Contract;
 
-public sealed record LabelReleasesResponse(
-    Pagination Pagination,
-    List<LabelRelease> Releases);
-
 public sealed record LabelRelease(
+    int Id,
+    string Title,
     string Status,
     string Format,
     string Catno,
-    string Thumb,
-    string ResourceUrl,
-    string Title,
-    int Id,
-    int Year,
     string Artist,
+    string ResourceUrl,
+    int Year,
+    string Thumb,
     ReleaseStats Stats);
+
+public sealed record LabelReleasesResponse(
+    Pagination Pagination,
+    List<LabelRelease> Releases);
 
 
 /*

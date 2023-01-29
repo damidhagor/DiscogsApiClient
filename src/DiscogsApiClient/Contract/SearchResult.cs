@@ -1,9 +1,5 @@
 ﻿namespace DiscogsApiClient.Contract;
 
-public sealed record SearchResultsResponse(
-    Pagination Pagination,
-    List<SearchResult> Results);
-
 public sealed record SearchResult(
     int Id,
     string Title,
@@ -26,6 +22,10 @@ public sealed record SearchResult(
     List<ReleaseFormat> Formats,
     SearchResultCommunityStats Community,
     SearchResultUserData UserData);
+
+public sealed record SearchResultsResponse(
+    Pagination Pagination,
+    List<SearchResult> Results);
 
 public enum SearchResultType : int
 {
