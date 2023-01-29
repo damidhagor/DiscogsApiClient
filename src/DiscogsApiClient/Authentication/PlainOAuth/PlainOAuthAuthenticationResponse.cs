@@ -9,6 +9,9 @@
 public sealed class PlainOAuthAuthenticationResponse : IAuthenticationResponse
 {
     /// <inheritdoc/>
+#if NET7_0
+    required
+#endif
     public bool Success { get; init; }
 
     /// <inheritdoc/>

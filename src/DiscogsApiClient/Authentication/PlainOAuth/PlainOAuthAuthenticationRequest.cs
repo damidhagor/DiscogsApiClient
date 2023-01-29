@@ -20,16 +20,25 @@ public sealed class PlainOAuthAuthenticationRequest : IAuthenticationRequest
     /// <summary>
     /// The user agent used by the DiscogsApiClient.
     /// </summary>
+#if NET7_0
+    required
+#endif
     public string UserAgent { get; init; }
 
     /// <summary>
     /// The app's consumer key from Discogs.
     /// </summary>
+#if NET7_0
+    required
+#endif
     public string ConsumerKey { get; init; }
 
     /// <summary>
     /// The app's consumer secret from Discogs.
     /// </summary>
+#if NET7_0
+    required
+#endif
     public string ConsumerSecret { get; init; }
 
     /// <summary>
@@ -51,12 +60,16 @@ public sealed class PlainOAuthAuthenticationRequest : IAuthenticationRequest
     /// </summary>
 #if NET7_0
     [StringSyntax(StringSyntaxAttribute.Uri)]
+    required
 #endif
     public string VerifierCallbackUrl { get; init; }
 
     /// <summary>
     /// The method which will be called by the <see cref="PlainOAuthAuthenticationProvider"/> to let the client open the Discogs login page and obtain the verifier key.
     /// </summary>
+#if NET7_0
+    required
+#endif
     public GetVerifierCallback GetVerifierCallback { get; init; }
 
 

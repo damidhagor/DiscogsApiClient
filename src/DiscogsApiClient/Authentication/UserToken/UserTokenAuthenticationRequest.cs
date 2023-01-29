@@ -9,6 +9,9 @@ public sealed class UserTokenAuthenticationRequest : IAuthenticationRequest
     /// <summary>
     /// The user's personal access token.
     /// </summary>
+#if NET7_0
+    required
+#endif
     public string UserToken { get; init; }
 
 
