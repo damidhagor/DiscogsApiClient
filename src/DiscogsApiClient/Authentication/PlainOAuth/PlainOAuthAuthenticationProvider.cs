@@ -140,25 +140,17 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
     /// <param name="callback">The callback url at which to return the verifier token.</param>
     /// <param name="getVerifier">The callback for the app to implement the login process.</param>
     /// <returns>The veriefier token.</returns>
-    private async Task<string> GetVerifier(string requestToken, string callback, GetVerifierCallback getVerifier, CancellationToken cancellationToken)
+    private async Task<string?> GetVerifier(string requestToken, string callback, GetVerifierCallback getVerifier, CancellationToken cancellationToken)
     {
-        var verifier = "";
-
         try
         {
             var url = string.Format(DiscogsApiUrls.VerifierTokenUrl, requestToken);
-            var verifierResult = await getVerifier(url, callback, cancellationToken);
-
-            if (verifierResult != null)
-            {
-                var parameters = HttpUtility.ParseQueryString(verifierResult);
-
-                verifier = parameters.Get("oauth_verifier") ?? "";
-            }
+            return await getVerifier(url, callback, cancellationToken);
         }
-        catch (Exception) { }
-
-        return verifier;
+        catch (Exception)
+        {
+            return null;
+        }
     }
 
     /// <summary>
