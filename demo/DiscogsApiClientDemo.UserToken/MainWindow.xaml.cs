@@ -23,7 +23,6 @@ public partial class MainWindow : Window
 
     public MainWindow(IDiscogsApiClient discogsApiClient)
     {
-        // Inject the DiscogsApiClient into your class
         _discogsApiClient = discogsApiClient;
 
         InitializeComponent();
