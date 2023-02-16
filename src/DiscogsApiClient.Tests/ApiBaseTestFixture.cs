@@ -1,6 +1,9 @@
+using System;
 using System.Net.Http;
+using System.Threading.RateLimiting;
 using System.Threading.Tasks;
 using DiscogsApiClient.Authentication.UserToken;
+using DiscogsApiClient.RateLimiting;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 
@@ -11,8 +14,18 @@ public abstract class ApiBaseTestFixture
 {
     protected DiscogsApiClient ApiClient;
     protected IConfiguration Configuration;
-    private readonly HttpClient _httpClient;
 
+    private static HttpClient _httpClient = new(new RateLimitedDelegatingHandler(new SlidingWindowRateLimiter(
+                    new SlidingWindowRateLimiterOptions()
+                    {
+                        Window = TimeSpan.FromSeconds(60),
+                        SegmentsPerWindow = 12,
+                        PermitLimit = 40,
+                        AutoReplenishment = true,
+                        QueueLimit = 1_000,
+                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst
+                    }))
+    { InnerHandler = new HttpClientHandler() });
 
     public ApiBaseTestFixture()
     {
@@ -23,8 +36,8 @@ public abstract class ApiBaseTestFixture
 
         var userAgent = Configuration["DiscogsApiOptions:UserAgent"];
 
-        _httpClient = new HttpClient();
-        _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent);
+        if (_httpClient.DefaultRequestHeaders.UserAgent.Count == 0)
+            _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent);
 
         var authenticationProvider = new UserTokenAuthenticationProvider();
         ApiClient = new DiscogsApiClient(_httpClient, authenticationProvider);
@@ -42,6 +55,6 @@ public abstract class ApiBaseTestFixture
     [OneTimeTearDown]
     public virtual void Cleanup()
     {
-        _httpClient.Dispose();
+        //_httpClient.Dispose();
     }
 }

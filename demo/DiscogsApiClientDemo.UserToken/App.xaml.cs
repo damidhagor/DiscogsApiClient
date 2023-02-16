@@ -15,7 +15,11 @@ public partial class App : Application
             .ConfigureServices((context, services) =>
             {
                 // Add DiscogsApiClient with user token authentication to the services collection
-                services.AddDiscogsApiClient("AwesomeAppDemo/1.0.0");
+                services.AddDiscogsApiClient(options =>
+                {
+                    options.UserAgent = "AwesomeAppDemo/1.0.0";
+                    options.UseRateLimiting = true;
+                });
                 services.AddDiscogsUserTokenAuthentication();
                 services.AddSingleton<MainWindow>();
             })

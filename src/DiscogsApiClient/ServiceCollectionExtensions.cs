@@ -1,5 +1,7 @@
-﻿using DiscogsApiClient.Authentication.PlainOAuth;
+﻿using System.Threading.RateLimiting;
+using DiscogsApiClient.Authentication.PlainOAuth;
 using DiscogsApiClient.Authentication.UserToken;
+using DiscogsApiClient.RateLimiting;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DiscogsApiClient;
@@ -13,10 +15,38 @@ public static class ServiceCollectionExtensions
     /// E.g. via the <see cref="ServiceCollectionExtensions.AddDiscogsUserTokenAuthentication(IServiceCollection)"/> or <see cref="ServiceCollectionExtensions.AddDiscogsPlainOAuthAuthentication(IServiceCollection)"/> method.
     /// </summary>
     /// <param name="userAgent">The suer agent to be used by the <see cref="DiscogsApiClient"/></param>
-    public static IServiceCollection AddDiscogsApiClient(this IServiceCollection services, string userAgent)
+    public static IServiceCollection AddDiscogsApiClient(this IServiceCollection services, Action<AddDiscogsApiClientOptions> configure)
     {
-        services.AddHttpClient<IDiscogsApiClient, DiscogsApiClient>(httpClient
-            => httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent));
+        var options = new AddDiscogsApiClientOptions();
+
+        configure(options);
+
+        if (string.IsNullOrWhiteSpace(options.UserAgent))
+        {
+            throw new ArgumentException("The user agent string must not be empty.", nameof(options.UserAgent));
+        }
+
+        var httpBuilder = services.AddHttpClient<IDiscogsApiClient, DiscogsApiClient>(httpClient
+            => httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent));
+
+        if (options.UseRateLimiting)
+        {
+            SlidingWindowRateLimiterOptions rateLimitingOptions = new()
+            {
+                Window = options.RateLimitingWindow,
+                SegmentsPerWindow = options.RateLimitingWindowSegments,
+                PermitLimit = options.RateLimitingPermits,
+                QueueLimit = options.RateLimitingQueueSize,
+                AutoReplenishment = true,
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst
+            };
+
+            services.AddSingleton(rateLimitingOptions);
+            services.AddTransient<RateLimiter, SlidingWindowRateLimiter>();
+            services.AddTransient<RateLimitedDelegatingHandler>();
+
+            httpBuilder.AddHttpMessageHandler<RateLimitedDelegatingHandler>();
+        }
 
         return services;
     }
@@ -37,5 +67,20 @@ public static class ServiceCollectionExtensions
     {
         services.AddSingleton<IAuthenticationProvider, PlainOAuthAuthenticationProvider>();
         return services;
+    }
+
+    public sealed class AddDiscogsApiClientOptions
+    {
+        public string UserAgent { get; set; } = "";
+
+        public bool UseRateLimiting { get; set; } = false;
+
+        public TimeSpan RateLimitingWindow { get; set; } = TimeSpan.FromSeconds(60);
+
+        public int RateLimitingWindowSegments { get; set; } = 12;
+
+        public int RateLimitingPermits { get; set; } = 40;
+
+        public int RateLimitingQueueSize { get; set; } = 100;
     }
 }
