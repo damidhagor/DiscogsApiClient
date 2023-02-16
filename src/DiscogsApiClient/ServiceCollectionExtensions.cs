@@ -14,7 +14,7 @@ public static class ServiceCollectionExtensions
     /// An implementation of <see cref="IAuthenticationProvider"/> needs to be added to the services collection as well.
     /// E.g. via the <see cref="ServiceCollectionExtensions.AddDiscogsUserTokenAuthentication(IServiceCollection)"/> or <see cref="ServiceCollectionExtensions.AddDiscogsPlainOAuthAuthentication(IServiceCollection)"/> method.
     /// </summary>
-    /// <param name="userAgent">The suer agent to be used by the <see cref="DiscogsApiClient"/></param>
+    /// <param name="configure">Method with an options object to configure the DiscogsApiClient.</param>
     public static IServiceCollection AddDiscogsApiClient(this IServiceCollection services, Action<AddDiscogsApiClientOptions> configure)
     {
         var options = new AddDiscogsApiClientOptions();
@@ -23,7 +23,7 @@ public static class ServiceCollectionExtensions
 
         if (string.IsNullOrWhiteSpace(options.UserAgent))
         {
-            throw new ArgumentException("The user agent string must not be empty.", nameof(options.UserAgent));
+            throw new InvalidOperationException("The user agent string must not be empty.");
         }
 
         var httpBuilder = services.AddHttpClient<IDiscogsApiClient, DiscogsApiClient>(httpClient
@@ -31,7 +31,7 @@ public static class ServiceCollectionExtensions
 
         if (options.UseRateLimiting)
         {
-            SlidingWindowRateLimiterOptions rateLimitingOptions = new()
+            var rateLimitingOptions = new SlidingWindowRateLimiterOptions()
             {
                 Window = options.RateLimitingWindow,
                 SegmentsPerWindow = options.RateLimitingWindowSegments,

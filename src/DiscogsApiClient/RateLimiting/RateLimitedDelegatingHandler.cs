@@ -13,7 +13,7 @@ internal sealed class RateLimitedDelegatingHandler : DelegatingHandler, IAsyncDi
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        using RateLimitLease lease = await _rateLimiter.AcquireAsync(1, cancellationToken);
+        using var lease = await _rateLimiter.AcquireAsync(1, cancellationToken);
 
         if (lease.IsAcquired)
         {
@@ -21,7 +21,7 @@ internal sealed class RateLimitedDelegatingHandler : DelegatingHandler, IAsyncDi
         }
 
         var response = new HttpResponseMessage(HttpStatusCode.TooManyRequests);
-        if (lease.TryGetMetadata(MetadataName.RetryAfter, out TimeSpan retryAfter))
+        if (lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter))
         {
             response.Headers.Add("Retry-After", ((int)retryAfter.TotalSeconds).ToString(NumberFormatInfo.InvariantInfo));
         }
