@@ -56,4 +56,19 @@ public sealed class UserTokenAuthenticationProvider : IAuthenticationProvider
 
         return request;
     }
+
+    /// <summary>
+    /// Creates an authentication header containing the user's personal access token.
+    /// </summary>
+    /// <param name="httpMethod"><inheritdoc/></param>
+    /// <param name="url"><inheritdoc/></param>
+    /// <returns><inheritdoc/></returns>
+    public string CreateAuthenticationHeader(
+        HttpMethod httpMethod,
+#if NET7_0
+        [StringSyntax(StringSyntaxAttribute.Uri)] string url)
+#else
+        string url)
+#endif
+        => $"Discogs token={_userToken}";
 }

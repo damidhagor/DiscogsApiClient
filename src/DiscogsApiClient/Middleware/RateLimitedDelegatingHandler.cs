@@ -1,8 +1,9 @@
 ﻿using System.Globalization;
 using System.Net;
 using System.Threading.RateLimiting;
+using DiscogsApiClient.Authentication;
 
-namespace DiscogsApiClient.RateLimiting;
+namespace DiscogsApiClient.Middleware;
 
 internal sealed class RateLimitedDelegatingHandler : DelegatingHandler, IAsyncDisposable
 {

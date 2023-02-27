@@ -95,6 +95,21 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
         return request;
     }
 
+    /// <summary>
+    /// Creates an authentication header containing the OAUth information.
+    /// </summary>
+    /// <param name="httpMethod"><inheritdoc/></param>
+    /// <param name="url"><inheritdoc/></param>
+    /// <returns><inheritdoc/></returns>
+    public string CreateAuthenticationHeader(
+        HttpMethod httpMethod,
+#if NET7_0
+        [StringSyntax(StringSyntaxAttribute.Uri)] string url)
+#else
+        string url)
+#endif
+        => CreateAuthenticationHeader();
+
 
     /// <summary>
     /// Gets the request token from the Discogs api.

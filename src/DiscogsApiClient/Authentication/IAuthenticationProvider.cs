@@ -36,4 +36,18 @@ public interface IAuthenticationProvider
 #else
         string url);
 #endif
+
+    /// <summary>
+    /// Creates an authentication header for the implemented authentication type.
+    /// </summary>
+    /// <param name="httpMethod">The <see cref="HttpMethod"/> for the created <see cref="HttpRequestMessage"/>.</param>
+    /// <param name="url">The Url of the created <see cref="HttpRequestMessage"/>.</param>
+    /// <returns>An authentication header.</returns>
+    string CreateAuthenticationHeader(
+        HttpMethod httpMethod,
+#if NET7_0
+        [StringSyntax(StringSyntaxAttribute.Uri)] string url);
+#else
+        string url);
+#endif
 }

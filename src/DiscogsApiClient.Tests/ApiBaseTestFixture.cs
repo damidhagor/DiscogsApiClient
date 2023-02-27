@@ -2,8 +2,9 @@ using System;
 using System.Net.Http;
 using System.Threading.RateLimiting;
 using System.Threading.Tasks;
+using DiscogsApiClient.Authentication;
 using DiscogsApiClient.Authentication.UserToken;
-using DiscogsApiClient.RateLimiting;
+using DiscogsApiClient.Middleware;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 
@@ -15,6 +16,7 @@ public abstract class ApiBaseTestFixture
     protected DiscogsApiClient ApiClient;
     protected IConfiguration Configuration;
 
+    private static IAuthenticationProvider _authenticationProvider = new UserTokenAuthenticationProvider();
     private static HttpClient _httpClient = new(new RateLimitedDelegatingHandler(new SlidingWindowRateLimiter(
                     new SlidingWindowRateLimiterOptions()
                     {
@@ -25,7 +27,12 @@ public abstract class ApiBaseTestFixture
                         QueueLimit = 1_000,
                         QueueProcessingOrder = QueueProcessingOrder.OldestFirst
                     }))
-    { InnerHandler = new HttpClientHandler() });
+    {
+        InnerHandler = new AuthenticationDelegatingHandler(_authenticationProvider)
+        {
+            InnerHandler = new HttpClientHandler()
+        }
+    });
 
     public ApiBaseTestFixture()
     {
@@ -39,8 +46,7 @@ public abstract class ApiBaseTestFixture
         if (_httpClient.DefaultRequestHeaders.UserAgent.Count == 0)
             _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent);
 
-        var authenticationProvider = new UserTokenAuthenticationProvider();
-        ApiClient = new DiscogsApiClient(_httpClient, authenticationProvider);
+        ApiClient = new DiscogsApiClient(_httpClient, _authenticationProvider);
     }
 
 

@@ -1,7 +1,7 @@
 ﻿using System.Threading.RateLimiting;
 using DiscogsApiClient.Authentication.PlainOAuth;
 using DiscogsApiClient.Authentication.UserToken;
-using DiscogsApiClient.RateLimiting;
+using DiscogsApiClient.Middleware;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DiscogsApiClient;
@@ -26,8 +26,11 @@ public static class ServiceCollectionExtensions
             throw new InvalidOperationException("The user agent string must not be empty.");
         }
 
+        services.AddTransient<AuthenticationDelegatingHandler>();
+
         var httpBuilder = services.AddHttpClient<IDiscogsApiClient, DiscogsApiClient>(httpClient
-            => httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent));
+            => httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent))
+            .AddHttpMessageHandler<AuthenticationDelegatingHandler>();
 
         if (options.UseRateLimiting)
         {
