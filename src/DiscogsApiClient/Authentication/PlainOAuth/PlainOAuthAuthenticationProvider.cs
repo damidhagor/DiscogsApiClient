@@ -139,7 +139,7 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
     /// <param name="requestToken">The request token obtained earlier in the flow.</param>
     /// <param name="callback">The callback url at which to return the verifier token.</param>
     /// <param name="getVerifier">The callback for the app to implement the login process.</param>
-    /// <returns>The veriefier token.</returns>
+    /// <returns>The verifier token.</returns>
     private async Task<string?> GetVerifier(string requestToken, string callback, GetVerifierCallback getVerifier, CancellationToken cancellationToken)
     {
         try

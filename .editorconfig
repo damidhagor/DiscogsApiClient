@@ -67,6 +67,7 @@ csharp_style_prefer_extended_property_pattern = true:suggestion
 csharp_style_var_for_built_in_types = true:suggestion
 csharp_style_var_when_type_is_apparent = true:suggestion
 csharp_style_var_elsewhere = true:suggestion
+csharp_new_line_before_open_brace = types,methods,anonymous_methods,control_blocks,anonymous_types,object_collection_array_initializers,lambdas,accessors
 
 [*.{cs,vb}]
 #### Naming styles ####
