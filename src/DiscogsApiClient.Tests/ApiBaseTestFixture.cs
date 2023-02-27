@@ -13,11 +13,18 @@ namespace DiscogsApiClient.Tests;
 [TestFixture]
 public abstract class ApiBaseTestFixture
 {
+    private static readonly IAuthenticationProvider _authenticationProvider;
+    private static readonly HttpClient _httpClient;
+
     protected DiscogsApiClient ApiClient;
     protected IConfiguration Configuration;
 
-    private static IAuthenticationProvider _authenticationProvider = new UserTokenAuthenticationProvider();
-    private static HttpClient _httpClient = new(new RateLimitedDelegatingHandler(new SlidingWindowRateLimiter(
+    static ApiBaseTestFixture()
+    {
+        _authenticationProvider = new UserTokenAuthenticationProvider();
+        _httpClient = new(
+            new RateLimitedDelegatingHandler(
+                new SlidingWindowRateLimiter(
                     new SlidingWindowRateLimiterOptions()
                     {
                         Window = TimeSpan.FromSeconds(60),
@@ -27,12 +34,16 @@ public abstract class ApiBaseTestFixture
                         QueueLimit = 1_000,
                         QueueProcessingOrder = QueueProcessingOrder.OldestFirst
                     }))
-    {
-        InnerHandler = new AuthenticationDelegatingHandler(_authenticationProvider)
-        {
-            InnerHandler = new HttpClientHandler()
-        }
-    });
+            {
+                InnerHandler = new AuthenticationDelegatingHandler(_authenticationProvider)
+                {
+                    InnerHandler = new DiscogsResponseDelegatingHandler()
+                    {
+                        InnerHandler = new HttpClientHandler()
+                    }
+                }
+            });
+    }
 
     public ApiBaseTestFixture()
     {

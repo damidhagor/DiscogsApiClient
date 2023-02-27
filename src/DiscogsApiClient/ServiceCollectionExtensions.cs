@@ -27,10 +27,12 @@ public static class ServiceCollectionExtensions
         }
 
         services.AddTransient<AuthenticationDelegatingHandler>();
+        services.AddTransient<DiscogsResponseDelegatingHandler>();
 
         var httpBuilder = services.AddHttpClient<IDiscogsApiClient, DiscogsApiClient>(httpClient
             => httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent))
-            .AddHttpMessageHandler<AuthenticationDelegatingHandler>();
+            .AddHttpMessageHandler<AuthenticationDelegatingHandler>()
+            .AddHttpMessageHandler<DiscogsResponseDelegatingHandler>();
 
         if (options.UseRateLimiting)
         {

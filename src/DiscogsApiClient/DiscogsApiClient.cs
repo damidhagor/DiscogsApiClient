@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Net;
-using System.Net.Http.Json;
 
 namespace DiscogsApiClient;
 
@@ -45,7 +44,6 @@ public sealed partial class DiscogsApiClient : IDiscogsApiClient
         CancellationToken cancellationToken)
     {
         using var response = await _httpClient.GetAsync(url, cancellationToken);
-        await response.CheckAndHandleHttpErrorCodes(cancellationToken);
 
         var result = await response.Content.DeserializeAsJsonAsync<T>(cancellationToken);
 
@@ -64,7 +62,6 @@ public sealed partial class DiscogsApiClient : IDiscogsApiClient
         var jsonContent = content is not null ? CreateJsonContent(content) : null;
 
         using var response = await _httpClient.PostAsync(url, jsonContent, cancellationToken);
-        await response.CheckAndHandleHttpErrorCodes(cancellationToken);
 
         var result = await response.Content.DeserializeAsJsonAsync<T>(cancellationToken);
 
@@ -83,7 +80,6 @@ public sealed partial class DiscogsApiClient : IDiscogsApiClient
         var jsonContent = content is not null ? CreateJsonContent(content) : null;
 
         using var response = await _httpClient.PutAsync(url, jsonContent, cancellationToken);
-        await response.CheckAndHandleHttpErrorCodes(cancellationToken);
 
         var result = await response.Content.DeserializeAsJsonAsync<T>(cancellationToken);
 
@@ -99,7 +95,6 @@ public sealed partial class DiscogsApiClient : IDiscogsApiClient
         CancellationToken cancellationToken)
     {
         using var response = await _httpClient.DeleteAsync(url, cancellationToken);
-        await response.CheckAndHandleHttpErrorCodes(cancellationToken);
         return response.StatusCode == HttpStatusCode.NoContent;
     }
 
