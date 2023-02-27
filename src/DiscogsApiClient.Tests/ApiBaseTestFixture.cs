@@ -47,14 +47,8 @@ public abstract class ApiBaseTestFixture
     [OneTimeSetUp]
     public virtual async Task Initialize()
     {
-        var userToken = Configuration["DiscogsApiOptions:UserToken"];
+        var userToken = Configuration["DiscogsApiOptions:UserToken"]!;
         var authenticationRequest = new UserTokenAuthenticationRequest(userToken);
         await ApiClient.AuthenticateAsync(authenticationRequest, default);
-    }
-
-    [OneTimeTearDown]
-    public virtual void Cleanup()
-    {
-        //_httpClient.Dispose();
     }
 }
