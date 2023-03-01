@@ -32,4 +32,7 @@
 		<PackageReference Include="System.Threading.RateLimiting" Version="7.0.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="DiscogsApiClient.Tests" />
+	</ItemGroup>
 </Project>
