@@ -37,17 +37,17 @@ public sealed partial class DiscogsApiClient : IDiscogsApiClient
     {
         var url = DiscogsApiUrls.OAuthIdentityUrl;
         return await _httpClient.GetFromJsonAsync<Identity>(url, cancellationToken)
-            ?? throw new DiscogsException();
+            ?? throw new DiscogsException(ExceptionMessages.GetRequestNotDeserializedMessage());
     }
 
     public async Task<User> GetUserAsync(string username, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(username))
-            throw new ArgumentException(nameof(username));
+            throw new ArgumentException(ExceptionMessages.GetNoUsernameProvidedMessage(), nameof(username));
 
         var url = string.Format(DiscogsApiUrls.UsersUrl, username);
         return await _httpClient.GetFromJsonAsync<User>(url, cancellationToken)
-            ?? throw new DiscogsException();
+            ?? throw new DiscogsException(ExceptionMessages.GetRequestNotDeserializedMessage());
     }
     #endregion
 
@@ -56,18 +56,18 @@ public sealed partial class DiscogsApiClient : IDiscogsApiClient
     public async Task<WantlistReleasesResponse> GetWantlistReleasesAsync(string username, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(username))
-            throw new ArgumentException(nameof(username));
+            throw new ArgumentException(ExceptionMessages.GetNoUsernameProvidedMessage(), nameof(username));
 
         var url = string.Format(DiscogsApiUrls.WantlistUrl, username)
             .AppendQueryParameters(paginationQueryParameters);
         return await _httpClient.GetFromJsonAsync<WantlistReleasesResponse>(url, cancellationToken)
-            ?? throw new DiscogsException();
+            ?? throw new DiscogsException(ExceptionMessages.GetRequestNotDeserializedMessage());
     }
 
     public async Task<WantlistRelease> AddReleaseToWantlistAsync(string username, int releaseId, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(username))
-            throw new ArgumentException(nameof(username));
+            throw new ArgumentException(ExceptionMessages.GetNoUsernameProvidedMessage(), nameof(username));
 
         var url = string.Format(DiscogsApiUrls.WantlistReleaseUrl, username, releaseId);
         using var response = await _httpClient.PutAsJsonAsync(url, new { }, cancellationToken);
@@ -77,7 +77,7 @@ public sealed partial class DiscogsApiClient : IDiscogsApiClient
     public async Task<bool> DeleteReleaseFromWantlistAsync(string username, int releaseId, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(username))
-            throw new ArgumentException(nameof(username));
+            throw new ArgumentException(ExceptionMessages.GetNoUsernameProvidedMessage(), nameof(username));
 
         var url = string.Format(DiscogsApiUrls.WantlistReleaseUrl, username, releaseId);
         using var response = await _httpClient.DeleteAsync(url, cancellationToken);
@@ -90,29 +90,29 @@ public sealed partial class DiscogsApiClient : IDiscogsApiClient
     public async Task<CollectionFoldersResponse> GetCollectionFoldersAsync(string username, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(username))
-            throw new ArgumentException(nameof(username));
+            throw new ArgumentException(ExceptionMessages.GetNoUsernameProvidedMessage(), nameof(username));
 
         var url = string.Format(DiscogsApiUrls.CollectionFoldersUrl, username);
         return await _httpClient.GetFromJsonAsync<CollectionFoldersResponse>(url, cancellationToken)
-            ?? throw new DiscogsException();
+            ?? throw new DiscogsException(ExceptionMessages.GetRequestNotDeserializedMessage());
     }
 
     public async Task<CollectionFolder> GetCollectionFolderAsync(string username, int folderId, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(username))
-            throw new ArgumentException(nameof(username));
+            throw new ArgumentException(ExceptionMessages.GetNoUsernameProvidedMessage(), nameof(username));
 
         var url = string.Format(DiscogsApiUrls.CollectionFolderUrl, username, folderId);
         return await _httpClient.GetFromJsonAsync<CollectionFolder>(url, cancellationToken)
-            ?? throw new DiscogsException();
+            ?? throw new DiscogsException(ExceptionMessages.GetRequestNotDeserializedMessage());
     }
 
     public async Task<CollectionFolder> CreateCollectionFolderAsync(string username, string folderName, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(username))
-            throw new ArgumentException(nameof(username));
+            throw new ArgumentException(ExceptionMessages.GetNoUsernameProvidedMessage(), nameof(username));
         if (string.IsNullOrWhiteSpace(folderName))
-            throw new ArgumentException(nameof(folderName));
+            throw new ArgumentException(ExceptionMessages.GetNoFolderNameProvidedMessage(), nameof(folderName));
 
         var url = string.Format(DiscogsApiUrls.CollectionFoldersUrl, username);
         var content = new { Name = folderName };
@@ -123,9 +123,9 @@ public sealed partial class DiscogsApiClient : IDiscogsApiClient
     public async Task<CollectionFolder> UpdateCollectionFolderAsync(string username, int folderId, string folderName, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(username))
-            throw new ArgumentException(nameof(username));
+            throw new ArgumentException(ExceptionMessages.GetNoUsernameProvidedMessage(), nameof(username));
         if (string.IsNullOrWhiteSpace(folderName))
-            throw new ArgumentException(nameof(folderName));
+            throw new ArgumentException(ExceptionMessages.GetNoFolderNameProvidedMessage(), nameof(folderName));
 
         var url = string.Format(DiscogsApiUrls.CollectionFolderUrl, username, folderId);
         var content = new { Name = folderName };
@@ -136,7 +136,7 @@ public sealed partial class DiscogsApiClient : IDiscogsApiClient
     public async Task<bool> DeleteCollectionFolderAsync(string username, int folderId, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(username))
-            throw new ArgumentException(nameof(username));
+            throw new ArgumentException(ExceptionMessages.GetNoUsernameProvidedMessage(), nameof(username));
 
         var url = string.Format(DiscogsApiUrls.CollectionFolderUrl, username, folderId);
         using var response = await _httpClient.DeleteAsync(url, cancellationToken);
@@ -146,18 +146,18 @@ public sealed partial class DiscogsApiClient : IDiscogsApiClient
     public async Task<CollectionFolderReleasesResponse> GetCollectionFolderReleasesAsync(string username, int folderId, PaginationQueryParameters paginationQueryParameters, CollectionFolderReleaseSortQueryParameters collectionFolderReleaseSortQueryParameters, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(username))
-            throw new ArgumentException(nameof(username));
+            throw new ArgumentException(ExceptionMessages.GetNoUsernameProvidedMessage(), nameof(username));
 
         var url = string.Format(DiscogsApiUrls.CollectionFolderReleasesUrl, username, folderId)
             .AppendQueryParameters(paginationQueryParameters, collectionFolderReleaseSortQueryParameters);
         return await _httpClient.GetFromJsonAsync<CollectionFolderReleasesResponse>(url, cancellationToken)
-            ?? throw new DiscogsException();
+            ?? throw new DiscogsException(ExceptionMessages.GetRequestNotDeserializedMessage());
     }
 
     public async Task<CollectionFolderRelease> AddReleaseToCollectionFolderAsync(string username, int folderId, int releaseId, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(username))
-            throw new ArgumentException(nameof(username));
+            throw new ArgumentException(ExceptionMessages.GetNoUsernameProvidedMessage(), nameof(username));
 
         var url = string.Format(DiscogsApiUrls.CollectionFolderAddReleaseUrl, username, folderId, releaseId);
         using var response = await _httpClient.PostAsJsonAsync(url, new { }, cancellationToken);
@@ -167,7 +167,7 @@ public sealed partial class DiscogsApiClient : IDiscogsApiClient
     public async Task<bool> DeleteReleaseFromCollectionFolderAsync(string username, int folderId, int releaseId, int instanceId, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(username))
-            throw new ArgumentException(nameof(username));
+            throw new ArgumentException(ExceptionMessages.GetNoUsernameProvidedMessage(), nameof(username));
 
         var url = string.Format(DiscogsApiUrls.CollectionFolderDeleteReleaseUrl, username, folderId, releaseId, instanceId);
         using var response = await _httpClient.DeleteAsync(url, cancellationToken);
@@ -177,11 +177,11 @@ public sealed partial class DiscogsApiClient : IDiscogsApiClient
     public async Task<CollectionValue> GetCollectionValueAsync(string username, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(username))
-            throw new ArgumentException(nameof(username));
+            throw new ArgumentException(ExceptionMessages.GetNoUsernameProvidedMessage(), nameof(username));
 
         var url = string.Format(DiscogsApiUrls.CollectionValueUrl, username);
         return await _httpClient.GetFromJsonAsync<CollectionValue>(url, cancellationToken)
-            ?? throw new DiscogsException();
+            ?? throw new DiscogsException(ExceptionMessages.GetRequestNotDeserializedMessage());
     }
     #endregion
 
@@ -191,7 +191,7 @@ public sealed partial class DiscogsApiClient : IDiscogsApiClient
     {
         var url = string.Format(DiscogsApiUrls.ArtistsUrl, artistId);
         return await _httpClient.GetFromJsonAsync<Artist>(url, cancellationToken)
-            ?? throw new DiscogsException();
+            ?? throw new DiscogsException(ExceptionMessages.GetRequestNotDeserializedMessage());
     }
 
     public async Task<ArtistReleasesResponse> GetArtistReleasesAsync(int artistId, PaginationQueryParameters paginationQueryParameters, ArtistReleaseSortQueryParameters artistReleaseSortQueryParameters, CancellationToken cancellationToken)
@@ -199,14 +199,14 @@ public sealed partial class DiscogsApiClient : IDiscogsApiClient
         var url = string.Format(DiscogsApiUrls.ArtistReleasesUrl, artistId)
             .AppendQueryParameters(paginationQueryParameters, artistReleaseSortQueryParameters);
         return await _httpClient.GetFromJsonAsync<ArtistReleasesResponse>(url, cancellationToken)
-            ?? throw new DiscogsException();
+            ?? throw new DiscogsException(ExceptionMessages.GetRequestNotDeserializedMessage());
     }
 
     public async Task<MasterRelease> GetMasterReleaseAsync(int masterReleaseId, CancellationToken cancellationToken)
     {
         var url = string.Format(DiscogsApiUrls.MasterReleasesUrl, masterReleaseId);
         return await _httpClient.GetFromJsonAsync<MasterRelease>(url, cancellationToken)
-            ?? throw new DiscogsException();
+            ?? throw new DiscogsException(ExceptionMessages.GetRequestNotDeserializedMessage());
     }
 
     public async Task<MasterReleaseVersionsResponse> GetMasterReleaseVersionsAsync(int masterReleaseId, PaginationQueryParameters paginationQueryParameters, MasterReleaseVersionFilterQueryParameters masterReleaseVersionQueryParameters, CancellationToken cancellationToken)
@@ -214,35 +214,35 @@ public sealed partial class DiscogsApiClient : IDiscogsApiClient
         var url = string.Format(DiscogsApiUrls.MasterReleaseVersionsUrl, masterReleaseId)
             .AppendQueryParameters(masterReleaseVersionQueryParameters, paginationQueryParameters);
         return await _httpClient.GetFromJsonAsync<MasterReleaseVersionsResponse>(url, cancellationToken)
-            ?? throw new DiscogsException();
+            ?? throw new DiscogsException(ExceptionMessages.GetRequestNotDeserializedMessage());
     }
 
     public async Task<Release> GetReleaseAsync(int releaseId, CancellationToken cancellationToken)
     {
         var url = string.Format(DiscogsApiUrls.ReleasesUrl, releaseId);
         return await _httpClient.GetFromJsonAsync<Release>(url, cancellationToken)
-            ?? throw new DiscogsException();
+            ?? throw new DiscogsException(ExceptionMessages.GetRequestNotDeserializedMessage());
     }
 
     public async Task<ReleaseCommunityRatingResponse> GetReleaseCommunityRatingAsync(int releaseId, CancellationToken cancellationToken)
     {
         var url = string.Format(DiscogsApiUrls.ReleaseCommunityRatingsUrl, releaseId);
         return await _httpClient.GetFromJsonAsync<ReleaseCommunityRatingResponse>(url, cancellationToken)
-            ?? throw new DiscogsException();
+            ?? throw new DiscogsException(ExceptionMessages.GetRequestNotDeserializedMessage());
     }
 
     public async Task<ReleaseStatsResponse> GetReleaseStatsAsync(int releaseId, CancellationToken cancellationToken)
     {
         var url = string.Format(DiscogsApiUrls.ReleaseStatsUrl, releaseId);
         return await _httpClient.GetFromJsonAsync<ReleaseStatsResponse>(url, cancellationToken)
-            ?? throw new DiscogsException();
+            ?? throw new DiscogsException(ExceptionMessages.GetRequestNotDeserializedMessage());
     }
 
     public async Task<Label> GetLabelAsync(int labelId, CancellationToken cancellationToken)
     {
         var url = string.Format(DiscogsApiUrls.LabelsUrl, labelId);
         return await _httpClient.GetFromJsonAsync<Label>(url, cancellationToken)
-            ?? throw new DiscogsException();
+            ?? throw new DiscogsException(ExceptionMessages.GetRequestNotDeserializedMessage());
     }
 
     public async Task<LabelReleasesResponse> GetLabelReleasesAsync(int labelId, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken)
@@ -250,7 +250,7 @@ public sealed partial class DiscogsApiClient : IDiscogsApiClient
         var url = string.Format(DiscogsApiUrls.LabelReleasesUrl, labelId)
             .AppendQueryParameters(paginationQueryParameters);
         return await _httpClient.GetFromJsonAsync<LabelReleasesResponse>(url, cancellationToken)
-            ?? throw new DiscogsException();
+            ?? throw new DiscogsException(ExceptionMessages.GetRequestNotDeserializedMessage());
     }
 
     public async Task<SearchResultsResponse> SearchDatabaseAsync(SearchQueryParameters searchQueryParameters, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken)
@@ -258,7 +258,7 @@ public sealed partial class DiscogsApiClient : IDiscogsApiClient
         var url = DiscogsApiUrls.SearchUrl
             .AppendQueryParameters(searchQueryParameters, paginationQueryParameters);
         return await _httpClient.GetFromJsonAsync<SearchResultsResponse>(url, cancellationToken)
-            ?? throw new DiscogsException();
+            ?? throw new DiscogsException(ExceptionMessages.GetRequestNotDeserializedMessage());
     }
     #endregion
 }

@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 using System.Net;
 using System.Threading.RateLimiting;
-using DiscogsApiClient.Authentication;
 
 namespace DiscogsApiClient.Middleware;
 

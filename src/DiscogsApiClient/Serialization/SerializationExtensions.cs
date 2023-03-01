@@ -16,11 +16,11 @@ internal static class SerializationExtensions
             var stringContent = await httpContent.ReadAsStringAsync(cancellationToken);
             var result = JsonSerializer.Deserialize<T>(stringContent, _jsonSerializerOptions);
 
-            return result ?? throw new SerializationDiscogsException("Deserialization returned no result.");
+            return result ?? throw new SerializationDiscogsException(ExceptionMessages.GetDeserializationNoResultMessage());
         }
         catch (Exception ex)
         {
-            throw new SerializationDiscogsException("Deserialization failed.", ex);
+            throw new SerializationDiscogsException(ExceptionMessages.GetDeserializationFailedMessage(), ex);
         }
     }
 
@@ -30,11 +30,11 @@ internal static class SerializationExtensions
         {
             var json = JsonSerializer.Serialize<T>(payload, _jsonSerializerOptions);
 
-            return json ?? throw new SerializationDiscogsException("Serialization returned no result.");
+            return json ?? throw new SerializationDiscogsException(ExceptionMessages.GetSerializationNoResultMessage());
         }
         catch (Exception ex)
         {
-            throw new SerializationDiscogsException("Serialization failed.", ex);
+            throw new SerializationDiscogsException(ExceptionMessages.GetSerializationFailedMessage(), ex);
         }
     }
 }

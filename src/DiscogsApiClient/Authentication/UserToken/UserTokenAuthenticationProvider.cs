@@ -30,7 +30,7 @@ public sealed class UserTokenAuthenticationProvider : IAuthenticationProvider
     public Task<IAuthenticationResponse> AuthenticateAsync(IAuthenticationRequest authenticationRequest, CancellationToken cancellationToken)
     {
         if (authenticationRequest is not UserTokenAuthenticationRequest userTokenAuthenticationRequest)
-            throw new ArgumentException($"The provided authentication request must be of type {typeof(UserTokenAuthenticationRequest).Name}", nameof(authenticationRequest));
+            throw new ArgumentException(ExceptionMessages.GetWrongAuthenticationRequestTypeMessage(nameof(UserTokenAuthenticationRequest)), nameof(authenticationRequest));
 
         _userToken = userTokenAuthenticationRequest.UserToken;
 

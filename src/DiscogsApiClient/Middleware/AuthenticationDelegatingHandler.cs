@@ -11,7 +11,7 @@ internal sealed class AuthenticationDelegatingHandler : DelegatingHandler
     {
         if (request.RequestUri is null)
         {
-            throw new InvalidOperationException("The request uri must be set.");
+            throw new InvalidOperationException(ExceptionMessages.GetRequestUriMissingMessage());
         }
 
         if (_authenticationProvider.IsAuthenticated)

@@ -131,16 +131,15 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
 
         try
         {
-            using (var request = CreateRequestTokenRequest(callback))
-            using (var response = await httpClient.SendAsync(request, cancellationToken))
-            {
-                var content = await response.Content.ReadAsStringAsync(cancellationToken);
+            using var request = CreateRequestTokenRequest(callback);
+            using var response = await httpClient.SendAsync(request, cancellationToken);
 
-                var parameters = HttpUtility.ParseQueryString(content);
+            var content = await response.Content.ReadAsStringAsync(cancellationToken);
 
-                requestToken = parameters.Get("oauth_token") ?? "";
-                requestTokenSecret = parameters.Get("oauth_token_secret") ?? "";
-            }
+            var parameters = HttpUtility.ParseQueryString(content);
+
+            requestToken = parameters.Get("oauth_token") ?? "";
+            requestTokenSecret = parameters.Get("oauth_token_secret") ?? "";
         }
         catch (Exception) { }
 
@@ -183,16 +182,15 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
 
         try
         {
-            using (var request = CreateAccessTokenRequest(requestToken, requestTokenSecret, verifier))
-            using (var response = await httpClient.SendAsync(request, cancellationToken))
-            {
-                var content = await response.Content.ReadAsStringAsync(cancellationToken);
+            using var request = CreateAccessTokenRequest(requestToken, requestTokenSecret, verifier);
+            using var response = await httpClient.SendAsync(request, cancellationToken);
 
-                var parameters = HttpUtility.ParseQueryString(content);
+            var content = await response.Content.ReadAsStringAsync(cancellationToken);
 
-                accessToken = parameters.Get("oauth_token") ?? "";
-                accessTokenSecret = parameters.Get("oauth_token_secret") ?? "";
-            }
+            var parameters = HttpUtility.ParseQueryString(content);
+
+            accessToken = parameters.Get("oauth_token") ?? "";
+            accessTokenSecret = parameters.Get("oauth_token_secret") ?? "";
         }
         catch (Exception) { }
 
@@ -203,7 +201,7 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
     /// <summary>
     /// Creates the <see cref="HttpRequestMessage"/> for getting the request token from the Discogs api.
     /// </summary>
-    /// <param name="callback">The callback url at which the reqtest token is returned later.</param>
+    /// <param name="callback">The callback url at which the request token is returned later.</param>
     private HttpRequestMessage CreateRequestTokenRequest(
 #if NET7_0
         [StringSyntax(StringSyntaxAttribute.Uri)] string callback)
@@ -215,9 +213,9 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
 
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
 
-        (string timestamp, string nonce) = CreateTimestampAndNonce();
+        (var timestamp, var nonce) = CreateTimestampAndNonce();
 
-        string authHeader = "OAuth ";
+        var authHeader = "OAuth ";
         authHeader += $"oauth_consumer_key=\"{WebUtility.UrlEncode(_consumerKey)}\",";
         authHeader += $"oauth_nonce=\"{WebUtility.UrlEncode(nonce)}\",";
         authHeader += $"oauth_signature=\"{WebUtility.UrlEncode($"{_consumerSecret}&")}\",";
@@ -242,9 +240,9 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
 
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
 
-        (string timestamp, string nonce) = CreateTimestampAndNonce();
+        (var timestamp, var nonce) = CreateTimestampAndNonce();
 
-        string authHeader = "OAuth ";
+        var authHeader = "OAuth ";
         authHeader += $"oauth_consumer_key=\"{WebUtility.UrlEncode(_consumerKey)}\",";
         authHeader += $"oauth_nonce=\"{WebUtility.UrlEncode(nonce)}\",";
         authHeader += $"oauth_token=\"{WebUtility.UrlEncode(requestToken)}\",";
@@ -264,9 +262,9 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
     /// </summary>
     private string CreateAuthenticationHeader()
     {
-        (string timestamp, string nonce) = CreateTimestampAndNonce();
+        (var timestamp, var nonce) = CreateTimestampAndNonce();
 
-        string header = "OAuth ";
+        var header = "OAuth ";
         header += $"oauth_consumer_key=\"{WebUtility.UrlEncode(_consumerKey)}\",";
         header += $"oauth_nonce=\"{WebUtility.UrlEncode(nonce)}\",";
         header += $"oauth_token=\"{WebUtility.UrlEncode(_accessToken)}\",";
@@ -282,10 +280,10 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
     /// </summary>
     private (string timestamp, string nonce) CreateTimestampAndNonce()
     {
-        TimeSpan ellapsedTimeSince1970 = DateTime.UtcNow - new DateTime(1970, 1, 1);
+        var elapsedTimeSince1970 = DateTime.UtcNow - new DateTime(1970, 1, 1);
 
-        long timestamp = (long)ellapsedTimeSince1970.TotalSeconds;
-        long nonce = (long)ellapsedTimeSince1970.TotalMilliseconds;
+        var timestamp = (long)elapsedTimeSince1970.TotalSeconds;
+        var nonce = (long)elapsedTimeSince1970.TotalMilliseconds;
 
         return (timestamp.ToString(), nonce.ToString());
     }

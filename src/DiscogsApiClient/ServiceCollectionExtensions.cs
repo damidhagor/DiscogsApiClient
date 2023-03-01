@@ -23,7 +23,7 @@ public static class ServiceCollectionExtensions
 
         if (string.IsNullOrWhiteSpace(options.UserAgent))
         {
-            throw new InvalidOperationException("The user agent string must not be empty.");
+            throw new InvalidOperationException(ExceptionMessages.GetUserAgentMissingMessage());
         }
 
         services.AddTransient<AuthenticationDelegatingHandler>();
