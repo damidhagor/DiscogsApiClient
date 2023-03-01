@@ -9,10 +9,7 @@ internal sealed class AuthenticationDelegatingHandler : DelegatingHandler
 
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        if (request.RequestUri is null)
-        {
-            throw new InvalidOperationException(ExceptionMessages.GetRequestUriMissingMessage());
-        }
+        Guard.IsNotNull(request.RequestUri);
 
         if (_authenticationProvider.IsAuthenticated)
         {

@@ -18,7 +18,6 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
     private string _accessToken = "";
     private string _accessTokenSecret = "";
 
-    /// <inheritdoc/>
     public bool IsAuthenticated => !string.IsNullOrWhiteSpace(_accessToken) && !string.IsNullOrWhiteSpace(_accessTokenSecret);
 
 
@@ -34,14 +33,15 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
     /// <exception cref="InvalidOperationException">Fires this exception if no consumer key or secret are provided.</exception>
     public async Task<IAuthenticationResponse> AuthenticateAsync(IAuthenticationRequest authenticationRequest, CancellationToken cancellationToken)
     {
-        if (authenticationRequest is not PlainOAuthAuthenticationRequest authAuthenticationRequest)
-            throw new ArgumentException($"The provided authentication request must be of type {typeof(PlainOAuthAuthenticationRequest).Name}", nameof(authenticationRequest));
+        Guard.IsOfType<PlainOAuthAuthenticationRequest>(authenticationRequest);
 
-        _userAgent = authAuthenticationRequest.UserAgent;
-        _consumerKey = authAuthenticationRequest.ConsumerKey;
-        _consumerSecret = authAuthenticationRequest.ConsumerSecret;
-        _accessToken = authAuthenticationRequest.AccessToken;
-        _accessTokenSecret = authAuthenticationRequest.AccessTokenSecret;
+        var oAuthAuthenticationRequest = (PlainOAuthAuthenticationRequest)authenticationRequest;
+
+        _userAgent = oAuthAuthenticationRequest.UserAgent;
+        _consumerKey = oAuthAuthenticationRequest.ConsumerKey;
+        _consumerSecret = oAuthAuthenticationRequest.ConsumerSecret;
+        _accessToken = oAuthAuthenticationRequest.AccessToken;
+        _accessTokenSecret = oAuthAuthenticationRequest.AccessTokenSecret;
 
         if (string.IsNullOrWhiteSpace(_accessToken) || string.IsNullOrWhiteSpace(_accessTokenSecret))
         {
@@ -54,12 +54,12 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
             if (string.IsNullOrWhiteSpace(_consumerKey) && string.IsNullOrWhiteSpace(_consumerSecret))
                 throw new InvalidOperationException("No consumer token or secret provided.");
 
-            var (requestToken, requestTokenSecret) = await GetRequestToken(httpClient, authAuthenticationRequest.VerifierCallbackUrl, cancellationToken);
+            var (requestToken, requestTokenSecret) = await GetRequestToken(httpClient, oAuthAuthenticationRequest.VerifierCallbackUrl, cancellationToken);
             if (string.IsNullOrWhiteSpace(requestToken) || string.IsNullOrWhiteSpace(requestTokenSecret))
                 return new PlainOAuthAuthenticationResponse("Getting request token failed.");
 
 
-            var verifier = await GetVerifier(requestToken, authAuthenticationRequest.VerifierCallbackUrl, authAuthenticationRequest.GetVerifierCallback, cancellationToken);
+            var verifier = await GetVerifier(requestToken, oAuthAuthenticationRequest.VerifierCallbackUrl, oAuthAuthenticationRequest.GetVerifierCallback, cancellationToken);
             if (string.IsNullOrWhiteSpace(verifier))
                 return new PlainOAuthAuthenticationResponse("Failed getting verifier token.");
 

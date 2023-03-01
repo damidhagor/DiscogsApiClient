@@ -14,7 +14,6 @@ public sealed class UserTokenAuthenticationProvider : IAuthenticationProvider
     /// </summary>
     private string _userToken = "";
 
-    /// <inheritdoc/>
     public bool IsAuthenticated => !string.IsNullOrWhiteSpace(_userToken);
 
 
@@ -29,10 +28,10 @@ public sealed class UserTokenAuthenticationProvider : IAuthenticationProvider
     /// <exception cref="ArgumentException">Fires this exception if the provided <see cref="IAuthenticationRequest"/> is not a <see cref="UserTokenAuthenticationRequest"/>.</exception>
     public Task<IAuthenticationResponse> AuthenticateAsync(IAuthenticationRequest authenticationRequest, CancellationToken cancellationToken)
     {
-        if (authenticationRequest is not UserTokenAuthenticationRequest userTokenAuthenticationRequest)
-            throw new ArgumentException(ExceptionMessages.GetWrongAuthenticationRequestTypeMessage(nameof(UserTokenAuthenticationRequest)), nameof(authenticationRequest));
+        Guard.IsOfType<UserTokenAuthenticationRequest>(authenticationRequest, nameof(authenticationRequest));
 
-        _userToken = userTokenAuthenticationRequest.UserToken;
+        var tokenAuthenticationRequest = (UserTokenAuthenticationRequest)authenticationRequest;
+        _userToken = tokenAuthenticationRequest.UserToken;
 
         return Task.FromResult<IAuthenticationResponse>(new UserTokenAuthenticationResponse(true));
     }

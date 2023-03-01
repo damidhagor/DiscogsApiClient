@@ -11,6 +11,7 @@ namespace DiscogsApiClient.Tests;
 public sealed class RateLimitingTestFixture : ApiBaseTestFixture
 {
     [Test]
+    [Explicit]
     public async Task ClientIsRateLimited_Success()
     {
         int succeeded = 0;

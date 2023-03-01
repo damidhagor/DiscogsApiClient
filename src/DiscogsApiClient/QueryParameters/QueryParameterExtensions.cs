@@ -18,8 +18,7 @@ internal static class QueryParameterExtensions
     /// <exception cref="ArgumentNullException">If the url is null or whitespace.</exception>
     public static string AppendQueryParameters(this string url, params IQueryParameters[] queryParameters)
     {
-        if (string.IsNullOrWhiteSpace(url))
-            throw new ArgumentNullException(nameof(url));
+        Guard.IsNotNullOrWhiteSpace(url);
 
         var queryParts = queryParameters.Select(p => p.CreateQueryParameterString());
         var query = string.Join("&", queryParts);
