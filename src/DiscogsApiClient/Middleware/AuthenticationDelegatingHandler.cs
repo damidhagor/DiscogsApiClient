@@ -5,9 +5,7 @@ internal sealed class AuthenticationDelegatingHandler : DelegatingHandler
     private readonly IAuthenticationProvider _authenticationProvider;
 
     public AuthenticationDelegatingHandler(IAuthenticationProvider authenticationProvider)
-    {
-        _authenticationProvider = authenticationProvider;
-    }
+        => _authenticationProvider = authenticationProvider;
 
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {

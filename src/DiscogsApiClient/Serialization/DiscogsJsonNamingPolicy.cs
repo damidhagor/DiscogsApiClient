@@ -37,7 +37,7 @@ internal sealed class DiscogsJsonNamingPolicy : JsonNamingPolicy
             }
         }
 
-        string convertedName = stringBuilder.ToString();
+        var convertedName = stringBuilder.ToString();
         _cachedNames[name] = convertedName;
         return convertedName;
     }

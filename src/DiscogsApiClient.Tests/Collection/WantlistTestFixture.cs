@@ -13,14 +13,13 @@ public sealed class WantlistTestFixture : ApiBaseTestFixture
     {
         var username = "damidhagor";
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
-        var itemCount = 0;
         var summedUpItemCount = 0;
 
         var response = await ApiClient.GetWantlistReleasesAsync(username, paginationParams, default);
-        itemCount = response.Pagination.Items;
+        var itemCount = response.Pagination.Items;
         summedUpItemCount += response.Wants.Count;
 
-        for (int p = 2; p <= response.Pagination.Pages; p++)
+        for (var p = 2; p <= response.Pagination.Pages; p++)
         {
             paginationParams = paginationParams with { Page = p };
             response = await ApiClient.GetWantlistReleasesAsync(username, paginationParams, default);

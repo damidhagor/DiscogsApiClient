@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace DiscogsApiClient.Serialization;
 
@@ -8,12 +7,7 @@ namespace DiscogsApiClient.Serialization;
 /// </summary>
 internal static class SerializationExtensions
 {
-    private static readonly DiscogsJsonNamingPolicy _jsonNamingPolicy = new();
-    private static readonly JsonSerializerOptions _jsonSerializerOptions = new()
-    {
-        PropertyNamingPolicy = _jsonNamingPolicy,
-        Converters = { new JsonStringEnumConverter(_jsonNamingPolicy) }
-    };
+    private static readonly JsonSerializerOptions _jsonSerializerOptions = DiscogsSerializerOptions.Options;
 
     public static async Task<T> DeserializeAsJsonAsync<T>(this HttpContent httpContent, CancellationToken cancellationToken)
     {
