@@ -42,7 +42,10 @@ public abstract class ApiBaseTestFixture
                         InnerHandler = new HttpClientHandler()
                     }
                 }
-            });
+            })
+        {
+            BaseAddress = new Uri("https://api.discogs.com")
+        };
     }
 
     public ApiBaseTestFixture()

@@ -5,6 +5,8 @@
 /// </summary>
 internal static class ExceptionMessages
 {
+    public static string GetBaseUrlMissingMessage() => "The base url string must not be empty.";
+
     public static string GetUserAgentMissingMessage() => "The user agent string must not be empty.";
 
     public static string GetSerializationNoResultMessage() => "Serialization returned no result.";

@@ -158,7 +158,7 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
     {
         try
         {
-            var url = string.Format(DiscogsApiUrls.VerifierTokenUrl, requestToken);
+            var url = $"https://discogs.com/oauth/authorize?oauth_token={requestToken}";
             return await getVerifier(url, callback, cancellationToken);
         }
         catch (Exception)
@@ -209,7 +209,7 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
         string callback)
 #endif
     {
-        var request = new HttpRequestMessage(HttpMethod.Get, DiscogsApiUrls.OAuthRequestTokenUrl);
+        var request = new HttpRequestMessage(HttpMethod.Get, "/oauth/request_token");
 
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
 
@@ -236,7 +236,7 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
     /// <param name="verifier">The obtained verifier token.</param>
     private HttpRequestMessage CreateAccessTokenRequest(string requestToken, string requestTokenSecret, string verifier)
     {
-        var request = new HttpRequestMessage(HttpMethod.Post, DiscogsApiUrls.OAuthAccessTokenUrl);
+        var request = new HttpRequestMessage(HttpMethod.Post, "/oauth/access_token");
 
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
 

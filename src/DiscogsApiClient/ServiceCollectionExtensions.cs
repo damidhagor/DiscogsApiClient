@@ -21,6 +21,11 @@ public static class ServiceCollectionExtensions
 
         configure(options);
 
+        if (string.IsNullOrWhiteSpace(options.BaseUrl))
+        {
+            throw new InvalidOperationException(ExceptionMessages.GetBaseUrlMissingMessage());
+        }
+
         if (string.IsNullOrWhiteSpace(options.UserAgent))
         {
             throw new InvalidOperationException(ExceptionMessages.GetUserAgentMissingMessage());
@@ -30,7 +35,11 @@ public static class ServiceCollectionExtensions
         services.AddTransient<DiscogsResponseDelegatingHandler>();
 
         var httpBuilder = services.AddHttpClient<IDiscogsApiClient, DiscogsApiClient>(httpClient
-            => httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent))
+            =>
+        {
+            httpClient.BaseAddress = new Uri(options.BaseUrl);
+            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent);
+        })
             .AddHttpMessageHandler<AuthenticationDelegatingHandler>()
             .AddHttpMessageHandler<DiscogsResponseDelegatingHandler>();
 
@@ -76,6 +85,8 @@ public static class ServiceCollectionExtensions
 
     public sealed class AddDiscogsApiClientOptions
     {
+        public string BaseUrl { get; set; } = "https://api.discogs.com";
+
         public string UserAgent { get; set; } = "";
 
         public bool UseRateLimiting { get; set; } = false;
