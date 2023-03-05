@@ -1,12 +1,18 @@
 using System;
+using System.Diagnostics;
+using System.Net;
 using System.Net.Http;
 using System.Threading.RateLimiting;
 using System.Threading.Tasks;
 using DiscogsApiClient.Authentication;
 using DiscogsApiClient.Authentication.UserToken;
+using DiscogsApiClient.Contract;
+using DiscogsApiClient.Exceptions;
 using DiscogsApiClient.Middleware;
+using DiscogsApiClient.Serialization;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
+using Refit;
 
 namespace DiscogsApiClient.Tests;
 
@@ -16,7 +22,7 @@ public abstract class ApiBaseTestFixture
     private static readonly IAuthenticationProvider _authenticationProvider;
     private static readonly HttpClient _httpClient;
 
-    protected DiscogsApiClient ApiClient;
+    protected IDiscogsApiClient ApiClient;
     protected IConfiguration Configuration;
 
     static ApiBaseTestFixture()
@@ -37,10 +43,7 @@ public abstract class ApiBaseTestFixture
             {
                 InnerHandler = new AuthenticationDelegatingHandler(_authenticationProvider)
                 {
-                    InnerHandler = new DiscogsResponseDelegatingHandler()
-                    {
-                        InnerHandler = new HttpClientHandler()
-                    }
+                    InnerHandler = new HttpClientHandler()
                 }
             })
         {
@@ -60,7 +63,39 @@ public abstract class ApiBaseTestFixture
         if (_httpClient.DefaultRequestHeaders.UserAgent.Count == 0)
             _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent);
 
-        ApiClient = new DiscogsApiClient(_httpClient, _authenticationProvider);
+        ApiClient = RestService.For<IDiscogsApiClient>(
+            _httpClient,
+            new RefitSettings
+            {
+                ContentSerializer = new SystemTextJsonContentSerializer(DiscogsSerializerOptions.Options),
+                ExceptionFactory = async (response) =>
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        if (Debugger.IsAttached)
+                        {
+                            string content = await response.Content.ReadAsStringAsync();
+                            ;
+                        }
+                        return null;
+                    }
+
+                    string? message = null;
+                    try
+                    {
+                        var errorMessage = await response.Content.DeserializeAsJsonAsync<ErrorMessage>(default);
+                        message = errorMessage.Message;
+                    }
+                    catch { }
+
+                    return response.StatusCode switch
+                    {
+                        HttpStatusCode.Unauthorized => new UnauthorizedDiscogsException(message),
+                        HttpStatusCode.NotFound => new ResourceNotFoundDiscogsException(message),
+                        _ => new DiscogsException(message),
+                    };
+                }
+            });
     }
 
 
@@ -69,6 +104,7 @@ public abstract class ApiBaseTestFixture
     {
         var userToken = Configuration["DiscogsApiOptions:UserToken"]!;
         var authenticationRequest = new UserTokenAuthenticationRequest(userToken);
+        await _authenticationProvider.AuthenticateAsync(authenticationRequest, default);
         await ApiClient.AuthenticateAsync(authenticationRequest, default);
     }
 }

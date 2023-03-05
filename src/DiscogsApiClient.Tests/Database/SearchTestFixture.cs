@@ -12,7 +12,7 @@ public sealed class SearchTestFixture : ApiBaseTestFixture
         var queryParams = new SearchQueryParameters { Query = "hammerfall" };
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
 
-        var response = await ApiClient.SearchDatabaseAsync(queryParams, paginationParams, default);
+        var response = await ApiClient.SearchDatabase(queryParams, paginationParams, default);
 
         Assert.IsNotNull(response);
         Assert.IsNotNull(response.Pagination);
@@ -31,7 +31,7 @@ public sealed class SearchTestFixture : ApiBaseTestFixture
         var queryParams = new SearchQueryParameters();
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
 
-        var response = await ApiClient.SearchDatabaseAsync(queryParams, paginationParams, default);
+        var response = await ApiClient.SearchDatabase(queryParams, paginationParams, default);
 
         Assert.IsNotNull(response);
         Assert.IsNotNull(response.Pagination);
@@ -51,7 +51,7 @@ public sealed class SearchTestFixture : ApiBaseTestFixture
         var queryParams = new SearchQueryParameters { Query = "hammerfall" };
         var paginationParams = new PaginationQueryParameters { Page = -1, PageSize = 50 };
 
-        var response = await ApiClient.SearchDatabaseAsync(queryParams, paginationParams, default);
+        var response = await ApiClient.SearchDatabase(queryParams, paginationParams, default);
 
         Assert.IsNotNull(response.Pagination);
         Assert.AreEqual(1, response.Pagination.Page);
@@ -70,7 +70,7 @@ public sealed class SearchTestFixture : ApiBaseTestFixture
         var queryParams = new SearchQueryParameters { Query = "hammerfall" };
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = -1 };
 
-        var response = await ApiClient.SearchDatabaseAsync(queryParams, paginationParams, default);
+        var response = await ApiClient.SearchDatabase(queryParams, paginationParams, default);
 
         Assert.IsNotNull(response.Pagination);
         Assert.AreEqual(1, response.Pagination.Page);
@@ -89,7 +89,7 @@ public sealed class SearchTestFixture : ApiBaseTestFixture
         var queryParams = new SearchQueryParameters { Query = "hammerfall" };
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = int.MaxValue };
 
-        var response = await ApiClient.SearchDatabaseAsync(queryParams, paginationParams, default);
+        var response = await ApiClient.SearchDatabase(queryParams, paginationParams, default);
 
         Assert.IsNotNull(response.Pagination);
         Assert.AreEqual(1, response.Pagination.Page);

@@ -8,9 +8,10 @@ namespace DiscogsApiClient.QueryParameters;
 /// <param name="SortProperty">The release property to sort the results with.</param>
 /// <param name="SortOrder">The sorting order.</param>
 public sealed record CollectionFolderReleaseSortQueryParameters(
+    [AliasAs("sort")]
     SortableProperty? SortProperty = default,
+    [AliasAs("sort_order")]
     SortOrder? SortOrder = default)
-    : IQueryParameters
 {
     /// <summary>
     /// Release properties which can be used to sort the results with.
@@ -25,19 +26,5 @@ public sealed record CollectionFolderReleaseSortQueryParameters(
         Rating,
         Added,
         Year
-    }
-
-    /// <inheritdoc/>
-    public string CreateQueryParameterString()
-    {
-        var parameters = new List<string>();
-
-        if (SortProperty is not null)
-            parameters.Add($"sort={SortProperty.Value.GetSortablePropertyString()}");
-
-        if (SortOrder is not null)
-            parameters.Add($"sort_order={SortOrder.Value.GetSortOrderString()}");
-
-        return string.Join("&", parameters);
     }
 }

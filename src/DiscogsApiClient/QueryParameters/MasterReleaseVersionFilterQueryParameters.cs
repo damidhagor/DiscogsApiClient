@@ -12,13 +12,18 @@ namespace DiscogsApiClient.QueryParameters;
 /// <param name="SortProperty">The release property to sort the results with.</param>
 /// <param name="SortOrder">The sorting order.</param>
 public sealed record MasterReleaseVersionFilterQueryParameters(
+    [AliasAs("format")]
     string? Format = default,
+    [AliasAs("label")]
     string? Label = default,
+    [AliasAs("released")]
     string? Released = default,
+    [AliasAs("country")]
     string? Country = default,
+    [AliasAs("sort")]
     SortableProperty? SortProperty = default,
+    [AliasAs("sort_order")]
     SortOrder? SortOrder = default)
-    : IQueryParameters
 {
     /// <summary>
     /// Release properties which can be used to sort the results with.
@@ -31,31 +36,5 @@ public sealed record MasterReleaseVersionFilterQueryParameters(
         Label,
         Catno,
         Country
-    }
-
-    /// <inheritdoc/>
-    public string CreateQueryParameterString()
-    {
-        var parameters = new List<string>();
-
-        if (Format is not null)
-            parameters.Add($"format={Format}");
-
-        if (Label is not null)
-            parameters.Add($"label={Label}");
-
-        if (Released is not null)
-            parameters.Add($"released={Released}");
-
-        if (Country is not null)
-            parameters.Add($"country={Country}");
-
-        if (SortProperty is not null)
-            parameters.Add($"sort={SortProperty.Value.GetSortablePropertyString()}");
-
-        if (SortOrder is not null)
-            parameters.Add($"sort_order={SortOrder.Value.GetSortOrderString()}");
-
-        return string.Join("&", parameters);
     }
 }

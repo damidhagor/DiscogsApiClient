@@ -1,8 +1,11 @@
-﻿using System.Threading.RateLimiting;
+﻿using System.Net;
+using System.Threading;
+using System.Threading.RateLimiting;
 using DiscogsApiClient.Authentication.PlainOAuth;
 using DiscogsApiClient.Authentication.UserToken;
 using DiscogsApiClient.Middleware;
 using Microsoft.Extensions.DependencyInjection;
+using Refit;
 
 namespace DiscogsApiClient;
 
@@ -34,14 +37,37 @@ public static class ServiceCollectionExtensions
         services.AddTransient<AuthenticationDelegatingHandler>();
         services.AddTransient<DiscogsResponseDelegatingHandler>();
 
-        var httpBuilder = services.AddHttpClient<IDiscogsApiClient, DiscogsApiClient>(httpClient
-            =>
-        {
-            httpClient.BaseAddress = new Uri(options.BaseUrl);
-            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent);
-        })
-            .AddHttpMessageHandler<AuthenticationDelegatingHandler>()
-            .AddHttpMessageHandler<DiscogsResponseDelegatingHandler>();
+        var httpClientBuilder = services.AddRefitClient<IDiscogsApiClient>(
+            new RefitSettings
+            {
+                ContentSerializer = new SystemTextJsonContentSerializer(DiscogsSerializerOptions.Options),
+                ExceptionFactory = async (response) =>
+                {
+                    if (response.IsSuccessStatusCode)
+                        return null;
+
+                    string? message = null;
+                    try
+                    {
+                        var errorMessage = await response.Content.DeserializeAsJsonAsync<ErrorMessage>(default);
+                        message = errorMessage.Message;
+                    }
+                    catch { }
+
+                    return response.StatusCode switch
+                    {
+                        HttpStatusCode.Unauthorized => new UnauthorizedDiscogsException(message),
+                        HttpStatusCode.NotFound => new ResourceNotFoundDiscogsException(message),
+                        _ => new DiscogsException(message),
+                    };
+                }
+            })
+            .ConfigureHttpClient(httpClient =>
+            {
+                httpClient.BaseAddress = new Uri(options.BaseUrl);
+                httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent);
+            })
+            .AddHttpMessageHandler<AuthenticationDelegatingHandler>();
 
         if (options.UseRateLimiting)
         {
@@ -59,7 +85,7 @@ public static class ServiceCollectionExtensions
             services.AddTransient<RateLimiter, SlidingWindowRateLimiter>();
             services.AddTransient<RateLimitedDelegatingHandler>();
 
-            httpBuilder.AddHttpMessageHandler<RateLimitedDelegatingHandler>();
+            httpClientBuilder.AddHttpMessageHandler<RateLimitedDelegatingHandler>();
         }
 
         return services;

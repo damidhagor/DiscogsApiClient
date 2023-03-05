@@ -12,7 +12,7 @@ public sealed class UserTestFixture : ApiBaseTestFixture
     {
         var username = "damidhagor";
 
-        var user = await ApiClient.GetUserAsync(username, default);
+        var user = await ApiClient.GetUser(username, default);
 
         Assert.IsNotNull(user);
         Assert.AreEqual(12579295, user.Id);
@@ -29,7 +29,7 @@ public sealed class UserTestFixture : ApiBaseTestFixture
     {
         var username = "";
 
-        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.GetUserAsync(username, default), "username");
+        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.GetUser(username, default), "Parameter \"username\" (string) must not be null or whitespace, was whitespace. (Parameter 'username')");
     }
 
     [Test]
@@ -37,6 +37,6 @@ public sealed class UserTestFixture : ApiBaseTestFixture
     {
         var username = "awrbaerhnqw54";
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetUserAsync(username, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetUser(username, default));
     }
 }

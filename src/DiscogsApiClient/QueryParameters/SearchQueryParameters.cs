@@ -14,49 +14,21 @@
 /// <param name="Format">Search by release format.</param>
 /// <param name="Barcode">Search by barcode.</param>
 public sealed record SearchQueryParameters(
+    [AliasAs("q")]
     string? Query = default,
+    [AliasAs("type")]
     string? Type = default,
+    [AliasAs("title")]
     string? Title = default,
+    [AliasAs("release_title")]
     string? ReleaseTitle = default,
+    [AliasAs("artist")]
     string? Artist = default,
+    [AliasAs("country")]
     string? Country = default,
+    [AliasAs("year")]
     string? Year = default,
+    [AliasAs("format")]
     string? Format = default,
-    string? Barcode = default)
-    : IQueryParameters
-{
-    /// <inheritdoc/>
-    public string CreateQueryParameterString()
-    {
-        var parameters = new List<string>();
-
-        if (!string.IsNullOrWhiteSpace(Query))
-            parameters.Add($"q={Query}");
-
-        if (!string.IsNullOrWhiteSpace(Type))
-            parameters.Add($"type={Type}");
-
-        if (!string.IsNullOrWhiteSpace(Title))
-            parameters.Add($"title={Title}");
-
-        if (!string.IsNullOrWhiteSpace(ReleaseTitle))
-            parameters.Add($"release_title={ReleaseTitle}");
-
-        if (!string.IsNullOrWhiteSpace(Artist))
-            parameters.Add($"artist={Artist}");
-
-        if (!string.IsNullOrWhiteSpace(Country))
-            parameters.Add($"country={Country}");
-
-        if (!string.IsNullOrWhiteSpace(Year))
-            parameters.Add($"year={Year}");
-
-        if (!string.IsNullOrWhiteSpace(Format))
-            parameters.Add($"format={Format}");
-
-        if (!string.IsNullOrWhiteSpace(Barcode))
-            parameters.Add($"barcode={Barcode}");
-
-        return string.Join('&', parameters);
-    }
-}
+    [AliasAs("barcode")]
+    string? Barcode = default);

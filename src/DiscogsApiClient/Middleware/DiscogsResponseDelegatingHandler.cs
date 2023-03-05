@@ -23,7 +23,7 @@ internal sealed class DiscogsResponseDelegatingHandler : DelegatingHandler
     /// <exception cref="UnauthorizedDiscogsException">The Http request wasn't authenticated.</exception>
     /// <exception cref="ResourceNotFoundDiscogsException">The requested resource was not found.</exception>
     /// <exception cref="DiscogsException">The request returned a general error.</exception>
-    public async Task CheckAndHandleHttpErrorCodes(HttpResponseMessage response, CancellationToken cancellationToken)
+    public static async Task CheckAndHandleHttpErrorCodes(HttpResponseMessage response, CancellationToken cancellationToken)
     {
         if (response.IsSuccessStatusCode)
             return;

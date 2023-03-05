@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using DiscogsApiClient.Exceptions;
 using NUnit.Framework;
 
 namespace DiscogsApiClient.Tests;
@@ -21,7 +18,7 @@ public sealed class RateLimitingTestFixture : ApiBaseTestFixture
         {
             try
             {
-                _ = await ApiClient.GetIdentityAsync(default);
+                _ = await ApiClient.GetIdentity(default);
                 succeeded++;
                 TestContext.WriteLine($"[{DateTime.Now:HH:mm:ss:fff}] {i:D2} SUCCESS");
             }

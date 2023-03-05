@@ -16,7 +16,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
         var sortParameters = new CollectionFolderReleaseSortQueryParameters();
 
-        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.GetCollectionFolderReleasesAsync(username, folderId, paginationParams, sortParameters, default), "username");
+        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParameters, default), "username");
     }
 
     [Test]
@@ -27,7 +27,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
         var sortParameters = new CollectionFolderReleaseSortQueryParameters();
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetCollectionFolderReleasesAsync(username, folderId, paginationParams, sortParameters, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParameters, default));
     }
 
     [Test]
@@ -38,7 +38,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
         var sortParameters = new CollectionFolderReleaseSortQueryParameters();
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetCollectionFolderReleasesAsync(username, folderId, paginationParams, sortParameters, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParameters, default));
     }
 
     [Test]
@@ -49,7 +49,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
         var sortParameters = new CollectionFolderReleaseSortQueryParameters();
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetCollectionFolderReleasesAsync(username, folderId, paginationParams, sortParameters, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParameters, default));
     }
 
 
@@ -60,7 +60,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var folderId = 1;
         var releaseId = 5134861;
 
-        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.AddReleaseToCollectionFolderAsync(username, folderId, releaseId, default), "username");
+        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, default), "username");
     }
 
     [Test]
@@ -70,7 +70,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var folderId = 1;
         var releaseId = 5134861;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.AddReleaseToCollectionFolderAsync(username, folderId, releaseId, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, default));
     }
 
     [Test]
@@ -80,7 +80,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var folderId = -1;
         var releaseId = 5134861;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.AddReleaseToCollectionFolderAsync(username, folderId, releaseId, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, default));
     }
 
     [Test]
@@ -90,7 +90,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var folderId = 42;
         var releaseId = 5134861;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.AddReleaseToCollectionFolderAsync(username, folderId, releaseId, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, default));
     }
 
     [Test]
@@ -100,7 +100,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var folderId = 0;
         var releaseId = 5134861;
 
-        Assert.ThrowsAsync<DiscogsException>(() => ApiClient.AddReleaseToCollectionFolderAsync(username, folderId, releaseId, default),
+        Assert.ThrowsAsync<DiscogsException>(() => ApiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, default),
             "Invalid folder_id: cannot add releases to the 'All' folder.");
     }
 
@@ -111,7 +111,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var folderId = 1;
         var releaseId = -1;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.AddReleaseToCollectionFolderAsync(username, folderId, releaseId, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, default));
     }
 
     [Test]
@@ -121,7 +121,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var folderId = 1;
         var releaseId = int.MaxValue;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.AddReleaseToCollectionFolderAsync(username, folderId, releaseId, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, default));
     }
 
 
@@ -133,7 +133,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var releaseId = 5134861;
         var instanceId = -1;
 
-        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.DeleteReleaseFromCollectionFolderAsync(username, folderId, releaseId, instanceId, default), "username");
+        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, default), "username");
     }
 
     [Test]
@@ -144,7 +144,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var releaseId = 5134861;
         var instanceId = -1;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromCollectionFolderAsync(username, folderId, releaseId, instanceId, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, default));
     }
 
     [Test]
@@ -155,7 +155,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var releaseId = 5134861;
         var instanceId = -1;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromCollectionFolderAsync(username, folderId, releaseId, instanceId, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, default));
     }
 
     [Test]
@@ -166,7 +166,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var releaseId = 5134861;
         var instanceId = -1;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromCollectionFolderAsync(username, folderId, releaseId, instanceId, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, default));
     }
 
     [Test]
@@ -177,7 +177,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var releaseId = -1;
         var instanceId = -1;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromCollectionFolderAsync(username, folderId, releaseId, instanceId, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, default));
     }
 
     [Test]
@@ -188,7 +188,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var releaseId = int.MaxValue;
         var instanceId = -1;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromCollectionFolderAsync(username, folderId, releaseId, instanceId, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, default));
     }
 
     [Test]
@@ -199,7 +199,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var releaseId = 5134861;
         var instanceId = -1;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromCollectionFolderAsync(username, folderId, releaseId, instanceId, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, default));
     }
 
     [Test]
@@ -210,7 +210,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var releaseId = 5134861;
         var instanceId = int.MaxValue;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromCollectionFolderAsync(username, folderId, releaseId, instanceId, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, default));
     }
 
 
@@ -224,19 +224,19 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var sortParameters = new CollectionFolderReleaseSortQueryParameters();
 
         // Create test folder
-        var collectionFolder = await ApiClient.CreateCollectionFolderAsync(username, folderName, default);
+        var collectionFolder = await ApiClient.CreateCollectionFolder(username, folderName, default);
 
         // Add release to folder
-        var collectionFolderRelease = await ApiClient.AddReleaseToCollectionFolderAsync(username, collectionFolder.Id, releaseId, default);
+        var collectionFolderRelease = await ApiClient.AddReleaseToCollectionFolder(username, collectionFolder.Id, releaseId, default);
 
         // Get release from folder
-        var collectionFolderReleaseResponse = await ApiClient.GetCollectionFolderReleasesAsync(username, collectionFolder.Id, paginationParams, sortParameters, default);
+        var collectionFolderReleaseResponse = await ApiClient.GetCollectionFolderReleases(username, collectionFolder.Id, paginationParams, sortParameters, default);
 
         // Delete release from folder
-        var wasReleaseDeleted = await ApiClient.DeleteReleaseFromCollectionFolderAsync(username, collectionFolder.Id, collectionFolderRelease.Id, collectionFolderRelease.InstanceId, default);
+        Assert.DoesNotThrowAsync(() => ApiClient.DeleteReleaseFromCollectionFolder(username, collectionFolder.Id, collectionFolderRelease.Id, collectionFolderRelease.InstanceId, default));
 
         // Delete folder
-        var wasFolderDeleted = await ApiClient.DeleteCollectionFolderAsync(username, collectionFolder.Id, default);
+        Assert.DoesNotThrowAsync(() => ApiClient.DeleteCollectionFolder(username, collectionFolder.Id, default));
 
 
         Assert.IsNotNull(collectionFolderRelease);
@@ -244,7 +244,5 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         Assert.IsNotNull(collectionFolderReleaseResponse);
         Assert.AreEqual(1, collectionFolderReleaseResponse.Pagination.Items);
         Assert.AreEqual(releaseId, collectionFolderReleaseResponse.Releases[0].Id);
-        Assert.IsTrue(wasReleaseDeleted);
-        Assert.IsTrue(wasFolderDeleted);
     }
 }

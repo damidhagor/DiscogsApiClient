@@ -9,7 +9,7 @@ public sealed class IdentityTestFixture : ApiBaseTestFixture
     [Test]
     public async Task GetIdentity_Success()
     {
-        var identity = await ApiClient.GetIdentityAsync(default);
+        var identity = await ApiClient.GetIdentity(default);
 
         Assert.IsNotNull(identity);
         Assert.AreEqual("DamIDhagor", identity.Username);

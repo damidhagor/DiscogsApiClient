@@ -12,7 +12,7 @@ public sealed class ArtistsTestFixture : ApiBaseTestFixture
     {
         var artistId = 287459;
 
-        var artist = await ApiClient.GetArtistAsync(artistId, default);
+        var artist = await ApiClient.GetArtist(artistId, default);
 
         Assert.IsNotNull(artist);
         Assert.AreEqual(artistId, artist.Id);
@@ -33,7 +33,7 @@ public sealed class ArtistsTestFixture : ApiBaseTestFixture
     {
         var artistId = -1;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetArtistAsync(artistId, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetArtist(artistId, default));
     }
 
     [Test]
@@ -43,7 +43,7 @@ public sealed class ArtistsTestFixture : ApiBaseTestFixture
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
         var sortParams = new ArtistReleaseSortQueryParameters();
 
-        var response = await ApiClient.GetArtistReleasesAsync(artistId, paginationParams, sortParams, default);
+        var response = await ApiClient.GetArtistReleases(artistId, paginationParams, sortParams, default);
 
         Assert.IsNotNull(response.Pagination);
         Assert.AreEqual(1, response.Pagination.Page);
@@ -65,7 +65,7 @@ public sealed class ArtistsTestFixture : ApiBaseTestFixture
         var paginationParams = new PaginationQueryParameters { Page = -1, PageSize = 50 };
         var sortParams = new ArtistReleaseSortQueryParameters();
 
-        var response = await ApiClient.GetArtistReleasesAsync(artistId, paginationParams, sortParams, default);
+        var response = await ApiClient.GetArtistReleases(artistId, paginationParams, sortParams, default);
 
         Assert.IsNotNull(response.Pagination);
         Assert.AreEqual(1, response.Pagination.Page);
@@ -87,7 +87,7 @@ public sealed class ArtistsTestFixture : ApiBaseTestFixture
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = -1 };
         var sortParams = new ArtistReleaseSortQueryParameters();
 
-        var response = await ApiClient.GetArtistReleasesAsync(artistId, paginationParams, sortParams, default);
+        var response = await ApiClient.GetArtistReleases(artistId, paginationParams, sortParams, default);
 
         Assert.IsNotNull(response.Pagination);
         Assert.AreEqual(1, response.Pagination.Page);
@@ -109,7 +109,7 @@ public sealed class ArtistsTestFixture : ApiBaseTestFixture
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = int.MaxValue };
         var sortParams = new ArtistReleaseSortQueryParameters();
 
-        var response = await ApiClient.GetArtistReleasesAsync(artistId, paginationParams, sortParams, default);
+        var response = await ApiClient.GetArtistReleases(artistId, paginationParams, sortParams, default);
 
         Assert.IsNotNull(response.Pagination);
         Assert.AreEqual(1, response.Pagination.Page);
@@ -134,14 +134,14 @@ public sealed class ArtistsTestFixture : ApiBaseTestFixture
         var itemCount = 0;
         var summedUpItemCount = 0;
 
-        var response = await ApiClient.GetArtistReleasesAsync(artistId, paginationParams, sortParams, default);
+        var response = await ApiClient.GetArtistReleases(artistId, paginationParams, sortParams, default);
         itemCount = response.Pagination.Items;
         summedUpItemCount += response.Releases.Count;
 
         for (int p = 2; p <= response.Pagination.Pages; p++)
         {
             paginationParams = paginationParams with { Page = p };
-            response = await ApiClient.GetArtistReleasesAsync(artistId, paginationParams, sortParams, default);
+            response = await ApiClient.GetArtistReleases(artistId, paginationParams, sortParams, default);
             summedUpItemCount += response.Releases.Count;
         }
 
@@ -155,7 +155,7 @@ public sealed class ArtistsTestFixture : ApiBaseTestFixture
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
         var sortParams = new ArtistReleaseSortQueryParameters();
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetArtistReleasesAsync(artistId, paginationParams, sortParams, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetArtistReleases(artistId, paginationParams, sortParams, default));
     }
 
     [Test]
@@ -165,6 +165,6 @@ public sealed class ArtistsTestFixture : ApiBaseTestFixture
         var paginationParams = new PaginationQueryParameters { Page = int.MaxValue, PageSize = 50 };
         var sortParams = new ArtistReleaseSortQueryParameters();
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetArtistReleasesAsync(artistId, paginationParams, sortParams, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetArtistReleases(artistId, paginationParams, sortParams, default));
     }
 }

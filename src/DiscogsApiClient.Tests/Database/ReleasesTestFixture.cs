@@ -13,7 +13,7 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
     {
         var masterReleaseId = 156551;
 
-        var masterRelease = await ApiClient.GetMasterReleaseAsync(masterReleaseId, default);
+        var masterRelease = await ApiClient.GetMasterRelease(masterReleaseId, default);
 
         Assert.IsNotNull(masterRelease);
         Assert.AreEqual(masterReleaseId, masterRelease.Id);
@@ -46,7 +46,7 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
     {
         var masterReleaseId = -1;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetReleaseAsync(masterReleaseId, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetRelease(masterReleaseId, default));
     }
 
     [Test]
@@ -56,7 +56,7 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
         var filterParams = new MasterReleaseVersionFilterQueryParameters();
 
-        var response = await ApiClient.GetMasterReleaseVersionsAsync(masterReleaseId, paginationParams, filterParams, default);
+        var response = await ApiClient.GetMasterReleaseVersions(masterReleaseId, paginationParams, filterParams, default);
 
         Assert.IsNotNull(response.Pagination);
         Assert.AreEqual(1, response.Pagination.Page);
@@ -76,7 +76,7 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
     {
         var releaseId = 5134861;
 
-        var release = await ApiClient.GetReleaseAsync(releaseId, default);
+        var release = await ApiClient.GetRelease(releaseId, default);
 
         Assert.IsNotNull(release);
         Assert.AreEqual(releaseId, release.Id);
@@ -133,7 +133,7 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
     {
         var releaseId = -1;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetReleaseAsync(releaseId, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetRelease(releaseId, default));
     }
 
 
@@ -142,7 +142,7 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
     {
         var releaseId = 5134861;
 
-        var ratingResponse = await ApiClient.GetReleaseCommunityRatingAsync(releaseId, default);
+        var ratingResponse = await ApiClient.GetReleaseCommunityRating(releaseId, default);
 
         Assert.IsNotNull(ratingResponse);
         Assert.AreEqual(ratingResponse.ReleaseId, releaseId);
@@ -156,7 +156,7 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
     {
         var releaseId = -1;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetReleaseCommunityRatingAsync(releaseId, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetReleaseCommunityRating(releaseId, default));
     }
 
 
@@ -165,7 +165,7 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
     {
         var releaseId = 5134861;
 
-        var stats = await ApiClient.GetReleaseStatsAsync(releaseId, default);
+        var stats = await ApiClient.GetReleaseStats(releaseId, default);
 
         Assert.IsNotNull(stats);
     }
@@ -175,6 +175,6 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
     {
         var releaseId = -1;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetReleaseStatsAsync(releaseId, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetReleaseStats(releaseId, default));
     }
 }
