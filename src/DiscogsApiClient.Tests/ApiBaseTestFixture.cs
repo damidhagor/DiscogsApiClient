@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.RateLimiting;
 using System.Threading.Tasks;
+using DiscogsApiClient.Authentication.OAuth;
 using DiscogsApiClient.Authentication.UserToken;
 using DiscogsApiClient.Middleware;
 using Microsoft.Extensions.Configuration;
@@ -16,7 +17,7 @@ namespace DiscogsApiClient.Tests;
 [TestFixture]
 public abstract class ApiBaseTestFixture
 {
-    private static readonly IAuthenticationProvider _authenticationProvider;
+    private static readonly IDiscogsAuthenticationService _authenticationService;
     private static readonly HttpClient _httpClient;
 
     protected IDiscogsApiClient ApiClient;
@@ -24,7 +25,9 @@ public abstract class ApiBaseTestFixture
 
     static ApiBaseTestFixture()
     {
-        _authenticationProvider = new UserTokenAuthenticationProvider();
+        _authenticationService = new DiscogsAuthenticationService(
+            new PersonalAccessTokenAuthenticationProvider(),
+            new OAuthAuthenticationProvider());
         _httpClient = new(
             new RateLimitedDelegatingHandler(
                 new SlidingWindowRateLimiter(
@@ -38,7 +41,7 @@ public abstract class ApiBaseTestFixture
                         QueueProcessingOrder = QueueProcessingOrder.OldestFirst
                     }))
             {
-                InnerHandler = new AuthenticationDelegatingHandler(_authenticationProvider)
+                InnerHandler = new AuthenticationDelegatingHandler(_authenticationService)
                 {
                     InnerHandler = new HttpClientHandler()
                 }
@@ -100,7 +103,6 @@ public abstract class ApiBaseTestFixture
     public virtual async Task Initialize()
     {
         var userToken = Configuration["DiscogsApiOptions:UserToken"]!;
-        var authenticationRequest = new UserTokenAuthenticationRequest(userToken);
-        await _authenticationProvider.AuthenticateAsync(authenticationRequest, default);
+        _authenticationService.AuthenticateWithPersonalAccessToken(userToken);
     }
 }

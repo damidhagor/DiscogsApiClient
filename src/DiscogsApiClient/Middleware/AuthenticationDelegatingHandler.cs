@@ -2,18 +2,18 @@
 
 internal sealed class AuthenticationDelegatingHandler : DelegatingHandler
 {
-    private readonly IAuthenticationProvider _authenticationProvider;
+    private readonly IDiscogsAuthenticationService _authenticationService;
 
-    public AuthenticationDelegatingHandler(IAuthenticationProvider authenticationProvider)
-        => _authenticationProvider = authenticationProvider;
+    public AuthenticationDelegatingHandler(IDiscogsAuthenticationService authenticationService)
+        => _authenticationService = authenticationService;
 
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         Guard.IsNotNull(request.RequestUri);
 
-        if (_authenticationProvider.IsAuthenticated)
+        if (_authenticationService.IsAuthenticated)
         {
-            var authHeader = _authenticationProvider.CreateAuthenticationHeader(request.Method, request.RequestUri.ToString());
+            var authHeader = _authenticationService.CreateAuthenticationHeader();
             request.Headers.Add("Authorization", authHeader);
         }
 

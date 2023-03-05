@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace DiscogsApiClient.Authentication.PlainOAuth;
+namespace DiscogsApiClient.Authentication.OAuth;
 
 /// <summary>
-/// Defines the method signature for the callback the <see cref="PlainOAuthAuthenticationProvider.AuthenticateAsync"/> method invokes
+/// Defines the method signature for the callback the <see cref="OAuthAuthenticationProvider.AuthenticateAsync"/> method invokes
 /// when it needs the client to open the Discogs login page to obtain the verifier key for the OAuth 1.0a flow.
 /// </summary>
 /// <param name="authorizeUrl">The Discogs login Url to open in a browser.</param>
@@ -12,10 +12,10 @@ namespace DiscogsApiClient.Authentication.PlainOAuth;
 public delegate Task<string> GetVerifierCallback(string authorizeUrl, string verifierCallbackUrl, CancellationToken cancellationToken);
 
 /// <summary>
-/// Parameters needed by the <see cref="PlainOAuthAuthenticationProvider"/> to authenticate against the Discogs Api with the OAuth 1.0a flow.
-/// If the <see cref="PlainOAuthAuthenticationProvider"/> is used then this <see cref="PlainOAuthAuthenticationRequest"/> must be passed to the <see cref="DiscogsApiClient.AuthenticateAsync"/> method.
+/// Parameters needed by the <see cref="OAuthAuthenticationProvider"/> to authenticate against the Discogs Api with the OAuth 1.0a flow.
+/// If the <see cref="OAuthAuthenticationProvider"/> is used then this <see cref="OAuthAuthenticationRequest"/> must be passed to the <see cref="DiscogsApiClient.AuthenticateAsync"/> method.
 /// </summary>
-public sealed class PlainOAuthAuthenticationRequest : IAuthenticationRequest
+public sealed class OAuthAuthenticationRequest
 {
     /// <summary>
     /// The user agent used by the DiscogsApiClient.
@@ -65,7 +65,7 @@ public sealed class PlainOAuthAuthenticationRequest : IAuthenticationRequest
     public string VerifierCallbackUrl { get; init; }
 
     /// <summary>
-    /// The method which will be called by the <see cref="PlainOAuthAuthenticationProvider"/> to let the client open the Discogs login page and obtain the verifier key.
+    /// The method which will be called by the <see cref="OAuthAuthenticationProvider"/> to let the client open the Discogs login page and obtain the verifier key.
     /// </summary>
 #if NET7_0
     required
@@ -77,11 +77,11 @@ public sealed class PlainOAuthAuthenticationRequest : IAuthenticationRequest
     /// <param name="consumerKey">The app's consumer key from Discogs.</param>
     /// <param name="consumerSecret">The app's consumer secret from Discogs.</param>
     /// <param name="verifierCallbackUrl">The Url the login page will be redirected to to pass the OAuth verifier key back to the client.</param>
-    /// <param name="getVerifierCallback">The method which will be called by the <see cref="PlainOAuthAuthenticationProvider"/> to let the client open the Discogs login page and obtain the verifier key.</param>
+    /// <param name="getVerifierCallback">The method which will be called by the <see cref="OAuthAuthenticationProvider"/> to let the client open the Discogs login page and obtain the verifier key.</param>
 #if NET7_0
     [SetsRequiredMembers]
 #endif
-    public PlainOAuthAuthenticationRequest(
+    public OAuthAuthenticationRequest(
         string userAgent,
         string consumerKey,
         string consumerSecret,

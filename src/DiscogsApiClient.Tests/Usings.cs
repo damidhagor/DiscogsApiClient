@@ -1,12 +1,4 @@
 ﻿global using DiscogsApiClient.Authentication;
 global using DiscogsApiClient.Contract;
-global using DiscogsApiClient.Contract.Artist;
-global using DiscogsApiClient.Contract.Label;
-global using DiscogsApiClient.Contract.Release;
-global using DiscogsApiClient.Contract.User;
-global using DiscogsApiClient.Contract.User.Wantlist;
-global using DiscogsApiClient.Contract.User.Collection;
-global using DiscogsApiClient.Contract.Search;
 global using DiscogsApiClient.Exceptions;
 global using DiscogsApiClient.QueryParameters;
-global using DiscogsApiClient.Serialization;

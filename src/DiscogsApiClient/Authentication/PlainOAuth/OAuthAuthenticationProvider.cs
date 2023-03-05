@@ -3,14 +3,39 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Web;
 
-namespace DiscogsApiClient.Authentication.PlainOAuth;
+namespace DiscogsApiClient.Authentication.OAuth;
+
+/// <summary>
+/// Defines an authentication provider which uses Discogs' OAuth 1.0a authentication flow to authenticate a user against the Discogs Api.
+/// </summary>
+internal interface IOAuthAuthenticationProvider
+{
+    /// <summary>
+    /// Indicates if the user is authenticated with the OAuth 1.0a flow.
+    /// </summary>
+    bool IsAuthenticated { get; }
+
+    /// <summary>
+    /// Authenticates the user with the OAuth 1.0a flow.
+    /// </summary>
+    /// <param name="token">The personal access token.</param>
+    Task<OAuthAuthenticationResponse> Authenticate(OAuthAuthenticationRequest request, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Creates an authentication header value to insert into a HttpRequestMessage.
+    /// <para />
+    /// Discogs expects this header to be named 'Authorization'.
+    /// </summary>
+    /// <returns>The authorization header value.</returns>
+    string CreateAuthenticationHeader();
+}
 
 /// <summary>
 /// This <see cref="IAuthenticationProvider"/> implementation authenticates against the Discogs Api
 /// using the OAuth 1.0a flow described <a href="https://www.discogs.com/developers#page:authentication,header:authentication-discogs-auth-flow">here</a>
 /// and should be provided to the <see cref="DiscogsApiClient"/>'s constructor.
 /// </summary>
-public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
+public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
 {
     private string _userAgent = "";
     private string _consumerKey = "";
@@ -27,21 +52,17 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
     /// This method returns the obtained access token and secret if successful
     /// which should be persisted and reused by the app.
     /// </summary>
-    /// <param name="authenticationRequest">The <see cref="PlainOAuthAuthenticationRequest"/> providing the callback delegate, url and OAuth parameters.</param>
+    /// <param name="authenticationRequest">The <see cref="OAuthAuthenticationRequest"/> providing the callback delegate, url and OAuth parameters.</param>
     /// <returns>The <see cref="PlainOAuthAuthenticationResponse"/> indicating if the authentication was successful.</returns>
-    /// <exception cref="ArgumentException">Fires this exception if the provided <see cref="IAuthenticationRequest"/> is not a <see cref="PlainOAuthAuthenticationRequest"/>.</exception>
+    /// <exception cref="ArgumentException">Fires this exception if the provided <see cref="IAuthenticationRequest"/> is not a <see cref="OAuthAuthenticationRequest"/>.</exception>
     /// <exception cref="InvalidOperationException">Fires this exception if no consumer key or secret are provided.</exception>
-    public async Task<IAuthenticationResponse> AuthenticateAsync(IAuthenticationRequest authenticationRequest, CancellationToken cancellationToken)
+    public async Task<OAuthAuthenticationResponse> Authenticate(OAuthAuthenticationRequest request, CancellationToken cancellationToken)
     {
-        Guard.IsOfType<PlainOAuthAuthenticationRequest>(authenticationRequest);
-
-        var oAuthAuthenticationRequest = (PlainOAuthAuthenticationRequest)authenticationRequest;
-
-        _userAgent = oAuthAuthenticationRequest.UserAgent;
-        _consumerKey = oAuthAuthenticationRequest.ConsumerKey;
-        _consumerSecret = oAuthAuthenticationRequest.ConsumerSecret;
-        _accessToken = oAuthAuthenticationRequest.AccessToken;
-        _accessTokenSecret = oAuthAuthenticationRequest.AccessTokenSecret;
+        _userAgent = request.UserAgent;
+        _consumerKey = request.ConsumerKey;
+        _consumerSecret = request.ConsumerSecret;
+        _accessToken = request.AccessToken;
+        _accessTokenSecret = request.AccessTokenSecret;
 
         if (string.IsNullOrWhiteSpace(_accessToken) || string.IsNullOrWhiteSpace(_accessTokenSecret))
         {
@@ -54,61 +75,44 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
             if (string.IsNullOrWhiteSpace(_consumerKey) && string.IsNullOrWhiteSpace(_consumerSecret))
                 throw new InvalidOperationException("No consumer token or secret provided.");
 
-            var (requestToken, requestTokenSecret) = await GetRequestToken(httpClient, oAuthAuthenticationRequest.VerifierCallbackUrl, cancellationToken);
+            var (requestToken, requestTokenSecret) = await GetRequestToken(httpClient, request.VerifierCallbackUrl, cancellationToken);
             if (string.IsNullOrWhiteSpace(requestToken) || string.IsNullOrWhiteSpace(requestTokenSecret))
-                return new PlainOAuthAuthenticationResponse("Getting request token failed.");
+                return new OAuthAuthenticationResponse("Getting request token failed.");
 
 
-            var verifier = await GetVerifier(requestToken, oAuthAuthenticationRequest.VerifierCallbackUrl, oAuthAuthenticationRequest.GetVerifierCallback, cancellationToken);
+            var verifier = await GetVerifier(requestToken, request.VerifierCallbackUrl, request.GetVerifierCallback, cancellationToken);
             if (string.IsNullOrWhiteSpace(verifier))
-                return new PlainOAuthAuthenticationResponse("Failed getting verifier token.");
+                return new OAuthAuthenticationResponse("Failed getting verifier token.");
 
 
             var (accessToken, accessTokenSecret) = await GetAccessToken(httpClient, requestToken, requestTokenSecret, verifier, cancellationToken);
             if (string.IsNullOrWhiteSpace(accessToken) || string.IsNullOrWhiteSpace(accessTokenSecret))
-                return new PlainOAuthAuthenticationResponse("Failed getting access token.");
+                return new OAuthAuthenticationResponse("Failed getting access token.");
 
             _accessToken = accessToken;
             _accessTokenSecret = accessTokenSecret;
         }
 
-        return new PlainOAuthAuthenticationResponse(_accessToken, _accessTokenSecret);
+        return new OAuthAuthenticationResponse(_accessToken, _accessTokenSecret);
     }
 
     /// <summary>
-    /// Creates an authenticated <see cref="HttpRequestMessage"/> with an added OAuth authorization header.
+    /// Creates the value needed for the authentication header for an authenticated request to the Discogs Api.
     /// </summary>
-    /// <param name="httpMethod"><inheritdoc/></param>
-    /// <param name="url"><inheritdoc/></param>
-    /// <returns><inheritdoc/></returns>
-    public HttpRequestMessage CreateAuthenticatedRequest(
-        HttpMethod httpMethod,
-#if NET7_0
-        [StringSyntax(StringSyntaxAttribute.Uri)] string url)
-#else
-        string url)
-#endif
+    public string CreateAuthenticationHeader()
     {
-        var request = new HttpRequestMessage(httpMethod, url);
-        request.Headers.Add("Authorization", CreateAuthenticationHeader());
+        (var timestamp, var nonce) = CreateTimestampAndNonce();
 
-        return request;
+        var header = "OAuth ";
+        header += $"oauth_consumer_key=\"{WebUtility.UrlEncode(_consumerKey)}\",";
+        header += $"oauth_nonce=\"{WebUtility.UrlEncode(nonce)}\",";
+        header += $"oauth_token=\"{WebUtility.UrlEncode(_accessToken)}\",";
+        header += $"oauth_signature=\"{WebUtility.UrlEncode($"{_consumerSecret}&{_accessTokenSecret}")}\",";
+        header += $"oauth_signature_method=\"PLAINTEXT\",";
+        header += $"oauth_timestamp=\"{WebUtility.UrlEncode(timestamp)}\"";
+
+        return header;
     }
-
-    /// <summary>
-    /// Creates an authentication header containing the OAUth information.
-    /// </summary>
-    /// <param name="httpMethod"><inheritdoc/></param>
-    /// <param name="url"><inheritdoc/></param>
-    /// <returns><inheritdoc/></returns>
-    public string CreateAuthenticationHeader(
-        HttpMethod httpMethod,
-#if NET7_0
-        [StringSyntax(StringSyntaxAttribute.Uri)] string url)
-#else
-        string url)
-#endif
-        => CreateAuthenticationHeader();
 
 
     /// <summary>
@@ -254,25 +258,6 @@ public sealed class PlainOAuthAuthenticationProvider : IAuthenticationProvider
         request.Headers.Add("Authorization", authHeader);
 
         return request;
-    }
-
-
-    /// <summary>
-    /// Creates the value needed for the authentication header for an authenticated request to the Discogs Api.
-    /// </summary>
-    private string CreateAuthenticationHeader()
-    {
-        (var timestamp, var nonce) = CreateTimestampAndNonce();
-
-        var header = "OAuth ";
-        header += $"oauth_consumer_key=\"{WebUtility.UrlEncode(_consumerKey)}\",";
-        header += $"oauth_nonce=\"{WebUtility.UrlEncode(nonce)}\",";
-        header += $"oauth_token=\"{WebUtility.UrlEncode(_accessToken)}\",";
-        header += $"oauth_signature=\"{WebUtility.UrlEncode($"{_consumerSecret}&{_accessTokenSecret}")}\",";
-        header += $"oauth_signature_method=\"PLAINTEXT\",";
-        header += $"oauth_timestamp=\"{WebUtility.UrlEncode(timestamp)}\"";
-
-        return header;
     }
 
     /// <summary>

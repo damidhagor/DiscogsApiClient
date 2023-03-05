@@ -1,7 +1,8 @@
 ﻿using System.Net;
 using System.Text.Json;
 using System.Threading.RateLimiting;
-using DiscogsApiClient.Authentication.PlainOAuth;
+using DiscogsApiClient.Authentication.OAuth;
+using DiscogsApiClient.Authentication.PersonalAccessToken;
 using DiscogsApiClient.Authentication.UserToken;
 using DiscogsApiClient.Middleware;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,8 +34,6 @@ public static class ServiceCollectionExtensions
             throw new InvalidOperationException(ExceptionMessages.GetUserAgentMissingMessage());
         }
 
-        services.AddTransient<AuthenticationDelegatingHandler>();
-
         var httpClientBuilder = services.AddDiscogsApiClient(options);
 
         if (options.UseRateLimiting)
@@ -45,26 +44,11 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    /// <summary>
-    /// Adds the <see cref="UserTokenAuthenticationProvider"/> to the services collection.
-    /// </summary>
-    public static IServiceCollection AddDiscogsUserTokenAuthentication(this IServiceCollection services)
-    {
-        services.AddSingleton<IAuthenticationProvider, UserTokenAuthenticationProvider>();
-        return services;
-    }
-
-    /// <summary>
-    /// Adds the <see cref="PlainOAuthAuthenticationProvider"/> to the services collection.
-    /// </summary>
-    public static IServiceCollection AddDiscogsPlainOAuthAuthentication(this IServiceCollection services)
-    {
-        services.AddSingleton<IAuthenticationProvider, PlainOAuthAuthenticationProvider>();
-        return services;
-    }
-
     private static IHttpClientBuilder AddDiscogsApiClient(this IServiceCollection services, AddDiscogsApiClientOptions options)
     {
+        services.AddSingleton<IPersonalAccessTokenAuthenticationProvider, PersonalAccessTokenAuthenticationProvider>();
+        services.AddSingleton<IOAuthAuthenticationProvider, OAuthAuthenticationProvider>();
+        services.AddTransient<IDiscogsAuthenticationService, DiscogsAuthenticationService>();
         services.AddTransient<AuthenticationDelegatingHandler>();
 
         return services.AddRefitClient<IDiscogsApiClient>(
