@@ -1,8 +1,11 @@
-﻿namespace DiscogsApiClient.Contract;
+﻿namespace DiscogsApiClient.Contract.User.Collection;
 
 public sealed record CollectionValue(
+    [property:JsonPropertyName("minimum")]
     string Minimum,
+    [property:JsonPropertyName("median")]
     string Median,
+    [property:JsonPropertyName("maximum")]
     string Maximum);
 
 /*

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using DiscogsApiClient.Exceptions;
-using DiscogsApiClient.QueryParameters;
 using NUnit.Framework;
 
 namespace DiscogsApiClient.Tests.Database;
@@ -22,9 +20,9 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
         Assert.Less(0, masterRelease.Genres.Count);
         Assert.Less(0, masterRelease.Images.Count);
         Assert.Less(0, masterRelease.LowestPrice);
-        Assert.Less(0, masterRelease.MainRelease);
+        Assert.Less(0, masterRelease.MainReleaseId);
         Assert.IsFalse(string.IsNullOrWhiteSpace(masterRelease.MainReleaseUrl));
-        Assert.Less(0, masterRelease.MostRecentRelease);
+        Assert.Less(0, masterRelease.MostRecentReleaseId);
         Assert.IsFalse(string.IsNullOrWhiteSpace(masterRelease.MostRecentReleaseUrl));
         Assert.Less(0, masterRelease.NumForSale);
         Assert.IsFalse(string.IsNullOrWhiteSpace(masterRelease.ResourceUrl));
@@ -33,7 +31,7 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
         Assert.AreEqual("1", masterRelease.Tracklist[0].Position);
         Assert.AreEqual("The Dragon Lies Bleeding", masterRelease.Tracklist[0].Title);
         Assert.AreEqual("4:23", masterRelease.Tracklist[0].Duration);
-        Assert.AreEqual("track", masterRelease.Tracklist[0].Type_);
+        Assert.AreEqual("track", masterRelease.Tracklist[0].Type);
         Assert.IsFalse(string.IsNullOrWhiteSpace(masterRelease.Uri));
         Assert.IsFalse(string.IsNullOrWhiteSpace(masterRelease.VersionsUrl));
         Assert.Less(0, masterRelease.Videos.Count);
@@ -60,14 +58,14 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
 
         Assert.IsNotNull(response.Pagination);
         Assert.AreEqual(1, response.Pagination.Page);
-        Assert.AreEqual(50, response.Pagination.PerPage);
-        Assert.Less(0, response.Pagination.Items);
-        Assert.Less(0, response.Pagination.Pages);
+        Assert.AreEqual(50, response.Pagination.ItemsPerPage);
+        Assert.Less(0, response.Pagination.TotalItems);
+        Assert.Less(0, response.Pagination.TotalPages);
         Assert.IsNotNull(response.Pagination.Urls);
-        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.Next));
-        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.Last));
+        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.NextPageUrl));
+        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.LastPageUrl));
 
-        Assert.IsNotNull(response.Versions);
+        Assert.IsNotNull(response.ReleaseVersions);
     }
 
 
@@ -88,26 +86,26 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
         Assert.AreEqual(1, release.Labels.Count);
         Assert.AreEqual(11499, release.Labels[0].Id);
         Assert.AreEqual("Nuclear Blast", release.Labels[0].Name);
-        Assert.AreEqual("NB 265-2", release.Labels[0].Catno);
+        Assert.AreEqual("NB 265-2", release.Labels[0].CatalogNumber);
         Assert.AreEqual(1, release.Formats.Count);
         Assert.AreEqual("CD", release.Formats[0].Name);
-        Assert.AreEqual("1", release.Formats[0].Qty);
+        Assert.AreEqual("1", release.Formats[0].Count);
         Assert.Less(0, release.Formats[0].Descriptions.Count);
-        Assert.AreEqual(release.FormatQuantity, release.Formats.Count);
-        Assert.Less(0, release.Community.Have);
-        Assert.Less(0, release.Community.Want);
-        Assert.Less(0, release.Community.Rating.Count);
-        Assert.Less(0, release.Community.Rating.Average);
-        Assert.AreNotEqual(DateTime.MinValue, release.DateAdded);
-        Assert.AreNotEqual(DateTime.MinValue, release.DateChanged);
+        Assert.AreEqual(release.FormatCount, release.Formats.Count);
+        Assert.Less(0, release.CommunityStatistics.UsersOwningReleaseCount);
+        Assert.Less(0, release.CommunityStatistics.UsersWantingReleaseCount);
+        Assert.Less(0, release.CommunityStatistics.Rating.Count);
+        Assert.Less(0, release.CommunityStatistics.Rating.Average);
+        Assert.AreNotEqual(DateTime.MinValue, release.AddedAt);
+        Assert.AreNotEqual(DateTime.MinValue, release.ChangedAt);
         Assert.Less(0, release.NumForSale);
         Assert.Less(0, release.LowestPrice);
         Assert.Less(0, release.MasterId);
         Assert.IsFalse(string.IsNullOrWhiteSpace(release.MasterUrl));
         Assert.AreEqual("Glory To The Brave", release.Title);
         Assert.AreEqual("Germany", release.Country);
-        Assert.AreEqual("1997", release.Released);
-        Assert.AreEqual("1997", release.ReleasedFormatted);
+        Assert.AreEqual("1997", release.Year);
+        Assert.AreEqual("1997", release.YearFormatted);
         Assert.IsFalse(string.IsNullOrWhiteSpace(release.Notes));
         Assert.Less(0, release.Identifiers.Count);
         Assert.AreEqual("Barcode", release.Identifiers[0].Type);
@@ -119,12 +117,12 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
         Assert.AreEqual("1", release.Tracklist[0].Position);
         Assert.AreEqual("The Dragon Lies Bleeding", release.Tracklist[0].Title);
         Assert.AreEqual("4:23", release.Tracklist[0].Duration);
-        Assert.AreEqual("track", release.Tracklist[0].Type_);
-        Assert.AreEqual(0, release.Extraartists.Count);
+        Assert.AreEqual("track", release.Tracklist[0].Type);
+        Assert.AreEqual(0, release.ExtraArtists.Count);
         Assert.Less(0, release.Images.Count);
-        Assert.IsFalse(string.IsNullOrWhiteSpace(release.Thumb));
+        Assert.IsFalse(string.IsNullOrWhiteSpace(release.ThumbnailUrl));
         Assert.Less(0, release.EstimatedWeight);
-        Assert.IsFalse(release.BlockedFromSale);
+        Assert.IsFalse(release.IsBlockedFromSale);
         Assert.IsFalse(string.IsNullOrWhiteSpace(release.DataQuality));
     }
 

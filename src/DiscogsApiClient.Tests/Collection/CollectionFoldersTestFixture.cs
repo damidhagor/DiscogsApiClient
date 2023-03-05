@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using DiscogsApiClient.Exceptions;
 using NUnit.Framework;
 
 namespace DiscogsApiClient.Tests.Collection;

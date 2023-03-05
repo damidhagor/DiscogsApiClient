@@ -7,14 +7,12 @@ namespace DiscogsApiClient.Serialization;
 /// </summary>
 internal static class SerializationExtensions
 {
-    private static readonly JsonSerializerOptions _jsonSerializerOptions = DiscogsSerializerOptions.Options;
-
     public static async Task<T> DeserializeAsJsonAsync<T>(this HttpContent httpContent, CancellationToken cancellationToken)
     {
         try
         {
             var stringContent = await httpContent.ReadAsStringAsync(cancellationToken);
-            var result = JsonSerializer.Deserialize<T>(stringContent, _jsonSerializerOptions);
+            var result = JsonSerializer.Deserialize<T>(stringContent);
 
             return result ?? throw new SerializationDiscogsException(ExceptionMessages.GetDeserializationNoResultMessage());
         }
@@ -28,7 +26,7 @@ internal static class SerializationExtensions
     {
         try
         {
-            var json = JsonSerializer.Serialize<T>(payload, _jsonSerializerOptions);
+            var json = JsonSerializer.Serialize<T>(payload);
 
             return json ?? throw new SerializationDiscogsException(ExceptionMessages.GetSerializationNoResultMessage());
         }

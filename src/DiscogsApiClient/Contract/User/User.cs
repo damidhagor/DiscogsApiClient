@@ -1,41 +1,77 @@
-﻿namespace DiscogsApiClient.Contract;
+﻿namespace DiscogsApiClient.Contract.User;
 
 public sealed record User(
+    [property:JsonPropertyName("id")]
     int Id,
+    [property:JsonPropertyName("resource_url")]
     string ResourceUrl,
+    [property:JsonPropertyName("uri")]
     string Uri,
+    [property:JsonPropertyName("username")]
     string Username,
+    [property:JsonPropertyName("name")]
     string Name,
+    [property:JsonPropertyName("homepage")]
     string HomePage,
+    [property:JsonPropertyName("location")]
     string Location,
+    [property:JsonPropertyName("profile")]
     string Profile,
-    DateTime Registered,
+    [property:JsonPropertyName("registered")]
+    DateTime RegisteredSince,
+    [property:JsonPropertyName("rank")]
     float Rank,
+    [property:JsonPropertyName("num_pending")]
     int NumPending,
+    [property:JsonPropertyName("num_for_sale")]
     int NumForSale,
+    [property:JsonPropertyName("num_lists")]
     int NumLists,
+    [property:JsonPropertyName("releases_contributed")]
     int ReleasesContributed,
+    [property:JsonPropertyName("releases_rated")]
     int ReleasesRated,
-    float RatingAvg,
+    [property:JsonPropertyName("rating_avg")]
+    float AverageRating,
+    [property:JsonPropertyName("inventory_url")]
     string InventoryUrl,
+    [property:JsonPropertyName("collection_folders_url")]
     string CollectionFoldersUrl,
+    [property:JsonPropertyName("collection_fields_url")]
     string CollectionFieldsUrl,
+    [property:JsonPropertyName("wantlist_url")]
     string WantlistUrl,
+    [property:JsonPropertyName("avatar_url")]
     string AvatarUrl,
-    string CurrAbbr,
-    bool Activated,
-    bool MarketplaceSuspended,
+    [property:JsonPropertyName("curr_abbr")]
+    string CurrencyAbbreviation,
+    [property:JsonPropertyName("activated")]
+    bool IsActivated,
+    [property:JsonPropertyName("marketplace_suspended")]
+    bool IsMarketplaceSuspended,
+    [property:JsonPropertyName("banner_url")]
     string BannerUrl,
+    [property:JsonPropertyName("buyer_rating")]
     float BuyerRating,
+    [property:JsonPropertyName("buyer_rating_stars")]
     float BuyerRatingStars,
+    [property:JsonPropertyName("buyer_num_ratings")]
     int BuyerNumRatings,
+    [property:JsonPropertyName("seller_rating")]
     float SellerRating,
+    [property:JsonPropertyName("seller_rating_stars")]
     float SellerRatingStars,
+    [property:JsonPropertyName("seller_num_ratings")]
     int SellerNumRatings,
+    [property:JsonPropertyName("is_staff")]
     bool IsStaff,
+    [property:JsonPropertyName("num_collection")]
     int NumCollection,
+    [property:JsonPropertyName("num_wantlist")]
     int NumWantlist,
+    [property:JsonPropertyName("email")]
     string Email,
+    [property:JsonPropertyName("num_unread")]
     int NumUnread);
 
 

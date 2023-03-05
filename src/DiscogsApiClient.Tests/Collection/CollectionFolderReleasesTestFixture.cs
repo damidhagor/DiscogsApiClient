@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using DiscogsApiClient.Exceptions;
-using DiscogsApiClient.QueryParameters;
 using NUnit.Framework;
 
 namespace DiscogsApiClient.Tests.Collection;
@@ -242,7 +240,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         Assert.IsNotNull(collectionFolderRelease);
         Assert.AreEqual(releaseId, collectionFolderRelease.Id);
         Assert.IsNotNull(collectionFolderReleaseResponse);
-        Assert.AreEqual(1, collectionFolderReleaseResponse.Pagination.Items);
+        Assert.AreEqual(1, collectionFolderReleaseResponse.Pagination.TotalItems);
         Assert.AreEqual(releaseId, collectionFolderReleaseResponse.Releases[0].Id);
     }
 }

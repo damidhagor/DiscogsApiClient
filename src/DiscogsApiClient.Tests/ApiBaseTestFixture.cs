@@ -4,12 +4,8 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.RateLimiting;
 using System.Threading.Tasks;
-using DiscogsApiClient.Authentication;
 using DiscogsApiClient.Authentication.UserToken;
-using DiscogsApiClient.Contract;
-using DiscogsApiClient.Exceptions;
 using DiscogsApiClient.Middleware;
-using DiscogsApiClient.Serialization;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using Refit;
@@ -67,7 +63,6 @@ public abstract class ApiBaseTestFixture
             _httpClient,
             new RefitSettings
             {
-                ContentSerializer = new SystemTextJsonContentSerializer(DiscogsSerializerOptions.Options),
                 ExceptionFactory = async (response) =>
                 {
                     if (response.IsSuccessStatusCode)
@@ -105,6 +100,5 @@ public abstract class ApiBaseTestFixture
         var userToken = Configuration["DiscogsApiOptions:UserToken"]!;
         var authenticationRequest = new UserTokenAuthenticationRequest(userToken);
         await _authenticationProvider.AuthenticateAsync(authenticationRequest, default);
-        await ApiClient.AuthenticateAsync(authenticationRequest, default);
     }
 }

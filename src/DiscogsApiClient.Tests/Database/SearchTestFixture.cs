@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using DiscogsApiClient.QueryParameters;
 using NUnit.Framework;
 
 namespace DiscogsApiClient.Tests.Database;
@@ -17,11 +16,11 @@ public sealed class SearchTestFixture : ApiBaseTestFixture
         Assert.IsNotNull(response);
         Assert.IsNotNull(response.Pagination);
         Assert.AreEqual(1, response.Pagination.Page);
-        Assert.Less(0, response.Pagination.Items);
-        Assert.Less(0, response.Pagination.Pages);
-        Assert.Less(0, response.Pagination.PerPage);
-        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.Next));
-        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.Last));
+        Assert.Less(0, response.Pagination.TotalItems);
+        Assert.Less(0, response.Pagination.TotalPages);
+        Assert.Less(0, response.Pagination.ItemsPerPage);
+        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.NextPageUrl));
+        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.LastPageUrl));
         Assert.AreEqual(50, response.Results.Count);
     }
 
@@ -36,11 +35,11 @@ public sealed class SearchTestFixture : ApiBaseTestFixture
         Assert.IsNotNull(response);
         Assert.IsNotNull(response.Pagination);
         Assert.AreEqual(1, response.Pagination.Page);
-        Assert.Less(0, response.Pagination.Items);
-        Assert.Less(0, response.Pagination.Pages);
-        Assert.Less(0, response.Pagination.PerPage);
-        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.Next));
-        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.Last));
+        Assert.Less(0, response.Pagination.TotalItems);
+        Assert.Less(0, response.Pagination.TotalPages);
+        Assert.Less(0, response.Pagination.ItemsPerPage);
+        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.NextPageUrl));
+        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.LastPageUrl));
         Assert.AreEqual(50, response.Results.Count);
     }
 
@@ -55,12 +54,12 @@ public sealed class SearchTestFixture : ApiBaseTestFixture
 
         Assert.IsNotNull(response.Pagination);
         Assert.AreEqual(1, response.Pagination.Page);
-        Assert.AreEqual(50, response.Pagination.PerPage);
-        Assert.Less(0, response.Pagination.Items);
-        Assert.Less(0, response.Pagination.Pages);
+        Assert.AreEqual(50, response.Pagination.ItemsPerPage);
+        Assert.Less(0, response.Pagination.TotalItems);
+        Assert.Less(0, response.Pagination.TotalPages);
         Assert.IsNotNull(response.Pagination.Urls);
-        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.Next));
-        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.Last));
+        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.NextPageUrl));
+        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.LastPageUrl));
         Assert.AreEqual(50, response.Results.Count);
     }
 
@@ -74,12 +73,12 @@ public sealed class SearchTestFixture : ApiBaseTestFixture
 
         Assert.IsNotNull(response.Pagination);
         Assert.AreEqual(1, response.Pagination.Page);
-        Assert.AreEqual(1, response.Pagination.PerPage);
-        Assert.Less(0, response.Pagination.Items);
-        Assert.Less(0, response.Pagination.Pages);
+        Assert.AreEqual(1, response.Pagination.ItemsPerPage);
+        Assert.Less(0, response.Pagination.TotalItems);
+        Assert.Less(0, response.Pagination.TotalPages);
         Assert.IsNotNull(response.Pagination.Urls);
-        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.Next));
-        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.Last));
+        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.NextPageUrl));
+        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.LastPageUrl));
         Assert.AreEqual(1, response.Results.Count);
     }
 
@@ -93,12 +92,12 @@ public sealed class SearchTestFixture : ApiBaseTestFixture
 
         Assert.IsNotNull(response.Pagination);
         Assert.AreEqual(1, response.Pagination.Page);
-        Assert.AreEqual(100, response.Pagination.PerPage);
-        Assert.Less(0, response.Pagination.Items);
-        Assert.Less(0, response.Pagination.Pages);
+        Assert.AreEqual(100, response.Pagination.ItemsPerPage);
+        Assert.Less(0, response.Pagination.TotalItems);
+        Assert.Less(0, response.Pagination.TotalPages);
         Assert.IsNotNull(response.Pagination.Urls);
-        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.Next));
-        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.Last));
+        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.NextPageUrl));
+        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.LastPageUrl));
         Assert.AreEqual(100, response.Results.Count);
     }
 }

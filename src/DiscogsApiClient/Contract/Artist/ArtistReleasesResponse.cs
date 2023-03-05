@@ -1,19 +1,9 @@
-﻿namespace DiscogsApiClient.Contract;
-
-public sealed record ArtistRelease(
-    int Id,
-    string Title,
-    string Type,
-    int MainRelease,
-    string Artist,
-    string Role,
-    string ResourceUrl,
-    int Year,
-    string Thumb,
-    ReleaseStats Stats);
+﻿namespace DiscogsApiClient.Contract.Artist;
 
 public sealed record ArtistReleasesResponse(
+    [property:JsonPropertyName("pagination")]
     Pagination Pagination,
+    [property:JsonPropertyName("releases")]
     List<ArtistRelease> Releases);
 
 

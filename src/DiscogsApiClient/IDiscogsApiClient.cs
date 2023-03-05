@@ -1,23 +1,7 @@
-﻿using DiscogsApiClient.Authentication.UserToken;
-
-namespace DiscogsApiClient;
+﻿namespace DiscogsApiClient;
 
 public interface IDiscogsApiClient
 {
-    /// <summary>
-    /// Indicates if the <see cref="DiscogsApiClient"/> has been authenticated and is ready to use.
-    /// </summary>
-    bool IsAuthenticated => false;
-
-    /// <summary>
-    /// Authenticates the <see cref="DiscogsApiClient"/> against the Discogs api by using the chosen <see cref="IAuthenticationProvider"/>.
-    /// </summary>
-    /// <param name="authenticationRequest">The <see cref="IAuthenticationRequest"/> implementation corresponding to the chosen <see cref="IAuthenticationProvider"/>.</param>
-    /// <returns>The <see cref="IAuthenticationResponse"/> implementation corresponding to the chosen <see cref="IAuthenticationProvider"/>.</returns>
-    Task<IAuthenticationResponse> AuthenticateAsync(IAuthenticationRequest authenticationRequest, CancellationToken cancellationToken)
-        => Task.FromResult<IAuthenticationResponse>(new UserTokenAuthenticationResponse(true));
-
-
     /// <summary>
     /// Queries the <see cref="Identity"/> of the currently authenticated user.
     /// </summary>
@@ -26,6 +10,7 @@ public interface IDiscogsApiClient
 
     [Get("/users/{username}")]
     internal Task<User> GetUserInternal(string username, CancellationToken cancellationToken);
+
     /// <summary>
     /// Queries the <see cref="User"/> object of the currently authenticated user.
     /// </summary>
@@ -38,6 +23,7 @@ public interface IDiscogsApiClient
 
     [Get("/users/{username}/collection/folders")]
     internal Task<CollectionFoldersResponse> GetCollectionFoldersInternal(string username, CancellationToken cancellationToken);
+
     /// <summary>
     /// Gets the collection folders of the user.
     /// </summary>
@@ -51,6 +37,7 @@ public interface IDiscogsApiClient
 
     [Get("/users/{username}/collection/folders/{folderId}")]
     internal Task<CollectionFolder> GetCollectionFolderInternal(string username, int folderId, CancellationToken cancellationToken);
+
     /// <summary>
     /// Gets a specific collection folder of the user.
     /// </summary>
@@ -65,6 +52,7 @@ public interface IDiscogsApiClient
 
     [Post("/users/{username}/collection/folders")]
     internal Task<CollectionFolder> CreateCollectionFolderInternal(string username, [Body] object folderNameObject, CancellationToken cancellationToken);
+
     /// <summary>
     /// Creates a new collection folder for the user.
     /// </summary>
@@ -80,6 +68,7 @@ public interface IDiscogsApiClient
 
     [Post("/users/{username}/collection/folders/{folderId}")]
     internal Task<CollectionFolder> UpdateCollectionFolderInternal(string username, int folderId, [Body] object folderNameObject, CancellationToken cancellationToken);
+
     /// <summary>
     /// Changes a collection folder's name for the user.
     /// </summary>
@@ -95,7 +84,8 @@ public interface IDiscogsApiClient
     }
 
     [Delete("/users/{username}/collection/folders/{folderId}")]
-    public Task DeleteCollectionFolderInternal(string username, int folderId, CancellationToken cancellationToken);
+    internal Task DeleteCollectionFolderInternal(string username, int folderId, CancellationToken cancellationToken);
+
     /// <summary>
     /// Deletes a collection folder for the user.
     /// </summary>
@@ -110,6 +100,7 @@ public interface IDiscogsApiClient
 
     [Get("/users/{username}/collection/folders/{folderId}/releases")]
     internal Task<CollectionFolderReleasesResponse> GetCollectionFolderReleasesInternal(string username, int folderId, PaginationQueryParameters paginationQueryParameters, CollectionFolderReleaseSortQueryParameters collectionFolderReleaseSortQueryParameters, CancellationToken cancellationToken);
+
     /// <summary>
     /// Gets the releases in a collection folder of the user.
     /// </summary>
@@ -125,6 +116,7 @@ public interface IDiscogsApiClient
 
     [Post("/users/{username}/collection/folders/{folderId}/releases/{releaseId}")]
     internal Task<CollectionFolderRelease> AddReleaseToCollectionFolderInternal(string username, int folderId, int releaseId, CancellationToken cancellationToken);
+
     /// <summary>
     /// Adds a release to the collection folder of the user.
     /// </summary>
@@ -140,6 +132,7 @@ public interface IDiscogsApiClient
 
     [Delete("/users/{username}/collection/folders/{folderId}/releases/{releaseId}/instances/{instanceId}")]
     internal Task DeleteReleaseFromCollectionFolderInternal(string username, int folderId, int releaseId, int instanceId, CancellationToken cancellationToken);
+
     /// <summary>
     /// Removes a release from a collection folder of the user.
     /// </summary>
@@ -156,6 +149,7 @@ public interface IDiscogsApiClient
 
     [Get("/users/{username}/collection/value")]
     internal Task<CollectionValue> GetCollectionValueInternal(string username, CancellationToken cancellationToken);
+
     /// <summary>
     /// Gets the estimated value of the user's collection.
     /// </summary>
@@ -170,6 +164,7 @@ public interface IDiscogsApiClient
 
     [Get("/users/{username}/wants")]
     internal Task<WantlistReleasesResponse> GetWantlistReleasesInternal(string username, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken);
+
     /// <summary>
     /// Gets the releases on the wantlist of the user.
     /// </summary>
@@ -184,6 +179,7 @@ public interface IDiscogsApiClient
 
     [Put("/users/{username}/wants/{releaseId}")]
     internal Task<WantlistRelease> AddReleaseToWantlistInternal(string username, int releaseId, CancellationToken cancellationToken);
+
     /// <summary>
     /// Adds a release to the wantlist of the user.
     /// </summary>
@@ -198,6 +194,7 @@ public interface IDiscogsApiClient
 
     [Delete("/users/{username}/wants/{releaseId}")]
     internal Task DeleteReleaseFromWantlistInternal(string username, int releaseId, CancellationToken cancellationToken);
+
     /// <summary>
     /// Removes a release from the wantlist of the user.
     /// </summary>

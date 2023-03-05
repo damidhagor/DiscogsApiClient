@@ -1,3 +1,5 @@
 ﻿namespace DiscogsApiClient.Contract;
 
-public sealed record ErrorMessage(string Message);
+public sealed record ErrorMessage(
+    [property:JsonPropertyName("message")]
+    string Message);

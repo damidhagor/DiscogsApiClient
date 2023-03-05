@@ -1,16 +1,18 @@
-﻿namespace DiscogsApiClient.Contract;
+﻿namespace DiscogsApiClient.Contract.User.Wantlist;
 
 public sealed record WantlistRelease(
+    [property:JsonPropertyName("id")]
     int Id,
+    [property:JsonPropertyName("resource_url")]
     string ResourceUrl,
-    DateTime DateAdded,
+    [property:JsonPropertyName("date_added")]
+    DateTime AddedAt,
+    [property:JsonPropertyName("rating")]
     int Rating,
-    UserListReleaseInformation BasicInformation,
+    [property:JsonPropertyName("basic_information")]
+    UserListReleaseInformation Release,
+    [property:JsonPropertyName("notes")]
     string Notes);
-
-public sealed record WantlistReleasesResponse(
-    Pagination Pagination,
-    List<WantlistRelease> Wants);
 
 
 /**

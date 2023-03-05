@@ -1,16 +1,9 @@
-﻿namespace DiscogsApiClient.Contract;
-
-public sealed record CollectionFolderRelease(
-    int Id,
-    int InstanceId,
-    DateTime DateAdded,
-    int Rating,
-    string ResourceUrl,
-    UserListReleaseInformation BasicInformation,
-    int FolderId);
+﻿namespace DiscogsApiClient.Contract.User.Collection;
 
 public sealed record CollectionFolderReleasesResponse(
+    [property:JsonPropertyName("pagination")]
     Pagination Pagination,
+    [property:JsonPropertyName("releases")]
     List<CollectionFolderRelease> Releases);
 
 

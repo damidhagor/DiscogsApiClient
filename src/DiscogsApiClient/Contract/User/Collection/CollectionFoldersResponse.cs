@@ -1,12 +1,7 @@
-﻿namespace DiscogsApiClient.Contract;
-
-public sealed record CollectionFolder(
-    int Id,
-    int Count,
-    string Name,
-    string ResourceUrl);
+﻿namespace DiscogsApiClient.Contract.User.Collection;
 
 public sealed record CollectionFoldersResponse(
+    [property:JsonPropertyName("folders")]
     List<CollectionFolder> Folders);
 
 

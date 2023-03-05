@@ -1,23 +1,12 @@
-﻿namespace DiscogsApiClient.Contract;
-
-public sealed record Label(
-    int Id,
-    string Name,
-    string ContactInfo,
-    string Profile,
-    string ResourceUrl,
-    string Uri,
-    string ReleasesUrl,
-    List<Image> Images,
-    LabelShortInfo ParentLabel,
-    List<LabelShortInfo> Sublabels,
-    List<string> Urls,
-    string DataQuality);
+﻿namespace DiscogsApiClient.Contract.Label;
 
 public sealed record LabelShortInfo(
+    [property:JsonPropertyName("id")]
     int Id,
-    string Name,
-    string ResourceUrl);
+    [property:JsonPropertyName("resource_url")]
+    string ResourceUrl,
+    [property:JsonPropertyName("name")]
+    string Name);
 
 
 /*

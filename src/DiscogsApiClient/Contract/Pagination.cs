@@ -1,15 +1,22 @@
 ﻿namespace DiscogsApiClient.Contract;
 
 public sealed record Pagination(
+    [property:JsonPropertyName("page")]
     int Page,
-    int Pages,
-    int PerPage,
-    int Items,
+    [property:JsonPropertyName("pages")]
+    int TotalPages,
+    [property:JsonPropertyName("per_page")]
+    int ItemsPerPage,
+    [property:JsonPropertyName("items")]
+    int TotalItems,
+    [property:JsonPropertyName("urls")]
     PaginationUrls Urls);
 
 public sealed record PaginationUrls(
-    string Next,
-    string Last);
+    [property:JsonPropertyName("next")]
+    string NextPageUrl,
+    [property:JsonPropertyName("last")]
+    string LastPageUrl);
 
 
 /*

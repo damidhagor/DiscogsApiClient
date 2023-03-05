@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using DiscogsApiClient.Exceptions;
 using NUnit.Framework;
 
 namespace DiscogsApiClient.Tests.User;
@@ -19,7 +18,7 @@ public sealed class UserTestFixture : ApiBaseTestFixture
         Assert.AreEqual("DamIDhagor", user.Username);
         Assert.AreEqual("alexander.jurk@outlook.com", user.Email);
         Assert.AreEqual("https://api.discogs.com/users/DamIDhagor", user.ResourceUrl);
-        Assert.IsTrue(user.Activated);
+        Assert.IsTrue(user.IsActivated);
         Assert.IsFalse(string.IsNullOrWhiteSpace(user.AvatarUrl));
         Assert.IsFalse(string.IsNullOrWhiteSpace(user.CollectionFoldersUrl));
     }

@@ -1,6 +1,4 @@
 ﻿using System.Threading.Tasks;
-using DiscogsApiClient.Exceptions;
-using DiscogsApiClient.QueryParameters;
 using NUnit.Framework;
 
 namespace DiscogsApiClient.Tests.Database;
@@ -23,7 +21,7 @@ public sealed class ArtistsTestFixture : ApiBaseTestFixture
         Assert.IsFalse(string.IsNullOrWhiteSpace(artist.Profile));
 
         Assert.Less(0, artist.Urls.Count);
-        Assert.Less(0, artist.Namevariations.Count);
+        Assert.Less(0, artist.NameVariations.Count);
         Assert.Less(0, artist.Members.Count);
         Assert.Less(0, artist.Images.Count);
     }
@@ -47,12 +45,12 @@ public sealed class ArtistsTestFixture : ApiBaseTestFixture
 
         Assert.IsNotNull(response.Pagination);
         Assert.AreEqual(1, response.Pagination.Page);
-        Assert.AreEqual(50, response.Pagination.PerPage);
-        Assert.Less(0, response.Pagination.Items);
-        Assert.Less(0, response.Pagination.Pages);
+        Assert.AreEqual(50, response.Pagination.ItemsPerPage);
+        Assert.Less(0, response.Pagination.TotalItems);
+        Assert.Less(0, response.Pagination.TotalPages);
         Assert.IsNotNull(response.Pagination.Urls);
-        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.Next));
-        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.Last));
+        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.NextPageUrl));
+        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.LastPageUrl));
 
         Assert.IsNotNull(response.Releases);
         Assert.AreEqual(50, response.Releases.Count);
@@ -69,12 +67,12 @@ public sealed class ArtistsTestFixture : ApiBaseTestFixture
 
         Assert.IsNotNull(response.Pagination);
         Assert.AreEqual(1, response.Pagination.Page);
-        Assert.AreEqual(50, response.Pagination.PerPage);
-        Assert.Less(0, response.Pagination.Items);
-        Assert.Less(0, response.Pagination.Pages);
+        Assert.AreEqual(50, response.Pagination.ItemsPerPage);
+        Assert.Less(0, response.Pagination.TotalItems);
+        Assert.Less(0, response.Pagination.TotalPages);
         Assert.IsNotNull(response.Pagination.Urls);
-        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.Next));
-        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.Last));
+        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.NextPageUrl));
+        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.LastPageUrl));
 
         Assert.IsNotNull(response.Releases);
         Assert.AreEqual(50, response.Releases.Count);
@@ -91,12 +89,12 @@ public sealed class ArtistsTestFixture : ApiBaseTestFixture
 
         Assert.IsNotNull(response.Pagination);
         Assert.AreEqual(1, response.Pagination.Page);
-        Assert.AreEqual(1, response.Pagination.PerPage);
-        Assert.Less(0, response.Pagination.Items);
-        Assert.Less(0, response.Pagination.Pages);
+        Assert.AreEqual(1, response.Pagination.ItemsPerPage);
+        Assert.Less(0, response.Pagination.TotalItems);
+        Assert.Less(0, response.Pagination.TotalPages);
         Assert.IsNotNull(response.Pagination.Urls);
-        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.Next));
-        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.Last));
+        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.NextPageUrl));
+        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.LastPageUrl));
 
         Assert.IsNotNull(response.Releases);
         Assert.AreEqual(1, response.Releases.Count);
@@ -113,12 +111,12 @@ public sealed class ArtistsTestFixture : ApiBaseTestFixture
 
         Assert.IsNotNull(response.Pagination);
         Assert.AreEqual(1, response.Pagination.Page);
-        Assert.AreEqual(100, response.Pagination.PerPage);
-        Assert.Less(0, response.Pagination.Items);
-        Assert.Less(0, response.Pagination.Pages);
+        Assert.AreEqual(100, response.Pagination.ItemsPerPage);
+        Assert.Less(0, response.Pagination.TotalItems);
+        Assert.Less(0, response.Pagination.TotalPages);
         Assert.IsNotNull(response.Pagination.Urls);
-        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.Next));
-        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.Last));
+        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.NextPageUrl));
+        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.LastPageUrl));
 
         Assert.IsNotNull(response.Releases);
         Assert.AreEqual(100, response.Releases.Count);
@@ -135,10 +133,10 @@ public sealed class ArtistsTestFixture : ApiBaseTestFixture
         var summedUpItemCount = 0;
 
         var response = await ApiClient.GetArtistReleases(artistId, paginationParams, sortParams, default);
-        itemCount = response.Pagination.Items;
+        itemCount = response.Pagination.TotalItems;
         summedUpItemCount += response.Releases.Count;
 
-        for (int p = 2; p <= response.Pagination.Pages; p++)
+        for (int p = 2; p <= response.Pagination.TotalPages; p++)
         {
             paginationParams = paginationParams with { Page = p };
             response = await ApiClient.GetArtistReleases(artistId, paginationParams, sortParams, default);

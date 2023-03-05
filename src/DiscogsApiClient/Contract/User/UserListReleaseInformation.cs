@@ -1,18 +1,31 @@
-﻿namespace DiscogsApiClient.Contract;
+﻿namespace DiscogsApiClient.Contract.User;
 
 public sealed record UserListReleaseInformation(
+    [property:JsonPropertyName("id")]
     int Id,
+    [property:JsonPropertyName("master_id")]
     int MasterId,
+    [property:JsonPropertyName("master_url")]
     string MasterUrl,
+    [property:JsonPropertyName("resource_url")]
     string ResourceUrl,
+    [property:JsonPropertyName("title")]
     string Title,
+    [property:JsonPropertyName("year")]
     int Year,
+    [property:JsonPropertyName("formats")]
     List<ReleaseFormat> Formats,
+    [property:JsonPropertyName("labels")]
     List<ReleaseLabel> Labels,
+    [property:JsonPropertyName("artists")]
     List<ReleaseArtist> Artists,
-    string Thumb,
-    string CoverImage,
+    [property:JsonPropertyName("thumb")]
+    string ThumbnailUrl,
+    [property:JsonPropertyName("cover_image")]
+    string CoverImageUrl,
+    [property:JsonPropertyName("genres")]
     List<string> Genres,
+    [property:JsonPropertyName("styles")]
     List<string> Styles);
 
 

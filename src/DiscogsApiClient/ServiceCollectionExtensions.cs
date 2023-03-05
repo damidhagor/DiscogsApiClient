@@ -1,11 +1,9 @@
 ﻿using System.Net;
-using System.Threading;
 using System.Threading.RateLimiting;
 using DiscogsApiClient.Authentication.PlainOAuth;
 using DiscogsApiClient.Authentication.UserToken;
 using DiscogsApiClient.Middleware;
 using Microsoft.Extensions.DependencyInjection;
-using Refit;
 
 namespace DiscogsApiClient;
 
@@ -35,12 +33,42 @@ public static class ServiceCollectionExtensions
         }
 
         services.AddTransient<AuthenticationDelegatingHandler>();
-        services.AddTransient<DiscogsResponseDelegatingHandler>();
 
-        var httpClientBuilder = services.AddRefitClient<IDiscogsApiClient>(
+        var httpClientBuilder = services.AddDiscogsApiClient(options);
+
+        if (options.UseRateLimiting)
+        {
+            AddRateLimiting(services, httpClientBuilder, options);
+        }
+
+        return services;
+    }
+
+    /// <summary>
+    /// Adds the <see cref="UserTokenAuthenticationProvider"/> to the services collection.
+    /// </summary>
+    public static IServiceCollection AddDiscogsUserTokenAuthentication(this IServiceCollection services)
+    {
+        services.AddSingleton<IAuthenticationProvider, UserTokenAuthenticationProvider>();
+        return services;
+    }
+
+    /// <summary>
+    /// Adds the <see cref="PlainOAuthAuthenticationProvider"/> to the services collection.
+    /// </summary>
+    public static IServiceCollection AddDiscogsPlainOAuthAuthentication(this IServiceCollection services)
+    {
+        services.AddSingleton<IAuthenticationProvider, PlainOAuthAuthenticationProvider>();
+        return services;
+    }
+
+    private static IHttpClientBuilder AddDiscogsApiClient(this IServiceCollection services, AddDiscogsApiClientOptions options)
+    {
+        services.AddTransient<AuthenticationDelegatingHandler>();
+
+        return services.AddRefitClient<IDiscogsApiClient>(
             new RefitSettings
             {
-                ContentSerializer = new SystemTextJsonContentSerializer(DiscogsSerializerOptions.Options),
                 ExceptionFactory = async (response) =>
                 {
                     if (response.IsSuccessStatusCode)
@@ -68,45 +96,26 @@ public static class ServiceCollectionExtensions
                 httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent);
             })
             .AddHttpMessageHandler<AuthenticationDelegatingHandler>();
+    }
 
-        if (options.UseRateLimiting)
+    private static IHttpClientBuilder AddRateLimiting(IServiceCollection services, IHttpClientBuilder builder, AddDiscogsApiClientOptions options)
+    {
+        var rateLimitingOptions = new SlidingWindowRateLimiterOptions()
         {
-            var rateLimitingOptions = new SlidingWindowRateLimiterOptions()
-            {
-                Window = options.RateLimitingWindow,
-                SegmentsPerWindow = options.RateLimitingWindowSegments,
-                PermitLimit = options.RateLimitingPermits,
-                QueueLimit = options.RateLimitingQueueSize,
-                AutoReplenishment = true,
-                QueueProcessingOrder = QueueProcessingOrder.OldestFirst
-            };
+            Window = options.RateLimitingWindow,
+            SegmentsPerWindow = options.RateLimitingWindowSegments,
+            PermitLimit = options.RateLimitingPermits,
+            QueueLimit = options.RateLimitingQueueSize,
+            AutoReplenishment = true,
+            QueueProcessingOrder = QueueProcessingOrder.OldestFirst
+        };
 
-            services.AddSingleton(rateLimitingOptions);
-            services.AddTransient<RateLimiter, SlidingWindowRateLimiter>();
-            services.AddTransient<RateLimitedDelegatingHandler>();
+        services.AddSingleton(rateLimitingOptions);
+        services.AddTransient<RateLimiter, SlidingWindowRateLimiter>();
+        services.AddTransient<RateLimitedDelegatingHandler>();
 
-            httpClientBuilder.AddHttpMessageHandler<RateLimitedDelegatingHandler>();
-        }
-
-        return services;
-    }
-
-    /// <summary>
-    /// Adds the <see cref="UserTokenAuthenticationProvider"/> to the services collection.
-    /// </summary>
-    public static IServiceCollection AddDiscogsUserTokenAuthentication(this IServiceCollection services)
-    {
-        services.AddSingleton<IAuthenticationProvider, UserTokenAuthenticationProvider>();
-        return services;
-    }
-
-    /// <summary>
-    /// Adds the <see cref="PlainOAuthAuthenticationProvider"/> to the services collection.
-    /// </summary>
-    public static IServiceCollection AddDiscogsPlainOAuthAuthentication(this IServiceCollection services)
-    {
-        services.AddSingleton<IAuthenticationProvider, PlainOAuthAuthenticationProvider>();
-        return services;
+        builder.AddHttpMessageHandler<RateLimitedDelegatingHandler>();
+        return builder;
     }
 
     public sealed class AddDiscogsApiClientOptions

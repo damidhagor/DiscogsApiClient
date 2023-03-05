@@ -1,24 +1,16 @@
-﻿namespace DiscogsApiClient.Contract;
-
-public sealed record Artist(
-    int Id,
-    string Name,
-    string Profile,
-    string ResourceUrl,
-    string Uri,
-    string ReleasesUrl,
-    List<Image> Images,
-    List<string> Urls,
-    List<string> Namevariations,
-    List<ArtistMember> Members,
-    string DataQuality);
+﻿namespace DiscogsApiClient.Contract.Artist;
 
 public sealed record ArtistMember(
+    [property:JsonPropertyName("id")]
     int Id,
-    string Name,
-    bool Active,
+    [property:JsonPropertyName("resource_url")]
     string ResourceUrl,
-    string ThumbnailUrl);
+    [property:JsonPropertyName("thumbnail_url")]
+    string ThumbnailUrl,
+    [property:JsonPropertyName("name")]
+    string Name,
+    [property:JsonPropertyName("active")]
+    bool IsActive);
 
 
 /**
