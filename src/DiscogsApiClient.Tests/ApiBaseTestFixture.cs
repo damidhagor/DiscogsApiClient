@@ -87,6 +87,7 @@ public abstract class ApiBaseTestFixture
                     {
                         HttpStatusCode.Unauthorized => new UnauthorizedDiscogsException(message),
                         HttpStatusCode.NotFound => new ResourceNotFoundDiscogsException(message),
+                        HttpStatusCode.TooManyRequests => new RateLimitExceededDiscogsException(message),
                         _ => new DiscogsException(message),
                     };
                 }
