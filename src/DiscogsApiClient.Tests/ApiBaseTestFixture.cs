@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.RateLimiting;
 using System.Threading.Tasks;
 using DiscogsApiClient.Authentication.UserToken;
@@ -78,8 +79,8 @@ public abstract class ApiBaseTestFixture
                     string? message = null;
                     try
                     {
-                        var errorMessage = await response.Content.DeserializeAsJsonAsync<ErrorMessage>(default);
-                        message = errorMessage.Message;
+                        var content = await response.Content.ReadAsStringAsync();
+                        message = JsonSerializer.Deserialize<ErrorMessage>(content)?.Message;
                     }
                     catch { }
 

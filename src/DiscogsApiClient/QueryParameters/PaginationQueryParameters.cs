@@ -1,6 +1,4 @@
-﻿using Refit;
-
-namespace DiscogsApiClient.QueryParameters;
+﻿namespace DiscogsApiClient.QueryParameters;
 
 /// <summary>
 /// Pagination parameters used by paginated requests to the Discogs Api.

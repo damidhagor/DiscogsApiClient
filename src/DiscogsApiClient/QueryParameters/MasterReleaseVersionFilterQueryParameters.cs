@@ -1,4 +1,5 @@
-﻿using static DiscogsApiClient.QueryParameters.MasterReleaseVersionFilterQueryParameters;
+﻿using System.Runtime.Serialization;
+using static DiscogsApiClient.QueryParameters.MasterReleaseVersionFilterQueryParameters;
 
 namespace DiscogsApiClient.QueryParameters;
 
@@ -30,11 +31,17 @@ public sealed record MasterReleaseVersionFilterQueryParameters(
     /// </summary>
     public enum SortableProperty
     {
+        [EnumMember(Value = "released")]
         Released,
+        [EnumMember(Value = "title")]
         Title,
+        [EnumMember(Value = "format")]
         Format,
+        [EnumMember(Value = "label")]
         Label,
-        Catno,
+        [EnumMember(Value = "catno")]
+        CatalogNumber,
+        [EnumMember(Value = "country")]
         Country
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Text.Json;
 using System.Threading.RateLimiting;
 using DiscogsApiClient.Authentication.PlainOAuth;
 using DiscogsApiClient.Authentication.UserToken;
@@ -77,8 +78,8 @@ public static class ServiceCollectionExtensions
                     string? message = null;
                     try
                     {
-                        var errorMessage = await response.Content.DeserializeAsJsonAsync<ErrorMessage>(default);
-                        message = errorMessage.Message;
+                        var content = await response.Content.ReadAsStringAsync();
+                        message = JsonSerializer.Deserialize<ErrorMessage>(content)?.Message;
                     }
                     catch { }
 
