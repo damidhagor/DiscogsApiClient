@@ -20,7 +20,6 @@ public partial class App : Application
                     options.UserAgent = "AwesomeAppDemo/1.0.0";
                     options.UseRateLimiting = true;
                 });
-                services.AddDiscogsPlainOAuthAuthentication();
                 services.AddSingleton<MainWindow>();
             })
             .Build();

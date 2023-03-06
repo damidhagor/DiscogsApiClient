@@ -4,7 +4,6 @@ using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.RateLimiting;
-using System.Threading.Tasks;
 using DiscogsApiClient.Authentication.OAuth;
 using DiscogsApiClient.Authentication.UserToken;
 using DiscogsApiClient.Middleware;
@@ -17,54 +16,63 @@ namespace DiscogsApiClient.Tests;
 [TestFixture]
 public abstract class ApiBaseTestFixture
 {
-    private static readonly IDiscogsAuthenticationService _authenticationService;
-    private static readonly HttpClient _httpClient;
+    private static readonly RateLimiter _rateLimiter;
 
-    protected IDiscogsApiClient ApiClient;
-    protected IConfiguration Configuration;
+    private HttpClient _authHttpClient = null!;
+    private HttpClient _clientHttpClient = null!;
+    private IConfiguration _configuration = null!;
+
+    protected IDiscogsApiClient ApiClient = null!;
 
     static ApiBaseTestFixture()
     {
-        _authenticationService = new DiscogsAuthenticationService(
+        _rateLimiter = new SlidingWindowRateLimiter(
+                new SlidingWindowRateLimiterOptions()
+                {
+                    Window = TimeSpan.FromSeconds(60),
+                    SegmentsPerWindow = 12,
+                    PermitLimit = 40,
+                    AutoReplenishment = true,
+                    QueueLimit = 1_000,
+                    QueueProcessingOrder = QueueProcessingOrder.OldestFirst
+                });
+    }
+
+    [OneTimeSetUp]
+    public void Setup()
+    {
+        _configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", false)
+            .AddJsonFile($"appsettings.Development.json", true)
+            .Build();
+
+        var userAgent = _configuration["DiscogsApiOptions:UserAgent"];
+        var baseUrl = _configuration["DiscogsApiOptions:BaseUrl"];
+        var userToken = _configuration["DiscogsApiOptions:UserToken"]!;
+
+        _authHttpClient = new HttpClient() { BaseAddress = new Uri(baseUrl!) };
+        _authHttpClient.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent);
+
+        var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider());
-        _httpClient = new(
-            new RateLimitedDelegatingHandler(
-                new SlidingWindowRateLimiter(
-                    new SlidingWindowRateLimiterOptions()
-                    {
-                        Window = TimeSpan.FromSeconds(60),
-                        SegmentsPerWindow = 12,
-                        PermitLimit = 40,
-                        AutoReplenishment = true,
-                        QueueLimit = 1_000,
-                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst
-                    }))
+            new OAuthAuthenticationProvider(_authHttpClient));
+        authService.AuthenticateWithPersonalAccessToken(userToken);
+
+        _clientHttpClient = new HttpClient(
+            new RateLimitedDelegatingHandler(_rateLimiter, false)
             {
-                InnerHandler = new AuthenticationDelegatingHandler(_authenticationService)
+                InnerHandler = new AuthenticationDelegatingHandler(authService)
                 {
                     InnerHandler = new HttpClientHandler()
                 }
             })
         {
-            BaseAddress = new Uri("https://api.discogs.com")
+            BaseAddress = new Uri(baseUrl!)
         };
-    }
-
-    public ApiBaseTestFixture()
-    {
-        Configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json", false)
-            .AddJsonFile($"appsettings.Development.json", true)
-            .Build();
-
-        var userAgent = Configuration["DiscogsApiOptions:UserAgent"];
-
-        if (_httpClient.DefaultRequestHeaders.UserAgent.Count == 0)
-            _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent);
+        _clientHttpClient.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent);
 
         ApiClient = RestService.For<IDiscogsApiClient>(
-            _httpClient,
+            _clientHttpClient,
             new RefitSettings
             {
                 ExceptionFactory = async (response) =>
@@ -73,9 +81,10 @@ public abstract class ApiBaseTestFixture
                     {
                         if (Debugger.IsAttached)
                         {
-                            string content = await response.Content.ReadAsStringAsync();
+                            var content = await response.Content.ReadAsStringAsync();
                             ;
                         }
+
                         return null;
                     }
 
@@ -98,11 +107,10 @@ public abstract class ApiBaseTestFixture
             });
     }
 
-
-    [OneTimeSetUp]
-    public virtual async Task Initialize()
+    [OneTimeTearDown]
+    public void TearDown()
     {
-        var userToken = Configuration["DiscogsApiOptions:UserToken"]!;
-        _authenticationService.AuthenticateWithPersonalAccessToken(userToken);
+        _authHttpClient?.Dispose();
+        _clientHttpClient?.Dispose();
     }
 }

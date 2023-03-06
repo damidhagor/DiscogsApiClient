@@ -11,10 +11,10 @@ public sealed class RateLimitingTestFixture : ApiBaseTestFixture
     [Explicit]
     public async Task ClientIsRateLimited_Success()
     {
-        int succeeded = 0;
-        int failed = 0;
+        var succeeded = 0;
+        var failed = 0;
 
-        for (int i = 0; i < 100; i++)
+        for (var i = 0; i < 100; i++)
         {
             try
             {

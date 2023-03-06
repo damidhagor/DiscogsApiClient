@@ -7,9 +7,13 @@ namespace DiscogsApiClient.Middleware;
 internal sealed class RateLimitedDelegatingHandler : DelegatingHandler, IAsyncDisposable
 {
     private readonly RateLimiter _rateLimiter;
+    private readonly bool _disposeRateLimiter;
 
-    public RateLimitedDelegatingHandler(RateLimiter limiter)
-         => _rateLimiter = limiter;
+    public RateLimitedDelegatingHandler(RateLimiter limiter, bool disposeRateLimiter = true)
+    {
+        _rateLimiter = limiter;
+        _disposeRateLimiter = disposeRateLimiter;
+    }
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
@@ -31,7 +35,10 @@ internal sealed class RateLimitedDelegatingHandler : DelegatingHandler, IAsyncDi
 
     async ValueTask IAsyncDisposable.DisposeAsync()
     {
-        await _rateLimiter.DisposeAsync().ConfigureAwait(false);
+        if (_disposeRateLimiter)
+        {
+            await _rateLimiter.DisposeAsync().ConfigureAwait(false);
+        }
 
         Dispose(false);
         GC.SuppressFinalize(this);
@@ -41,7 +48,7 @@ internal sealed class RateLimitedDelegatingHandler : DelegatingHandler, IAsyncDi
     {
         base.Dispose(disposing);
 
-        if (disposing)
+        if (disposing && _disposeRateLimiter)
         {
             _rateLimiter.Dispose();
         }

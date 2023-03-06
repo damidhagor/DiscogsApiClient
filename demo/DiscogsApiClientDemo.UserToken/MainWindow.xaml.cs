@@ -5,7 +5,7 @@ using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DiscogsApiClient;
-using DiscogsApiClient.Authentication.UserToken;
+using DiscogsApiClient.Authentication;
 
 namespace DiscogsApiClientDemo.UserToken;
 
@@ -13,6 +13,7 @@ namespace DiscogsApiClientDemo.UserToken;
 public partial class MainWindow : Window
 {
     private readonly IDiscogsApiClient _discogsApiClient;
+    private readonly IDiscogsAuthenticationService _discogsAuthenticationService;
 
     [ObservableProperty]
     private string _userToken = "";
@@ -21,10 +22,10 @@ public partial class MainWindow : Window
     private string _userName = "";
 
 
-    public MainWindow(IDiscogsApiClient discogsApiClient)
+    public MainWindow(IDiscogsApiClient discogsApiClient, IDiscogsAuthenticationService discogsAuthenticationService)
     {
         _discogsApiClient = discogsApiClient;
-
+        _discogsAuthenticationService = discogsAuthenticationService;
         InitializeComponent();
     }
 
@@ -34,19 +35,9 @@ public partial class MainWindow : Window
         try
         {
             // Authenticate/login with your user token from your Discogs account settings.
-            var authRequest = new UserTokenAuthenticationRequest(UserToken);
-            var authResponse = await _discogsApiClient.AuthenticateAsync(authRequest, cancellationToken);
-
-            // If login successful you can make calls to the Discogs Api.
-            if (authResponse.Success)
-            {
-                var identityResponse = await _discogsApiClient.GetIdentityAsync(cancellationToken);
-                UserName = identityResponse.Username;
-            }
-            else
-            {
-                UserName = "";
-            }
+            _discogsAuthenticationService.AuthenticateWithPersonalAccessToken(UserToken);
+            var identityResponse = await _discogsApiClient.GetIdentity(cancellationToken);
+            UserName = identityResponse.Username;
         }
         catch (Exception ex)
         {

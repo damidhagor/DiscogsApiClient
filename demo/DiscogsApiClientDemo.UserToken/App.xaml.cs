@@ -14,13 +14,12 @@ public partial class App : Application
         _host = new HostBuilder()
             .ConfigureServices((context, services) =>
             {
-                // Add DiscogsApiClient with user token authentication to the services collection
+                // Add DiscogsApiClient to the services collection
                 services.AddDiscogsApiClient(options =>
                 {
                     options.UserAgent = "AwesomeAppDemo/1.0.0";
                     options.UseRateLimiting = true;
                 });
-                services.AddDiscogsUserTokenAuthentication();
                 services.AddSingleton<MainWindow>();
             })
             .Build();

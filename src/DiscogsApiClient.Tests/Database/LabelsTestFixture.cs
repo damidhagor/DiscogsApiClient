@@ -127,14 +127,12 @@ public sealed class LabelsTestFixture : ApiBaseTestFixture
         var labelId = 34650;
 
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
-        var itemCount = 0;
-        var summedUpItemCount = 0;
 
         var response = await ApiClient.GetLabelReleases(labelId, paginationParams, default);
-        itemCount = response.Pagination.TotalItems;
-        summedUpItemCount += response.Releases.Count;
+        var itemCount = response.Pagination.TotalItems;
+        var summedUpItemCount = response.Releases.Count;
 
-        for (int p = 2; p <= response.Pagination.TotalPages; p++)
+        for (var p = 2; p <= response.Pagination.TotalPages; p++)
         {
             paginationParams = paginationParams with { Page = p };
             response = await ApiClient.GetLabelReleases(labelId, paginationParams, default);

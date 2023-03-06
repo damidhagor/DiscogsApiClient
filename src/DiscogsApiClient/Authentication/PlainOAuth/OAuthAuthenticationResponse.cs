@@ -10,7 +10,6 @@ namespace DiscogsApiClient.Authentication.OAuth;
 /// </summary>
 public sealed class OAuthAuthenticationResponse
 {
-
     /// <summary>
     /// Indicates if the authentication was successful.
     /// <para/>
@@ -21,8 +20,7 @@ public sealed class OAuthAuthenticationResponse
 #if NET7_0
     required
 #endif
-    public bool Success
-    { get; init; }
+    public bool Success { get; init; }
 
     /// <summary>
     /// Contains the error if the authentication failed.

@@ -18,20 +18,13 @@ public delegate Task<string> GetVerifierCallback(string authorizeUrl, string ver
 public sealed class OAuthAuthenticationRequest
 {
     /// <summary>
-    /// The user agent used by the DiscogsApiClient.
-    /// </summary>
-#if NET7_0
-    required
-#endif
-    public string UserAgent { get; init; }
-
-    /// <summary>
     /// The app's consumer key from Discogs.
     /// </summary>
 #if NET7_0
     required
 #endif
-    public string ConsumerKey { get; init; }
+    public string ConsumerKey
+    { get; init; }
 
     /// <summary>
     /// The app's consumer secret from Discogs.
@@ -39,7 +32,8 @@ public sealed class OAuthAuthenticationRequest
 #if NET7_0
     required
 #endif
-    public string ConsumerSecret { get; init; }
+    public string ConsumerSecret
+    { get; init; }
 
     /// <summary>
     /// The user's access token.
@@ -62,7 +56,8 @@ public sealed class OAuthAuthenticationRequest
     [StringSyntax(StringSyntaxAttribute.Uri)]
     required
 #endif
-    public string VerifierCallbackUrl { get; init; }
+    public string VerifierCallbackUrl
+    { get; init; }
 
     /// <summary>
     /// The method which will be called by the <see cref="OAuthAuthenticationProvider"/> to let the client open the Discogs login page and obtain the verifier key.
@@ -70,7 +65,8 @@ public sealed class OAuthAuthenticationRequest
 #if NET7_0
     required
 #endif
-    public GetVerifierCallback GetVerifierCallback { get; init; }
+    public GetVerifierCallback GetVerifierCallback
+    { get; init; }
 
 
     /// <param name="userAgent">The app's consumer secret from Discogs.</param>
@@ -82,7 +78,6 @@ public sealed class OAuthAuthenticationRequest
     [SetsRequiredMembers]
 #endif
     public OAuthAuthenticationRequest(
-        string userAgent,
         string consumerKey,
         string consumerSecret,
 #if NET7_0
@@ -92,7 +87,6 @@ public sealed class OAuthAuthenticationRequest
 #endif
         GetVerifierCallback getVerifierCallback)
     {
-        UserAgent = userAgent;
         ConsumerKey = consumerKey;
         ConsumerSecret = consumerSecret;
         AccessToken = "";

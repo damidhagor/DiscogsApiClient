@@ -26,32 +26,24 @@ public static class ServiceCollectionExtensions
 
         if (string.IsNullOrWhiteSpace(options.BaseUrl))
         {
-            throw new InvalidOperationException(ExceptionMessages.GetBaseUrlMissingMessage());
+            throw new InvalidOperationException("The base url string must not be empty.");
         }
 
         if (string.IsNullOrWhiteSpace(options.UserAgent))
         {
-            throw new InvalidOperationException(ExceptionMessages.GetUserAgentMissingMessage());
+            throw new InvalidOperationException("The user agent string must not be empty.");
         }
 
-        var httpClientBuilder = services.AddDiscogsApiClient(options);
-
-        if (options.UseRateLimiting)
-        {
-            AddRateLimiting(services, httpClientBuilder, options);
-        }
-
-        return services;
-    }
-
-    private static IHttpClientBuilder AddDiscogsApiClient(this IServiceCollection services, AddDiscogsApiClientOptions options)
-    {
-        services.AddSingleton<IPersonalAccessTokenAuthenticationProvider, PersonalAccessTokenAuthenticationProvider>();
-        services.AddSingleton<IOAuthAuthenticationProvider, OAuthAuthenticationProvider>();
-        services.AddTransient<IDiscogsAuthenticationService, DiscogsAuthenticationService>();
         services.AddTransient<AuthenticationDelegatingHandler>();
+        services.AddSingleton<IDiscogsAuthenticationService, DiscogsAuthenticationService>();
+        services.AddSingleton<IPersonalAccessTokenAuthenticationProvider, PersonalAccessTokenAuthenticationProvider>();
+        services.AddHttpClient<IOAuthAuthenticationProvider, OAuthAuthenticationProvider>(httpClient =>
+        {
+            httpClient.BaseAddress = new Uri(options.BaseUrl);
+            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent);
+        });
 
-        return services.AddRefitClient<IDiscogsApiClient>(
+        var httpClientBuilder = services.AddRefitClient<IDiscogsApiClient>(
             new RefitSettings
             {
                 ExceptionFactory = async (response) =>
@@ -82,26 +74,27 @@ public static class ServiceCollectionExtensions
                 httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent);
             })
             .AddHttpMessageHandler<AuthenticationDelegatingHandler>();
-    }
 
-    private static IHttpClientBuilder AddRateLimiting(IServiceCollection services, IHttpClientBuilder builder, AddDiscogsApiClientOptions options)
-    {
-        var rateLimitingOptions = new SlidingWindowRateLimiterOptions()
+        if (options.UseRateLimiting)
         {
-            Window = options.RateLimitingWindow,
-            SegmentsPerWindow = options.RateLimitingWindowSegments,
-            PermitLimit = options.RateLimitingPermits,
-            QueueLimit = options.RateLimitingQueueSize,
-            AutoReplenishment = true,
-            QueueProcessingOrder = QueueProcessingOrder.OldestFirst
-        };
+            var rateLimitingOptions = new SlidingWindowRateLimiterOptions()
+            {
+                Window = options.RateLimitingWindow,
+                SegmentsPerWindow = options.RateLimitingWindowSegments,
+                PermitLimit = options.RateLimitingPermits,
+                QueueLimit = options.RateLimitingQueueSize,
+                AutoReplenishment = true,
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst
+            };
 
-        services.AddSingleton(rateLimitingOptions);
-        services.AddTransient<RateLimiter, SlidingWindowRateLimiter>();
-        services.AddTransient<RateLimitedDelegatingHandler>();
+            services.AddSingleton(rateLimitingOptions);
+            services.AddTransient<RateLimiter, SlidingWindowRateLimiter>();
+            services.AddTransient<RateLimitedDelegatingHandler>();
 
-        builder.AddHttpMessageHandler<RateLimitedDelegatingHandler>();
-        return builder;
+            httpClientBuilder.AddHttpMessageHandler<RateLimitedDelegatingHandler>();
+        }
+
+        return services;
     }
 
     public sealed class AddDiscogsApiClientOptions

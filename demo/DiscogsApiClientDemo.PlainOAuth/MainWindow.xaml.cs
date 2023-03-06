@@ -5,7 +5,8 @@ using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DiscogsApiClient;
-using DiscogsApiClient.Authentication.PlainOAuth;
+using DiscogsApiClient.Authentication;
+using DiscogsApiClient.Authentication.OAuth;
 
 namespace DiscogsApiClientDemo.PlainOAuth;
 
@@ -13,6 +14,7 @@ namespace DiscogsApiClientDemo.PlainOAuth;
 public partial class MainWindow : Window
 {
     private readonly IDiscogsApiClient _discogsApiClient;
+    private readonly IDiscogsAuthenticationService _discogsAuthenticationService;
 
     [ObservableProperty]
     private string _consumerKey = "";
@@ -29,10 +31,10 @@ public partial class MainWindow : Window
     [ObservableProperty]
     private string _username = "";
 
-    public MainWindow(IDiscogsApiClient discogsApiClient)
+    public MainWindow(IDiscogsApiClient discogsApiClient, IDiscogsAuthenticationService discogsAuthenticationService)
     {
         _discogsApiClient = discogsApiClient;
-
+        _discogsAuthenticationService = discogsAuthenticationService;
         InitializeComponent();
     }
 
@@ -42,23 +44,21 @@ public partial class MainWindow : Window
         try
         {
             // Authenticate/login with your consumer key  & secret from your Discogs application settings.
-            var authRequest = new PlainOAuthAuthenticationRequest(
-                "AwesomeAppDemo/1.0.0",
+            var authRequest = new OAuthAuthenticationRequest(
                 ConsumerKey,
                 ConsumerSecret,
                 "http://localhost/verifier_token",
                 GetVerifier);
 
-            var authResponse = await _discogsApiClient.AuthenticateAsync(authRequest, cancellationToken);
+            var authResponse = await _discogsAuthenticationService.AuthenticateWithOAuth(authRequest, cancellationToken);
 
             // If login successful you can make calls to the Discogs Api.
-            if (authResponse is PlainOAuthAuthenticationResponse oauthResponse
-                && authResponse.Success)
+            if (authResponse.Success)
             {
-                var identityResponse = await _discogsApiClient.GetIdentityAsync(cancellationToken);
+                var identityResponse = await _discogsApiClient.GetIdentity(cancellationToken);
                 Username = identityResponse.Username;
-                AccessToken = oauthResponse.AccessToken ?? "";
-                AccessTokenSecret = oauthResponse.AccessTokenSecret ?? "";
+                AccessToken = authResponse.AccessToken ?? "";
+                AccessTokenSecret = authResponse.AccessTokenSecret ?? "";
             }
             else
             {

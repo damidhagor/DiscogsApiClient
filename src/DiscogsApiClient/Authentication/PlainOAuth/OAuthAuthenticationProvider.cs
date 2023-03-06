@@ -6,38 +6,13 @@ using System.Web;
 namespace DiscogsApiClient.Authentication.OAuth;
 
 /// <summary>
-/// Defines an authentication provider which uses Discogs' OAuth 1.0a authentication flow to authenticate a user against the Discogs Api.
-/// </summary>
-internal interface IOAuthAuthenticationProvider
-{
-    /// <summary>
-    /// Indicates if the user is authenticated with the OAuth 1.0a flow.
-    /// </summary>
-    bool IsAuthenticated { get; }
-
-    /// <summary>
-    /// Authenticates the user with the OAuth 1.0a flow.
-    /// </summary>
-    /// <param name="token">The personal access token.</param>
-    Task<OAuthAuthenticationResponse> Authenticate(OAuthAuthenticationRequest request, CancellationToken cancellationToken);
-
-    /// <summary>
-    /// Creates an authentication header value to insert into a HttpRequestMessage.
-    /// <para />
-    /// Discogs expects this header to be named 'Authorization'.
-    /// </summary>
-    /// <returns>The authorization header value.</returns>
-    string CreateAuthenticationHeader();
-}
-
-/// <summary>
 /// This <see cref="IAuthenticationProvider"/> implementation authenticates against the Discogs Api
 /// using the OAuth 1.0a flow described <a href="https://www.discogs.com/developers#page:authentication,header:authentication-discogs-auth-flow">here</a>
 /// and should be provided to the <see cref="DiscogsApiClient"/>'s constructor.
 /// </summary>
-public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
+internal sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
 {
-    private string _userAgent = "";
+    private readonly HttpClient _httpClient;
     private string _consumerKey = "";
     private string _consumerSecret = "";
     private string _accessToken = "";
@@ -45,6 +20,7 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
 
     public bool IsAuthenticated => !string.IsNullOrWhiteSpace(_accessToken) && !string.IsNullOrWhiteSpace(_accessTokenSecret);
 
+    public OAuthAuthenticationProvider(HttpClient httpClient) => _httpClient = httpClient;
 
     /// <summary>
     /// Authenticates the client by requesting him to log in with his Discogs account.
@@ -58,7 +34,6 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
     /// <exception cref="InvalidOperationException">Fires this exception if no consumer key or secret are provided.</exception>
     public async Task<OAuthAuthenticationResponse> Authenticate(OAuthAuthenticationRequest request, CancellationToken cancellationToken)
     {
-        _userAgent = request.UserAgent;
         _consumerKey = request.ConsumerKey;
         _consumerSecret = request.ConsumerSecret;
         _accessToken = request.AccessToken;
@@ -66,16 +41,13 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
 
         if (string.IsNullOrWhiteSpace(_accessToken) || string.IsNullOrWhiteSpace(_accessTokenSecret))
         {
-            using var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(_userAgent);
-
             _accessToken = "";
             _accessTokenSecret = "";
 
             if (string.IsNullOrWhiteSpace(_consumerKey) && string.IsNullOrWhiteSpace(_consumerSecret))
                 throw new InvalidOperationException("No consumer token or secret provided.");
 
-            var (requestToken, requestTokenSecret) = await GetRequestToken(httpClient, request.VerifierCallbackUrl, cancellationToken);
+            var (requestToken, requestTokenSecret) = await GetRequestToken(_httpClient, request.VerifierCallbackUrl, cancellationToken);
             if (string.IsNullOrWhiteSpace(requestToken) || string.IsNullOrWhiteSpace(requestTokenSecret))
                 return new OAuthAuthenticationResponse("Getting request token failed.");
 
@@ -85,7 +57,7 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
                 return new OAuthAuthenticationResponse("Failed getting verifier token.");
 
 
-            var (accessToken, accessTokenSecret) = await GetAccessToken(httpClient, requestToken, requestTokenSecret, verifier, cancellationToken);
+            var (accessToken, accessTokenSecret) = await GetAccessToken(_httpClient, requestToken, requestTokenSecret, verifier, cancellationToken);
             if (string.IsNullOrWhiteSpace(accessToken) || string.IsNullOrWhiteSpace(accessTokenSecret))
                 return new OAuthAuthenticationResponse("Failed getting access token.");
 
