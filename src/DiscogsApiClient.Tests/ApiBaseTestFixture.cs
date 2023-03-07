@@ -46,19 +46,42 @@ public abstract class ApiBaseTestFixture
             .AddJsonFile($"appsettings.Development.json", true)
             .Build();
 
-        var userAgent = _configuration["DiscogsApiOptions:UserAgent"];
-        var baseUrl = _configuration["DiscogsApiOptions:BaseUrl"];
-        var userToken = _configuration["DiscogsApiOptions:UserToken"]!;
+        (ApiClient, _authHttpClient, _clientHttpClient) = CreateDiscogsApiClient();
+    }
 
-        _authHttpClient = new HttpClient() { BaseAddress = new Uri(baseUrl!) };
-        _authHttpClient.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent);
+    [OneTimeTearDown]
+    public void TearDown()
+    {
+        _authHttpClient?.Dispose();
+        _clientHttpClient?.Dispose();
+    }
+
+    protected (IDiscogsApiClient discogsApiClient, HttpClient authHttpClient, HttpClient clientHttpClient) CreateUnauthenticatedDiscogsApiClient()
+        => CreateDiscogsApiClient(userToken: "");
+
+    protected (IDiscogsApiClient discogsApiClient, HttpClient authHttpClient, HttpClient clientHttpClient) CreateDiscogsApiClient(
+        string? authUserAgent = null,
+        string? authBaseUrl = null,
+        string? clientUserAgent = null,
+        string? clientBaseUrl = null,
+        string? userToken = null)
+    {
+        authUserAgent ??= _configuration["DiscogsApiOptions:UserAgent"];
+        authBaseUrl ??= _configuration["DiscogsApiOptions:BaseUrl"];
+        clientUserAgent ??= _configuration["DiscogsApiOptions:UserAgent"];
+        clientBaseUrl ??= _configuration["DiscogsApiOptions:BaseUrl"];
+        userToken ??= _configuration["DiscogsApiOptions:UserToken"]!;
+
+        var authHttpClient = new HttpClient() { BaseAddress = new Uri(authBaseUrl!) };
+        authHttpClient.DefaultRequestHeaders.UserAgent.ParseAdd(authUserAgent);
 
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider(_authHttpClient));
-        authService.AuthenticateWithPersonalAccessToken(userToken);
+            new OAuthAuthenticationProvider(authHttpClient));
+        if (!string.IsNullOrWhiteSpace(userToken))
+            authService.AuthenticateWithPersonalAccessToken(userToken);
 
-        _clientHttpClient = new HttpClient(
+        var clientHttpClient = new HttpClient(
             new RateLimitedDelegatingHandler(_rateLimiter, false)
             {
                 InnerHandler = new AuthenticationDelegatingHandler(authService)
@@ -67,12 +90,12 @@ public abstract class ApiBaseTestFixture
                 }
             })
         {
-            BaseAddress = new Uri(baseUrl!)
+            BaseAddress = new Uri(clientBaseUrl!)
         };
-        _clientHttpClient.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent);
+        clientHttpClient.DefaultRequestHeaders.UserAgent.ParseAdd(clientUserAgent);
 
-        ApiClient = RestService.For<IDiscogsApiClient>(
-            _clientHttpClient,
+        var discogsApiClient = RestService.For<IDiscogsApiClient>(
+            clientHttpClient,
             new RefitSettings
             {
                 ExceptionFactory = async (response) =>
@@ -98,19 +121,14 @@ public abstract class ApiBaseTestFixture
 
                     return response.StatusCode switch
                     {
-                        HttpStatusCode.Unauthorized => new UnauthorizedDiscogsException(message),
+                        HttpStatusCode.Unauthorized => new UnauthenticatedDiscogsException(message),
                         HttpStatusCode.NotFound => new ResourceNotFoundDiscogsException(message),
                         HttpStatusCode.TooManyRequests => new RateLimitExceededDiscogsException(message),
                         _ => new DiscogsException(message),
                     };
                 }
             });
-    }
 
-    [OneTimeTearDown]
-    public void TearDown()
-    {
-        _authHttpClient?.Dispose();
-        _clientHttpClient?.Dispose();
+        return (discogsApiClient, authHttpClient, clientHttpClient);
     }
 }
