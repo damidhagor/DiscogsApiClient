@@ -1,5 +1,11 @@
 ﻿namespace DiscogsApiClient.Contract.User.Collection;
 
+/// <summary>
+/// The estimated value of the user's collection
+/// </summary>
+/// <param name="Minimum">The minimum value</param>
+/// <param name="Median">The average value</param>
+/// <param name="Maximum">The maximum value</param>
 public sealed record CollectionValue(
     [property:JsonPropertyName("minimum")]
     string Minimum,
@@ -7,6 +13,7 @@ public sealed record CollectionValue(
     string Median,
     [property:JsonPropertyName("maximum")]
     string Maximum);
+
 
 /*
 {

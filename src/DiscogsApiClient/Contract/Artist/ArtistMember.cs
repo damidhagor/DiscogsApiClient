@@ -1,5 +1,13 @@
 ﻿namespace DiscogsApiClient.Contract.Artist;
 
+/// <summary>
+/// A member of an artist (band)
+/// </summary>
+/// <param name="Id">Artist member id</param>
+/// <param name="ResourceUrl">The Api url to the member</param>
+/// <param name="ThumbnailUrl">The thumbnail image url of the member</param>
+/// <param name="Name">Member's name</param>
+/// <param name="IsActive">If the artist member is active</param>
 public sealed record ArtistMember(
     [property:JsonPropertyName("id")]
     int Id,

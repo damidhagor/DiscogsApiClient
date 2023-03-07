@@ -1,5 +1,12 @@
 ﻿namespace DiscogsApiClient.Contract.User;
 
+/// <summary>
+/// Information about the currently authenticated user.
+/// </summary>
+/// <param name="Id">The user id</param>
+/// <param name="Username">The username</param>
+/// <param name="ResourceUrl">The Api url to the user's profile</param>
+/// <param name="ConsumerName">The name of the application which is consuming the Api (User-Agent)</param>
 public sealed record Identity(
     [property:JsonPropertyName("id")]
     int Id,

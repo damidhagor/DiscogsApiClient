@@ -2,6 +2,15 @@
 
 namespace DiscogsApiClient.Contract;
 
+/// <summary>
+/// Represents a Discogs image.
+/// </summary>
+/// <param name="Type">The image type.</param>
+/// <param name="ResourceUrl">The url to the image.</param>
+/// <param name="ImageUri">The url to the image.</param>
+/// <param name="ImageUri150">The url to a 150x150 scaled version of the image.</param>
+/// <param name="Width">The width of the image.</param>
+/// <param name="Height">The height of the image.</param>
 public sealed record Image(
     [property:JsonPropertyName("type")]
     ImageType Type,
@@ -16,6 +25,9 @@ public sealed record Image(
     [property:JsonPropertyName("height")]
     int Height);
 
+/// <summary>
+/// The possible types of <see cref="Image"/>s.
+/// </summary>
 public enum ImageType : int
 {
     [EnumMember(Value = "primary")]
@@ -23,6 +35,7 @@ public enum ImageType : int
     [EnumMember(Value = "secondary")]
     Secondary = 2
 }
+
 
 /**
 "images":[

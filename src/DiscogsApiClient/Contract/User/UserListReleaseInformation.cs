@@ -1,5 +1,21 @@
 ﻿namespace DiscogsApiClient.Contract.User;
 
+/// <summary>
+/// Reduced information about a release which is used for releases in the collection and wantlist of a user.
+/// </summary>
+/// <param name="Id">Release id</param>
+/// <param name="MasterId">The id of the master release</param>
+/// <param name="MasterUrl">The Api url to the master release</param>
+/// <param name="ResourceUrl">The Api url to the release</param>
+/// <param name="Title">Release Title</param>
+/// <param name="Year">Release year</param>
+/// <param name="Formats">List of available formats</param>
+/// <param name="Labels">List of publishing labels</param>
+/// <param name="Artists">List of participating artists</param>
+/// <param name="ThumbnailUrl">Link to a thumbnail version of the cover</param>
+/// <param name="CoverImageUrl">Link to the full cover image</param>
+/// <param name="Genres">List of Genres</param>
+/// <param name="Styles">List of styles</param>
 public sealed record UserListReleaseInformation(
     [property:JsonPropertyName("id")]
     int Id,

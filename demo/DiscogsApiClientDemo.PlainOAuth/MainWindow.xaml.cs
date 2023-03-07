@@ -6,7 +6,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DiscogsApiClient;
 using DiscogsApiClient.Authentication;
-using DiscogsApiClient.Authentication.OAuth;
 
 namespace DiscogsApiClientDemo.PlainOAuth;
 
@@ -44,31 +43,24 @@ public partial class MainWindow : Window
         try
         {
             // Authenticate/login with your consumer key  & secret from your Discogs application settings.
-            var authRequest = new OAuthAuthenticationRequest(
+            (AccessToken, AccessTokenSecret) = await _discogsAuthenticationService.AuthenticateWithOAuth(
                 ConsumerKey,
                 ConsumerSecret,
+                "",
+                "",
                 "http://localhost/verifier_token",
-                GetVerifier);
+                GetVerifier,
+                cancellationToken);
 
-            var authResponse = await _discogsAuthenticationService.AuthenticateWithOAuth(authRequest, cancellationToken);
-
-            // If login successful you can make calls to the Discogs Api.
-            if (authResponse.Success)
-            {
-                var identityResponse = await _discogsApiClient.GetIdentity(cancellationToken);
-                Username = identityResponse.Username;
-                AccessToken = authResponse.AccessToken ?? "";
-                AccessTokenSecret = authResponse.AccessTokenSecret ?? "";
-            }
-            else
-            {
-                AccessToken = "";
-                AccessTokenSecret = "";
-                Username = "";
-            }
+            // If login successful (No Exceptions thrown) you can make calls to the Discogs Api.
+            var identityResponse = await _discogsApiClient.GetIdentity(cancellationToken);
+            Username = identityResponse.Username;
         }
         catch (Exception ex)
         {
+            AccessToken = "";
+            AccessTokenSecret = "";
+            Username = "";
             MessageBox.Show(ex.Message, "Error");
         }
     }

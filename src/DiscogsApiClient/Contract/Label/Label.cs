@@ -1,5 +1,20 @@
 ﻿namespace DiscogsApiClient.Contract.Label;
 
+/// <summary>
+/// Information about a label
+/// </summary>
+/// <param name="Id">Label id</param>
+/// <param name="ResourceUrl">The Api url to the label</param>
+/// <param name="Name">Label name</param>
+/// <param name="ContactInfo">Label's contact information</param>
+/// <param name="Profile">Profile text of the label</param>
+/// <param name="Uri">Url to the label's profile on the Discogs website</param>
+/// <param name="ReleasesUrl">The Api url to the list of release of the label</param>
+/// <param name="Images">List of images of the label</param>
+/// <param name="ParentLabel">Parent label of this label</param>
+/// <param name="Sublabels">Sub-labels of this label</param>
+/// <param name="Urls">Urls of this label</param>
+/// <param name="DataQuality"></param>
 public sealed record Label(
     [property:JsonPropertyName("id")]
     int Id,

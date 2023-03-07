@@ -1,5 +1,10 @@
 ﻿namespace DiscogsApiClient.Contract.Artist;
 
+/// <summary>
+/// Returns a paginated list of releases from a specific artist
+/// </summary>
+/// <param name="Pagination">Pagination information</param>
+/// <param name="Releases">List of releases</param>
 public sealed record ArtistReleasesResponse(
     [property:JsonPropertyName("pagination")]
     Pagination Pagination,

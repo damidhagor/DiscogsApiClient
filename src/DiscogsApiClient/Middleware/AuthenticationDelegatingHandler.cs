@@ -1,5 +1,8 @@
 ﻿namespace DiscogsApiClient.Middleware;
 
+/// <summary>
+/// Inserts an authentication header for the Discogs Api into the HttpResponseMessage.
+/// </summary>
 internal sealed class AuthenticationDelegatingHandler : DelegatingHandler
 {
     private readonly IDiscogsAuthenticationService _authenticationService;

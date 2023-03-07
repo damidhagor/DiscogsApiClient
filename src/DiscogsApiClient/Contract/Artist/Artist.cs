@@ -1,5 +1,19 @@
 ﻿namespace DiscogsApiClient.Contract.Artist;
 
+/// <summary>
+/// Represents an artist
+/// </summary>
+/// <param name="Id">Artost's id</param>
+/// <param name="ResourceUrl">The Api url for this artist</param>
+/// <param name="Uri">The url to the artist's page on Discogs</param>
+/// <param name="Name">Artist's Name</param>
+/// <param name="Profile">Profile text of the artist</param>
+/// <param name="ReleasesUrl">The Api url to query the releases of this artist</param>
+/// <param name="Images">List of images from this artist</param>
+/// <param name="Urls">List of urls of this artist</param>
+/// <param name="NameVariations">Variations of the artist's name</param>
+/// <param name="Members">List of artist members</param>
+/// <param name="DataQuality"></param>
 public sealed record Artist(
     [property:JsonPropertyName("id")]
     int Id,

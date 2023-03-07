@@ -1,5 +1,18 @@
 ﻿namespace DiscogsApiClient.Contract.Label;
 
+/// <summary>
+/// Information about a release of a label
+/// </summary>
+/// <param name="Id">Release id</param>
+/// <param name="ResourceUrl">The Api url to this release</param>
+/// <param name="ThumbnailUrl">The thumbnail url of the cover image</param>
+/// <param name="Title">Release title</param>
+/// <param name="Status">Release status</param>
+/// <param name="Format">Format of the release</param>
+/// <param name="CatalogNumber">Catalog number of the release</param>
+/// <param name="Artist">Release artist</param>
+/// <param name="Year">Release year</param>
+/// <param name="Stats">Statistics about the release</param>
 public sealed record LabelRelease(
     [property:JsonPropertyName("id")]
     int Id,

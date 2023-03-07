@@ -1,5 +1,10 @@
 ﻿namespace DiscogsApiClient.Contract.Search;
 
+/// <summary>
+/// Return paginated search results
+/// </summary>
+/// <param name="Pagination">Pagination information</param>
+/// <param name="Results">Search results</param>
 public sealed record SearchResultsResponse(
     [property:JsonPropertyName("pagination")]
     Pagination Pagination,

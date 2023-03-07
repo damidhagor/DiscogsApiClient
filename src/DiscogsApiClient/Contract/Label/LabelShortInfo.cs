@@ -1,5 +1,11 @@
 ﻿namespace DiscogsApiClient.Contract.Label;
 
+/// <summary>
+/// Short information about a label
+/// </summary>
+/// <param name="Id">Label id</param>
+/// <param name="ResourceUrl">The Api url to the label</param>
+/// <param name="Name">Label name</param>
 public sealed record LabelShortInfo(
     [property:JsonPropertyName("id")]
     int Id,

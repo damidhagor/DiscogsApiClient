@@ -1,5 +1,10 @@
 ﻿namespace DiscogsApiClient.Contract.Search;
 
+/// <summary>
+/// User data for a search result
+/// </summary>
+/// <param name="IsInWantlist">If this result is in the user's collection</param>
+/// <param name="IsInCollection">If this result is on the user's wantlist</param>
 public sealed record SearchResultUserData(
     [property:JsonPropertyName("in_wantlist")]
     bool IsInWantlist,

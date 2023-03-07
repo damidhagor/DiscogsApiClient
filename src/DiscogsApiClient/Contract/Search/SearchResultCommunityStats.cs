@@ -1,5 +1,10 @@
 ﻿namespace DiscogsApiClient.Contract.Search;
 
+/// <summary>
+/// Community statistics for a search result
+/// </summary>
+/// <param name="UsersWantingCount">How many users have this result on ther wantlist</param>
+/// <param name="UsersHavingCount">How many users own this search result</param>
 public sealed record SearchResultCommunityStats(
     [property:JsonPropertyName("want")]
     int UsersWantingCount,

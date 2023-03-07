@@ -1,5 +1,15 @@
 ﻿namespace DiscogsApiClient.Contract.User.Collection;
 
+/// <summary>
+/// Represents a release in the user's collection folder
+/// </summary>
+/// <param name="Id">Id of the release</param>
+/// <param name="InstanceId">Id of the instance of the release in the collection folder</param>
+/// <param name="AddedAt">When the release was added to the folder</param>
+/// <param name="Rating">Rating of the release</param>
+/// <param name="ResourceUrl">The Api url to this release</param>
+/// <param name="Release">Information about the release</param>
+/// <param name="FolderId">The id of the folder contaiing the release</param>
 public sealed record CollectionFolderRelease(
     [property:JsonPropertyName("id")]
     int Id,

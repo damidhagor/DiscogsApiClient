@@ -1,5 +1,10 @@
 ﻿namespace DiscogsApiClient.Contract.Label;
 
+/// <summary>
+/// Returns the list of release published by a label
+/// </summary>
+/// <param name="Pagination">Pagination information</param>
+/// <param name="Releases">List of releases</param>
 public sealed record LabelReleasesResponse(
     [property:JsonPropertyName("pagination")]
     Pagination Pagination,

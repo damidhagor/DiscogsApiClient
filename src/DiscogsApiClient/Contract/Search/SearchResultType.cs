@@ -1,76 +1,21 @@
-﻿namespace DiscogsApiClient.Contract.Search;
+﻿using System.Runtime.Serialization;
+
+namespace DiscogsApiClient.Contract.Search;
 
 /// <summary>
-/// Represents a search result of a database search.
-/// <para/>
-/// NOTE: Which properties are populated is dependent of the result type which is indicated by the <see cref="ResultType"/> property.
-/// <para/>
-/// E.g. the <see cref="Barcodes"/> properties will only be present for results of type <see cref="SearchResultType.Release"/>.
+/// The type a search result can be
 /// </summary>
-/// <param name="Id">Id of the result</param>
-/// <param name="Title">Title or name of the result</param>
-/// <param name="ResourceUrl">The Api url to the result</param>
-/// <param name="ResultType">The type of the result</param>
-/// <param name="Uri">Url to the Discogs page of the result</param>
-/// <param name="ThumbnailUrl">Thumbnail image url</param>
-/// <param name="CatalogNumber">Catalog number (if applicable)</param>
-/// <param name="Year">Release year (if applicable)</param>
-/// <param name="Country">Release country (if applicable)</param>
-/// <param name="CoverImageUrl">Image url of the result</param>
-/// <param name="MasterReleaseId">Id of the master release (if applicable)</param>
-/// <param name="MasterReleaseUrl">The Api url of the master release (if applicable)</param>
-/// <param name="Format">Release format (if applicable)</param>
-/// <param name="Genres">Release Genres (if applicable)</param>
-/// <param name="Styles">release Styles (if applicable)</param>
-/// <param name="Labels">Release labels (if applicable)</param>
-/// <param name="Barcodes">Release identifying barcodes (if applicable)</param>
-/// <param name="FormatCount">Number of release formats (if applicable)</param>
-/// <param name="Formats">All release formats (if applicable)</param>
-/// <param name="CommunityStatistics">Release community statistics (if applicable)</param>
-/// <param name="UserData"></param>
-public sealed record SearchResult(
-    [property:JsonPropertyName("id")]
-    int Id,
-    [property:JsonPropertyName("title")]
-    string Title,
-    [property:JsonPropertyName("resource_url")]
-    string ResourceUrl,
-    [property:JsonPropertyName("type")]
-    SearchResultType ResultType,
-    [property:JsonPropertyName("uri")]
-    string Uri,
-    [property:JsonPropertyName("thumb")]
-    string ThumbnailUrl,
-    [property:JsonPropertyName("catno")]
-    string CatalogNumber,
-    [property:JsonPropertyName("year")]
-    string Year,
-    [property:JsonPropertyName("country")]
-    string Country,
-    [property:JsonPropertyName("cover_image")]
-    string CoverImageUrl,
-    [property:JsonPropertyName("master_id")]
-    int? MasterReleaseId,
-    [property:JsonPropertyName("master_url")]
-    string MasterReleaseUrl,
-    [property:JsonPropertyName("format")]
-    List<string> Format,
-    [property:JsonPropertyName("genre")]
-    List<string> Genres,
-    [property:JsonPropertyName("style")]
-    List<string> Styles,
-    [property:JsonPropertyName("label")]
-    List<string> Labels,
-    [property:JsonPropertyName("barcode")]
-    List<string> Barcodes,
-    [property:JsonPropertyName("format_quantity")]
-    int FormatCount,
-    [property:JsonPropertyName("formats")]
-    List<ReleaseFormat> Formats,
-    [property:JsonPropertyName("community")]
-    SearchResultCommunityStats CommunityStatistics,
-    [property:JsonPropertyName("user_data")]
-    SearchResultUserData UserData);
+public enum SearchResultType : int
+{
+    [EnumMember(Value = "artist")]
+    Artist = 1,
+    [EnumMember(Value = "master")]
+    MasterRelease = 2,
+    [EnumMember(Value = "release")]
+    Release = 3,
+    [EnumMember(Value = "label")]
+    Label = 4
+}
 
 
 /**

@@ -1,5 +1,14 @@
 ﻿namespace DiscogsApiClient.Contract.User.Wantlist;
 
+/// <summary>
+/// Represents a release from the user's wantlist.
+/// </summary>
+/// <param name="Id">The release's id.</param>
+/// <param name="ResourceUrl">The Api url to the release.</param>
+/// <param name="AddedAt">When the release was added to the wantlist.</param>
+/// <param name="Rating">The rating of the release.</param>
+/// <param name="Release">Information about the release.</param>
+/// <param name="Notes">User's notes to this release on the wantlist.</param>
 public sealed record WantlistRelease(
     [property:JsonPropertyName("id")]
     int Id,

@@ -1,5 +1,9 @@
 ﻿namespace DiscogsApiClient.Contract.User.Collection;
 
+/// <summary>
+/// Returns the list of folders in the user's collection
+/// </summary>
+/// <param name="Folders">List of folders</param>
 public sealed record CollectionFoldersResponse(
     [property:JsonPropertyName("folders")]
     List<CollectionFolder> Folders);

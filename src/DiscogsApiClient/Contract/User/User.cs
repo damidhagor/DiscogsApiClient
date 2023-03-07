@@ -1,5 +1,44 @@
 ﻿namespace DiscogsApiClient.Contract.User;
 
+/// <summary>
+/// Information about a user. If the user is not the currently authenticated user the information in the response is limited.
+/// </summary>
+/// <param name="Id">User id</param>
+/// <param name="ResourceUrl">The Api url to this user</param>
+/// <param name="Uri">The url to the user's prifile on the website</param>
+/// <param name="Username">Username</param>
+/// <param name="Name">Name of the user</param>
+/// <param name="HomePage">User's Homepage</param>
+/// <param name="Location">User's location</param>
+/// <param name="Profile">Profile text of the user</param>
+/// <param name="RegisteredSince">When the user was registered</param>
+/// <param name="Rank">Rank of the user</param>
+/// <param name="NumPending"></param>
+/// <param name="NumForSale">How many releases the user has for sale</param>
+/// <param name="NumLists">How many lists the user has</param>
+/// <param name="ReleasesContributed">To how many releases the user contributed</param>
+/// <param name="ReleasesRated">How many releases the user rated</param>
+/// <param name="AverageRating">The average release rating given by the user</param>
+/// <param name="InventoryUrl">Url to the user's inventory</param>
+/// <param name="CollectionFoldersUrl">The Api url to the user's collection folders</param>
+/// <param name="CollectionFieldsUrl">The Api url to the user's custom collection fields</param>
+/// <param name="WantlistUrl">The api url to the user's wantlist</param>
+/// <param name="AvatarUrl">Image url for the avatar</param>
+/// <param name="CurrencyAbbreviation">The user's chosen currency (abbreviated)</param>
+/// <param name="IsActivated">If the user is active</param>
+/// <param name="IsMarketplaceSuspended">If the user is suspended on the marketplace</param>
+/// <param name="BannerUrl">Image url to the user's banner</param>
+/// <param name="BuyerRating">The rating of the user as a buyer</param>
+/// <param name="BuyerRatingStars">The rating of the user as a buyer in stars</param>
+/// <param name="BuyerNumRatings">How many times the user was rated as a buyer</param>
+/// <param name="SellerRating">The rating of the user as a seller</param>
+/// <param name="SellerRatingStars">The rating of the user as a seller in stars</param>
+/// <param name="SellerNumRatings">How many times the user was rated as a seller</param>
+/// <param name="IsStaff">If the user belongs to the Discogs staff</param>
+/// <param name="NumCollection">How many releases are in the user's collection</param>
+/// <param name="NumWantlist">How many releases are on the user's wantlist</param>
+/// <param name="Email">User's email address</param>
+/// <param name="NumUnread"></param>
 public sealed record User(
     [property:JsonPropertyName("id")]
     int Id,

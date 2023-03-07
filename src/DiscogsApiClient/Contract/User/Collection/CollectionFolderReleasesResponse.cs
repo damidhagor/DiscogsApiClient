@@ -1,5 +1,10 @@
 ﻿namespace DiscogsApiClient.Contract.User.Collection;
 
+/// <summary>
+/// Returns a paged list of releases in a collection folder.
+/// </summary>
+/// <param name="Pagination">Pagination information</param>
+/// <param name="Releases">Releases in the folder.</param>
 public sealed record CollectionFolderReleasesResponse(
     [property:JsonPropertyName("pagination")]
     Pagination Pagination,

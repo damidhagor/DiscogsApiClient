@@ -1,5 +1,10 @@
 ﻿namespace DiscogsApiClient.Contract.User.Wantlist;
 
+/// <summary>
+/// Contains paged releases from the user's wantlist.
+/// </summary>
+/// <param name="Pagination">Pagination information.</param>
+/// <param name="Releases">The releases from the user's wantlist.</param>
 public sealed record WantlistReleasesResponse(
     [property:JsonPropertyName("pagination")]
     Pagination Pagination,
