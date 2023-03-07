@@ -3,7 +3,7 @@ using System.Text.Json;
 using System.Threading.RateLimiting;
 using DiscogsApiClient.Authentication.OAuth;
 using DiscogsApiClient.Authentication.PersonalAccessToken;
-using DiscogsApiClient.Authentication.UserToken;
+using DiscogsApiClient.Authentication.PersonalAccessToken;
 using DiscogsApiClient.Middleware;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using NUnit.Framework;
-
-namespace DiscogsApiClient.Tests.User;
+﻿namespace DiscogsApiClient.Tests.User;
 
 public sealed class UserTestFixture : ApiBaseTestFixture
 {

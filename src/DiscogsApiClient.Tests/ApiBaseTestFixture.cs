@@ -1,14 +1,12 @@
-using System;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.RateLimiting;
 using DiscogsApiClient.Authentication.OAuth;
-using DiscogsApiClient.Authentication.UserToken;
+using DiscogsApiClient.Authentication.PersonalAccessToken;
 using DiscogsApiClient.Middleware;
 using Microsoft.Extensions.Configuration;
-using NUnit.Framework;
 using Refit;
 
 namespace DiscogsApiClient.Tests;

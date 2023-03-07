@@ -1,6 +1,6 @@
 ﻿using DiscogsApiClient.Authentication.PersonalAccessToken;
 
-namespace DiscogsApiClient.Authentication.UserToken;
+namespace DiscogsApiClient.Authentication.PersonalAccessToken;
 
 /// <summary>
 /// An authentication provider which uses a personal access token to authenticate a user against the Discogs Api.
@@ -15,10 +15,16 @@ internal sealed class PersonalAccessTokenAuthenticationProvider : IPersonalAcces
 
     public void Authenticate(string token)
     {
+        _userToken = "";
+
         Guard.IsNotNullOrWhiteSpace(token);
 
         _userToken = token;
     }
 
-    public string CreateAuthenticationHeader() => $"Discogs token={_userToken}";
+    public string CreateAuthenticationHeader()
+    => string.IsNullOrWhiteSpace(_userToken)
+        ? throw new UnauthenticatedDiscogsException($"The {nameof(PersonalAccessTokenAuthenticationProvider)} must be authenticated before reating an authentication header.")
+        : $"Discogs token={_userToken}";
+
 }

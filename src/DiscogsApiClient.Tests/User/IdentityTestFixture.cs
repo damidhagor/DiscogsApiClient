@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using NUnit.Framework;
-
-namespace DiscogsApiClient.Tests.User;
+﻿namespace DiscogsApiClient.Tests.User;
 
 [TestFixture]
 public sealed class IdentityTestFixture : ApiBaseTestFixture
