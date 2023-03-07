@@ -67,7 +67,7 @@ internal sealed class DiscogsAuthenticationService : IDiscogsAuthenticationServi
     }
 
     /// <inheritdoc/>
-    /// <exception cref="UnauthorizedDiscogsException"></exception>
+    /// <exception cref="UnauthenticatedDiscogsException"></exception>
     public string CreateAuthenticationHeader()
     {
         if (_lastAuthenticatedWithPersonalAccessToken
@@ -78,6 +78,6 @@ internal sealed class DiscogsAuthenticationService : IDiscogsAuthenticationServi
             && _oAuthAuthenticationProvider.IsAuthenticated)
             return _oAuthAuthenticationProvider.CreateAuthenticationHeader();
 
-        throw new UnauthorizedDiscogsException("The authentication provider is not authenticated with any of the available authentication flows.");
+        throw new UnauthenticatedDiscogsException("The authentication provider is not authenticated with any of the available authentication flows.");
     }
 }

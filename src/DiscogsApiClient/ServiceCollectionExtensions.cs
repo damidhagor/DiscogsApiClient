@@ -60,7 +60,7 @@ public static class ServiceCollectionExtensions
 
                     return response.StatusCode switch
                     {
-                        HttpStatusCode.Unauthorized => new UnauthorizedDiscogsException(message),
+                        HttpStatusCode.Unauthorized => new UnauthenticatedDiscogsException(message),
                         HttpStatusCode.NotFound => new ResourceNotFoundDiscogsException(message),
                         HttpStatusCode.TooManyRequests => new RateLimitExceededDiscogsException(message),
                         _ => new DiscogsException(message),
