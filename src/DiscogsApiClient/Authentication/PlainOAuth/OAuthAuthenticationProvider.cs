@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http.Headers;
 using System.Web;
 
@@ -22,55 +21,51 @@ internal sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
 
     public OAuthAuthenticationProvider(HttpClient httpClient) => _httpClient = httpClient;
 
-    /// <summary>
-    /// Authenticates the client by requesting him to log in with his Discogs account.
-    /// <para/>
-    /// This method returns the obtained access token and secret if successful
-    /// which should be persisted and reused by the app.
-    /// </summary>
-    /// <param name="authenticationRequest">The <see cref="OAuthAuthenticationRequest"/> providing the callback delegate, url and OAuth parameters.</param>
-    /// <returns>The <see cref="PlainOAuthAuthenticationResponse"/> indicating if the authentication was successful.</returns>
-    /// <exception cref="ArgumentException">Fires this exception if the provided <see cref="IAuthenticationRequest"/> is not a <see cref="OAuthAuthenticationRequest"/>.</exception>
-    /// <exception cref="InvalidOperationException">Fires this exception if no consumer key or secret are provided.</exception>
-    public async Task<OAuthAuthenticationResponse> Authenticate(OAuthAuthenticationRequest request, CancellationToken cancellationToken)
+    /// <inheritdoc/>
+    /// <exception cref="AuthenticationFailedDiscogsException"></exception>
+    public async Task<(string accessToken, string accessTokenSecret)> Authenticate(
+        string consumerKey,
+        string consumerSecret,
+        string? accessToken,
+        string? accessTokenSecret,
+        string verifierCallbackUrl,
+        GetVerifierCallback getVerifierCallback,
+        CancellationToken cancellationToken)
     {
-        _consumerKey = request.ConsumerKey;
-        _consumerSecret = request.ConsumerSecret;
-        _accessToken = request.AccessToken;
-        _accessTokenSecret = request.AccessTokenSecret;
+        Guard.IsNotNullOrWhiteSpace(consumerKey);
+        Guard.IsNotNullOrWhiteSpace(consumerSecret);
+        Guard.IsNotNullOrWhiteSpace(verifierCallbackUrl);
+        Guard.IsNotNull(getVerifierCallback);
+
+        _consumerKey = consumerKey;
+        _consumerSecret = consumerSecret;
+        _accessToken = accessToken ?? "";
+        _accessTokenSecret = accessTokenSecret ?? "";
 
         if (string.IsNullOrWhiteSpace(_accessToken) || string.IsNullOrWhiteSpace(_accessTokenSecret))
         {
             _accessToken = "";
             _accessTokenSecret = "";
 
-            if (string.IsNullOrWhiteSpace(_consumerKey) && string.IsNullOrWhiteSpace(_consumerSecret))
-                throw new InvalidOperationException("No consumer token or secret provided.");
-
-            var (requestToken, requestTokenSecret) = await GetRequestToken(_httpClient, request.VerifierCallbackUrl, cancellationToken);
+            var (requestToken, requestTokenSecret) = await GetRequestToken(_httpClient, verifierCallbackUrl, cancellationToken);
             if (string.IsNullOrWhiteSpace(requestToken) || string.IsNullOrWhiteSpace(requestTokenSecret))
-                return new OAuthAuthenticationResponse("Getting request token failed.");
+                throw new AuthenticationFailedDiscogsException("Getting request token failed.");
 
-
-            var verifier = await GetVerifier(requestToken, request.VerifierCallbackUrl, request.GetVerifierCallback, cancellationToken);
+            var verifier = await GetVerifier(requestToken, verifierCallbackUrl, getVerifierCallback, cancellationToken);
             if (string.IsNullOrWhiteSpace(verifier))
-                return new OAuthAuthenticationResponse("Failed getting verifier token.");
+                throw new AuthenticationFailedDiscogsException("Failed getting verifier token.");
 
-
-            var (accessToken, accessTokenSecret) = await GetAccessToken(_httpClient, requestToken, requestTokenSecret, verifier, cancellationToken);
+            (accessToken, accessTokenSecret) = await GetAccessToken(_httpClient, requestToken, requestTokenSecret, verifier, cancellationToken);
             if (string.IsNullOrWhiteSpace(accessToken) || string.IsNullOrWhiteSpace(accessTokenSecret))
-                return new OAuthAuthenticationResponse("Failed getting access token.");
+                throw new AuthenticationFailedDiscogsException("Failed getting access token.");
 
             _accessToken = accessToken;
             _accessTokenSecret = accessTokenSecret;
         }
 
-        return new OAuthAuthenticationResponse(_accessToken, _accessTokenSecret);
+        return (_accessToken, _accessTokenSecret);
     }
 
-    /// <summary>
-    /// Creates the value needed for the authentication header for an authenticated request to the Discogs Api.
-    /// </summary>
     public string CreateAuthenticationHeader()
     {
         (var timestamp, var nonce) = CreateTimestampAndNonce();
@@ -93,21 +88,27 @@ internal sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
     /// <param name="httpClient">The <see cref="HttpClient"/> used by the authentication flow.</param>
     /// <param name="callback">The callback url the Discogs login page redirects the browser to to return the request token to the app.</param>
     /// <returns>Returns the obtained request token and secret.</returns>
-    private async Task<(string requestToken, string requestTokenSecret)> GetRequestToken(
-        HttpClient httpClient,
-#if NET7_0
-        [StringSyntax(StringSyntaxAttribute.Uri)] string callback,
-#else
-        string callback,
-#endif
-        CancellationToken cancellationToken)
+    private async Task<(string requestToken, string requestTokenSecret)> GetRequestToken(HttpClient httpClient, string callback, CancellationToken cancellationToken)
     {
         var requestToken = "";
         var requestTokenSecret = "";
 
         try
         {
-            using var request = CreateRequestTokenRequest(callback);
+            (var timestamp, var nonce) = CreateTimestampAndNonce();
+
+            var authHeader = "OAuth ";
+            authHeader += $"oauth_consumer_key=\"{WebUtility.UrlEncode(_consumerKey)}\",";
+            authHeader += $"oauth_nonce=\"{WebUtility.UrlEncode(nonce)}\",";
+            authHeader += $"oauth_signature=\"{WebUtility.UrlEncode($"{_consumerSecret}&")}\",";
+            authHeader += $"oauth_signature_method=\"PLAINTEXT\",";
+            authHeader += $"oauth_timestamp=\"{WebUtility.UrlEncode(timestamp)}\",";
+            authHeader += $"oauth_callback=\"{WebUtility.UrlEncode(callback)}\"";
+
+            using var request = new HttpRequestMessage(HttpMethod.Get, "/oauth/request_token");
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
+            request.Headers.Add("Authorization", authHeader);
+
             using var response = await httpClient.SendAsync(request, cancellationToken);
 
             var content = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -158,7 +159,21 @@ internal sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
 
         try
         {
-            using var request = CreateAccessTokenRequest(requestToken, requestTokenSecret, verifier);
+            (var timestamp, var nonce) = CreateTimestampAndNonce();
+
+            var authHeader = "OAuth ";
+            authHeader += $"oauth_consumer_key=\"{WebUtility.UrlEncode(_consumerKey)}\",";
+            authHeader += $"oauth_nonce=\"{WebUtility.UrlEncode(nonce)}\",";
+            authHeader += $"oauth_token=\"{WebUtility.UrlEncode(requestToken)}\",";
+            authHeader += $"oauth_signature=\"{WebUtility.UrlEncode($"{_consumerSecret}&{requestTokenSecret}")}\",";
+            authHeader += $"oauth_signature_method=\"PLAINTEXT\",";
+            authHeader += $"oauth_timestamp=\"{WebUtility.UrlEncode(timestamp)}\",";
+            authHeader += $"oauth_verifier=\"{WebUtility.UrlEncode(verifier)}\"";
+
+            using var request = new HttpRequestMessage(HttpMethod.Post, "/oauth/access_token");
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
+            request.Headers.Add("Authorization", authHeader);
+
             using var response = await httpClient.SendAsync(request, cancellationToken);
 
             var content = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -171,65 +186,6 @@ internal sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
         catch (Exception) { }
 
         return (accessToken, accessTokenSecret);
-    }
-
-
-    /// <summary>
-    /// Creates the <see cref="HttpRequestMessage"/> for getting the request token from the Discogs api.
-    /// </summary>
-    /// <param name="callback">The callback url at which the request token is returned later.</param>
-    private HttpRequestMessage CreateRequestTokenRequest(
-#if NET7_0
-        [StringSyntax(StringSyntaxAttribute.Uri)] string callback)
-#else
-        string callback)
-#endif
-    {
-        var request = new HttpRequestMessage(HttpMethod.Get, "/oauth/request_token");
-
-        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
-
-        (var timestamp, var nonce) = CreateTimestampAndNonce();
-
-        var authHeader = "OAuth ";
-        authHeader += $"oauth_consumer_key=\"{WebUtility.UrlEncode(_consumerKey)}\",";
-        authHeader += $"oauth_nonce=\"{WebUtility.UrlEncode(nonce)}\",";
-        authHeader += $"oauth_signature=\"{WebUtility.UrlEncode($"{_consumerSecret}&")}\",";
-        authHeader += $"oauth_signature_method=\"PLAINTEXT\",";
-        authHeader += $"oauth_timestamp=\"{WebUtility.UrlEncode(timestamp)}\",";
-        authHeader += $"oauth_callback=\"{WebUtility.UrlEncode(callback)}\"";
-
-        request.Headers.Add("Authorization", authHeader);
-
-        return request;
-    }
-
-    /// <summary>
-    /// Creates the <see cref="HttpRequestMessage"/> for getting the access token and secret from the Discogs api.
-    /// </summary>
-    /// <param name="requestToken">The obtained request token.</param>
-    /// <param name="requestTokenSecret">The obtained request token secret.</param>
-    /// <param name="verifier">The obtained verifier token.</param>
-    private HttpRequestMessage CreateAccessTokenRequest(string requestToken, string requestTokenSecret, string verifier)
-    {
-        var request = new HttpRequestMessage(HttpMethod.Post, "/oauth/access_token");
-
-        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
-
-        (var timestamp, var nonce) = CreateTimestampAndNonce();
-
-        var authHeader = "OAuth ";
-        authHeader += $"oauth_consumer_key=\"{WebUtility.UrlEncode(_consumerKey)}\",";
-        authHeader += $"oauth_nonce=\"{WebUtility.UrlEncode(nonce)}\",";
-        authHeader += $"oauth_token=\"{WebUtility.UrlEncode(requestToken)}\",";
-        authHeader += $"oauth_signature=\"{WebUtility.UrlEncode($"{_consumerSecret}&{requestTokenSecret}")}\",";
-        authHeader += $"oauth_signature_method=\"PLAINTEXT\",";
-        authHeader += $"oauth_timestamp=\"{WebUtility.UrlEncode(timestamp)}\",";
-        authHeader += $"oauth_verifier=\"{WebUtility.UrlEncode(verifier)}\"";
-
-        request.Headers.Add("Authorization", authHeader);
-
-        return request;
     }
 
     /// <summary>
