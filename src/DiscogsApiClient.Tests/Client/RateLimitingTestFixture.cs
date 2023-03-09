@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using NUnit.Framework;
-
-namespace DiscogsApiClient.Tests;
+﻿namespace DiscogsApiClient.Tests.Client;
 
 [TestFixture]
 public sealed class RateLimitingTestFixture : ApiBaseTestFixture

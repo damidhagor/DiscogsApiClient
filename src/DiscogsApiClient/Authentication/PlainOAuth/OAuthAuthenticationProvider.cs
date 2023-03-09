@@ -68,6 +68,9 @@ internal sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
 
     public string CreateAuthenticationHeader()
     {
+        if (!IsAuthenticated)
+            throw new UnauthenticatedDiscogsException($"The {nameof(OAuthAuthenticationProvider)} must be authenticated before creating an authentication header.");
+
         (var timestamp, var nonce) = CreateTimestampAndNonce();
 
         var header = "OAuth ";
