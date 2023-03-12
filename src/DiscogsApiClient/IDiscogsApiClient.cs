@@ -47,6 +47,7 @@ public interface IDiscogsApiClient
     public async Task<CollectionFolder> GetCollectionFolder(string username, int folderId, CancellationToken cancellationToken)
     {
         Guard.IsNotNullOrWhiteSpace(username);
+        Guard.IsGreaterThanOrEqualTo(folderId, 0);
         return await GetCollectionFolderInternal(username, folderId, cancellationToken);
     }
 
@@ -80,6 +81,7 @@ public interface IDiscogsApiClient
     {
         Guard.IsNotNullOrWhiteSpace(username);
         Guard.IsNotNullOrWhiteSpace(folderName);
+        Guard.IsGreaterThan(folderId, 1);
         return await UpdateCollectionFolderInternal(username, folderId, new { Name = folderName }, cancellationToken);
     }
 
@@ -95,6 +97,7 @@ public interface IDiscogsApiClient
     public async Task DeleteCollectionFolder(string username, int folderId, CancellationToken cancellationToken)
     {
         Guard.IsNotNullOrWhiteSpace(username);
+        Guard.IsGreaterThan(folderId, 1);
         await DeleteCollectionFolderInternal(username, folderId, cancellationToken);
     }
 
@@ -111,6 +114,7 @@ public interface IDiscogsApiClient
     public async Task<CollectionFolderReleasesResponse> GetCollectionFolderReleases(string username, int folderId, PaginationQueryParameters paginationQueryParameters, CollectionFolderReleaseSortQueryParameters collectionFolderReleaseSortQueryParameters, CancellationToken cancellationToken)
     {
         Guard.IsNotNullOrWhiteSpace(username);
+        Guard.IsGreaterThanOrEqualTo(folderId, 0);
         return await GetCollectionFolderReleasesInternal(username, folderId, paginationQueryParameters, collectionFolderReleaseSortQueryParameters, cancellationToken);
     }
 

@@ -1,53 +1,178 @@
-﻿using System;
-using System.Threading.Tasks;
-using NUnit.Framework;
+﻿using static DiscogsApiClient.QueryParameters.CollectionFolderReleaseSortQueryParameters;
 
 namespace DiscogsApiClient.Tests.Collection;
 
 public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
 {
     [Test]
-    public void GetCollectionFolderReleases_EmptyUsername()
+    public void GetCollectionFolderReleases_Username_Guard()
     {
-        var username = "";
-        var folderId = 0;
-        var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
+        var folderId = 999;
+        var paginationParams = new PaginationQueryParameters();
         var sortParameters = new CollectionFolderReleaseSortQueryParameters();
 
-        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParameters, default), "username");
+        Assert.ThrowsAsync<ArgumentNullException>(() => ApiClient.GetCollectionFolderReleases(null!, folderId, paginationParams, sortParameters, default), "username");
+        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.GetCollectionFolderReleases("", folderId, paginationParams, sortParameters, default), "username");
+        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.GetCollectionFolderReleases("  ", folderId, paginationParams, sortParameters, default), "username");
     }
 
     [Test]
     public void GetCollectionFolderReleases_InvalidUsername()
     {
         var username = "awrbaerhnqw54";
-        var folderId = 0;
-        var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
+        var folderId = 999;
+        var paginationParams = new PaginationQueryParameters();
         var sortParameters = new CollectionFolderReleaseSortQueryParameters();
 
         Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParameters, default));
     }
 
     [Test]
-    public void GetCollectionFolderReleases_InvalidFolderId()
+    public void GetCollectionFolderReleases_FolderId_Guard()
     {
         var username = "damidhagor";
-        var folderId = -1;
-        var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
+        var paginationParams = new PaginationQueryParameters();
         var sortParameters = new CollectionFolderReleaseSortQueryParameters();
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParameters, default));
+        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.GetCollectionFolderReleases(username, -1, paginationParams, sortParameters, default));
     }
 
     [Test]
     public void GetCollectionFolderReleases_NotExistingFolderId()
     {
         var username = "damidhagor";
-        var folderId = 42;
-        var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
+        var folderId = 999;
+        var paginationParams = new PaginationQueryParameters();
         var sortParameters = new CollectionFolderReleaseSortQueryParameters();
 
         Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParameters, default));
+    }
+
+    [Test]
+    public void GetCollectionFolderReleases_Unauthenticated()
+    {
+        var clients = CreateUnauthenticatedDiscogsApiClient();
+        var username = "damidhagor";
+        var folderId = 1;
+        var paginationParams = new PaginationQueryParameters();
+        var sortParameters = new CollectionFolderReleaseSortQueryParameters();
+
+        Assert.ThrowsAsync<UnauthenticatedDiscogsException>(() => clients.discogsApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParameters, default));
+
+        clients.authHttpClient.Dispose();
+        clients.clientHttpClient.Dispose();
+    }
+
+    [Test]
+    public async Task GetCollectionFolderReleases_Sorted()
+    {
+        var username = "damidhagor";
+        var folderId = 0;
+        var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
+
+        // Artist
+        var sortParametersAscending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Artist, SortOrder = SortOrder.Ascending };
+        var responseAscending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersAscending, default);
+        var sortParametersDescending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Artist, SortOrder = SortOrder.Descending };
+        var responseDescending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, default);
+
+        Assert.That(
+            responseAscending.Releases.Select(r => r.Release.Artists.First().Name),
+            Is.Ordered.Ascending);
+        Assert.That(
+            responseDescending.Releases.Select(r => r.Release.Artists.First().Name),
+            Is.Ordered.Descending);
+
+        // Label
+        sortParametersAscending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Label, SortOrder = SortOrder.Ascending };
+        responseAscending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersAscending, default);
+        sortParametersDescending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Label, SortOrder = SortOrder.Descending };
+        responseDescending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, default);
+
+        Assert.That(
+            responseAscending.Releases.Select(r => r.Release.Labels.First().Name),
+            Is.Ordered.Ascending);
+        Assert.That(
+            responseDescending.Releases.Select(r => r.Release.Labels.First().Name),
+            Is.Ordered.Descending);
+
+        // Title
+        sortParametersAscending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Title, SortOrder = SortOrder.Ascending };
+        responseAscending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersAscending, default);
+        sortParametersDescending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Title, SortOrder = SortOrder.Descending };
+        responseDescending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, default);
+
+        Assert.That(
+            responseAscending.Releases.Select(r => r.Release.Title),
+            Is.Ordered.Ascending);
+        Assert.That(
+            responseDescending.Releases.Select(r => r.Release.Title),
+            Is.Ordered.Descending);
+
+        // CatalogNumber
+        sortParametersAscending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.CatalogNumber, SortOrder = SortOrder.Ascending };
+        responseAscending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersAscending, default);
+        sortParametersDescending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.CatalogNumber, SortOrder = SortOrder.Descending };
+        responseDescending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, default);
+
+        Assert.That(
+            responseAscending.Releases.Select(r => r.Release.Labels.First().CatalogNumber),
+            Is.Ordered.Ascending);
+        Assert.That(
+            responseDescending.Releases.Select(r => r.Release.Labels.First().CatalogNumber),
+            Is.Ordered.Descending);
+
+        // Format
+        sortParametersAscending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Format, SortOrder = SortOrder.Ascending };
+        responseAscending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersAscending, default);
+        sortParametersDescending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Format, SortOrder = SortOrder.Descending };
+        responseDescending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, default);
+
+        Assert.That(
+            responseAscending.Releases.Select(r => r.Release.Formats.First().Name),
+            Is.Ordered.Ascending);
+        Assert.That(
+            responseDescending.Releases.Select(r => r.Release.Formats.First().Name),
+            Is.Ordered.Descending);
+
+        // Rating
+        sortParametersAscending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Rating, SortOrder = SortOrder.Ascending };
+        responseAscending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersAscending, default);
+        sortParametersDescending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Rating, SortOrder = SortOrder.Descending };
+        responseDescending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, default);
+
+        Assert.That(
+            responseAscending.Releases.Select(r => r.Rating),
+            Is.Ordered.Ascending);
+        Assert.That(
+            responseDescending.Releases.Select(r => r.Rating),
+            Is.Ordered.Descending);
+
+        // AddedAt
+        sortParametersAscending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.AddedAt, SortOrder = SortOrder.Ascending };
+        responseAscending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersAscending, default);
+        sortParametersDescending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.AddedAt, SortOrder = SortOrder.Descending };
+        responseDescending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, default);
+
+        Assert.That(
+            responseAscending.Releases.Select(r => r.AddedAt),
+            Is.Ordered.Ascending);
+        Assert.That(
+            responseDescending.Releases.Select(r => r.AddedAt),
+            Is.Ordered.Descending);
+
+        // Year
+        sortParametersAscending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Year, SortOrder = SortOrder.Ascending };
+        responseAscending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersAscending, default);
+        sortParametersDescending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Year, SortOrder = SortOrder.Descending };
+        responseDescending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, default);
+
+        Assert.That(
+            responseAscending.Releases.Select(r => r.Release.Year),
+            Is.Ordered.Ascending);
+        Assert.That(
+            responseDescending.Releases.Select(r => r.Release.Year),
+            Is.Ordered.Descending);
     }
 
 

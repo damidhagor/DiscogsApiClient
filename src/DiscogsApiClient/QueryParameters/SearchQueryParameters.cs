@@ -14,21 +14,21 @@
 /// <param name="Format">Search by release format.</param>
 /// <param name="Barcode">Search by barcode.</param>
 public sealed record SearchQueryParameters(
-    [AliasAs("q")]
+    [property: AliasAs("q")]
     string? Query = default,
-    [AliasAs("type")]
+    [property: AliasAs("type")]
     string? Type = default,
-    [AliasAs("title")]
+    [property: AliasAs("title")]
     string? Title = default,
-    [AliasAs("release_title")]
+    [property: AliasAs("release_title")]
     string? ReleaseTitle = default,
-    [AliasAs("artist")]
+    [property: AliasAs("artist")]
     string? Artist = default,
-    [AliasAs("country")]
+    [property: AliasAs("country")]
     string? Country = default,
-    [AliasAs("year")]
+    [property: AliasAs("year")]
     string? Year = default,
-    [AliasAs("format")]
+    [property: AliasAs("format")]
     string? Format = default,
-    [AliasAs("barcode")]
+    [property: AliasAs("barcode")]
     string? Barcode = default);

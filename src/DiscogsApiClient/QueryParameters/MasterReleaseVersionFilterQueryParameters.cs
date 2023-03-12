@@ -13,17 +13,17 @@ namespace DiscogsApiClient.QueryParameters;
 /// <param name="SortProperty">The release property to sort the results with.</param>
 /// <param name="SortOrder">The sorting order.</param>
 public sealed record MasterReleaseVersionFilterQueryParameters(
-    [AliasAs("format")]
+    [property: AliasAs("format")]
     string? Format = default,
-    [AliasAs("label")]
+    [property: AliasAs("label")]
     string? Label = default,
-    [AliasAs("released")]
+    [property: AliasAs("released")]
     string? Released = default,
-    [AliasAs("country")]
+    [property: AliasAs("country")]
     string? Country = default,
-    [AliasAs("sort")]
+    [property: AliasAs("sort")]
     SortableProperty? SortProperty = default,
-    [AliasAs("sort_order")]
+    [property: AliasAs("sort_order")]
     SortOrder? SortOrder = default)
 {
     /// <summary>

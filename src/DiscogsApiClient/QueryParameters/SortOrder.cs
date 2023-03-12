@@ -7,8 +7,8 @@ namespace DiscogsApiClient.QueryParameters;
 /// </summary>
 public enum SortOrder
 {
-    [EnumMember(Value = "ascending")]
+    [EnumMember(Value = "asc")]
     Ascending,
-    [EnumMember(Value = "descending")]
+    [EnumMember(Value = "desc")]
     Descending
 }
