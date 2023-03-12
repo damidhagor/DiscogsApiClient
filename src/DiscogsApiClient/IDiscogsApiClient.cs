@@ -131,6 +131,8 @@ public interface IDiscogsApiClient
     public async Task<CollectionFolderRelease> AddReleaseToCollectionFolder(string username, int folderId, int releaseId, CancellationToken cancellationToken)
     {
         Guard.IsNotNullOrWhiteSpace(username);
+        Guard.IsGreaterThanOrEqualTo(folderId, 1);
+        Guard.IsGreaterThanOrEqualTo(releaseId, 1);
         return await AddReleaseToCollectionFolderInternal(username, folderId, releaseId, cancellationToken);
     }
 
@@ -148,6 +150,9 @@ public interface IDiscogsApiClient
     public async Task DeleteReleaseFromCollectionFolder(string username, int folderId, int releaseId, int instanceId, CancellationToken cancellationToken)
     {
         Guard.IsNotNullOrWhiteSpace(username);
+        Guard.IsGreaterThanOrEqualTo(folderId, 1);
+        Guard.IsGreaterThanOrEqualTo(releaseId, 1);
+        Guard.IsGreaterThanOrEqualTo(instanceId, 1);
         await DeleteReleaseFromCollectionFolderInternal(username, folderId, releaseId, instanceId, cancellationToken);
     }
 

@@ -177,163 +177,183 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
 
 
     [Test]
-    public void AddReleaseToCollectionFolder_EmptyUsername()
+    public void AddReleaseToCollectionFolder_Username_Guard()
     {
-        var username = "";
-        var folderId = 1;
+        var folderId = 999;
         var releaseId = 5134861;
 
-        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, default), "username");
+        Assert.ThrowsAsync<ArgumentNullException>(() => ApiClient.AddReleaseToCollectionFolder(null!, folderId, releaseId, default), "username");
+        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.AddReleaseToCollectionFolder("", folderId, releaseId, default), "username");
+        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.AddReleaseToCollectionFolder("  ", folderId, releaseId, default), "username");
     }
 
     [Test]
     public void AddReleaseToCollectionFolder_InvalidUsername()
     {
         var username = "awrbaerhnqw54";
-        var folderId = 1;
+        var folderId = 999;
         var releaseId = 5134861;
 
         Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, default));
     }
 
     [Test]
-    public void AddReleaseToCollectionFolder_InvalidFolderId()
+    public void AddReleaseToCollectionFolder_FolderId_Guard()
     {
         var username = "damidhagor";
-        var folderId = -1;
         var releaseId = 5134861;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, default));
+        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.AddReleaseToCollectionFolder(username, -1, releaseId, default));
+        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.AddReleaseToCollectionFolder(username, 0, releaseId, default));
     }
 
     [Test]
     public void AddReleaseToCollectionFolder_NotExistingFolderId()
     {
         var username = "damidhagor";
-        var folderId = 42;
+        var folderId = 999;
         var releaseId = 5134861;
 
         Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, default));
     }
 
     [Test]
-    public void AddReleaseToCollectionFolder_AllFolderId()
+    public void AddReleaseToCollectionFolder_ReleaseId_Guard()
     {
         var username = "damidhagor";
-        var folderId = 0;
-        var releaseId = 5134861;
+        var folderId = 999;
 
-        Assert.ThrowsAsync<DiscogsException>(() => ApiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, default),
-            "Invalid folder_id: cannot add releases to the 'All' folder.");
-    }
-
-    [Test]
-    public void AddReleaseToCollectionFolder_InvalidReleaseId()
-    {
-        var username = "damidhagor";
-        var folderId = 1;
-        var releaseId = -1;
-
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, default));
+        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.AddReleaseToCollectionFolder(username, folderId, -1, default));
+        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.AddReleaseToCollectionFolder(username, folderId, 0, default));
     }
 
     [Test]
     public void AddReleaseToCollectionFolder_NotExistingReleaseId()
     {
         var username = "damidhagor";
-        var folderId = 1;
+        var folderId = 999;
         var releaseId = int.MaxValue;
 
         Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, default));
     }
 
+    [Test]
+    public void AddReleaseToCollectionFolder_Unauthenticated()
+    {
+        var clients = CreateUnauthenticatedDiscogsApiClient();
+        var username = "damidhagor";
+        var folderId = 999;
+        var releaseId = 5134861;
+
+        Assert.ThrowsAsync<UnauthenticatedDiscogsException>(() => clients.discogsApiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, default));
+
+        clients.authHttpClient.Dispose();
+        clients.clientHttpClient.Dispose();
+    }
+
 
     [Test]
-    public void DeleteReleaseFromCollectionFolder_EmptyUsername()
+    public void DeleteReleaseFromCollectionFolder_Username_Guard()
     {
-        var username = "";
-        var folderId = 1;
+        var folderId = 999;
         var releaseId = 5134861;
-        var instanceId = -1;
+        var instanceId = 999;
 
-        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, default), "username");
+        Assert.ThrowsAsync<ArgumentNullException>(() => ApiClient.DeleteReleaseFromCollectionFolder(null!, folderId, releaseId, instanceId, default), "username");
+        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.DeleteReleaseFromCollectionFolder("", folderId, releaseId, instanceId, default), "username");
+        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.DeleteReleaseFromCollectionFolder("  ", folderId, releaseId, instanceId, default), "username");
     }
 
     [Test]
     public void DeleteReleaseFromCollectionFolder_InvalidUsername()
     {
         var username = "awrbaerhnqw54";
-        var folderId = 1;
+        var folderId = 999;
         var releaseId = 5134861;
-        var instanceId = -1;
+        var instanceId = 999;
 
         Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, default));
     }
 
     [Test]
-    public void DeleteReleaseFromCollectionFolder_InvalidFolderId()
+    public void DeleteReleaseFromCollectionFolder_FolderId_Guard()
     {
         var username = "damidhagor";
-        var folderId = -1;
         var releaseId = 5134861;
         var instanceId = -1;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, default));
+        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.DeleteReleaseFromCollectionFolder(username, -1, releaseId, instanceId, default));
+        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.DeleteReleaseFromCollectionFolder(username, 0, releaseId, instanceId, default));
     }
 
     [Test]
     public void DeleteReleaseFromCollectionFolder_NotExistingFolderId()
     {
         var username = "damidhagor";
-        var folderId = 42;
+        var folderId = 999;
         var releaseId = 5134861;
-        var instanceId = -1;
+        var instanceId = 999;
 
         Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, default));
     }
 
     [Test]
-    public void DeleteReleaseFromCollectionFolder_InvalidReleaseId()
+    public void DeleteReleaseFromCollectionFolder_ReleaseId_Guard()
     {
         var username = "damidhagor";
-        var folderId = 1;
-        var releaseId = -1;
-        var instanceId = -1;
+        var folderId = 999;
+        var instanceId = 999;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, default));
+        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, -1, instanceId, default));
+        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, 0, instanceId, default));
     }
 
     [Test]
     public void DeleteReleaseFromCollectionFolder_NotExistingReleaseId()
     {
         var username = "damidhagor";
-        var folderId = 1;
+        var folderId = 999;
         var releaseId = int.MaxValue;
-        var instanceId = -1;
+        var instanceId = 999;
 
         Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, default));
     }
 
     [Test]
-    public void DeleteReleaseFromCollectionFolder_InvalidInstanceId()
+    public void DeleteReleaseFromCollectionFolder_InstanceId_Guard()
     {
         var username = "damidhagor";
-        var folderId = 1;
+        var folderId = 999;
         var releaseId = 5134861;
-        var instanceId = -1;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, default));
+        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, -1, default));
+        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, 0, default));
     }
 
     [Test]
     public void DeleteReleaseFromCollectionFolder_NotExistingInstanceId()
     {
         var username = "damidhagor";
-        var folderId = 1;
+        var folderId = 999;
         var releaseId = 5134861;
         var instanceId = int.MaxValue;
 
         Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, default));
+    }
+
+    [Test]
+    public void DeleteReleaseFromCollectionFolder_Unauthenticated()
+    {
+        var clients = CreateUnauthenticatedDiscogsApiClient();
+        var username = "damidhagor";
+        var folderId = 999;
+        var releaseId = 5134861;
+        var instanceId = 999;
+
+        Assert.ThrowsAsync<UnauthenticatedDiscogsException>(() => clients.discogsApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, default));
+
+        clients.authHttpClient.Dispose();
+        clients.clientHttpClient.Dispose();
     }
 
 
