@@ -198,6 +198,7 @@ public interface IDiscogsApiClient
     public async Task<WantlistRelease> AddReleaseToWantlist(string username, int releaseId, CancellationToken cancellationToken)
     {
         Guard.IsNotNullOrWhiteSpace(username);
+        Guard.IsGreaterThan(releaseId, 0);
         return await AddReleaseToWantlistInternal(username, releaseId, cancellationToken);
     }
 
@@ -213,6 +214,7 @@ public interface IDiscogsApiClient
     public async Task DeleteReleaseFromWantlist(string username, int releaseId, CancellationToken cancellationToken)
     {
         Guard.IsNotNullOrWhiteSpace(username);
+        Guard.IsGreaterThan(releaseId, 0);
         await DeleteReleaseFromWantlistInternal(username, releaseId, cancellationToken);
     }
 

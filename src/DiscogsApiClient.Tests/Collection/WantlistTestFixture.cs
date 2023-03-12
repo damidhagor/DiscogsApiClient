@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using NUnit.Framework;
-
-namespace DiscogsApiClient.Tests.Collection;
+﻿namespace DiscogsApiClient.Tests.Collection;
 
 public sealed class WantlistTestFixture : ApiBaseTestFixture
 {
@@ -28,31 +24,33 @@ public sealed class WantlistTestFixture : ApiBaseTestFixture
     }
 
     [Test]
-    public void GetWantlist_EmptyUsername()
+    public void GetWantlist_Username_Guard()
     {
-        var username = "";
-        var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
+        var paginationParams = new PaginationQueryParameters();
 
-        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.GetWantlistReleases(username, paginationParams, default), "username");
+        Assert.ThrowsAsync<ArgumentNullException>(() => ApiClient.GetWantlistReleases(null!, paginationParams, default), "username");
+        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.GetWantlistReleases("", paginationParams, default), "username");
+        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.GetWantlistReleases("  ", paginationParams, default), "username");
     }
 
     [Test]
     public void GetWantlist_InvalidUsername()
     {
         var username = "awrbaerhnqw54";
-        var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
+        var paginationParams = new PaginationQueryParameters();
 
         Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetWantlistReleases(username, paginationParams, default));
     }
 
 
     [Test]
-    public void AddWantlistRelease_EmptyUsername()
+    public void AddWantlistRelease_Username_Guard()
     {
-        var username = "";
         var releaseId = 5134861;
 
-        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.AddReleaseToWantlist(username, releaseId, default), "username");
+        Assert.ThrowsAsync<ArgumentNullException>(() => ApiClient.AddReleaseToWantlist(null!, releaseId, default), "username");
+        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.AddReleaseToWantlist("", releaseId, default), "username");
+        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.AddReleaseToWantlist("  ", releaseId, default), "username");
     }
 
     [Test]
@@ -65,31 +63,45 @@ public sealed class WantlistTestFixture : ApiBaseTestFixture
     }
 
     [Test]
-    public void AddWantlistRelease_InvalidReleaseId()
+    public void AddWantlistRelease_ReleaseId_Guard()
     {
         var username = "damidhagor";
-        var releaseId = -1;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.AddReleaseToWantlist(username, releaseId, default));
+        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.AddReleaseToWantlist(username, -1, default));
+        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.AddReleaseToWantlist(username, 0, default));
     }
 
     [Test]
     public void AddWantlistRelease_NotExistingReleaseId()
     {
         var username = "damidhagor";
-        var releaseId = 99999999;
+        var releaseId = int.MaxValue;
 
         Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.AddReleaseToWantlist(username, releaseId, default));
     }
 
-
     [Test]
-    public void DeleteWantlistRelease_EmptyUsername()
+    public void AddWantlistRelease_Unauthenticated()
     {
-        var username = "";
+        var clients = CreateUnauthenticatedDiscogsApiClient();
+        var username = "damidhagor";
         var releaseId = 5134861;
 
-        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.DeleteReleaseFromWantlist(username, releaseId, default), "username");
+        Assert.ThrowsAsync<UnauthenticatedDiscogsException>(async () => await clients.discogsApiClient.AddReleaseToWantlist(username, releaseId, default));
+
+        clients.authHttpClient.Dispose();
+        clients.clientHttpClient.Dispose();
+    }
+
+
+    [Test]
+    public void DeleteWantlistRelease_Username_Guard()
+    {
+        var releaseId = 5134861;
+
+        Assert.ThrowsAsync<ArgumentNullException>(() => ApiClient.DeleteReleaseFromWantlist(null!, releaseId, default), "username");
+        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.DeleteReleaseFromWantlist("", releaseId, default), "username");
+        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.DeleteReleaseFromWantlist("  ", releaseId, default), "username");
     }
 
     [Test]
@@ -102,21 +114,34 @@ public sealed class WantlistTestFixture : ApiBaseTestFixture
     }
 
     [Test]
-    public void DeleteWantlistRelease_InvalidReleaseId()
+    public void DeleteWantlistRelease_ReleaseId_Guard()
     {
         var username = "damidhagor";
-        var releaseId = -1;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromWantlist(username, releaseId, default));
+        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.DeleteReleaseFromWantlist(username, -1, default));
+        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.DeleteReleaseFromWantlist(username, 0, default));
     }
 
     [Test]
     public void DeleteWantlistRelease_NotExistingReleaseId()
     {
         var username = "damidhagor";
-        var releaseId = 99999999;
+        var releaseId = int.MaxValue;
 
         Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromWantlist(username, releaseId, default));
+    }
+
+    [Test]
+    public void DeleteWantlistRelease_Unauthenticated()
+    {
+        var clients = CreateUnauthenticatedDiscogsApiClient();
+        var username = "damidhagor";
+        var releaseId = 5134861;
+
+        Assert.ThrowsAsync<UnauthenticatedDiscogsException>(async () => await clients.discogsApiClient.DeleteReleaseFromWantlist(username, releaseId, default));
+
+        clients.authHttpClient.Dispose();
+        clients.clientHttpClient.Dispose();
     }
 
 
