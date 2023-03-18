@@ -8,7 +8,7 @@ namespace DiscogsApiClient.Middleware;
 /// An optional handler which rate-limits the <see cref="IDiscogsApiClient"/> to ensure that the Discogs Api is not overloading and rejecting requests.
 /// <para/>
 /// This uses the <see href="https://learn.microsoft.com/en-us/aspnet/core/performance/rate-limit?view=aspnetcore-8.0#slide"> sliding window algorithm</see>
-/// which is configured at startup with the options provided by the <see cref="ServiceCollectionExtensions.AddDiscogsApiClientOptions"/> method.
+/// which is configured at startup with the options provided by the <see cref="ServiceCollectionExtensions.DiscogsApiClientOptions"/> method.
 /// <para/>
 /// For use in the test project the handler can optionally be configured to not dispose its <see cref="RateLimiter"/> so all unit tests are rate limited and run successfully.
 /// </summary>

@@ -18,7 +18,7 @@ public abstract class ApiBaseTestFixture
 
     private HttpClient _authHttpClient = null!;
     private HttpClient _clientHttpClient = null!;
-    private IConfiguration _configuration = null!;
+    protected IConfiguration Configuration = null!;
 
     protected IDiscogsApiClient ApiClient = null!;
 
@@ -39,7 +39,7 @@ public abstract class ApiBaseTestFixture
     [OneTimeSetUp]
     public void Setup()
     {
-        _configuration = new ConfigurationBuilder()
+        Configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", false)
             .AddJsonFile($"appsettings.Development.json", true)
             .Build();
@@ -64,11 +64,11 @@ public abstract class ApiBaseTestFixture
         string? clientBaseUrl = null,
         string? userToken = null)
     {
-        authUserAgent ??= _configuration["DiscogsApiOptions:UserAgent"];
-        authBaseUrl ??= _configuration["DiscogsApiOptions:BaseUrl"];
-        clientUserAgent ??= _configuration["DiscogsApiOptions:UserAgent"];
-        clientBaseUrl ??= _configuration["DiscogsApiOptions:BaseUrl"];
-        userToken ??= _configuration["DiscogsApiOptions:UserToken"]!;
+        authUserAgent ??= Configuration["DiscogsApiOptions:UserAgent"];
+        authBaseUrl ??= Configuration["DiscogsApiOptions:BaseUrl"];
+        clientUserAgent ??= Configuration["DiscogsApiOptions:UserAgent"];
+        clientBaseUrl ??= Configuration["DiscogsApiOptions:BaseUrl"];
+        userToken ??= Configuration["DiscogsApiOptions:UserToken"]!;
 
         var authHttpClient = new HttpClient() { BaseAddress = new Uri(authBaseUrl!) };
         authHttpClient.DefaultRequestHeaders.UserAgent.ParseAdd(authUserAgent);
