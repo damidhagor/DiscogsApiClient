@@ -12,7 +12,7 @@
 /// <param name="ReleasesUrl">The Api url to the list of release of the label</param>
 /// <param name="Images">List of images of the label</param>
 /// <param name="ParentLabel">Parent label of this label</param>
-/// <param name="Sublabels">Sub-labels of this label</param>
+/// <param name="SubLabels">Sub-labels of this label</param>
 /// <param name="Urls">Urls of this label</param>
 /// <param name="DataQuality"></param>
 public sealed record Label(
@@ -35,7 +35,7 @@ public sealed record Label(
     [property:JsonPropertyName("parent_label")]
     LabelShortInfo ParentLabel,
     [property:JsonPropertyName("sublabels")]
-    List<LabelShortInfo> Sublabels,
+    List<LabelShortInfo> SubLabels,
     [property:JsonPropertyName("urls")]
     List<string> Urls,
     [property:JsonPropertyName("data_quality")]

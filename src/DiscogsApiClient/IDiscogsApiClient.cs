@@ -240,26 +240,38 @@ public interface IDiscogsApiClient
     /// </summary>
     /// <param name="artistId">The artist's id.</param>
     /// <param name="paginationQueryParameters">Pagination parameters.</param>
-    async Task<ArtistReleasesResponse> GetArtistReleases(int artistId, PaginationQueryParameters paginationQueryParameters, ArtistReleaseSortQueryParameters artistReleaseSortQueryParameters, CancellationToken cancellationToken)
+    public async Task<ArtistReleasesResponse> GetArtistReleases(int artistId, PaginationQueryParameters paginationQueryParameters, ArtistReleaseSortQueryParameters artistReleaseSortQueryParameters, CancellationToken cancellationToken)
     {
         Guard.IsGreaterThan(artistId, 0);
         return await GetArtistReleasesInternal(artistId, paginationQueryParameters, artistReleaseSortQueryParameters, cancellationToken);
     }
 
+    [Get("/labels/{labelId}")]
+    internal Task<Label> GetLabelInternal(int labelId, CancellationToken cancellationToken);
+
     /// <summary>
     /// Gets a label from the Discog database.
     /// </summary>
     /// <param name="labelId">The label's id.</param>
-    [Get("/labels/{labelId}")]
-    Task<Label> GetLabel(int labelId, CancellationToken cancellationToken);
+    public async Task<Label> GetLabel(int labelId, CancellationToken cancellationToken)
+    {
+        Guard.IsGreaterThan(labelId, 0);
+        return await GetLabelInternal(labelId, cancellationToken);
+    }
+
+    [Get("/labels/{labelId}/releases")]
+    internal Task<LabelReleasesResponse> GetLabelReleasesInternal(int labelId, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets the releases of a label from the Discog database.
     /// </summary>
     /// <param name="labelId">The label's id.</param>
     /// <param name="paginationQueryParameters">Pagination parameters.</param>
-    [Get("/labels/{labelId}/releases")]
-    Task<LabelReleasesResponse> GetLabelReleases(int labelId, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken);
+    public async Task<LabelReleasesResponse> GetLabelReleases(int labelId, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken)
+    {
+        Guard.IsGreaterThan(labelId, 0);
+        return await GetLabelReleasesInternal(labelId, paginationQueryParameters, cancellationToken);
+    }
 
     /// <summary>
     /// Gets a master release from the Discog database.

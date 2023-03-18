@@ -12,7 +12,7 @@
 /// <param name="CatalogNumber">Catalog number of the release</param>
 /// <param name="Artist">Release artist</param>
 /// <param name="Year">Release year</param>
-/// <param name="Stats">Statistics about the release</param>
+/// <param name="Statistics">Statistics about the release</param>
 public sealed record LabelRelease(
     [property:JsonPropertyName("id")]
     int Id,
@@ -33,7 +33,7 @@ public sealed record LabelRelease(
     [property:JsonPropertyName("year")]
     int Year,
     [property:JsonPropertyName("stats")]
-    ReleaseStats Stats);
+    ReleaseStats Statistics);
 
 
 /*
