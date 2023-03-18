@@ -219,20 +219,32 @@ public interface IDiscogsApiClient
     }
 
 
+    [Get("/artists/{artistId}")]
+    internal Task<Artist> GetArtistInternal(int artistId, CancellationToken cancellationToken);
+
     /// <summary>
     /// Gets an artist from the Discog database.
     /// </summary>
     /// <param name="artistId">The artist's id.</param>
-    [Get("/artists/{artistId}")]
-    Task<Artist> GetArtist(int artistId, CancellationToken cancellationToken);
+    public async Task<Artist> GetArtist(int artistId, CancellationToken cancellationToken)
+    {
+        Guard.IsGreaterThan(artistId, 0);
+        return await GetArtistInternal(artistId, cancellationToken);
+    }
+
+    [Get("/artists/{artistId}/releases")]
+    internal Task<ArtistReleasesResponse> GetArtistReleasesInternal(int artistId, PaginationQueryParameters paginationQueryParameters, ArtistReleaseSortQueryParameters artistReleaseSortQueryParameters, CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets the releases of an artist from the Discog database.
     /// </summary>
     /// <param name="artistId">The artist's id.</param>
     /// <param name="paginationQueryParameters">Pagination parameters.</param>
-    [Get("/artists/{artistId}/releases")]
-    Task<ArtistReleasesResponse> GetArtistReleases(int artistId, PaginationQueryParameters paginationQueryParameters, ArtistReleaseSortQueryParameters artistReleaseSortQueryParameters, CancellationToken cancellationToken);
+    async Task<ArtistReleasesResponse> GetArtistReleases(int artistId, PaginationQueryParameters paginationQueryParameters, ArtistReleaseSortQueryParameters artistReleaseSortQueryParameters, CancellationToken cancellationToken)
+    {
+        Guard.IsGreaterThan(artistId, 0);
+        return await GetArtistReleasesInternal(artistId, paginationQueryParameters, artistReleaseSortQueryParameters, cancellationToken);
+    }
 
     /// <summary>
     /// Gets a label from the Discog database.

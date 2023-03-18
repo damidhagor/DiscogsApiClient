@@ -8,7 +8,7 @@
 /// <param name="ThumbnailUrl">Thumbnail url for the cover image</param>
 /// <param name="Type">The type of the release (e.g. master or normal release)</param>
 /// <param name="Title">Release title</param>
-/// <param name="MainRelease">Id of the main release</param>
+/// <param name="MainReleaseId">Id of the main release</param>
 /// <param name="Artist">Artist name</param>
 /// <param name="Role">The contributing role of the artist on this release</param>
 /// <param name="Year">Release year</param>
@@ -25,7 +25,7 @@ public sealed record ArtistRelease(
     [property:JsonPropertyName("title")]
     string Title,
     [property:JsonPropertyName("main_release")]
-    int MainRelease,
+    int MainReleaseId,
     [property:JsonPropertyName("artist")]
     string Artist,
     [property:JsonPropertyName("role")]
