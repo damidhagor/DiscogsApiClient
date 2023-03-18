@@ -246,6 +246,7 @@ public interface IDiscogsApiClient
         return await GetArtistReleasesInternal(artistId, paginationQueryParameters, artistReleaseSortQueryParameters, cancellationToken);
     }
 
+
     [Get("/labels/{labelId}")]
     internal Task<Label> GetLabelInternal(int labelId, CancellationToken cancellationToken);
 
@@ -273,20 +274,33 @@ public interface IDiscogsApiClient
         return await GetLabelReleasesInternal(labelId, paginationQueryParameters, cancellationToken);
     }
 
+
+    [Get("/masters/{masterReleaseId}")]
+    internal Task<MasterRelease> GetMasterReleaseInternal(int masterReleaseId, CancellationToken cancellationToken);
+
     /// <summary>
     /// Gets a master release from the Discog database.
     /// </summary>
     /// <param name="masterReleaseId">The master release's id.</param>
-    [Get("/masters/{masterReleaseId}")]
-    Task<MasterRelease> GetMasterRelease(int masterReleaseId, CancellationToken cancellationToken);
+    public async Task<MasterRelease> GetMasterRelease(int masterReleaseId, CancellationToken cancellationToken)
+    {
+        Guard.IsGreaterThan(masterReleaseId, 0);
+        return await GetMasterReleaseInternal(masterReleaseId, cancellationToken);
+    }
+
+    [Get("/masters/{masterReleaseId}/versions")]
+    internal Task<MasterReleaseVersionsResponse> GetMasterReleaseVersionsInternal(int masterReleaseId, PaginationQueryParameters paginationQueryParameters, MasterReleaseVersionFilterQueryParameters masterReleaseVersionQueryParameters, CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets the release versions of a master release from the Discog database.
     /// </summary>
     /// <param name="masterReleaseId">The master release's id.</param>
     /// <param name="paginationQueryParameters">Pagination parameters.</param>
-    [Get("/masters/{masterReleaseId}/versions")]
-    Task<MasterReleaseVersionsResponse> GetMasterReleaseVersions(int masterReleaseId, PaginationQueryParameters paginationQueryParameters, MasterReleaseVersionFilterQueryParameters masterReleaseVersionQueryParameters, CancellationToken cancellationToken);
+    public async Task<MasterReleaseVersionsResponse> GetMasterReleaseVersions(int masterReleaseId, PaginationQueryParameters paginationQueryParameters, MasterReleaseVersionFilterQueryParameters masterReleaseVersionQueryParameters, CancellationToken cancellationToken)
+    {
+        Guard.IsGreaterThan(masterReleaseId, 0);
+        return await GetMasterReleaseVersionsInternal(masterReleaseId, paginationQueryParameters, masterReleaseVersionQueryParameters, cancellationToken);
+    }
 
     /// <summary>
     /// Gets a release from the Discog database.

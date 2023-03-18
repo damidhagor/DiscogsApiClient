@@ -9,7 +9,7 @@ public sealed record MasterReleaseVersionFilters(
     [property:JsonPropertyName("available")]
     MasterReleaseVersionFilter AvailableFilters,
     [property: JsonPropertyName("applied")]
-    MasterReleaseVersionFilter AppliedFilters);
+    MasterReleaseVersionAppliedFilter AppliedFilters);
 
 
 /**
@@ -26,7 +26,9 @@ public sealed record MasterReleaseVersionFilters(
    },
    "filters":{
       "applied":{
-         
+            "country": [
+                "Germany"
+            ]
       },
       "available":{
          "format":{

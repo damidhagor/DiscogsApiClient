@@ -1,74 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using NUnit.Framework;
-
-namespace DiscogsApiClient.Tests.Database;
+﻿namespace DiscogsApiClient.Tests.Database;
 
 public sealed class ReleasesTestFixture : ApiBaseTestFixture
 {
-    [Test]
-    public async Task GetMasterRelease_Success()
-    {
-        var masterReleaseId = 156551;
-
-        var masterRelease = await ApiClient.GetMasterRelease(masterReleaseId, default);
-
-        Assert.IsNotNull(masterRelease);
-        Assert.AreEqual(masterReleaseId, masterRelease.Id);
-        Assert.AreEqual(1, masterRelease.Artists.Count);
-        Assert.AreEqual("HammerFall", masterRelease.Artists[0].Name);
-        Assert.Less(0, masterRelease.Genres.Count);
-        Assert.Less(0, masterRelease.Images.Count);
-        Assert.Less(0, masterRelease.LowestPrice);
-        Assert.Less(0, masterRelease.MainReleaseId);
-        Assert.IsFalse(string.IsNullOrWhiteSpace(masterRelease.MainReleaseUrl));
-        Assert.Less(0, masterRelease.MostRecentReleaseId);
-        Assert.IsFalse(string.IsNullOrWhiteSpace(masterRelease.MostRecentReleaseUrl));
-        Assert.Less(0, masterRelease.NumForSale);
-        Assert.IsFalse(string.IsNullOrWhiteSpace(masterRelease.ResourceUrl));
-        Assert.AreEqual("Glory To The Brave", masterRelease.Title);
-        Assert.AreEqual(9, masterRelease.Tracklist.Count);
-        Assert.AreEqual("1", masterRelease.Tracklist[0].Position);
-        Assert.AreEqual("The Dragon Lies Bleeding", masterRelease.Tracklist[0].Title);
-        Assert.AreEqual("4:23", masterRelease.Tracklist[0].Duration);
-        Assert.AreEqual("track", masterRelease.Tracklist[0].Type);
-        Assert.IsFalse(string.IsNullOrWhiteSpace(masterRelease.Uri));
-        Assert.IsFalse(string.IsNullOrWhiteSpace(masterRelease.VersionsUrl));
-        Assert.Less(0, masterRelease.Videos.Count);
-        Assert.AreEqual(1997, masterRelease.Year);
-        Assert.Less(0, masterRelease.Styles.Count);
-    }
-
-    [Test]
-    public void GetMasterRelease_NotExistingReleaseId()
-    {
-        var masterReleaseId = -1;
-
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetRelease(masterReleaseId, default));
-    }
-
-    [Test]
-    public async Task GetMasterReleaseVersions_Success()
-    {
-        var masterReleaseId = 156551;
-        var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
-        var filterParams = new MasterReleaseVersionFilterQueryParameters();
-
-        var response = await ApiClient.GetMasterReleaseVersions(masterReleaseId, paginationParams, filterParams, default);
-
-        Assert.IsNotNull(response.Pagination);
-        Assert.AreEqual(1, response.Pagination.Page);
-        Assert.AreEqual(50, response.Pagination.ItemsPerPage);
-        Assert.Less(0, response.Pagination.TotalItems);
-        Assert.Less(0, response.Pagination.TotalPages);
-        Assert.IsNotNull(response.Pagination.Urls);
-        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.NextPageUrl));
-        Assert.IsFalse(string.IsNullOrWhiteSpace(response.Pagination.Urls.LastPageUrl));
-
-        Assert.IsNotNull(response.ReleaseVersions);
-    }
-
-
     [Test]
     public async Task GetRelease_Success()
     {

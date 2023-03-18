@@ -32,7 +32,9 @@ public sealed record MasterReleaseVersionsResponse(
    },
    "filters":{
       "applied":{
-         
+            "country": [
+                "Germany"
+            ]
       },
       "available":{
          "format":{

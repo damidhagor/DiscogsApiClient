@@ -2,7 +2,7 @@
 
 /// <summary>
 /// Filters and their possible values for a master release request.
-/// Each filter is a dictionary of the filter value and the number of results it will result <inheritdoc./>
+/// Each filter is a dictionary of the filter value and the number of results it will result.
 /// </summary>
 /// <param name="Format">Formats to filter by</param>
 /// <param name="Label">Labels to filter by</param>
@@ -10,13 +10,13 @@
 /// <param name="Year">Release years to filter by</param>
 public sealed record MasterReleaseVersionFilter(
     [property:JsonPropertyName("format")]
-    Dictionary<string, int> Format,
+    Dictionary<string, int>? Format,
     [property:JsonPropertyName("label")]
-    Dictionary<string, int> Label,
+    Dictionary<string, int>? Label,
     [property:JsonPropertyName("country")]
-    Dictionary<string, int> Country,
+    Dictionary<string, int>? Country,
     [property:JsonPropertyName("released")]
-    Dictionary<string, int> Year);
+    Dictionary<string, int>? Year);
 
 
 /**
@@ -33,7 +33,9 @@ public sealed record MasterReleaseVersionFilter(
    },
    "filters":{
       "applied":{
-         
+            "country": [
+                "Germany"
+            ]
       },
       "available":{
          "format":{

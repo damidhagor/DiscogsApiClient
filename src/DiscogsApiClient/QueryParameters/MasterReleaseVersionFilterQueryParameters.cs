@@ -8,7 +8,7 @@ namespace DiscogsApiClient.QueryParameters;
 /// </summary>
 /// <param name="Format">The format to filter the results by.</param>
 /// <param name="Label">The label to filter the results by.</param>
-/// <param name="Released">The release year to filter the results by.</param>
+/// <param name="Year">The release year to filter the results by.</param>
 /// <param name="Country">The country to filter the results by.</param>
 /// <param name="SortProperty">The release property to sort the results with.</param>
 /// <param name="SortOrder">The sorting order.</param>
@@ -18,7 +18,7 @@ public sealed record MasterReleaseVersionFilterQueryParameters(
     [property: AliasAs("label")]
     string? Label = default,
     [property: AliasAs("released")]
-    string? Released = default,
+    string? Year = default,
     [property: AliasAs("country")]
     string? Country = default,
     [property: AliasAs("sort")]
@@ -32,7 +32,7 @@ public sealed record MasterReleaseVersionFilterQueryParameters(
     public enum SortableProperty
     {
         [EnumMember(Value = "released")]
-        Released,
+        Year,
         [EnumMember(Value = "title")]
         Title,
         [EnumMember(Value = "format")]

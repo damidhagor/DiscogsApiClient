@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using static DiscogsApiClient.QueryParameters.ArtistReleaseSortQueryParameters;
+﻿using static DiscogsApiClient.QueryParameters.ArtistReleaseSortQueryParameters;
 
 namespace DiscogsApiClient.Tests.Database;
 
@@ -193,21 +192,20 @@ public sealed class ArtistsTestFixture : ApiBaseTestFixture
     }
 
     [Test]
-    public async Task GetArtistAllReleases_Success()
+    public async Task GetAllArtistReleases_Success()
     {
         var artistId = 287459;
 
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
-        var sortParams = new ArtistReleaseSortQueryParameters();
 
-        var response = await ApiClient.GetArtistReleases(artistId, paginationParams, sortParams, default);
+        var response = await ApiClient.GetArtistReleases(artistId, paginationParams, default!, default);
         var itemCount = response.Pagination.TotalItems;
         var summedUpItemCount = response.Releases.Count;
 
         for (var p = 2; p <= response.Pagination.TotalPages; p++)
         {
             paginationParams = paginationParams with { Page = p };
-            response = await ApiClient.GetArtistReleases(artistId, paginationParams, sortParams, default);
+            response = await ApiClient.GetArtistReleases(artistId, paginationParams, default!, default);
             summedUpItemCount += response.Releases.Count;
         }
 
@@ -227,11 +225,6 @@ public sealed class ArtistsTestFixture : ApiBaseTestFixture
         var responseAscending = await ApiClient.GetArtistReleases(artistId, paginationParams, sortParametersAscending, default);
         var sortParametersDescending = new ArtistReleaseSortQueryParameters { SortProperty = SortableProperty.Title, SortOrder = SortOrder.Descending };
         var responseDescending = await ApiClient.GetArtistReleases(artistId, paginationParams, sortParametersDescending, default);
-
-        var titles = string.Join(Environment.NewLine, responseAscending
-            .Releases
-            .Select(r => r.Title));
-
 
         Assert.That(
             responseAscending.Releases.Select(r => r.Title),
