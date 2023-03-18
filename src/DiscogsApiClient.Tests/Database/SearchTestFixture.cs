@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using NUnit.Framework;
+﻿using DiscogsApiClient.Contract.Search;
 
 namespace DiscogsApiClient.Tests.Database;
 
@@ -43,9 +42,45 @@ public sealed class SearchTestFixture : ApiBaseTestFixture
         Assert.AreEqual(50, response.Results.Count);
     }
 
+    [Test]
+    public async Task Search_Type_Success()
+    {
+        // Artist
+        var searchParams = new SearchQueryParameters { Query = "hammerfall", Type = "artist" };
+        var response = await ApiClient.SearchDatabase(searchParams, default!, default);
+
+        Assert.IsNotNull(response);
+        Assert.Less(0, response.Results.Count);
+        Assert.IsTrue(response.Results.All(r => r.ResultType == SearchResultType.Artist));
+
+        // Master
+        searchParams = new SearchQueryParameters { Query = "hammerfall", Type = "master" };
+        response = await ApiClient.SearchDatabase(searchParams, default!, default);
+
+        Assert.IsNotNull(response);
+        Assert.Less(0, response.Results.Count);
+        Assert.IsTrue(response.Results.All(r => r.ResultType == SearchResultType.Master));
+
+        // Release
+        searchParams = new SearchQueryParameters { Query = "hammerfall", Type = "release" };
+        response = await ApiClient.SearchDatabase(searchParams, default!, default);
+
+        Assert.IsNotNull(response);
+        Assert.Less(0, response.Results.Count);
+        Assert.IsTrue(response.Results.All(r => r.ResultType == SearchResultType.Release));
+
+        // Label
+        searchParams = new SearchQueryParameters { Query = "hammerfall", Type = "label" };
+        response = await ApiClient.SearchDatabase(searchParams, default!, default);
+
+        Assert.IsNotNull(response);
+        Assert.Less(0, response.Results.Count);
+        Assert.IsTrue(response.Results.All(r => r.ResultType == SearchResultType.Label));
+    }
+
 
     [Test]
-    public async Task Search_Success_InvalidSmallPageNumber()
+    public async Task Search_InvalidSmallPageNumber()
     {
         var queryParams = new SearchQueryParameters { Query = "hammerfall" };
         var paginationParams = new PaginationQueryParameters { Page = -1, PageSize = 50 };
@@ -64,7 +99,17 @@ public sealed class SearchTestFixture : ApiBaseTestFixture
     }
 
     [Test]
-    public async Task Search_Success_InvalidSmallPageSize()
+    public void Search_InvalidBigPageNumber()
+    {
+        var queryParams = new SearchQueryParameters { Query = "hammerfall" };
+        var paginationParams = new PaginationQueryParameters { Page = int.MaxValue, PageSize = 50 };
+
+        // Should fail with 404 but Discord seems to enounter an internal error instead!
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.SearchDatabase(queryParams, paginationParams, default));
+    }
+
+    [Test]
+    public async Task Search_InvalidSmallPageSize()
     {
         var queryParams = new SearchQueryParameters { Query = "hammerfall" };
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = -1 };
@@ -83,7 +128,7 @@ public sealed class SearchTestFixture : ApiBaseTestFixture
     }
 
     [Test]
-    public async Task Search_Success_InvalidBigPageSize()
+    public async Task Search_InvalidBigPageSize()
     {
         var queryParams = new SearchQueryParameters { Query = "hammerfall" };
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = int.MaxValue };

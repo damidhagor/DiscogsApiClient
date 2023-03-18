@@ -5,18 +5,17 @@ namespace DiscogsApiClient.Contract.Search;
 /// <summary>
 /// The type a search result can be
 /// </summary>
-public enum SearchResultType : int
+public enum SearchResultType
 {
     [EnumMember(Value = "artist")]
-    Artist = 1,
+    Artist,
     [EnumMember(Value = "master")]
-    MasterRelease = 2,
+    Master,
     [EnumMember(Value = "release")]
-    Release = 3,
+    Release,
     [EnumMember(Value = "label")]
-    Label = 4
+    Label
 }
-
 
 /**
 RELEASE
