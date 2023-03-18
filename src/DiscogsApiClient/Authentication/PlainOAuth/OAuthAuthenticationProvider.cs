@@ -47,15 +47,15 @@ internal sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
             _accessToken = "";
             _accessTokenSecret = "";
 
-            var (requestToken, requestTokenSecret) = await GetRequestToken(_httpClient, verifierCallbackUrl, cancellationToken);
+            var (requestToken, requestTokenSecret) = await GetRequestToken(_httpClient, verifierCallbackUrl, cancellationToken).ConfigureAwait(false);
             if (string.IsNullOrWhiteSpace(requestToken) || string.IsNullOrWhiteSpace(requestTokenSecret))
                 throw new AuthenticationFailedDiscogsException("Getting request token failed.");
 
-            var verifier = await GetVerifier(requestToken, verifierCallbackUrl, getVerifierCallback, cancellationToken);
+            var verifier = await GetVerifier(requestToken, verifierCallbackUrl, getVerifierCallback, cancellationToken).ConfigureAwait(false);
             if (string.IsNullOrWhiteSpace(verifier))
                 throw new AuthenticationFailedDiscogsException("Failed getting verifier token.");
 
-            (accessToken, accessTokenSecret) = await GetAccessToken(_httpClient, requestToken, requestTokenSecret, verifier, cancellationToken);
+            (accessToken, accessTokenSecret) = await GetAccessToken(_httpClient, requestToken, requestTokenSecret, verifier, cancellationToken).ConfigureAwait(false);
             if (string.IsNullOrWhiteSpace(accessToken) || string.IsNullOrWhiteSpace(accessTokenSecret))
                 throw new AuthenticationFailedDiscogsException("Failed getting access token.");
 
@@ -112,9 +112,9 @@ internal sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
             request.Headers.Add("Authorization", authHeader);
 
-            using var response = await httpClient.SendAsync(request, cancellationToken);
+            using var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-            var content = await response.Content.ReadAsStringAsync(cancellationToken);
+            var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 
             var parameters = HttpUtility.ParseQueryString(content);
 
@@ -139,7 +139,7 @@ internal sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
         try
         {
             var url = $"https://discogs.com/oauth/authorize?oauth_token={requestToken}";
-            return await getVerifier(url, callback, cancellationToken);
+            return await getVerifier(url, callback, cancellationToken).ConfigureAwait(false);
         }
         catch (Exception)
         {
@@ -177,9 +177,9 @@ internal sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
             request.Headers.Add("Authorization", authHeader);
 
-            using var response = await httpClient.SendAsync(request, cancellationToken);
+            using var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-            var content = await response.Content.ReadAsStringAsync(cancellationToken);
+            var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 
             var parameters = HttpUtility.ParseQueryString(content);
 
