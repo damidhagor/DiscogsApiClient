@@ -1,4 +1,7 @@
-﻿namespace DiscogsApiClient.Tests.Database;
+﻿using System.Collections.Generic;
+using static DiscogsApiClient.QueryParameters.ArtistReleaseSortQueryParameters;
+
+namespace DiscogsApiClient.Tests.Database;
 
 public sealed class ArtistsTestFixture : ApiBaseTestFixture
 {
@@ -209,5 +212,45 @@ public sealed class ArtistsTestFixture : ApiBaseTestFixture
         }
 
         Assert.AreEqual(itemCount, summedUpItemCount);
+    }
+
+    [Test]
+    public async Task GetArtistReleases_Sorted()
+    {
+        var artistId = 253729;
+
+        var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
+        var sortParams = new ArtistReleaseSortQueryParameters();
+
+        // Title
+        var sortParametersAscending = new ArtistReleaseSortQueryParameters { SortProperty = SortableProperty.Title, SortOrder = SortOrder.Ascending };
+        var responseAscending = await ApiClient.GetArtistReleases(artistId, paginationParams, sortParametersAscending, default);
+        var sortParametersDescending = new ArtistReleaseSortQueryParameters { SortProperty = SortableProperty.Title, SortOrder = SortOrder.Descending };
+        var responseDescending = await ApiClient.GetArtistReleases(artistId, paginationParams, sortParametersDescending, default);
+
+        var titles = string.Join(Environment.NewLine, responseAscending
+            .Releases
+            .Select(r => r.Title));
+
+
+        Assert.That(
+            responseAscending.Releases.Select(r => r.Title),
+            Is.Ordered.Ascending);
+        Assert.That(
+            responseDescending.Releases.Select(r => r.Title),
+            Is.Ordered.Descending);
+
+        // Year
+        sortParametersAscending = new ArtistReleaseSortQueryParameters { SortProperty = SortableProperty.Year, SortOrder = SortOrder.Ascending };
+        responseAscending = await ApiClient.GetArtistReleases(artistId, paginationParams, sortParametersAscending, default);
+        sortParametersDescending = new ArtistReleaseSortQueryParameters { SortProperty = SortableProperty.Year, SortOrder = SortOrder.Descending };
+        responseDescending = await ApiClient.GetArtistReleases(artistId, paginationParams, sortParametersDescending, default);
+
+        Assert.That(
+            responseAscending.Releases.Select(r => r.Year),
+            Is.Ordered.Ascending);
+        Assert.That(
+            responseDescending.Releases.Select(r => r.Year),
+            Is.Ordered.Descending);
     }
 }
