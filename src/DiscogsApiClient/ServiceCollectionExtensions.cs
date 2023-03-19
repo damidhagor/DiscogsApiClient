@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Text.Json;
 using System.Threading.RateLimiting;
 using DiscogsApiClient.Authentication.OAuth;
@@ -18,25 +19,28 @@ public static partial class ServiceCollectionExtensions
     /// <param name="configure">Method with an options object to configure the Discogs Api client.</param>
     public static IServiceCollection AddDiscogsApiClient(this IServiceCollection services, Action<DiscogsApiClientOptions> configure)
     {
-        var options = new DiscogsApiClientOptions();
+        var discogsOptions = new DiscogsApiClientOptions();
 
-        configure(options);
+        configure(discogsOptions);
 
-        if (string.IsNullOrWhiteSpace(options.BaseUrl))
+        if (string.IsNullOrWhiteSpace(discogsOptions.BaseUrl))
         {
             throw new InvalidOperationException("The base url string must not be empty.");
         }
 
-        if (string.IsNullOrWhiteSpace(options.UserAgent))
+        if (string.IsNullOrWhiteSpace(discogsOptions.UserAgent))
         {
             throw new InvalidOperationException("The user agent string must not be empty.");
         }
 
+        services.AddSingleton(discogsOptions);
         services.AddTransient<AuthenticationDelegatingHandler>();
         services.AddSingleton<IDiscogsAuthenticationService, DiscogsAuthenticationService>();
         services.AddSingleton<IPersonalAccessTokenAuthenticationProvider, PersonalAccessTokenAuthenticationProvider>();
-        services.AddHttpClient<IOAuthAuthenticationProvider, OAuthAuthenticationProvider>(httpClient =>
+
+        services.AddHttpClient<IOAuthAuthenticationProvider, OAuthAuthenticationProvider>((serviceProvider, httpClient) =>
         {
+            var options = serviceProvider.GetRequiredService<DiscogsApiClientOptions>();
             httpClient.BaseAddress = new Uri(options.BaseUrl);
             httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent);
         });
@@ -44,50 +48,30 @@ public static partial class ServiceCollectionExtensions
         var httpClientBuilder = services.AddRefitClient<IDiscogsApiClient>(
             new RefitSettings
             {
-                ExceptionFactory = async (response) =>
-                {
-                    if (response.IsSuccessStatusCode)
-                        return null;
-
-                    string? message = null;
-                    try
-                    {
-                        var content = await response.Content.ReadAsStringAsync();
-                        message = JsonSerializer.Deserialize<ErrorMessage>(content)?.Message;
-                    }
-                    catch { }
-
-                    return response.StatusCode switch
-                    {
-                        HttpStatusCode.Unauthorized => new UnauthenticatedDiscogsException(message),
-                        HttpStatusCode.Forbidden => new UnauthenticatedDiscogsException(message),
-                        HttpStatusCode.NotFound => new ResourceNotFoundDiscogsException(message),
-                        HttpStatusCode.TooManyRequests => new RateLimitExceededDiscogsException(message),
-                        _ => new DiscogsException(message),
-                    };
-                }
+                ExceptionFactory = HandleDiscogsHttpResponseMessage
             })
-            .ConfigureHttpClient(httpClient =>
+            .ConfigureHttpClient((serviceProvider, httpClient) =>
             {
+                var options = serviceProvider.GetRequiredService<DiscogsApiClientOptions>();
                 httpClient.BaseAddress = new Uri(options.BaseUrl);
                 httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent);
             })
             .AddHttpMessageHandler<AuthenticationDelegatingHandler>();
 
-        if (options.UseRateLimiting)
+        if (discogsOptions.UseRateLimiting)
         {
             var rateLimitingOptions = new SlidingWindowRateLimiterOptions()
             {
-                Window = options.RateLimitingWindow,
-                SegmentsPerWindow = options.RateLimitingWindowSegments,
-                PermitLimit = options.RateLimitingPermits,
-                QueueLimit = options.RateLimitingQueueSize,
+                Window = discogsOptions.RateLimitingWindow,
+                SegmentsPerWindow = discogsOptions.RateLimitingWindowSegments,
+                PermitLimit = discogsOptions.RateLimitingPermits,
+                QueueLimit = discogsOptions.RateLimitingQueueSize,
                 AutoReplenishment = true,
                 QueueProcessingOrder = QueueProcessingOrder.OldestFirst
             };
 
             services.AddSingleton(rateLimitingOptions);
-            services.AddTransient<RateLimiter, SlidingWindowRateLimiter>();
+            services.AddSingleton<RateLimiter, SlidingWindowRateLimiter>();
             services.AddTransient<RateLimitedDelegatingHandler>();
 
             httpClientBuilder.AddHttpMessageHandler<RateLimitedDelegatingHandler>();
@@ -95,47 +79,27 @@ public static partial class ServiceCollectionExtensions
 
         return services;
     }
-}
 
-/// <summary>
-/// Options for initializing the library with Dependency Injection.
-/// </summary>
-public sealed class DiscogsApiClientOptions
-{
-    /// <summary>
-    /// Base url of the Discogs Api.
-    /// </summary>
-    public string BaseUrl { get; set; } = "https://api.discogs.com";
+    internal static async Task<Exception?> HandleDiscogsHttpResponseMessage(HttpResponseMessage response)
+    {
+        if (response.IsSuccessStatusCode)
+            return null;
 
-    /// <summary>
-    /// User-Agent header value to identify your app.
-    /// </summary>
-    public string UserAgent { get; set; } = "";
+        string? message = null;
+        try
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            message = JsonSerializer.Deserialize<ErrorMessage>(content)?.Message;
+        }
+        catch { }
 
-    /// <summary>
-    /// If the <see cref="IDiscogsApiClient"/> should be rate limited.
-    /// <para/>
-    /// The rate limiter uses the <see href="https://learn.microsoft.com/en-us/aspnet/core/performance/rate-limit?view=aspnetcore-8.0#slide"> sliding window algorithm</see>.
-    /// </summary>
-    public bool UseRateLimiting { get; set; } = false;
-
-    /// <summary>
-    /// The length of the sliding window.
-    /// </summary>
-    public TimeSpan RateLimitingWindow { get; set; } = TimeSpan.FromSeconds(60);
-
-    /// <summary>
-    /// In how many segments the window is split up.
-    /// </summary>
-    public int RateLimitingWindowSegments { get; set; } = 12;
-
-    /// <summary>
-    /// How many permits the window allows in total.
-    /// </summary>
-    public int RateLimitingPermits { get; set; } = 40;
-
-    /// <summary>
-    /// How many requests will be allowed to be waiting for leases.
-    /// </summary>
-    public int RateLimitingQueueSize { get; set; } = 100;
+        return response.StatusCode switch
+        {
+            HttpStatusCode.Unauthorized => new UnauthenticatedDiscogsException(message),
+            HttpStatusCode.Forbidden => new UnauthenticatedDiscogsException(message),
+            HttpStatusCode.NotFound => new ResourceNotFoundDiscogsException(message),
+            HttpStatusCode.TooManyRequests => new RateLimitExceededDiscogsException(message),
+            _ => new DiscogsException(message),
+        };
+    }
 }

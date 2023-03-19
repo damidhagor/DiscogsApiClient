@@ -1,7 +1,5 @@
 using System.Diagnostics;
-using System.Net;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.RateLimiting;
 using DiscogsApiClient.Authentication.OAuth;
 using DiscogsApiClient.Authentication.PersonalAccessToken;
@@ -98,33 +96,13 @@ public abstract class ApiBaseTestFixture
             {
                 ExceptionFactory = async (response) =>
                 {
-                    if (response.IsSuccessStatusCode)
-                    {
-                        if (Debugger.IsAttached)
-                        {
-                            var content = await response.Content.ReadAsStringAsync();
-                            ;
-                        }
-
-                        return null;
-                    }
-
-                    string? message = null;
-                    try
+                    if (Debugger.IsAttached && response.IsSuccessStatusCode)
                     {
                         var content = await response.Content.ReadAsStringAsync();
-                        message = JsonSerializer.Deserialize<ErrorMessage>(content)?.Message;
+                        Debugger.Break();
                     }
-                    catch { }
 
-                    return response.StatusCode switch
-                    {
-                        HttpStatusCode.Unauthorized => new UnauthenticatedDiscogsException(message),
-                        HttpStatusCode.Forbidden => new UnauthenticatedDiscogsException(message),
-                        HttpStatusCode.NotFound => new ResourceNotFoundDiscogsException(message),
-                        HttpStatusCode.TooManyRequests => new RateLimitExceededDiscogsException(message),
-                        _ => new DiscogsException(message),
-                    };
+                    return await ServiceCollectionExtensions.HandleDiscogsHttpResponseMessage(response);
                 }
             });
 
