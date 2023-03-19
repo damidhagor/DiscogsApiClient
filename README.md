@@ -141,7 +141,8 @@ public Task<string> GetVerifier(string authUrl, string callbackUrl, Cancellation
 
 - ### **3.0.0**
 
-  - The client is now implemented with the [Refit](https://github.com/reactiveui/refit) library:
+  - The client is now implemented with the [Refit](https://github.com/reactiveui/refit) library.
+  - The library now also targets .Net 7 and the .Net 8 preview.
   - The client now supports rate limiting which is handled with middleware in the HttpClient.
   - Dependency Injection registration is simplified to a single method call.
   - Refactored the authentication flow:

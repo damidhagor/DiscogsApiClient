@@ -5,19 +5,19 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<Title>DiscogsApiClient</Title>
-		<Authors>DamIDhagor</Authors>
+		<Authors>Alexander Jurk</Authors>
 		<Description>This is a library for authenticated access to the Discogs database.</Description>
 		<PackageProjectUrl>https://github.com/damidhagor/DiscogsApiClient</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/damidhagor/DiscogsApiClient</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>discogs</PackageTags>
-		<PackageLicenseExpression> MIT</PackageLicenseExpression>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<AssemblyVersion>2.1.1</AssemblyVersion>
-		<FileVersion>2.1.1</FileVersion>
+		<AssemblyVersion>3.0.0</AssemblyVersion>
+		<FileVersion>3.0.0</FileVersion>
 		<Version>$(AssemblyVersion)</Version>
-		<PackageReleaseNotes>Fixed URL not being formatted correctly</PackageReleaseNotes>
+		<PackageReleaseNotes>The client now uses Refit, overhauls authentication, adds rate limiting and has many more changes</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<ItemGroup>
