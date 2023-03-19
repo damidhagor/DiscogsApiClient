@@ -58,8 +58,7 @@ internal sealed class DiscogsAuthenticationService : IDiscogsAuthenticationServi
             accessTokenSecret,
             verifierCallbackUrl,
             getVerifierCallback,
-            cancellationToken)
-            .ConfigureAwait(false);
+            cancellationToken);
 
         _lastAuthenticatedWithOauth = true;
         _lastAuthenticatedWithPersonalAccessToken = false;
