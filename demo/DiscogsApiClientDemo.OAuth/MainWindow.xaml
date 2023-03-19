@@ -1,4 +1,4 @@
-﻿<Window x:Class="DiscogsApiClientDemo.PlainOAuth.MainWindow"
+﻿<Window x:Class="DiscogsApiClientDemo.OAuth.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"

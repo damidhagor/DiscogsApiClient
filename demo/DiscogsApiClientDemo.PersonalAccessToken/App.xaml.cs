@@ -3,7 +3,7 @@ using DiscogsApiClient;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace DiscogsApiClientDemo.PlainOAuth;
+namespace DiscogsApiClientDemo.PersonalAccessToken;
 
 public partial class App : Application
 {
@@ -14,7 +14,7 @@ public partial class App : Application
         _host = new HostBuilder()
             .ConfigureServices((context, services) =>
             {
-                // Add DiscogsApiClient with plain OAuth authentication to the services collection
+                // Add DiscogsApiClient to the services collection
                 services.AddDiscogsApiClient(options =>
                 {
                     options.UserAgent = "AwesomeAppDemo/1.0.0";
@@ -33,7 +33,5 @@ public partial class App : Application
     }
 
     private async void Application_Exit(object sender, ExitEventArgs e)
-    {
-        await _host.StopAsync();
-    }
+        => await _host.StopAsync();
 }

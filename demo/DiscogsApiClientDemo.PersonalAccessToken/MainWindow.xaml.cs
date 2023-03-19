@@ -7,7 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 using DiscogsApiClient;
 using DiscogsApiClient.Authentication;
 
-namespace DiscogsApiClientDemo.UserToken;
+namespace DiscogsApiClientDemo.PersonalAccessToken;
 
 [ObservableObject]
 public partial class MainWindow : Window

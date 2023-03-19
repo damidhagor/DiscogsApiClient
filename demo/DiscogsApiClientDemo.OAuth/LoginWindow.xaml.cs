@@ -2,7 +2,7 @@
 using System.Windows;
 using Microsoft.Web.WebView2.Core;
 
-namespace DiscogsApiClientDemo.PlainOAuth;
+namespace DiscogsApiClientDemo.OAuth;
 
 public partial class LoginWindow : Window
 {
@@ -30,7 +30,7 @@ public partial class LoginWindow : Window
     {
         if (e.Uri.StartsWith(_callbackUrl))
         {
-            int index = e.Uri.IndexOf("oauth_verifier");
+            var index = e.Uri.IndexOf("oauth_verifier");
 
             Result = index > -1 ? e.Uri[(index + 15)..] : "";
 
