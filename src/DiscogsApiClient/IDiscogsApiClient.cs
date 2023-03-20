@@ -1,41 +1,43 @@
-﻿using DiscogsApiClient.Authentication;
-using DiscogsApiClient.Contract;
-using DiscogsApiClient.QueryParameters;
-
-namespace DiscogsApiClient;
+﻿namespace DiscogsApiClient;
 
 public interface IDiscogsApiClient
 {
     /// <summary>
-    /// Indicates if the <see cref="DiscogsApiClient"/> has been authenticated and is ready to use.
-    /// </summary>
-    bool IsAuthenticated { get; }
-
-    /// <summary>
-    /// Authenticates the <see cref="DiscogsApiClient"/> against the Discogs api by using the chosen <see cref="IAuthenticationProvider"/>.
-    /// </summary>
-    /// <param name="authenticationRequest">The <see cref="IAuthenticationRequest"/> implementation corresponding to the chosen <see cref="IAuthenticationProvider"/>.</param>
-    /// <returns>The <see cref="IAuthenticationResponse"/> implementation corresponding to the chosen <see cref="IAuthenticationProvider"/>.</returns>
-    Task<IAuthenticationResponse> AuthenticateAsync(IAuthenticationRequest authenticationRequest, CancellationToken cancellationToken);
-
-
-    /// <summary>
     /// Queries the <see cref="Identity"/> of the currently authenticated user.
     /// </summary>
-    Task<Identity> GetIdentityAsync(CancellationToken cancellationToken);
+    [Get("/oauth/identity")]
+    Task<Identity> GetIdentity(CancellationToken cancellationToken);
+
+    [Get("/users/{username}")]
+    internal Task<User> GetUserInternal(string username, CancellationToken cancellationToken);
 
     /// <summary>
     /// Queries the <see cref="User"/> object of the currently authenticated user.
     /// </summary>
-    Task<User> GetUserAsync(string username, CancellationToken cancellationToken);
+    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    public async Task<User> GetUser(string username, CancellationToken cancellationToken)
+    {
+        Guard.IsNotNullOrWhiteSpace(username);
+        return await GetUserInternal(username, cancellationToken);
+    }
 
+
+    [Get("/users/{username}/collection/folders")]
+    internal Task<CollectionFoldersResponse> GetCollectionFoldersInternal(string username, CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets the collection folders of the user.
     /// </summary>
     /// <param name="username">The name of the user.</param>
     /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
-    Task<List<CollectionFolder>> GetCollectionFoldersAsync(string username, CancellationToken cancellationToken);
+    public async Task<CollectionFoldersResponse> GetCollectionFolders(string username, CancellationToken cancellationToken)
+    {
+        Guard.IsNotNullOrWhiteSpace(username);
+        return await GetCollectionFoldersInternal(username, cancellationToken);
+    }
+
+    [Get("/users/{username}/collection/folders/{folderId}")]
+    internal Task<CollectionFolder> GetCollectionFolderInternal(string username, int folderId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets a specific collection folder of the user.
@@ -43,7 +45,16 @@ public interface IDiscogsApiClient
     /// <param name="username">The name of the user.</param>
     /// <param name="folderId">The id of the folder.</param>
     /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
-    Task<CollectionFolder> GetCollectionFolderAsync(string username, int folderId, CancellationToken cancellationToken);
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the folder id is invalid.</exception>
+    public async Task<CollectionFolder> GetCollectionFolder(string username, int folderId, CancellationToken cancellationToken)
+    {
+        Guard.IsNotNullOrWhiteSpace(username);
+        Guard.IsGreaterThanOrEqualTo(folderId, 0);
+        return await GetCollectionFolderInternal(username, folderId, cancellationToken);
+    }
+
+    [Post("/users/{username}/collection/folders")]
+    internal Task<CollectionFolder> CreateCollectionFolderInternal(string username, [Body] object folderNameObject, CancellationToken cancellationToken);
 
     /// <summary>
     /// Creates a new collection folder for the user.
@@ -51,7 +62,15 @@ public interface IDiscogsApiClient
     /// <param name="username">The name of the user.</param>
     /// <param name="folderName">The new folder's name.</param>
     /// <exception cref="ArgumentException">Fires this exception if no username or folder name is provided.</exception>
-    Task<CollectionFolder> CreateCollectionFolderAsync(string username, string folderName, CancellationToken cancellationToken);
+    public async Task<CollectionFolder> CreateCollectionFolder(string username, string folderName, CancellationToken cancellationToken)
+    {
+        Guard.IsNotNullOrWhiteSpace(username);
+        Guard.IsNotNullOrWhiteSpace(folderName);
+        return await CreateCollectionFolderInternal(username, new { Name = folderName }, cancellationToken);
+    }
+
+    [Post("/users/{username}/collection/folders/{folderId}")]
+    internal Task<CollectionFolder> UpdateCollectionFolderInternal(string username, int folderId, [Body] object folderNameObject, CancellationToken cancellationToken);
 
     /// <summary>
     /// Changes a collection folder's name for the user.
@@ -60,7 +79,17 @@ public interface IDiscogsApiClient
     /// <param name="folderId">The folder's id.</param>
     /// <param name="folderName">The new folder name.</param>
     /// <exception cref="ArgumentException">Fires this exception if no username or folder name is provided.</exception>
-    Task<CollectionFolder> UpdateCollectionFolderAsync(string username, int folderId, string folderName, CancellationToken cancellationToken);
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the folder id is invalid.</exception>
+    public async Task<CollectionFolder> UpdateCollectionFolder(string username, int folderId, string folderName, CancellationToken cancellationToken)
+    {
+        Guard.IsNotNullOrWhiteSpace(username);
+        Guard.IsNotNullOrWhiteSpace(folderName);
+        Guard.IsGreaterThan(folderId, 1);
+        return await UpdateCollectionFolderInternal(username, folderId, new { Name = folderName }, cancellationToken);
+    }
+
+    [Delete("/users/{username}/collection/folders/{folderId}")]
+    internal Task DeleteCollectionFolderInternal(string username, int folderId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Deletes a collection folder for the user.
@@ -68,7 +97,16 @@ public interface IDiscogsApiClient
     /// <param name="username">The name of the user.</param>
     /// <param name="folderId">The folder's id.</param>
     /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
-    Task<bool> DeleteCollectionFolderAsync(string username, int folderId, CancellationToken cancellationToken);
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the folder id is invalid.</exception>
+    public async Task DeleteCollectionFolder(string username, int folderId, CancellationToken cancellationToken)
+    {
+        Guard.IsNotNullOrWhiteSpace(username);
+        Guard.IsGreaterThan(folderId, 1);
+        await DeleteCollectionFolderInternal(username, folderId, cancellationToken);
+    }
+
+    [Get("/users/{username}/collection/folders/{folderId}/releases")]
+    internal Task<CollectionFolderReleasesResponse> GetCollectionFolderReleasesInternal(string username, int folderId, PaginationQueryParameters paginationQueryParameters, CollectionFolderReleaseSortQueryParameters collectionFolderReleaseSortQueryParameters, CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets the releases in a collection folder of the user.
@@ -77,7 +115,16 @@ public interface IDiscogsApiClient
     /// <param name="folderId">The folder's id.</param>
     /// <param name="paginationQueryParameters">Pagination parameters.</param>
     /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
-    Task<CollectionFolderReleasesResponse> GetCollectionFolderReleasesByFolderIdAsync(string username, int folderId, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken);
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the folder id is invalid.</exception>
+    public async Task<CollectionFolderReleasesResponse> GetCollectionFolderReleases(string username, int folderId, PaginationQueryParameters paginationQueryParameters, CollectionFolderReleaseSortQueryParameters collectionFolderReleaseSortQueryParameters, CancellationToken cancellationToken)
+    {
+        Guard.IsNotNullOrWhiteSpace(username);
+        Guard.IsGreaterThanOrEqualTo(folderId, 0);
+        return await GetCollectionFolderReleasesInternal(username, folderId, paginationQueryParameters, collectionFolderReleaseSortQueryParameters, cancellationToken);
+    }
+
+    [Post("/users/{username}/collection/folders/{folderId}/releases/{releaseId}")]
+    internal Task<CollectionFolderRelease> AddReleaseToCollectionFolderInternal(string username, int folderId, int releaseId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Adds a release to the collection folder of the user.
@@ -86,7 +133,17 @@ public interface IDiscogsApiClient
     /// <param name="folderId">The folder's id.</param>
     /// <param name="releaseId">The release's id.</param>
     /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
-    Task<CollectionFolderRelease> AddReleaseToCollectionFolderAsync(string username, int folderId, int releaseId, CancellationToken cancellationToken);
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the folder or release id is invalid.</exception>
+    public async Task<CollectionFolderRelease> AddReleaseToCollectionFolder(string username, int folderId, int releaseId, CancellationToken cancellationToken)
+    {
+        Guard.IsNotNullOrWhiteSpace(username);
+        Guard.IsGreaterThanOrEqualTo(folderId, 1);
+        Guard.IsGreaterThanOrEqualTo(releaseId, 1);
+        return await AddReleaseToCollectionFolderInternal(username, folderId, releaseId, cancellationToken);
+    }
+
+    [Delete("/users/{username}/collection/folders/{folderId}/releases/{releaseId}/instances/{instanceId}")]
+    internal Task DeleteReleaseFromCollectionFolderInternal(string username, int folderId, int releaseId, int instanceId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Removes a release from a collection folder of the user.
@@ -96,8 +153,33 @@ public interface IDiscogsApiClient
     /// <param name="releaseId">The release's id.</param>
     /// <param name="instanceId">The release's instance id in the folder.</param>
     /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
-    Task<bool> DeleteReleaseFromCollectionFolderAsync(string username, int folderId, int releaseId, int instanceId, CancellationToken cancellationToken);
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the folder, release or instance id is invalid.</exception>
+    public async Task DeleteReleaseFromCollectionFolder(string username, int folderId, int releaseId, int instanceId, CancellationToken cancellationToken)
+    {
+        Guard.IsNotNullOrWhiteSpace(username);
+        Guard.IsGreaterThanOrEqualTo(folderId, 1);
+        Guard.IsGreaterThanOrEqualTo(releaseId, 1);
+        Guard.IsGreaterThanOrEqualTo(instanceId, 1);
+        await DeleteReleaseFromCollectionFolderInternal(username, folderId, releaseId, instanceId, cancellationToken);
+    }
 
+    [Get("/users/{username}/collection/value")]
+    internal Task<CollectionValue> GetCollectionValueInternal(string username, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets the estimated value of the user's collection.
+    /// </summary>
+    /// <param name="username">The name of the user.</param>
+    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    public async Task<CollectionValue> GetCollectionValue(string username, CancellationToken cancellationToken)
+    {
+        Guard.IsNotNullOrWhiteSpace(username);
+        return await GetCollectionValueInternal(username, cancellationToken);
+    }
+
+
+    [Get("/users/{username}/wants")]
+    internal Task<WantlistReleasesResponse> GetWantlistReleasesInternal(string username, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets the releases on the wantlist of the user.
@@ -105,7 +187,14 @@ public interface IDiscogsApiClient
     /// <param name="username">The name of the user.</param>
     /// <param name="paginationQueryParameters">Pagination parameters for the results.</param>
     /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
-    Task<WantlistReleasesResponse> GetWantlistReleasesAsync(string username, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken);
+    public async Task<WantlistReleasesResponse> GetWantlistReleases(string username, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken)
+    {
+        Guard.IsNotNullOrWhiteSpace(username);
+        return await GetWantlistReleasesInternal(username, paginationQueryParameters, cancellationToken);
+    }
+
+    [Put("/users/{username}/wants/{releaseId}")]
+    internal Task<WantlistRelease> AddReleaseToWantlistInternal(string username, int releaseId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Adds a release to the wantlist of the user.
@@ -113,7 +202,16 @@ public interface IDiscogsApiClient
     /// <param name="username">The name of the user.</param>
     /// <param name="releaseId">The release's id.</param>
     /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
-    Task<WantlistRelease> AddWantlistReleaseAsync(string username, int releaseId, CancellationToken cancellationToken);
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the release id is invalid.</exception>
+    public async Task<WantlistRelease> AddReleaseToWantlist(string username, int releaseId, CancellationToken cancellationToken)
+    {
+        Guard.IsNotNullOrWhiteSpace(username);
+        Guard.IsGreaterThan(releaseId, 0);
+        return await AddReleaseToWantlistInternal(username, releaseId, cancellationToken);
+    }
+
+    [Delete("/users/{username}/wants/{releaseId}")]
+    internal Task DeleteReleaseFromWantlistInternal(string username, int releaseId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Removes a release from the wantlist of the user.
@@ -121,52 +219,146 @@ public interface IDiscogsApiClient
     /// <param name="username">The name of the user.</param>
     /// <param name="releaseId">The release's id.</param>
     /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
-    Task<bool> DeleteWantlistReleaseAsync(string username, int releaseId, CancellationToken cancellationToken);
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the release id is invalid.</exception>
+    public async Task DeleteReleaseFromWantlist(string username, int releaseId, CancellationToken cancellationToken)
+    {
+        Guard.IsNotNullOrWhiteSpace(username);
+        Guard.IsGreaterThan(releaseId, 0);
+        await DeleteReleaseFromWantlistInternal(username, releaseId, cancellationToken);
+    }
 
+
+    [Get("/artists/{artistId}")]
+    internal Task<Artist> GetArtistInternal(int artistId, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Gets an artist from the Discog database.
+    /// Gets an artist from the Discogs database.
     /// </summary>
     /// <param name="artistId">The artist's id.</param>
-    Task<Artist> GetArtistAsync(int artistId, CancellationToken cancellationToken);
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the artist id is invalid.</exception>
+    public async Task<Artist> GetArtist(int artistId, CancellationToken cancellationToken)
+    {
+        Guard.IsGreaterThan(artistId, 0);
+        return await GetArtistInternal(artistId, cancellationToken);
+    }
+
+    [Get("/artists/{artistId}/releases")]
+    internal Task<ArtistReleasesResponse> GetArtistReleasesInternal(int artistId, PaginationQueryParameters paginationQueryParameters, ArtistReleaseSortQueryParameters artistReleaseSortQueryParameters, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Gets the releases of an artist from the Discog database.
+    /// Gets the releases of an artist from the Discogs database.
     /// </summary>
     /// <param name="artistId">The artist's id.</param>
     /// <param name="paginationQueryParameters">Pagination parameters.</param>
-    Task<ArtistReleasesResponse> GetArtistReleasesAsync(int artistId, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken);
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the artist id is invalid.</exception>
+    public async Task<ArtistReleasesResponse> GetArtistReleases(int artistId, PaginationQueryParameters paginationQueryParameters, ArtistReleaseSortQueryParameters artistReleaseSortQueryParameters, CancellationToken cancellationToken)
+    {
+        Guard.IsGreaterThan(artistId, 0);
+        return await GetArtistReleasesInternal(artistId, paginationQueryParameters, artistReleaseSortQueryParameters, cancellationToken);
+    }
+
+
+    [Get("/labels/{labelId}")]
+    internal Task<Label> GetLabelInternal(int labelId, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Gets a label from the Discog database.
+    /// Gets a label from the Discogs database.
     /// </summary>
     /// <param name="labelId">The label's id.</param>
-    Task<Label> GetLabelAsync(int labelId, CancellationToken cancellationToken);
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the label id is invalid.</exception>
+    public async Task<Label> GetLabel(int labelId, CancellationToken cancellationToken)
+    {
+        Guard.IsGreaterThan(labelId, 0);
+        return await GetLabelInternal(labelId, cancellationToken);
+    }
+
+    [Get("/labels/{labelId}/releases")]
+    internal Task<LabelReleasesResponse> GetLabelReleasesInternal(int labelId, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Gets the releases of a label from the Discog database.
+    /// Gets the releases of a label from the Discogs database.
     /// </summary>
     /// <param name="labelId">The label's id.</param>
     /// <param name="paginationQueryParameters">Pagination parameters.</param>
-    Task<LabelReleasesResponse> GetLabelReleasesAsync(int labelId, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken);
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the label id is invalid.</exception>
+    public async Task<LabelReleasesResponse> GetLabelReleases(int labelId, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken)
+    {
+        Guard.IsGreaterThan(labelId, 0);
+        return await GetLabelReleasesInternal(labelId, paginationQueryParameters, cancellationToken);
+    }
+
+
+    [Get("/masters/{masterReleaseId}")]
+    internal Task<MasterRelease> GetMasterReleaseInternal(int masterReleaseId, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Gets a master release from the Discog database.
+    /// Gets a master release from the Discogs database.
     /// </summary>
     /// <param name="masterReleaseId">The master release's id.</param>
-    Task<MasterRelease> GetMasterReleaseAsync(int masterReleaseId, CancellationToken cancellationToken);
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the release id is invalid.</exception>
+    public async Task<MasterRelease> GetMasterRelease(int masterReleaseId, CancellationToken cancellationToken)
+    {
+        Guard.IsGreaterThan(masterReleaseId, 0);
+        return await GetMasterReleaseInternal(masterReleaseId, cancellationToken);
+    }
+
+    [Get("/masters/{masterReleaseId}/versions")]
+    internal Task<MasterReleaseVersionsResponse> GetMasterReleaseVersionsInternal(int masterReleaseId, PaginationQueryParameters paginationQueryParameters, MasterReleaseVersionFilterQueryParameters masterReleaseVersionQueryParameters, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Gets a release from the Discog database.
+    /// Gets the release versions of a master release from the Discogs database.
     /// </summary>
-    /// <param name="releaseId">The release's id.</param>
-    Task<Release> GetReleaseAsync(int releaseId, CancellationToken cancellationToken);
+    /// <param name="masterReleaseId">The master release's id.</param>
+    /// <param name="paginationQueryParameters">Pagination parameters.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the release id is invalid.</exception>
+    public async Task<MasterReleaseVersionsResponse> GetMasterReleaseVersions(int masterReleaseId, PaginationQueryParameters paginationQueryParameters, MasterReleaseVersionFilterQueryParameters masterReleaseVersionQueryParameters, CancellationToken cancellationToken)
+    {
+        Guard.IsGreaterThan(masterReleaseId, 0);
+        return await GetMasterReleaseVersionsInternal(masterReleaseId, paginationQueryParameters, masterReleaseVersionQueryParameters, cancellationToken);
+    }
+
+
+    [Get("/releases/{releaseId}")]
+    internal Task<Release> GetReleaseInternal(int releaseId, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Gets the community rating of a release from the Discog database.
+    /// Gets a release from the Discogs database.
     /// </summary>
     /// <param name="releaseId">The release's id.</param>
-    Task<ReleaseCommunityRatingResponse> GetReleaseCommunityRatingAsync(int releaseId, CancellationToken cancellationToken);
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the release id is invalid.</exception>
+    public async Task<Release> GetRelease(int releaseId, CancellationToken cancellationToken)
+    {
+        Guard.IsGreaterThan(releaseId, 0);
+        return await GetReleaseInternal(releaseId, cancellationToken);
+    }
+
+    [Get("/releases/{releaseId}/rating")]
+    internal Task<ReleaseCommunityRatingResponse> GetReleaseCommunityRatingInternal(int releaseId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets the community rating of a release from the Discogs database.
+    /// </summary>
+    /// <param name="releaseId">The release's id.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the release id is invalid.</exception>
+    public async Task<ReleaseCommunityRatingResponse> GetReleaseCommunityRating(int releaseId, CancellationToken cancellationToken)
+    {
+        Guard.IsGreaterThan(releaseId, 0);
+        return await GetReleaseCommunityRatingInternal(releaseId, cancellationToken);
+    }
+
+    [Get("/releases/{releaseId}/stats")]
+    internal Task<ReleaseStatsResponse> GetReleaseStatsInternal(int releaseId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets statistics of a release from the Discogs database.
+    /// </summary>
+    /// <param name="releaseId">The release's id.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the release id is invalid.</exception>
+    public async Task<ReleaseStatsResponse> GetReleaseStats(int releaseId, CancellationToken cancellationToken)
+    {
+        Guard.IsGreaterThan(releaseId, 0);
+        return await GetReleaseStatsInternal(releaseId, cancellationToken);
+    }
 
 
     /// <summary>
@@ -174,5 +366,6 @@ public interface IDiscogsApiClient
     /// </summary>
     /// <param name="searchQueryParameters">The search parameters to query for.</param>
     /// <param name="paginationQueryParameters">Pagination parameters.</param>
-    Task<SearchResultsResponse> SearchDatabaseAsync(SearchQueryParameters searchQueryParameters, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken);
+    [Get("/database/search")]
+    Task<SearchResultsResponse> SearchDatabase(SearchQueryParameters searchQueryParameters, PaginationQueryParameters paginationQueryParameters, CancellationToken cancellationToken);
 }

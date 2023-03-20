@@ -1,0 +1,26 @@
+﻿<Window x:Class="DiscogsApiClientDemo.PersonalAccessToken.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        Title="DiscogsApiClient Demo"
+        FontSize="16"
+        Height="150" Width="650">
+
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        <StackPanel Orientation="Horizontal">
+            <Label Content="User Token:"/>
+            <TextBox Text="{Binding UserToken, Mode=TwoWay}"
+                     Width="400"
+                     Margin="0,0,10,0"
+                     VerticalContentAlignment="Center"/>
+            <Button Content="Login"
+                    Command="{Binding LoginCommand}"
+                    Padding="5,0,5,0" />
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal">
+            <Label Content="Logged in user:"/>
+            <Label Content="{Binding UserName, Mode=OneWay}"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

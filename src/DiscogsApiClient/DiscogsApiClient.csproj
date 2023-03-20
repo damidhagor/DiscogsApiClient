@@ -1,34 +1,41 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <Title>DiscogsApiClient</Title>
-    <Authors>DamIDhagor</Authors>
-    <Description>This is a library for authenticated access to the Discogs database.</Description>
-    <PackageProjectUrl>https://github.com/damidhagor/DiscogsApiClient</PackageProjectUrl>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/damidhagor/DiscogsApiClient</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageTags>discogs</PackageTags>
-    <PackageLicenseExpression> MIT</PackageLicenseExpression>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <AssemblyVersion>2.1.1</AssemblyVersion>
-    <FileVersion>2.1.1</FileVersion>
-    <Version>$(AssemblyVersion)</Version>
-    <PackageReleaseNotes>Fixed URL not being formatted correctly</PackageReleaseNotes>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Title>DiscogsApiClient</Title>
+		<Authors>Alexander Jurk</Authors>
+		<Description>This is a library for authenticated access to the Discogs database.</Description>
+		<PackageProjectUrl>https://github.com/damidhagor/DiscogsApiClient</PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/damidhagor/DiscogsApiClient</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>discogs</PackageTags>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<AssemblyVersion>3.0.0</AssemblyVersion>
+		<FileVersion>3.0.0</FileVersion>
+		<Version>$(AssemblyVersion)</Version>
+		<PackageReleaseNotes>The client now uses Refit, overhauls authentication, adds rate limiting and has many more changes</PackageReleaseNotes>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Diagnostics" Version="8.1.0" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
+		<PackageReference Include="Refit" Version="6.3.2" />
+		<PackageReference Include="Refit.HttpClientFactory" Version="6.3.2" />
+		<PackageReference Include="System.Threading.RateLimiting" Version="7.0.0" />
+	</ItemGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="DiscogsApiClient.Tests" />
+	</ItemGroup>
 </Project>
