@@ -154,6 +154,10 @@ public Task<string> GetVerifier(string authUrl, string callbackUrl, Cancellation
   - The contract classes are restructured into sub-namespaces and a few properties are renamed for clarity.
   - The parameters for Api calls are now validated.
   - New Discogs Api methods query parameters are supported now.
+- ### **3.0.1**
+  - Fixed ```Release.LowestPrice``` & ```MasterRelease.LowestPrice``` deserialization failing due tu ```null``` value being sent by Discogs.
+  - Fixed a typo in the ```ReleaseIdentifier``` class name.
+  - Added better exception handling to the OAuth flow. ```AuthenticationFailedDiscogsException``` now contains the underlying exception which caused the authentication to fail if one was thrown.
 
 ## **Breaking changes in 3.0.0**
 

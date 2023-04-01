@@ -17,7 +17,7 @@
 		<AssemblyVersion>3.0.0</AssemblyVersion>
 		<FileVersion>3.0.0</FileVersion>
 		<Version>$(AssemblyVersion)</Version>
-		<PackageReleaseNotes>The client now uses Refit, overhauls authentication, adds rate limiting and has many more changes</PackageReleaseNotes>
+		<PackageReleaseNotes>The client now uses Refit, overhauls authentication, adds rate limiting and has many more changes.</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<ItemGroup>
