@@ -76,7 +76,7 @@ public sealed record Release(
     [property:JsonPropertyName("released_formatted")]
     string YearFormatted,
     [property:JsonPropertyName("identifiers")]
-    List<ReleaseIdentifiers> Identifiers,
+    List<ReleaseIdentifier> Identifiers,
     [property:JsonPropertyName("videos")]
     List<Video> Videos,
     [property:JsonPropertyName("genres")]

@@ -5,7 +5,7 @@
 /// </summary>
 /// <param name="Type">Identifier type</param>
 /// <param name="Value">Identifier value</param>
-public sealed record ReleaseIdentifiers(
+public sealed record ReleaseIdentifier(
 
     [property:JsonPropertyName("type")]
     string Type,
