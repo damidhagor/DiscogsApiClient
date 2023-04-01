@@ -60,7 +60,7 @@ public sealed record Release(
     [property:JsonPropertyName("num_for_sale")]
     int NumForSale,
     [property:JsonPropertyName("lowest_price")]
-    float LowestPrice,
+    float? LowestPrice,
     [property:JsonPropertyName("master_id")]
     int MasterId,
     [property:JsonPropertyName("master_url")]
