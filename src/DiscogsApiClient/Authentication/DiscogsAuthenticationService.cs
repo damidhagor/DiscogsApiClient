@@ -16,7 +16,7 @@ internal sealed class DiscogsAuthenticationService : IDiscogsAuthenticationServi
     private readonly IPersonalAccessTokenAuthenticationProvider _personalAccessTokenAuthenticationProvider;
     private readonly IOAuthAuthenticationProvider _oAuthAuthenticationProvider;
     private bool _lastAuthenticatedWithPersonalAccessToken = false;
-    private bool _lastAuthenticatedWithOauth = false;
+    private bool _lastAuthenticatedWithOAuth = false;
 
     public bool IsAuthenticated => _personalAccessTokenAuthenticationProvider.IsAuthenticated || _oAuthAuthenticationProvider.IsAuthenticated;
 
@@ -35,7 +35,7 @@ internal sealed class DiscogsAuthenticationService : IDiscogsAuthenticationServi
         _personalAccessTokenAuthenticationProvider.Authenticate(token);
 
         _lastAuthenticatedWithPersonalAccessToken = true;
-        _lastAuthenticatedWithOauth = false;
+        _lastAuthenticatedWithOAuth = false;
     }
 
     /// <inheritdoc />
@@ -49,7 +49,7 @@ internal sealed class DiscogsAuthenticationService : IDiscogsAuthenticationServi
         GetVerifierCallback getVerifierCallback,
         CancellationToken cancellationToken)
     {
-        _lastAuthenticatedWithOauth = false;
+        _lastAuthenticatedWithOAuth = false;
 
         var tokens = await _oAuthAuthenticationProvider.Authenticate(
             consumerKey,
@@ -60,7 +60,7 @@ internal sealed class DiscogsAuthenticationService : IDiscogsAuthenticationServi
             getVerifierCallback,
             cancellationToken);
 
-        _lastAuthenticatedWithOauth = true;
+        _lastAuthenticatedWithOAuth = true;
         _lastAuthenticatedWithPersonalAccessToken = false;
 
         return tokens;
@@ -74,7 +74,7 @@ internal sealed class DiscogsAuthenticationService : IDiscogsAuthenticationServi
             && _personalAccessTokenAuthenticationProvider.IsAuthenticated)
             return _personalAccessTokenAuthenticationProvider.CreateAuthenticationHeader();
 
-        if (_lastAuthenticatedWithOauth
+        if (_lastAuthenticatedWithOAuth
             && _oAuthAuthenticationProvider.IsAuthenticated)
             return _oAuthAuthenticationProvider.CreateAuthenticationHeader();
 

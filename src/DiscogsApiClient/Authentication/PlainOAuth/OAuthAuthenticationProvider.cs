@@ -121,7 +121,10 @@ internal sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
             requestToken = parameters.Get("oauth_token") ?? "";
             requestTokenSecret = parameters.Get("oauth_token_secret") ?? "";
         }
-        catch (Exception) { }
+        catch (Exception e)
+        {
+            throw new AuthenticationFailedDiscogsException("OAuth authentication failed while getting a request token. See the inner exception for details.", e);
+        }
 
         return (requestToken, requestTokenSecret);
     }
@@ -141,9 +144,9 @@ internal sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
             var url = $"https://discogs.com/oauth/authorize?oauth_token={requestToken}";
             return await getVerifier(url, callback, cancellationToken);
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            return null;
+            throw new AuthenticationFailedDiscogsException("OAuth authentication failed while getting the verifier token. See the inner exception for details.", e);
         }
     }
 
@@ -186,7 +189,10 @@ internal sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
             accessToken = parameters.Get("oauth_token") ?? "";
             accessTokenSecret = parameters.Get("oauth_token_secret") ?? "";
         }
-        catch (Exception) { }
+        catch (Exception e)
+        {
+            throw new AuthenticationFailedDiscogsException("OAuth authentication failed while getting the access tokens. See the inner exception for details.", e);
+        }
 
         return (accessToken, accessTokenSecret);
     }

@@ -60,7 +60,7 @@ public sealed record Release(
     [property:JsonPropertyName("num_for_sale")]
     int NumForSale,
     [property:JsonPropertyName("lowest_price")]
-    float LowestPrice,
+    float? LowestPrice,
     [property:JsonPropertyName("master_id")]
     int MasterId,
     [property:JsonPropertyName("master_url")]
@@ -76,7 +76,7 @@ public sealed record Release(
     [property:JsonPropertyName("released_formatted")]
     string YearFormatted,
     [property:JsonPropertyName("identifiers")]
-    List<ReleaseIdentifiers> Identifiers,
+    List<ReleaseIdentifier> Identifiers,
     [property:JsonPropertyName("videos")]
     List<Video> Videos,
     [property:JsonPropertyName("genres")]

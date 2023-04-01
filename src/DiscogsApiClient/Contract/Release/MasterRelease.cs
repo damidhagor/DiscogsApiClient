@@ -42,7 +42,7 @@ public sealed record MasterRelease(
     [property:JsonPropertyName("num_for_sale")]
     int NumForSale,
     [property:JsonPropertyName("lowest_price")]
-    float LowestPrice,
+    float? LowestPrice,
     [property:JsonPropertyName("images")]
     List<Image> Images,
     [property:JsonPropertyName("genres")]
