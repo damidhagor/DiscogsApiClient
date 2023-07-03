@@ -11,7 +11,7 @@ namespace DiscogsApiClient.Authentication;
 /// and
 /// <see href="https://www.discogs.com/developers#page:authentication,header:authentication-oauth-flow">OAuth 1.0a</see>.
 /// </summary>
-internal sealed class DiscogsAuthenticationService : IDiscogsAuthenticationService
+public sealed class DiscogsAuthenticationService : IDiscogsAuthenticationService
 {
     private readonly IPersonalAccessTokenAuthenticationProvider _personalAccessTokenAuthenticationProvider;
     private readonly IOAuthAuthenticationProvider _oAuthAuthenticationProvider;

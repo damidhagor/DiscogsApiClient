@@ -5,7 +5,7 @@
 /// <para />
 /// See <see href="https://www.discogs.com/developers#page:authentication,header:authentication-discogs-auth-flow">Discogs auth flow</see>
 /// </summary>
-internal interface IPersonalAccessTokenAuthenticationProvider
+public interface IPersonalAccessTokenAuthenticationProvider
 {
     /// <summary>
     /// Indicates if the user is authenticated with a personal access token.

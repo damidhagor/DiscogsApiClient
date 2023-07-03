@@ -5,7 +5,7 @@
 /// <para />
 /// See <see href="https://www.discogs.com/developers#page:authentication,header:authentication-discogs-auth-flow">Discogs auth flow</see>
 /// </summary>
-internal sealed class PersonalAccessTokenAuthenticationProvider : IPersonalAccessTokenAuthenticationProvider
+public sealed class PersonalAccessTokenAuthenticationProvider : IPersonalAccessTokenAuthenticationProvider
 {
     private string _userToken = "";
 

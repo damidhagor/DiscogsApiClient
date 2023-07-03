@@ -3,7 +3,7 @@
 /// <summary>
 /// Defines an authentication provider which uses Discogs' OAuth 1.0a authentication flow to authenticate a user against the Discogs Api.
 /// </summary>
-internal interface IOAuthAuthenticationProvider
+public interface IOAuthAuthenticationProvider
 {
     /// <summary>
     /// Indicates if the user is authenticated with the OAuth 1.0a flow.
