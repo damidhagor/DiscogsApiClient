@@ -8,9 +8,8 @@ public sealed class SearchTestFixture : ApiBaseTestFixture
     public async Task Search_Success()
     {
         var queryParams = new SearchQueryParameters { Query = "hammerfall" };
-        var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
 
-        var response = await ApiClient.SearchDatabase(queryParams, paginationParams, default);
+        var response = await ApiClient.SearchDatabase(queryParams);
 
         Assert.IsNotNull(response);
         Assert.IsNotNull(response.Pagination);
@@ -27,9 +26,8 @@ public sealed class SearchTestFixture : ApiBaseTestFixture
     public async Task Search_NoQuery_Success()
     {
         var queryParams = new SearchQueryParameters();
-        var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
 
-        var response = await ApiClient.SearchDatabase(queryParams, paginationParams, default);
+        var response = await ApiClient.SearchDatabase(queryParams);
 
         Assert.IsNotNull(response);
         Assert.IsNotNull(response.Pagination);
@@ -47,7 +45,7 @@ public sealed class SearchTestFixture : ApiBaseTestFixture
     {
         // Artist
         var searchParams = new SearchQueryParameters { Query = "hammerfall", Type = "artist" };
-        var response = await ApiClient.SearchDatabase(searchParams, default!, default);
+        var response = await ApiClient.SearchDatabase(searchParams);
 
         Assert.IsNotNull(response);
         Assert.Less(0, response.Results.Count);
@@ -55,7 +53,7 @@ public sealed class SearchTestFixture : ApiBaseTestFixture
 
         // Master
         searchParams = new SearchQueryParameters { Query = "hammerfall", Type = "master" };
-        response = await ApiClient.SearchDatabase(searchParams, default!, default);
+        response = await ApiClient.SearchDatabase(searchParams);
 
         Assert.IsNotNull(response);
         Assert.Less(0, response.Results.Count);
@@ -63,7 +61,7 @@ public sealed class SearchTestFixture : ApiBaseTestFixture
 
         // Release
         searchParams = new SearchQueryParameters { Query = "hammerfall", Type = "release" };
-        response = await ApiClient.SearchDatabase(searchParams, default!, default);
+        response = await ApiClient.SearchDatabase(searchParams);
 
         Assert.IsNotNull(response);
         Assert.Less(0, response.Results.Count);
@@ -71,7 +69,7 @@ public sealed class SearchTestFixture : ApiBaseTestFixture
 
         // Label
         searchParams = new SearchQueryParameters { Query = "hammerfall", Type = "label" };
-        response = await ApiClient.SearchDatabase(searchParams, default!, default);
+        response = await ApiClient.SearchDatabase(searchParams);
 
         Assert.IsNotNull(response);
         Assert.Less(0, response.Results.Count);
@@ -85,7 +83,7 @@ public sealed class SearchTestFixture : ApiBaseTestFixture
         var queryParams = new SearchQueryParameters { Query = "hammerfall" };
         var paginationParams = new PaginationQueryParameters { Page = -1, PageSize = 50 };
 
-        var response = await ApiClient.SearchDatabase(queryParams, paginationParams, default);
+        var response = await ApiClient.SearchDatabase(queryParams, paginationParams);
 
         Assert.IsNotNull(response.Pagination);
         Assert.AreEqual(1, response.Pagination.Page);
@@ -105,7 +103,7 @@ public sealed class SearchTestFixture : ApiBaseTestFixture
         var paginationParams = new PaginationQueryParameters { Page = int.MaxValue, PageSize = 50 };
 
         // Should fail with 404 but Discord seems to enounter an internal error instead!
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.SearchDatabase(queryParams, paginationParams, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.SearchDatabase(queryParams, paginationParams));
     }
 
     [Test]
@@ -114,7 +112,7 @@ public sealed class SearchTestFixture : ApiBaseTestFixture
         var queryParams = new SearchQueryParameters { Query = "hammerfall" };
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = -1 };
 
-        var response = await ApiClient.SearchDatabase(queryParams, paginationParams, default);
+        var response = await ApiClient.SearchDatabase(queryParams, paginationParams);
 
         Assert.IsNotNull(response.Pagination);
         Assert.AreEqual(1, response.Pagination.Page);
@@ -133,7 +131,7 @@ public sealed class SearchTestFixture : ApiBaseTestFixture
         var queryParams = new SearchQueryParameters { Query = "hammerfall" };
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = int.MaxValue };
 
-        var response = await ApiClient.SearchDatabase(queryParams, paginationParams, default);
+        var response = await ApiClient.SearchDatabase(queryParams, paginationParams);
 
         Assert.IsNotNull(response.Pagination);
         Assert.AreEqual(1, response.Pagination.Page);

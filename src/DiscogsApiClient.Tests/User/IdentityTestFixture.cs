@@ -6,7 +6,7 @@ public sealed class IdentityTestFixture : ApiBaseTestFixture
     [Test]
     public async Task GetIdentity_Success()
     {
-        var identity = await ApiClient.GetIdentity(default);
+        var identity = await ApiClient.GetIdentity();
 
         Assert.IsNotNull(identity);
         Assert.AreEqual("DamIDhagor", identity.Username);
@@ -20,7 +20,7 @@ public sealed class IdentityTestFixture : ApiBaseTestFixture
     {
         var unauthenticatedClients = CreateUnauthenticatedDiscogsApiClient();
 
-        Assert.ThrowsAsync<UnauthenticatedDiscogsException>(() => unauthenticatedClients.discogsApiClient.GetIdentity(default));
+        Assert.ThrowsAsync<UnauthenticatedDiscogsException>(() => unauthenticatedClients.discogsApiClient.GetIdentity());
 
         unauthenticatedClients.authHttpClient.Dispose();
         unauthenticatedClients.clientHttpClient.Dispose();

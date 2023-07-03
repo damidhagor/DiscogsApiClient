@@ -7,7 +7,7 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
     {
         var releaseId = 5134861;
 
-        var release = await ApiClient.GetRelease(releaseId, default);
+        var release = await ApiClient.GetRelease(releaseId);
 
         Assert.IsNotNull(release);
         Assert.AreEqual(releaseId, release.Id);
@@ -100,8 +100,8 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
     [Test]
     public void GetRelease_ReleaseId_Guard()
     {
-        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.GetRelease(-1, default));
-        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.GetRelease(0, default));
+        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.GetRelease(-1));
+        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.GetRelease(0));
     }
 
     [Test]
@@ -109,7 +109,7 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
     {
         var releaseId = int.MaxValue;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetRelease(releaseId, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetRelease(releaseId));
     }
 
 
@@ -118,7 +118,7 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
     {
         var releaseId = 5134861;
 
-        var ratingResponse = await ApiClient.GetReleaseCommunityRating(releaseId, default);
+        var ratingResponse = await ApiClient.GetReleaseCommunityRating(releaseId);
 
         Assert.IsNotNull(ratingResponse);
         Assert.AreEqual(ratingResponse.ReleaseId, releaseId);
@@ -130,8 +130,8 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
     [Test]
     public void GetReleaseCommunityRating_ReleaseId_Guard()
     {
-        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.GetReleaseCommunityRating(-1, default));
-        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.GetReleaseCommunityRating(0, default));
+        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.GetReleaseCommunityRating(-1));
+        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.GetReleaseCommunityRating(0));
     }
 
     [Test]
@@ -139,7 +139,7 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
     {
         var releaseId = int.MaxValue;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetReleaseCommunityRating(releaseId, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetReleaseCommunityRating(releaseId));
     }
 
 
@@ -148,7 +148,7 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
     {
         var releaseId = 5134861;
 
-        var stats = await ApiClient.GetReleaseStats(releaseId, default);
+        var stats = await ApiClient.GetReleaseStats(releaseId);
 
         Assert.IsNotNull(stats);
     }
@@ -156,8 +156,8 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
     [Test]
     public void GetReleaseStats_ReleaseId_Guard()
     {
-        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.GetReleaseStats(-1, default));
-        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.GetReleaseStats(0, default));
+        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.GetReleaseStats(-1));
+        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.GetReleaseStats(0));
     }
 
     [Test]
@@ -165,6 +165,6 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
     {
         var releaseId = int.MaxValue;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetReleaseStats(releaseId, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetReleaseStats(releaseId));
     }
 }

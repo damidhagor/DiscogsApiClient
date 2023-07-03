@@ -7,7 +7,7 @@ public sealed class CollectionValueTestFixture : ApiBaseTestFixture
     {
         var username = "damidhagor";
 
-        var collectionValue = await ApiClient.GetCollectionValue(username, default);
+        var collectionValue = await ApiClient.GetCollectionValue(username);
 
         Assert.IsNotNull(collectionValue);
         Assert.IsFalse(string.IsNullOrWhiteSpace(collectionValue.Minimum));
@@ -18,9 +18,9 @@ public sealed class CollectionValueTestFixture : ApiBaseTestFixture
     [Test]
     public void GetCollectionValue_Username_Guard()
     {
-        Assert.ThrowsAsync<ArgumentNullException>(() => ApiClient.GetCollectionValue(null!, default), "username");
-        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.GetCollectionValue("", default), "username");
-        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.GetCollectionValue("   ", default), "username");
+        Assert.ThrowsAsync<ArgumentNullException>(() => ApiClient.GetCollectionValue(null!), "username");
+        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.GetCollectionValue(""), "username");
+        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.GetCollectionValue("   "), "username");
     }
 
     [Test]
@@ -28,6 +28,6 @@ public sealed class CollectionValueTestFixture : ApiBaseTestFixture
     {
         var username = "awrbaerhnqw54";
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetCollectionValue(username, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetCollectionValue(username));
     }
 }

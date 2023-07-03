@@ -7,7 +7,7 @@ public sealed class UserTestFixture : ApiBaseTestFixture
     {
         var username = "damidhagor";
 
-        var user = await ApiClient.GetUser(username, default);
+        var user = await ApiClient.GetUser(username);
 
         Assert.IsNotNull(user);
         Assert.AreEqual(12579295, user.Id);
@@ -25,7 +25,7 @@ public sealed class UserTestFixture : ApiBaseTestFixture
         var username = "damidhagor";
         var unauthenticatedClients = CreateUnauthenticatedDiscogsApiClient();
 
-        var user = await unauthenticatedClients.discogsApiClient.GetUser(username, default);
+        var user = await unauthenticatedClients.discogsApiClient.GetUser(username);
 
         Assert.IsNotNull(user);
         Assert.AreEqual(12579295, user.Id);
@@ -45,7 +45,7 @@ public sealed class UserTestFixture : ApiBaseTestFixture
     {
         var username = "";
 
-        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.GetUser(username, default), "Parameter \"username\" (string) must not be null or whitespace, was whitespace. (Parameter 'username')");
+        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.GetUser(username), "Parameter \"username\" (string) must not be null or whitespace, was whitespace. (Parameter 'username')");
     }
 
     [Test]
@@ -53,6 +53,6 @@ public sealed class UserTestFixture : ApiBaseTestFixture
     {
         var username = "awrbaerhnqw54";
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetUser(username, default));
+        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetUser(username));
     }
 }
