@@ -14,8 +14,8 @@
 		<PackageTags>discogs</PackageTags>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<AssemblyVersion>3.0.1</AssemblyVersion>
-		<FileVersion>3.0.1</FileVersion>
+		<AssemblyVersion>3.1.0</AssemblyVersion>
+		<FileVersion>3.1.0</FileVersion>
 		<Version>$(AssemblyVersion)</Version>
 		<PackageReleaseNotes>The client now uses Refit, overhauls authentication, adds rate limiting and has many more changes.</PackageReleaseNotes>
 	</PropertyGroup>
