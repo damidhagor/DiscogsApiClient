@@ -15,19 +15,28 @@ public interface IOAuthAuthenticationProvider
     /// </summary>
     /// <param name="consumerKey">The consumer key</param>
     /// <param name="consumerSecret">The consumer secret</param>
-    /// <param name="accessToken">The previously obtained access token, if the user was already authenticated with this method.</param>
-    /// <param name="accessTokenSecret">The previously obtained access token secret, if the user was already authenticated with this method.</param>
     /// <param name="verifierCallbackUrl">The url to which the Discogs Api will redirect to provide the verifier token back to the application.</param>
     /// <param name="getVerifierCallback">The callback to the application which the provider will invoke to let the application handle the login for the user on the Discogs website.</param>
     /// <returns>A tuple containing the access token and access token secret.</returns>
     Task<(string accessToken, string accessTokenSecret)> Authenticate(
         string consumerKey,
         string consumerSecret,
-        string? accessToken,
-        string? accessTokenSecret,
         string verifierCallbackUrl,
         GetVerifierCallback getVerifierCallback,
         CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Authenticates the user with already existing access token and secret without triggering the authentication flow.
+    /// </summary>
+    /// <param name="consumerKey">The consumer key</param>
+    /// <param name="consumerSecret">The consumer secret</param>
+    /// <param name="accessToken">The already obtained access token.</param>
+    /// <param name="accessTokenSecret">The already obtained access token secret.</param>
+    void Authenticate(
+        string consumerKey,
+        string consumerSecret,
+        string accessToken,
+        string accessTokenSecret);
 
     /// <summary>
     /// Creates an authentication header value to insert into a HttpRequestMessage.

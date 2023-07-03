@@ -26,8 +26,6 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
     public async Task<(string accessToken, string accessTokenSecret)> Authenticate(
         string consumerKey,
         string consumerSecret,
-        string? accessToken,
-        string? accessTokenSecret,
         string verifierCallbackUrl,
         GetVerifierCallback getVerifierCallback,
         CancellationToken cancellationToken)
@@ -39,8 +37,8 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
 
         _consumerKey = consumerKey;
         _consumerSecret = consumerSecret;
-        _accessToken = accessToken ?? "";
-        _accessTokenSecret = accessTokenSecret ?? "";
+        _accessToken = "";
+        _accessTokenSecret = "";
 
         if (string.IsNullOrWhiteSpace(_accessToken) || string.IsNullOrWhiteSpace(_accessTokenSecret))
         {
@@ -55,7 +53,7 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
             if (string.IsNullOrWhiteSpace(verifier))
                 throw new AuthenticationFailedDiscogsException("Failed getting verifier token.");
 
-            (accessToken, accessTokenSecret) = await GetAccessToken(_httpClient, requestToken, requestTokenSecret, verifier, cancellationToken);
+            var (accessToken, accessTokenSecret) = await GetAccessToken(_httpClient, requestToken, requestTokenSecret, verifier, cancellationToken);
             if (string.IsNullOrWhiteSpace(accessToken) || string.IsNullOrWhiteSpace(accessTokenSecret))
                 throw new AuthenticationFailedDiscogsException("Failed getting access token.");
 
@@ -64,6 +62,24 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
         }
 
         return (_accessToken, _accessTokenSecret);
+    }
+
+    /// <inheritdoc/>
+    public void Authenticate(
+        string consumerKey,
+        string consumerSecret,
+        string accessToken,
+        string accessTokenSecret)
+    {
+        Guard.IsNotNullOrWhiteSpace(consumerKey);
+        Guard.IsNotNullOrWhiteSpace(consumerSecret);
+        Guard.IsNotNullOrWhiteSpace(accessToken);
+        Guard.IsNotNullOrWhiteSpace(accessTokenSecret);
+
+        _consumerKey = consumerKey;
+        _consumerSecret = consumerSecret;
+        _accessToken = accessToken;
+        _accessTokenSecret = accessTokenSecret;
     }
 
     public string CreateAuthenticationHeader()

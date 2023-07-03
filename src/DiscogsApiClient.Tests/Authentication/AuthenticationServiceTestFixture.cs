@@ -90,7 +90,7 @@ public sealed class AuthenticationServiceTestFixture : ApiBaseTestFixture
 
         Assert.IsFalse(authService.IsAuthenticated);
 
-        var (accessToken, accessTokenSecret) = await authService.AuthenticateWithOAuth("key", "secret", "", "", "http://localhost/access_token", oauthMockHandler.GetVerifierCallbackMockCaller, default);
+        var (accessToken, accessTokenSecret) = await authService.AuthenticateWithOAuth("key", "secret", "http://localhost/access_token", oauthMockHandler.GetVerifierCallbackMockCaller, default);
         var authHeader = authService.CreateAuthenticationHeader();
 
         Assert.IsTrue(authService.IsAuthenticated);
@@ -100,8 +100,24 @@ public sealed class AuthenticationServiceTestFixture : ApiBaseTestFixture
         Assert.IsTrue(authHeader.Contains("oauth_token=\"accesstoken\""));
     }
 
-    [Test]
-    public void OAuth_Guards_Works()
+    [Theory]
+    [TestCase(null, "", "", null, typeof(ArgumentNullException), "consumerKey")]
+    [TestCase("", "", "", null, typeof(ArgumentException), "consumerKey")]
+    [TestCase("   ", "", "", null, typeof(ArgumentException), "consumerKey")]
+    [TestCase("x", null, "", null, typeof(ArgumentNullException), "consumerSecret")]
+    [TestCase("x", "", "", null, typeof(ArgumentException), "consumerSecret")]
+    [TestCase("x", "   ", "", null, typeof(ArgumentException), "consumerSecret")]
+    [TestCase("x", "x", null, null, typeof(ArgumentNullException), "verifierCallbackUrl")]
+    [TestCase("x", "x", "", null, typeof(ArgumentException), "verifierCallbackUrl")]
+    [TestCase("x", "x", "  ", null, typeof(ArgumentException), "verifierCallbackUrl")]
+    [TestCase("x", "x", "x", null, typeof(ArgumentNullException), "getVerifierCallback")]
+    public void OAuthAuthentication_Guards_Works(
+        string consumerKey,
+        string consumerSecret,
+        string verifierCallbackUrl,
+        GetVerifierCallback verifierCallback,
+        Type exceptionType,
+        string paramName)
     {
         var oauthMockHandler = new OAuthMockDelegatingHandler();
         var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
@@ -110,48 +126,67 @@ public sealed class AuthenticationServiceTestFixture : ApiBaseTestFixture
             new PersonalAccessTokenAuthenticationProvider(),
             new OAuthAuthenticationProvider(httpClient));
 
-        ArgumentException? exception = Assert.ThrowsAsync<ArgumentNullException>(
-            () => authService.AuthenticateWithOAuth(null!, "", "", "", "", null!, default!));
-        Assert.AreEqual("consumerKey", exception!.ParamName);
+        var exception = Assert.ThrowsAsync(
+            exceptionType,
+            () => authService.AuthenticateWithOAuth(consumerKey, consumerSecret, verifierCallbackUrl, verifierCallback, default!))
+            as ArgumentException;
+        Assert.AreEqual(paramName, exception!.ParamName);
+    }
 
-        exception = Assert.ThrowsAsync<ArgumentException>(
-            () => authService.AuthenticateWithOAuth("", "", "", "", "", null!, default!));
-        Assert.AreEqual("consumerKey", exception!.ParamName);
+    [Test]
+    public void OAuthAuthentication_Short_Circuit_Successful()
+    {
+        var oauthMockHandler = new OAuthMockDelegatingHandler();
+        var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
 
-        exception = Assert.ThrowsAsync<ArgumentException>(
-            () => authService.AuthenticateWithOAuth("   ", "", "", "", "", null!, default!));
-        Assert.AreEqual("consumerKey", exception!.ParamName);
+        var authService = new DiscogsAuthenticationService(
+            new PersonalAccessTokenAuthenticationProvider(),
+            new OAuthAuthenticationProvider(httpClient));
 
+        Assert.IsFalse(authService.IsAuthenticated);
 
-        exception = Assert.ThrowsAsync<ArgumentNullException>(
-            () => authService.AuthenticateWithOAuth("x", null!, "", "", "", null!, default!));
-        Assert.AreEqual("consumerSecret", exception!.ParamName);
+        authService.AuthenticateWithOAuth("key", "secret", "testtoken", "testsecret");
+        var authHeader = authService.CreateAuthenticationHeader();
 
-        exception = Assert.ThrowsAsync<ArgumentException>(
-            () => authService.AuthenticateWithOAuth("x", "", "", "", "", null!, default!));
-        Assert.AreEqual("consumerSecret", exception!.ParamName);
+        Assert.IsTrue(authService.IsAuthenticated);
+        Assert.IsTrue(authHeader.Contains("oauth_consumer_key=\"key\""));
+        Assert.IsTrue(authHeader.Contains("oauth_token=\"testtoken\""));
+        Assert.IsTrue(authHeader.Contains("oauth_signature=\"secret%26testsecret\""));
+    }
 
-        exception = Assert.ThrowsAsync<ArgumentException>(
-            () => authService.AuthenticateWithOAuth("x", "   ", "", "", "", null!, default!));
-        Assert.AreEqual("consumerSecret", exception!.ParamName);
+    [Theory]
+    [TestCase(null, "", "", "", typeof(ArgumentNullException), "consumerKey")]
+    [TestCase("", "", "", "", typeof(ArgumentException), "consumerKey")]
+    [TestCase("   ", "", "", "", typeof(ArgumentException), "consumerKey")]
+    [TestCase("x", null, "", "", typeof(ArgumentNullException), "consumerSecret")]
+    [TestCase("x", "", "", "", typeof(ArgumentException), "consumerSecret")]
+    [TestCase("x", "   ", "", "", typeof(ArgumentException), "consumerSecret")]
+    [TestCase("x", "x", null, "", typeof(ArgumentNullException), "accessToken")]
+    [TestCase("x", "x", "", "", typeof(ArgumentException), "accessToken")]
+    [TestCase("x", "x", "   ", "", typeof(ArgumentException), "accessToken")]
+    [TestCase("x", "x", "x", null, typeof(ArgumentNullException), "accessTokenSecret")]
+    [TestCase("x", "x", "x", "", typeof(ArgumentException), "accessTokenSecret")]
+    [TestCase("x", "x", "x", "   ", typeof(ArgumentException), "accessTokenSecret")]
+    public void OAuthAuthentication_Short_Circuit_Guards_Works(
+        string consumerKey,
+        string consumerSecret,
+        string accessToken,
+        string accessTokenSecret,
+        Type exceptionType,
+        string paramName)
+    {
+        var oauthMockHandler = new OAuthMockDelegatingHandler();
+        var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
 
+        var authService = new DiscogsAuthenticationService(
+            new PersonalAccessTokenAuthenticationProvider(),
+            new OAuthAuthenticationProvider(httpClient));
 
-        exception = Assert.ThrowsAsync<ArgumentNullException>(
-            () => authService.AuthenticateWithOAuth("x", "x", "", "", null!, null!, default!));
-        Assert.AreEqual("verifierCallbackUrl", exception!.ParamName);
-
-        exception = Assert.ThrowsAsync<ArgumentException>(
-            () => authService.AuthenticateWithOAuth("x", "x", "", "", "", null!, default!));
-        Assert.AreEqual("verifierCallbackUrl", exception!.ParamName);
-
-        exception = Assert.ThrowsAsync<ArgumentException>(
-            () => authService.AuthenticateWithOAuth("x", "x", "", "", "  ", null!, default!));
-        Assert.AreEqual("verifierCallbackUrl", exception!.ParamName);
-
-
-        exception = Assert.ThrowsAsync<ArgumentNullException>(
-            () => authService.AuthenticateWithOAuth("x", "x", "", "", "x", null!, default!));
-        Assert.AreEqual("getVerifierCallback", exception!.ParamName);
+        var exception = Assert.Throws(
+            exceptionType,
+            () => authService.AuthenticateWithOAuth(consumerKey, consumerSecret, accessToken, accessTokenSecret))
+            as ArgumentException;
+        Assert.AreEqual(paramName, exception!.ParamName);
     }
 
     [Test]
@@ -166,7 +201,7 @@ public sealed class AuthenticationServiceTestFixture : ApiBaseTestFixture
 
         Assert.IsFalse(authService.IsAuthenticated);
 
-        var (accessToken, accessTokenSecret) = await authService.AuthenticateWithOAuth("key", "secret", "", "", "http://localhost/access_token", oauthMockHandler.GetVerifierCallbackMockCaller, default);
+        var (accessToken, accessTokenSecret) = await authService.AuthenticateWithOAuth("key", "secret", "http://localhost/access_token", oauthMockHandler.GetVerifierCallbackMockCaller, default);
         var authHeader = authService.CreateAuthenticationHeader();
 
         Assert.IsTrue(authService.IsAuthenticated);
@@ -179,7 +214,7 @@ public sealed class AuthenticationServiceTestFixture : ApiBaseTestFixture
         oauthMockHandler.RequestTokenSecret = "";
 
         Assert.ThrowsAsync<AuthenticationFailedDiscogsException>(
-            () => authService.AuthenticateWithOAuth("key", "secret", "", "", "http://localhost/access_token", oauthMockHandler.GetVerifierCallbackMockCaller, default));
+            () => authService.AuthenticateWithOAuth("key", "secret", "http://localhost/access_token", oauthMockHandler.GetVerifierCallbackMockCaller, default));
         Assert.IsFalse(authService.IsAuthenticated);
         Assert.Throws<UnauthenticatedDiscogsException>(() => authService.CreateAuthenticationHeader());
     }
@@ -205,7 +240,7 @@ public sealed class AuthenticationServiceTestFixture : ApiBaseTestFixture
         Assert.AreEqual($"Discogs token={userToken}", authService.CreateAuthenticationHeader());
 
         // OAuth replaces personal access token
-        var (accessToken, accessTokenSecret) = await authService.AuthenticateWithOAuth("key", "secret", "", "", "http://localhost/access_token", oauthMockHandler.GetVerifierCallbackMockCaller, default);
+        var (accessToken, accessTokenSecret) = await authService.AuthenticateWithOAuth("key", "secret", "http://localhost/access_token", oauthMockHandler.GetVerifierCallbackMockCaller, default);
         var authHeader = authService.CreateAuthenticationHeader();
 
         Assert.IsTrue(authService.IsAuthenticated);
@@ -234,7 +269,7 @@ public sealed class AuthenticationServiceTestFixture : ApiBaseTestFixture
         oauthMockHandler.RequestTokenSecret = "";
 
         Assert.ThrowsAsync<AuthenticationFailedDiscogsException>(
-            () => authService.AuthenticateWithOAuth("key", "secret", "", "", "http://localhost/access_token", oauthMockHandler.GetVerifierCallbackMockCaller, default));
+            () => authService.AuthenticateWithOAuth("key", "secret", "http://localhost/access_token", oauthMockHandler.GetVerifierCallbackMockCaller, default));
         Assert.IsFalse(authService.IsAuthenticated);
         Assert.Throws<UnauthenticatedDiscogsException>(() => authService.CreateAuthenticationHeader());
     }

@@ -43,8 +43,6 @@ public sealed class DiscogsAuthenticationService : IDiscogsAuthenticationService
     public async Task<(string accessToken, string accessTokenSecret)> AuthenticateWithOAuth(
         string consumerKey,
         string consumerSecret,
-        string? accessToken,
-        string? accessTokenSecret,
         string verifierCallbackUrl,
         GetVerifierCallback getVerifierCallback,
         CancellationToken cancellationToken)
@@ -54,8 +52,6 @@ public sealed class DiscogsAuthenticationService : IDiscogsAuthenticationService
         var tokens = await _oAuthAuthenticationProvider.Authenticate(
             consumerKey,
             consumerSecret,
-            accessToken,
-            accessTokenSecret,
             verifierCallbackUrl,
             getVerifierCallback,
             cancellationToken);
@@ -64,6 +60,25 @@ public sealed class DiscogsAuthenticationService : IDiscogsAuthenticationService
         _lastAuthenticatedWithPersonalAccessToken = false;
 
         return tokens;
+    }
+
+    /// <inheritdoc />
+    public void AuthenticateWithOAuth(
+        string consumerKey,
+        string consumerSecret,
+        string accessToken,
+        string accessTokenSecret)
+    {
+        _lastAuthenticatedWithOAuth = false;
+
+        _oAuthAuthenticationProvider.Authenticate(
+            consumerKey,
+            consumerSecret,
+            accessToken,
+            accessTokenSecret);
+
+        _lastAuthenticatedWithOAuth = true;
+        _lastAuthenticatedWithPersonalAccessToken = false;
     }
 
     /// <inheritdoc/>
