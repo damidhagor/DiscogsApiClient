@@ -46,8 +46,6 @@ public partial class MainWindow : Window
             (AccessToken, AccessTokenSecret) = await _discogsAuthenticationService.AuthenticateWithOAuth(
                 ConsumerKey,
                 ConsumerSecret,
-                "",
-                "",
                 "http://localhost/verifier_token",
                 GetVerifier,
                 cancellationToken);
