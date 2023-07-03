@@ -94,8 +94,6 @@ public async Task Authenticate(
     (accessToken, accessTokenSecret) = await _discogsAuthenticationService.AuthenticateWithOAuth(
         consumerKey,
         consumerSecret,
-        "",
-        "",
         "http://localhost/verifier_token",
         GetVerifier,
         cancellationToken);
@@ -158,6 +156,10 @@ public Task<string> GetVerifier(string authUrl, string callbackUrl, Cancellation
   - Fixed ```Release.LowestPrice``` & ```MasterRelease.LowestPrice``` deserialization failing due tu ```null``` value being sent by Discogs.
   - Fixed a typo in the ```ReleaseIdentifier``` class name.
   - Added better exception handling to the OAuth flow. ```AuthenticationFailedDiscogsException``` now contains the underlying exception which caused the authentication to fail if one was thrown.
+- ### **3.1.0**
+  - Reusing previously obtained Access Tokens & Secret via OAuth was moved into its own method ```Authenticate``` method.
+  - Optional query parameters are now nullable and optional in the Api call.
+  - Some internal interfaces and implementations were made public.
 
 ## **Breaking changes in 3.0.0**
 
