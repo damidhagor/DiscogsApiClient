@@ -12,8 +12,6 @@ public sealed class AuthenticationDelegatingHandler : DelegatingHandler
 
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        Guard.IsNotNull(request.RequestUri);
-
         if (_authenticationService.IsAuthenticated)
         {
             var authHeader = _authenticationService.CreateAuthenticationHeader();

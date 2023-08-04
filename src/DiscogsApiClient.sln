@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiscogsApiClient", "Discogs
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiscogsApiClient.Tests", "DiscogsApiClient.Tests\DiscogsApiClient.Tests.csproj", "{489F8E2F-5533-4136-9155-925D1A44BFB8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscogsApiClient.ApiClientGenerator", "DiscogsApiClient.ApiClientGenerator\DiscogsApiClient.ApiClientGenerator.csproj", "{D4EB4732-1883-4711-AC03-8D2B559E0736}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{489F8E2F-5533-4136-9155-925D1A44BFB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{489F8E2F-5533-4136-9155-925D1A44BFB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{489F8E2F-5533-4136-9155-925D1A44BFB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4EB4732-1883-4711-AC03-8D2B559E0736}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4EB4732-1883-4711-AC03-8D2B559E0736}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4EB4732-1883-4711-AC03-8D2B559E0736}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4EB4732-1883-4711-AC03-8D2B559E0736}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -36,4 +36,10 @@
 	<ItemGroup>
 		<InternalsVisibleTo Include="DiscogsApiClient.Tests" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\DiscogsApiClient.ApiClientGenerator\DiscogsApiClient.ApiClientGenerator.csproj"
+						ReferenceOutputAssembly="false"
+						OutputItemType="Analyzer" />
+	</ItemGroup>
 </Project>

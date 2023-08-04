@@ -1,7 +1,4 @@
-﻿using System;
-using System.Net;
-using System.Text.Json;
-using System.Threading.RateLimiting;
+﻿using System.Threading.RateLimiting;
 using DiscogsApiClient.Authentication.OAuth;
 using DiscogsApiClient.Authentication.PersonalAccessToken;
 using DiscogsApiClient.Middleware;
@@ -45,17 +42,14 @@ public static partial class ServiceCollectionExtensions
             httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent);
         });
 
-        var httpClientBuilder = services.AddRefitClient<IDiscogsApiClient>(
-            new RefitSettings
-            {
-                ExceptionFactory = HandleDiscogsHttpResponseMessage
-            })
+        var httpClientBuilder = services.AddHttpClient<IDiscogsClient, DiscogsClient>()
             .ConfigureHttpClient((serviceProvider, httpClient) =>
             {
                 var options = serviceProvider.GetRequiredService<DiscogsApiClientOptions>();
                 httpClient.BaseAddress = new Uri(options.BaseUrl);
                 httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent);
             })
+            .AddHttpMessageHandler<ErrorHandlingDelegatingHandler>()
             .AddHttpMessageHandler<AuthenticationDelegatingHandler>();
 
         if (discogsOptions.UseRateLimiting)
@@ -78,28 +72,5 @@ public static partial class ServiceCollectionExtensions
         }
 
         return services;
-    }
-
-    internal static async Task<Exception?> HandleDiscogsHttpResponseMessage(HttpResponseMessage response)
-    {
-        if (response.IsSuccessStatusCode)
-            return null;
-
-        string? message = null;
-        try
-        {
-            var content = await response.Content.ReadAsStringAsync();
-            message = JsonSerializer.Deserialize<ErrorMessage>(content)?.Message;
-        }
-        catch { }
-
-        return response.StatusCode switch
-        {
-            HttpStatusCode.Unauthorized => new UnauthenticatedDiscogsException(message),
-            HttpStatusCode.Forbidden => new UnauthenticatedDiscogsException(message),
-            HttpStatusCode.NotFound => new ResourceNotFoundDiscogsException(message),
-            HttpStatusCode.TooManyRequests => new RateLimitExceededDiscogsException(message),
-            _ => new DiscogsException(message),
-        };
     }
 }

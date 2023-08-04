@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using DiscogsApiClient.ApiClientGenerator;
 using static DiscogsApiClient.QueryParameters.ArtistReleaseSortQueryParameters;
 
 namespace DiscogsApiClient.QueryParameters;

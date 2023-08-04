@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http;
 using DiscogsApiClient.Authentication.OAuth;
+using DiscogsApiClient.Tests.MockMiddleware;
 
 namespace DiscogsApiClient.Tests.Authentication;
 

@@ -1,11 +1,9 @@
-using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.RateLimiting;
 using DiscogsApiClient.Authentication.OAuth;
 using DiscogsApiClient.Authentication.PersonalAccessToken;
 using DiscogsApiClient.Middleware;
 using Microsoft.Extensions.Configuration;
-using Refit;
 
 namespace DiscogsApiClient.Tests;
 
@@ -18,7 +16,7 @@ public abstract class ApiBaseTestFixture
     private HttpClient _clientHttpClient = null!;
     protected IConfiguration Configuration = null!;
 
-    protected IDiscogsApiClient ApiClient = null!;
+    protected IDiscogsClient ApiClient = null!;
 
     static ApiBaseTestFixture()
     {
@@ -52,10 +50,10 @@ public abstract class ApiBaseTestFixture
         _clientHttpClient?.Dispose();
     }
 
-    protected (IDiscogsApiClient discogsApiClient, HttpClient authHttpClient, HttpClient clientHttpClient) CreateUnauthenticatedDiscogsApiClient()
+    protected (IDiscogsClient discogsApiClient, HttpClient authHttpClient, HttpClient clientHttpClient) CreateUnauthenticatedDiscogsApiClient()
         => CreateDiscogsApiClient(userToken: "");
 
-    protected (IDiscogsApiClient discogsApiClient, HttpClient authHttpClient, HttpClient clientHttpClient) CreateDiscogsApiClient(
+    protected (IDiscogsClient discogsApiClient, HttpClient authHttpClient, HttpClient clientHttpClient) CreateDiscogsApiClient(
         string? authUserAgent = null,
         string? authBaseUrl = null,
         string? clientUserAgent = null,
@@ -80,9 +78,15 @@ public abstract class ApiBaseTestFixture
         var clientHttpClient = new HttpClient(
             new RateLimitedDelegatingHandler(_rateLimiter, false)
             {
-                InnerHandler = new AuthenticationDelegatingHandler(authService)
+                InnerHandler = new ErrorHandlingDelegatingHandler()
                 {
-                    InnerHandler = new HttpClientHandler()
+                    InnerHandler = new DebugMessageContentDelegatingHandler()
+                    {
+                        InnerHandler = new AuthenticationDelegatingHandler(authService)
+                        {
+                            InnerHandler = new HttpClientHandler()
+                        }
+                    }
                 }
             })
         {
@@ -90,21 +94,7 @@ public abstract class ApiBaseTestFixture
         };
         clientHttpClient.DefaultRequestHeaders.UserAgent.ParseAdd(clientUserAgent);
 
-        var discogsApiClient = RestService.For<IDiscogsApiClient>(
-            clientHttpClient,
-            new RefitSettings
-            {
-                ExceptionFactory = async (response) =>
-                {
-                    if (Debugger.IsAttached && response.IsSuccessStatusCode)
-                    {
-                        var content = await response.Content.ReadAsStringAsync();
-                        Debugger.Break();
-                    }
-
-                    return await ServiceCollectionExtensions.HandleDiscogsHttpResponseMessage(response);
-                }
-            });
+        var discogsApiClient = new DiscogsClient(clientHttpClient);
 
         return (discogsApiClient, authHttpClient, clientHttpClient);
     }

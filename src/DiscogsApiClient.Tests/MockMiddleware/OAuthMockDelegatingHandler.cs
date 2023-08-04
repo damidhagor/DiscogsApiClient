@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 
-namespace DiscogsApiClient.Tests.Authentication;
+namespace DiscogsApiClient.Tests.MockMiddleware;
 
 public sealed class OAuthMockDelegatingHandler : DelegatingHandler
 {

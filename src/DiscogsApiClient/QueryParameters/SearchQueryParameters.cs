@@ -1,4 +1,6 @@
-﻿namespace DiscogsApiClient.QueryParameters;
+﻿using DiscogsApiClient.ApiClientGenerator;
+
+namespace DiscogsApiClient.QueryParameters;
 
 /// <summary>
 /// Search parameters used by search requests to the Discogs Api.

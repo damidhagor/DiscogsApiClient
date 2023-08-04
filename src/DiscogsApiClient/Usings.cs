@@ -11,4 +11,3 @@ global using DiscogsApiClient.Contract.User.Collection;
 global using DiscogsApiClient.Contract.User.Wantlist;
 global using DiscogsApiClient.Exceptions;
 global using DiscogsApiClient.QueryParameters;
-global using Refit;

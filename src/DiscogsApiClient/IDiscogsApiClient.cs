@@ -1,14 +1,17 @@
-﻿namespace DiscogsApiClient;
+﻿using DiscogsApiClient.ApiClientGenerator;
 
-public interface IDiscogsApiClient
+namespace DiscogsApiClient;
+
+[ApiClient]
+public interface IDiscogsClient
 {
     /// <summary>
     /// Queries the <see cref="Identity"/> of the currently authenticated user.
     /// </summary>
-    [Get("/oauth/identity")]
+    [HttpGet("/oauth/identity")]
     Task<Identity> GetIdentity(CancellationToken cancellationToken = default);
 
-    [Get("/users/{username}")]
+    [HttpGet("/users/{username}")]
     internal Task<User> GetUserInternal(string username, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -22,7 +25,7 @@ public interface IDiscogsApiClient
     }
 
 
-    [Get("/users/{username}/collection/folders")]
+    [HttpGet("/users/{username}/collection/folders")]
     internal Task<CollectionFoldersResponse> GetCollectionFoldersInternal(string username, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -36,7 +39,7 @@ public interface IDiscogsApiClient
         return await GetCollectionFoldersInternal(username, cancellationToken);
     }
 
-    [Get("/users/{username}/collection/folders/{folderId}")]
+    [HttpGet("/users/{username}/collection/folders/{folderId}")]
     internal Task<CollectionFolder> GetCollectionFolderInternal(string username, int folderId, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -53,8 +56,8 @@ public interface IDiscogsApiClient
         return await GetCollectionFolderInternal(username, folderId, cancellationToken);
     }
 
-    [Post("/users/{username}/collection/folders")]
-    internal Task<CollectionFolder> CreateCollectionFolderInternal(string username, [Body] object folderNameObject, CancellationToken cancellationToken = default);
+    [HttpPost("/users/{username}/collection/folders")]
+    internal Task<CollectionFolder> CreateCollectionFolderInternal(string username, [Body] CollectionFolderCreateRequest createRequest, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Creates a new collection folder for the user.
@@ -66,11 +69,11 @@ public interface IDiscogsApiClient
     {
         Guard.IsNotNullOrWhiteSpace(username);
         Guard.IsNotNullOrWhiteSpace(folderName);
-        return await CreateCollectionFolderInternal(username, new { Name = folderName }, cancellationToken);
+        return await CreateCollectionFolderInternal(username, new(folderName), cancellationToken);
     }
 
-    [Post("/users/{username}/collection/folders/{folderId}")]
-    internal Task<CollectionFolder> UpdateCollectionFolderInternal(string username, int folderId, [Body] object folderNameObject, CancellationToken cancellationToken = default);
+    [HttpPost("/users/{username}/collection/folders/{folderId}")]
+    internal Task<CollectionFolder> UpdateCollectionFolderInternal(string username, int folderId, [Body] CollectionFolderCreateRequest createRequest, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Changes a collection folder's name for the user.
@@ -85,10 +88,10 @@ public interface IDiscogsApiClient
         Guard.IsNotNullOrWhiteSpace(username);
         Guard.IsNotNullOrWhiteSpace(folderName);
         Guard.IsGreaterThan(folderId, 1);
-        return await UpdateCollectionFolderInternal(username, folderId, new { Name = folderName }, cancellationToken);
+        return await UpdateCollectionFolderInternal(username, folderId, new(folderName), cancellationToken);
     }
 
-    [Delete("/users/{username}/collection/folders/{folderId}")]
+    [HttpDelete("/users/{username}/collection/folders/{folderId}")]
     internal Task DeleteCollectionFolderInternal(string username, int folderId, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -105,7 +108,7 @@ public interface IDiscogsApiClient
         await DeleteCollectionFolderInternal(username, folderId, cancellationToken);
     }
 
-    [Get("/users/{username}/collection/folders/{folderId}/releases")]
+    [HttpGet("/users/{username}/collection/folders/{folderId}/releases")]
     internal Task<CollectionFolderReleasesResponse> GetCollectionFolderReleasesInternal(string username, int folderId, PaginationQueryParameters? paginationQueryParameters = null, CollectionFolderReleaseSortQueryParameters? collectionFolderReleaseSortQueryParameters = null, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -123,7 +126,7 @@ public interface IDiscogsApiClient
         return await GetCollectionFolderReleasesInternal(username, folderId, paginationQueryParameters, collectionFolderReleaseSortQueryParameters, cancellationToken);
     }
 
-    [Post("/users/{username}/collection/folders/{folderId}/releases/{releaseId}")]
+    [HttpPost("/users/{username}/collection/folders/{folderId}/releases/{releaseId}")]
     internal Task<CollectionFolderRelease> AddReleaseToCollectionFolderInternal(string username, int folderId, int releaseId, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -142,7 +145,7 @@ public interface IDiscogsApiClient
         return await AddReleaseToCollectionFolderInternal(username, folderId, releaseId, cancellationToken);
     }
 
-    [Delete("/users/{username}/collection/folders/{folderId}/releases/{releaseId}/instances/{instanceId}")]
+    [HttpDelete("/users/{username}/collection/folders/{folderId}/releases/{releaseId}/instances/{instanceId}")]
     internal Task DeleteReleaseFromCollectionFolderInternal(string username, int folderId, int releaseId, int instanceId, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -163,7 +166,7 @@ public interface IDiscogsApiClient
         await DeleteReleaseFromCollectionFolderInternal(username, folderId, releaseId, instanceId, cancellationToken);
     }
 
-    [Get("/users/{username}/collection/value")]
+    [HttpGet("/users/{username}/collection/value")]
     internal Task<CollectionValue> GetCollectionValueInternal(string username, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -178,7 +181,7 @@ public interface IDiscogsApiClient
     }
 
 
-    [Get("/users/{username}/wants")]
+    [HttpGet("/users/{username}/wants")]
     internal Task<WantlistReleasesResponse> GetWantlistReleasesInternal(string username, PaginationQueryParameters? paginationQueryParameters = null, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -193,7 +196,7 @@ public interface IDiscogsApiClient
         return await GetWantlistReleasesInternal(username, paginationQueryParameters, cancellationToken);
     }
 
-    [Put("/users/{username}/wants/{releaseId}")]
+    [HttpPut("/users/{username}/wants/{releaseId}")]
     internal Task<WantlistRelease> AddReleaseToWantlistInternal(string username, int releaseId, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -210,7 +213,7 @@ public interface IDiscogsApiClient
         return await AddReleaseToWantlistInternal(username, releaseId, cancellationToken);
     }
 
-    [Delete("/users/{username}/wants/{releaseId}")]
+    [HttpDelete("/users/{username}/wants/{releaseId}")]
     internal Task DeleteReleaseFromWantlistInternal(string username, int releaseId, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -228,7 +231,7 @@ public interface IDiscogsApiClient
     }
 
 
-    [Get("/artists/{artistId}")]
+    [HttpGet("/artists/{artistId}")]
     internal Task<Artist> GetArtistInternal(int artistId, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -242,7 +245,7 @@ public interface IDiscogsApiClient
         return await GetArtistInternal(artistId, cancellationToken);
     }
 
-    [Get("/artists/{artistId}/releases")]
+    [HttpGet("/artists/{artistId}/releases")]
     internal Task<ArtistReleasesResponse> GetArtistReleasesInternal(int artistId, PaginationQueryParameters? paginationQueryParameters = null, ArtistReleaseSortQueryParameters? artistReleaseSortQueryParameters = null, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -258,7 +261,7 @@ public interface IDiscogsApiClient
     }
 
 
-    [Get("/labels/{labelId}")]
+    [HttpGet("/labels/{labelId}")]
     internal Task<Label> GetLabelInternal(int labelId, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -272,7 +275,7 @@ public interface IDiscogsApiClient
         return await GetLabelInternal(labelId, cancellationToken);
     }
 
-    [Get("/labels/{labelId}/releases")]
+    [HttpGet("/labels/{labelId}/releases")]
     internal Task<LabelReleasesResponse> GetLabelReleasesInternal(int labelId, PaginationQueryParameters? paginationQueryParameters = null, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -288,7 +291,7 @@ public interface IDiscogsApiClient
     }
 
 
-    [Get("/masters/{masterReleaseId}")]
+    [HttpGet("/masters/{masterReleaseId}")]
     internal Task<MasterRelease> GetMasterReleaseInternal(int masterReleaseId, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -302,7 +305,7 @@ public interface IDiscogsApiClient
         return await GetMasterReleaseInternal(masterReleaseId, cancellationToken);
     }
 
-    [Get("/masters/{masterReleaseId}/versions")]
+    [HttpGet("/masters/{masterReleaseId}/versions")]
     internal Task<MasterReleaseVersionsResponse> GetMasterReleaseVersionsInternal(int masterReleaseId, PaginationQueryParameters? paginationQueryParameters = null, MasterReleaseVersionFilterQueryParameters? masterReleaseVersionQueryParameters = null, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -318,7 +321,7 @@ public interface IDiscogsApiClient
     }
 
 
-    [Get("/releases/{releaseId}")]
+    [HttpGet("/releases/{releaseId}")]
     internal Task<Release> GetReleaseInternal(int releaseId, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -332,7 +335,7 @@ public interface IDiscogsApiClient
         return await GetReleaseInternal(releaseId, cancellationToken);
     }
 
-    [Get("/releases/{releaseId}/rating")]
+    [HttpGet("/releases/{releaseId}/rating")]
     internal Task<ReleaseCommunityRatingResponse> GetReleaseCommunityRatingInternal(int releaseId, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -346,7 +349,7 @@ public interface IDiscogsApiClient
         return await GetReleaseCommunityRatingInternal(releaseId, cancellationToken);
     }
 
-    [Get("/releases/{releaseId}/stats")]
+    [HttpGet("/releases/{releaseId}/stats")]
     internal Task<ReleaseStatsResponse> GetReleaseStatsInternal(int releaseId, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -366,6 +369,6 @@ public interface IDiscogsApiClient
     /// </summary>
     /// <param name="searchQueryParameters">The search parameters to query for.</param>
     /// <param name="paginationQueryParameters">Pagination parameters.</param>
-    [Get("/database/search")]
+    [HttpGet("/database/search")]
     Task<SearchResultsResponse> SearchDatabase(SearchQueryParameters searchQueryParameters, PaginationQueryParameters? paginationQueryParameters = null, CancellationToken cancellationToken = default);
 }
