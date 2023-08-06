@@ -4,7 +4,7 @@ internal static class ApiMethodBodyGenerator
 {
     private const string _route =
         """
-                string route = "{0}";
+                string route = $"{0}";
         """;
 
     public static void GenerateApiMethodBody(this StringBuilder builder, ApiMethod apiMethod, CancellationToken cancellationToken)
@@ -16,13 +16,56 @@ internal static class ApiMethodBodyGenerator
 
     private static void GenerateRoute(this StringBuilder builder, string route, List<ApiMethodParameter> parameters)
     {
-        var constructedRoute = route;
-        foreach (var parameter in parameters.Where(p => p.Type == ApiMethodParameterType.Route))
+        var constructedRoute = $"{route}";
+        foreach (var parameter in parameters.OfType<RouteApiMethodParameter>())
         {
-            constructedRoute = constructedRoute.Replace($"{{{parameter.Name}}}", $"\" + {parameter.Name} + \"");
+            constructedRoute = constructedRoute.Replace(parameter.RoutePart, $"{{{parameter.Name}}}");
         }
 
-        builder.AppendLine(string.Format(_route, constructedRoute));
+        builder.AppendLine($"\t\tvar route = $\"{constructedRoute}\";");
+        builder.AppendLine();
+
+        if (parameters.Any(p => p.Type == ApiMethodParameterType.Query))
+        {
+            builder.AppendLine("\t\tvar queryBuilder = new System.Text.StringBuilder(\"?\");");
+            builder.AppendLine();
+
+            foreach (var parameter in parameters.OfType<QueryApiMethodParameter>())
+            {
+                builder.AppendLine($"\t\tif ({parameter.Name} is not null)");
+                builder.AppendLine("\t\t{");
+
+                foreach (var queryParam in parameter.QueryParameters)
+                {
+                    builder.AppendLine($"\t\t\tif ({parameter.Name}.{queryParam.Value} is not null)");
+                    builder.AppendLine("\t\t\t{");
+
+                    builder.AppendLine(
+                        """
+                                        if (queryBuilder.Length > 1)
+                                        {
+                                            queryBuilder.Append("&");
+                                        }
+
+                        """);
+
+                    builder.AppendLine($"\t\t\t\tqueryBuilder.Append(\"{queryParam.Parameter}=\");");
+                    builder.AppendLine($"\t\t\t\tqueryBuilder.Append({parameter.Name}.{queryParam.Value});");
+                    builder.AppendLine("\t\t\t}");
+                }
+
+                builder.AppendLine("\t\t}");
+                builder.AppendLine();
+            }
+
+            builder.AppendLine(
+                """
+                        if (queryBuilder.Length > 1)
+                        {
+                            route += queryBuilder.ToString();
+                        }
+                """);
+        }
     }
 
     private static void GenerateHttpCall(this StringBuilder builder, ApiMethod apiMethod)

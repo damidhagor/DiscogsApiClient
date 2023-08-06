@@ -164,7 +164,18 @@ internal static class ApiMethodParser
 
         foreach (var property in properties)
         {
-            parameters.Add((property.Name, property.Name));
+            var name = property.Name;
+
+            if(property.TryGetAttribute(
+                AttributeSourceHelpers.AttributesNamespace,
+                AttributeSourceHelpers.AliasAsAttributeName,
+                out var attribute)
+                && attribute!.TryGetAttributeConstructorArgument<string>(out var altName))
+            {
+                name = altName!;
+            }
+
+            parameters.Add((name, property.Name));
         }
 
         return parameters;
