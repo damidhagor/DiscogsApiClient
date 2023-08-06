@@ -26,7 +26,7 @@ internal static class ApiMethodParser
 
     private static ApiMethod? ParseApiMethod(this IMethodSymbol methodSymbol, CancellationToken cancellationToken)
     {
-        using var writer = new StreamWriter("C:\\Users\\alexa\\Desktop\\access.txt", append: true);
+        using var writer = FileOutputDebugHelper.GetOutputStreamWriter("access.txt", true);
 
         if (!methodSymbol.TryGetAttributeBase(
             AttributeSourceHelpers.AttributesNamespace,
@@ -108,7 +108,7 @@ internal static class ApiMethodParser
 
     private static List<ApiMethodParameter> ParseApiMethodParameters(this IMethodSymbol methodSymbol, string route, CancellationToken cancellationToken)
     {
-        using var writer = new StreamWriter("C:\\Users\\alexa\\Desktop\\parameters.txt", append: true);
+        using var writer = FileOutputDebugHelper.GetOutputStreamWriter("parameters.txt", true);
 
         var parameters = new List<ApiMethodParameter>();
 
@@ -162,7 +162,7 @@ internal static class ApiMethodParser
             .Where(m => m.DeclaredAccessibility == Accessibility.Public
                      && m.Kind == SymbolKind.Property);
 
-        foreach ( var property in properties )
+        foreach (var property in properties)
         {
             parameters.Add((property.Name, property.Name));
         }

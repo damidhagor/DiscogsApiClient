@@ -89,9 +89,8 @@ public class ApiClientSourceGenerator : IIncrementalGenerator
         {
             var (hint, source) = apiClient.GenerateApiClient(context.CancellationToken);
 
-#pragma warning disable RS1035 // Do not use APIs banned for analyzers
-            File.WriteAllText($"C:\\Users\\alexa\\Desktop\\discogs-{hint}", source.ToString());
-#pragma warning restore RS1035 // Do not use APIs banned for analyzers
+            using var writer = FileOutputDebugHelper.GetOutputStreamWriter($"client-{hint}", false);
+            writer.WriteLine(source.ToString());
 
             context.AddSource(hint, source);
         }
