@@ -10,6 +10,8 @@ internal static class ApiCLientAttribute
 
     public const string Source =
         $$"""
+        #nullable enable
+        
         namespace {{Namespace}};
 
         [System.AttributeUsage(System.AttributeTargets.Interface)]

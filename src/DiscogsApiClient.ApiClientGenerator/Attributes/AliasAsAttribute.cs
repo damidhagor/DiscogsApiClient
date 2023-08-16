@@ -10,6 +10,8 @@ internal static class AliasAsAttribute
 
     public const string Source =
         $$"""
+        #nullable enable
+
         namespace {{Namespace}};
 
         [System.AttributeUsage(System.AttributeTargets.Property | System.AttributeTargets.Field)]

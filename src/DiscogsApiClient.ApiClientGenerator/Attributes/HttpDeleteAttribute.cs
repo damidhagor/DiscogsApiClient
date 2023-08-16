@@ -10,6 +10,8 @@ internal static class HttpDeleteAttribute
 
     public const string Source =
         $$"""
+        #nullable enable
+        
         namespace {{Namespace}};
 
         [System.AttributeUsage(System.AttributeTargets.Method)]

@@ -10,6 +10,8 @@ internal static class HttpPostAttribute
 
     public const string Source =
         $$"""
+        #nullable enable
+        
         namespace {{Namespace}};
 
         [System.AttributeUsage(System.AttributeTargets.Method)]
