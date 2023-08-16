@@ -134,25 +134,26 @@ internal static class ApiMethodParser
 
             var name = parameter.Name;
             var fullName = parameter.ToDisplayString();
+            var typeFullName = parameter.Type.ToDisplayString();
 
             ApiMethodParameter apiMethodParameter;
 
             if (parameter.Type.ToDisplayString() == "System.Threading.CancellationToken")
             {
-                apiMethodParameter = new CancellationTokenApiMethodParameter(name, fullName);
+                apiMethodParameter = new CancellationTokenApiMethodParameter(name, fullName, typeFullName);
             }
             else if (parameter.HasAttribute(BodyAttribute.Namespace, BodyAttribute.Name))
             {
-                apiMethodParameter = new BodyApiMethodParameter(name, fullName);
+                apiMethodParameter = new BodyApiMethodParameter(name, fullName, typeFullName);
             }
             else if (route.Contains($"{{{name}}}"))
             {
-                apiMethodParameter = new RouteApiMethodParameter(name, fullName, $"{{{name}}}");
+                apiMethodParameter = new RouteApiMethodParameter(name, fullName, typeFullName, $"{{{name}}}");
             }
             else
             {
                 var queryParameters = parameter.Type.ParseAsQueryParameters();
-                apiMethodParameter = new QueryApiMethodParameter(name, fullName, queryParameters);
+                apiMethodParameter = new QueryApiMethodParameter(name, fullName, typeFullName, queryParameters);
             }
 
             parameters.Add(apiMethodParameter);

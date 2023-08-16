@@ -2,7 +2,7 @@
 
 internal sealed class BodyApiMethodParameter : ApiMethodParameter
 {
-    public BodyApiMethodParameter(string name, string fullName)
-        : base(name, fullName, ApiMethodParameterType.Body)
+    public BodyApiMethodParameter(string name, string fullName, string typeFullName)
+        : base(name, fullName, typeFullName, ApiMethodParameterType.Body)
     { }
 }

@@ -2,7 +2,7 @@
 
 internal sealed class CancellationTokenApiMethodParameter : ApiMethodParameter
 {
-    public CancellationTokenApiMethodParameter(string name, string fullName)
-        : base(name, fullName, ApiMethodParameterType.CancellationToken)
+    public CancellationTokenApiMethodParameter(string name, string fullName, string typeFullName)
+        : base(name, fullName, typeFullName, ApiMethodParameterType.CancellationToken)
     { }
 }

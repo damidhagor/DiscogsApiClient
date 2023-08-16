@@ -112,6 +112,9 @@ internal static class ApiClientGenerator
 
         builder.GenerateApiClientEnd();
 
+        builder.GenerateQueryParameterExtensions(apiClient.Methods, cancellationToken);
+        builder.GenerateQueryParameterPropertyExtensions(apiClient.Methods, cancellationToken);
+
         return builder.ToString();
     }
 
@@ -160,7 +163,7 @@ internal static class ApiClientGenerator
 
                 for (var i = 0; i < queryParameters.Length; i++)
                 {
-                    builder.AppendLine($"\t\tCalculateQuerySize({queryParameters[i].Name}, ref capacity, ref parameterCount);");
+                    builder.AppendLine($"\t\t{queryParameters[i].Name}.CalculateQuerySize(ref capacity, ref parameterCount);");
                 }
 
                 builder.AppendLine(
@@ -179,7 +182,7 @@ internal static class ApiClientGenerator
 
                 for (var i = 0; i < queryParameters.Length; i++)
                 {
-                    builder.AppendLine($"\t\tAppendQuery(queryBuilder, routeLength, {queryParameters[i].Name});");
+                    builder.AppendLine($"\t\t{queryParameters[i].Name}.AppendQuery(queryBuilder, routeLength);");
                 }
 
                 builder.AppendLine(
@@ -195,111 +198,220 @@ internal static class ApiClientGenerator
                     """);
             }
         }
+    }
 
-        var implementedQueryBuilders = new HashSet<string>();
+    private static void GenerateQueryParameterExtensions(this StringBuilder builder, List<ApiMethod> apiMethods, CancellationToken cancellationToken)
+    {
+        var implementedExtensions = new HashSet<string>();
+        var queryParameters = apiMethods
+            .SelectMany(m => m.Parameters)
+            .OfType<QueryApiMethodParameter>();
 
-        foreach (var apiMethod in apiMethods)
+        foreach (var parameter in queryParameters)
         {
-            foreach (var queryParameter in apiMethod.Parameters.OfType<QueryApiMethodParameter>())
+            if (implementedExtensions.Contains(parameter.FullName))
             {
-                if (implementedQueryBuilders.Contains(queryParameter.FullName))
-                {
-                    continue;
-                }
+                continue;
+            }
 
+            builder.AppendLine(
+                $$"""
+                
+
+                #if NET7_0_OR_GREATER
+                file static class {{parameter.TypeFullName.Replace(".", "").Replace("?", "")}}Extensions
+                #else
+                internal static class {{parameter.TypeFullName.Replace(".", "").Replace("?", "")}}Extensions
+                #endif
+                {
+                    public static void CalculateQuerySize(this {{parameter.FullName}}, ref int capacity, ref int parameterCount)
+                    {
+                        if ({{parameter.Name}} is not null)
+                        {
+                """);
+
+            foreach (var property in parameter.QueryParameters)
+            {
                 builder.AppendLine(
                     $$"""
-
-                        private void CalculateQuerySize({{queryParameter.FullName}}, ref int capacity, ref int parameterCount)
-                        {
-                            if ({{queryParameter.Name}} is not null)
-                            {
-                    """);
-
-                foreach (var property in queryParameter.QueryParameters)
-                {
-                    builder.AppendLine(
-                        $$"""
-                                    if ({{queryParameter.Name}}.{{property.PropertyName}} is not null)
+                                    if ({{parameter.Name}}.{{property.PropertyName}} is not null)
                                     {
-                                        capacity += {{property.ParameterName.Length}} + {{queryParameter.Name}}.{{property.PropertyName}}.ToString().Length;
+                                        capacity += {{property.ParameterName.Length + 1}}; // {{property.ParameterName}}
+                                        capacity += QueryParameterHelper.CalculateQuerySize({{parameter.Name}}.{{property.PropertyName}});
                                         parameterCount++;
                                     }
                         """);
-                }
+            }
 
-                builder.AppendLine(
-                    """
-                            }
+            builder.AppendLine(
+                """
                         }
-                    """);
+                    }
+                """);
 
+            builder.AppendLine(
+                $$"""
+
+                    public static void AppendQuery(this {{parameter.FullName}}, System.Text.StringBuilder queryBuilder, int routeLength)
+                    {
+                        if ({{parameter.Name}} is not null)
+                        {
+                """);
+
+            foreach (var property in parameter.QueryParameters)
+            {
                 builder.AppendLine(
                     $$"""
+                                if ({{parameter.Name}}.{{property.PropertyName}} is not null)
+                                {
+                                    if (queryBuilder.Length > routeLength)
+                                    {
+                                        queryBuilder.Append('&');
+                                    }
 
-                        private void AppendQuery(System.Text.StringBuilder queryBuilder, int routeLength, {{queryParameter.FullName}})
-                        {
-                            if ({{queryParameter.Name}} is not null)
-                            {
+                                    queryBuilder.Append("{{property.ParameterName}}=");
                     """);
 
-                foreach (var property in queryParameter.QueryParameters)
+                if (property.ParameterType == QueryParameterType.Enum)
                 {
                     builder.AppendLine(
                         $$"""
-                                    if ({{queryParameter.Name}}.{{property.PropertyName}} is not null)
-                                    {
-                                        if (queryBuilder.Length > routeLength)
+                                        queryBuilder.Append({{parameter.Name}} switch
                                         {
-                                            queryBuilder.Append('&');
-                                        }
-
-                                        queryBuilder.Append("{{property.ParameterName}}=");
                         """);
 
-                    if (property.ParameterType == QueryParameterType.Enum)
+                    foreach (var enumValue in property.EnumValues!)
                     {
                         builder.AppendLine(
                             $$"""
-                                            queryBuilder.Append({{queryParameter.Name}} switch
-                                            {
-                            """);
-
-                        foreach (var enumValue in property.EnumValues!)
-                        {
-                            builder.AppendLine(
-                                $$"""
-                                                    { {{property.PropertyName}}: {{property.PropertyType}}.{{enumValue.MemberName}} } => "{{enumValue.DisplayName}}",
-                                """);
-                        }
-
-                        builder.AppendLine(
-                            """
-                                            });
-                            """);
-                    }
-                    else
-                    {
-                        builder.AppendLine(
-                            $$"""
-                                            queryBuilder.Append({{queryParameter.Name}}.{{property.PropertyName}});
+                                                { {{property.PropertyName}}: {{property.PropertyType}}.{{enumValue.MemberName}} } => "{{enumValue.DisplayName}}",
                             """);
                     }
 
                     builder.AppendLine(
                         """
-                                    }
+                                        });
+                        """);
+                }
+                else
+                {
+                    builder.AppendLine(
+                        $$"""
+                                        queryBuilder.Append({{parameter.Name}}.{{property.PropertyName}});
                         """);
                 }
 
                 builder.AppendLine(
                     """
-                            }
+                                }
+                    """);
+            }
+
+            builder.AppendLine(
+                """
+                        }
+                    }
+                """);
+
+
+            builder.AppendLine("}");
+
+            implementedExtensions.Add(parameter.FullName);
+        }
+    }
+
+    private static void GenerateQueryParameterPropertyExtensions(this StringBuilder builder, List<ApiMethod> apiMethods, CancellationToken cancellationToken)
+    {
+        var implementedExtensions = new HashSet<string>();
+        var queryParameters = apiMethods
+            .SelectMany(m => m.Parameters)
+            .OfType<QueryApiMethodParameter>()
+            .SelectMany(p => p.QueryParameters);
+
+        builder.AppendLine(
+            $$"""
+                
+
+            #if NET7_0_OR_GREATER
+            file static class QueryParameterHelper
+            #else
+            internal static class QueryParameterHelper
+            #endif
+            {
+            """
+        );
+
+        foreach (var parameter in queryParameters)
+        {
+            if (implementedExtensions.Contains(parameter.PropertyType))
+            {
+                continue;
+            }
+
+            if (parameter.ParameterType == QueryParameterType.String)
+            {
+                builder.AppendLine(
+                    $$"""
+                        public static int CalculateQuerySize(string? text)
+                        {
+                            return text?.Length ?? 0;
+                        }
+                    """);
+            }
+            else if (parameter.ParameterType == QueryParameterType.Integer)
+            {
+                builder.AppendLine(
+                    $$"""
+                        public static int CalculateQuerySize(int? number)
+                        {
+                            return number?.ToString()?.Length ?? 0;
+                        }
+                    """);
+            }
+            else if (parameter.ParameterType == QueryParameterType.Enum)
+            {
+                builder.AppendLine(
+                    $$"""
+                        public static int CalculateQuerySize({{parameter.PropertyType}} enumValue)
+                        {
+                            return enumValue switch
+                            {
+                    """);
+
+                if (parameter.EnumValues is not null)
+                {
+                    foreach (var enumValue in parameter.EnumValues)
+                    {
+                        builder.AppendLine(
+                            $$"""
+                                        {{parameter.PropertyType}}.{{enumValue.MemberName}} => {{enumValue.DisplayName.Length}}, // {{enumValue.DisplayName}}
+                            """);
+                    }
+                }
+
+                builder.AppendLine(
+                    $$"""
+                                _ => throw new ArgumentOutOfRangeException(nameof(enumValue))
+                            };
                         }
                     """);
 
-                implementedQueryBuilders.Add(queryParameter.FullName);
+                builder.AppendLine(
+                    $$"""
+                        public static int CalculateQuerySize({{parameter.PropertyType}}? enumValue)
+                        {
+                            return enumValue is not null ? CalculateQuerySize(enumValue.Value) : 0;
+                        }
+                    """);
             }
+            else
+            {
+                throw new ArgumentOutOfRangeException(nameof(parameter.ParameterType));
+            }
+
+            implementedExtensions.Add(parameter.PropertyType);
         }
+
+        builder.AppendLine("}");
     }
 }
