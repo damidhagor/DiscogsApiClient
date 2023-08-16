@@ -1,4 +1,6 @@
-﻿namespace DiscogsApiClient.ApiClientGenerator.Models;
+﻿using DiscogsApiClient.ApiClientGenerator.Models.MethodParameters;
+
+namespace DiscogsApiClient.ApiClientGenerator.Models;
 
 internal sealed class ApiMethod
 {

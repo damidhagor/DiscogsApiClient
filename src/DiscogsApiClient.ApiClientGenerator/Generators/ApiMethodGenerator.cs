@@ -1,4 +1,6 @@
-﻿namespace DiscogsApiClient.ApiClientGenerator.Generators;
+﻿using DiscogsApiClient.ApiClientGenerator.Models.MethodParameters;
+
+namespace DiscogsApiClient.ApiClientGenerator.Generators;
 
 internal static class ApiMethodGenerator
 {

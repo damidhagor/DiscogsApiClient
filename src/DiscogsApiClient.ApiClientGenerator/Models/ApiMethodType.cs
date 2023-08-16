@@ -2,6 +2,7 @@
 
 internal enum ApiMethodType
 {
+    Unknown,
     Get,
     Post,
     Put,

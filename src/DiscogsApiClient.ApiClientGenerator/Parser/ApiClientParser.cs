@@ -1,10 +1,6 @@
-﻿using DiscogsApiClient.ApiClientGenerator.Models;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿namespace DiscogsApiClient.ApiClientGenerator.Parser;
 
-namespace DiscogsApiClient.ApiClientGenerator.Parser;
-
-internal static class ApiParser
+internal static class ApiClientParser
 {
     public static ApiClient? ParseApiClient(this InterfaceDeclarationSyntax interfaceSyntax, Compilation compilation, CancellationToken cancellationToken)
     {

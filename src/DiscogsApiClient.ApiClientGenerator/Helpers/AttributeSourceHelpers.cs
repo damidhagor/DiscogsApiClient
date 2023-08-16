@@ -110,7 +110,7 @@ internal static class AttributeSourceHelpers
         $$"""
         namespace {{AttributesNamespace}};
 
-        [System.AttributeUsage(System.AttributeTargets.Property)]
+        [System.AttributeUsage(System.AttributeTargets.Property | System.AttributeTargets.Field)]
         public sealed class {{AliasAsAttributeName}} : System.Attribute
         {
             public string Alias { get; set; }
