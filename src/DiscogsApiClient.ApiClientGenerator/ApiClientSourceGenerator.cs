@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using DiscogsApiClient.ApiClientGenerator.Attributes;
 using DiscogsApiClient.ApiClientGenerator.Generators;
 using DiscogsApiClient.ApiClientGenerator.Helpers;
 using DiscogsApiClient.ApiClientGenerator.Parser;
@@ -62,8 +63,8 @@ public class ApiClientSourceGenerator : IIncrementalGenerator
     private static bool IsMarkerAttribute(AttributeSyntax attributeSyntax, GeneratorSyntaxContext context)
     {
         return context.SemanticModel.GetSymbolInfo(attributeSyntax).Symbol is IMethodSymbol attributeSymbol
-                    && attributeSymbol.ContainingNamespace.ToDisplayString() == AttributeSourceHelpers.AttributesNamespace
-                    && attributeSymbol.ContainingType.Name == AttributeSourceHelpers.GenerateApiClientAttributeName;
+                    && attributeSymbol.ContainingNamespace.ToDisplayString() == ApiCLientAttribute.Namespace
+                    && attributeSymbol.ContainingType.Name == ApiCLientAttribute.Name;
     }
 
     private static void Execute(Compilation compilation, ImmutableArray<InterfaceDeclarationSyntax> interfaceDeclarations, SourceProductionContext context)

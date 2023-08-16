@@ -1,60 +1,46 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace DiscogsApiClient.ApiClientGenerator.Helpers;
+﻿namespace DiscogsApiClient.ApiClientGenerator.Helpers;
 
 internal static class SymbolExtensions
 {
-    public static bool TryGetAttribute(
-        this ISymbol symbol,
-        string attributeNamespace,
-        string attributeName,
-        out AttributeData? attributeData)
+    public static bool TryGetConstFieldValue<T>(this INamedTypeSymbol? symbol, string fieldName, out T? value)
     {
-        attributeData = symbol
-            .GetAttributes()
-            .FirstOrDefault(b => b.AttributeClass?.Name == attributeName
-                              && b.AttributeClass?.ContainingNamespace.ToDisplayString() == attributeNamespace);
+        value = default;
 
-        return attributeData is not null;
-    }
-
-    public static bool TryGetAttributeBase(
-        this ISymbol symbol,
-        string attributeNamespace,
-        string attributeName,
-        out AttributeData? attributeData)
-    {
-        attributeData = symbol
-            .GetAttributes()
-            .FirstOrDefault(b => b.AttributeClass?.BaseType?.Name == attributeName
-                              && b.AttributeClass?.BaseType?.ContainingNamespace.ToDisplayString() == attributeNamespace);
-
-        return attributeData is not null;
-    }
-
-
-    public static bool TryGetAttributeConstructorArgument<T>(this AttributeData attributeData, out T? value)
-        => TryGetAttributeConstructorArgument(attributeData, 0, out value);
-
-    public static bool TryGetAttributeConstructorArgument<T>(this AttributeData attributeData, int index, out T? value)
-    {
-        if (attributeData.ConstructorArguments.Length <= index)
+        var inspectedSymbol = symbol;
+        while (inspectedSymbol is not null)
         {
-            value = default;
+            var field = inspectedSymbol.GetMembers()
+                .OfType<IFieldSymbol>()
+                .FirstOrDefault(f => f.IsConst && f.Name == fieldName);
+
+            if (field is not null)
+            {
+                if (field.ConstantValue is T castValue)
+                {
+                    value = castValue;
+                    return true;
+                }
+
+                return false;
+            }
+
+            inspectedSymbol = inspectedSymbol.BaseType;
+        }
+
+        return false;
+    }
+
+    public static bool TryGetGenericTypeArgument(this INamedTypeSymbol? symbol, int index, out ITypeSymbol? genericArgument)
+    {
+        genericArgument = default;
+        if (symbol is null
+            || !symbol.IsGenericType
+            || index >= symbol.Arity)
+        {
             return false;
         }
 
-        var argument = attributeData.ConstructorArguments[index].Value;
-
-        if (argument is T castValue)
-        {
-            value = castValue;
-            return true;
-        }
-        else
-        {
-            value = default;
-            return false;
-        }
+        genericArgument = symbol.TypeArguments[index];
+        return true;
     }
 }

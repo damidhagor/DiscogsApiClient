@@ -1,4 +1,5 @@
-﻿using DiscogsApiClient.ApiClientGenerator.Helpers;
+﻿using DiscogsApiClient.ApiClientGenerator.Attributes;
+using DiscogsApiClient.ApiClientGenerator.Helpers;
 using DiscogsApiClient.ApiClientGenerator.Models.MethodParameters;
 
 namespace DiscogsApiClient.ApiClientGenerator.Parser;
@@ -49,27 +50,31 @@ internal static class ApiMethodParser
         apiMethodType = ApiMethodType.Unknown;
         route = "";
 
-        if (!methodSymbol.TryGetAttributeBase(
-            AttributeSourceHelpers.AttributesNamespace,
-            AttributeSourceHelpers.HttpMethodAttributeName,
-            out var httpMethodAttributeData))
-        {
-            return false;
-        }
-
-        if (!httpMethodAttributeData!.TryGetAttributeConstructorArgument<string>(out var parsedRoute))
+        if (!methodSymbol.TryGetAttributeConstructorArgument<string>(
+            HttpMethodBaseAttribute.Namespace,
+            HttpMethodBaseAttribute.Name,
+            out var parsedRoute))
         {
             return false;
         }
 
         route = parsedRoute!;
 
-        apiMethodType = httpMethodAttributeData?.AttributeClass switch
+        if (!methodSymbol.TryGetConstAttributeFieldValue<string>(
+            HttpMethodBaseAttribute.Namespace,
+            HttpMethodBaseAttribute.Name,
+            "Method",
+            out var parsedMethod))
         {
-            { Name: AttributeSourceHelpers.HttpGetAttributeName } => ApiMethodType.Get,
-            { Name: AttributeSourceHelpers.HttpPostAttributeName } => ApiMethodType.Post,
-            { Name: AttributeSourceHelpers.HttpPutAttributeName } => ApiMethodType.Put,
-            { Name: AttributeSourceHelpers.HttpDeleteAttributeName } => ApiMethodType.Delete,
+            return false;
+        }
+
+        apiMethodType = parsedMethod switch
+        {
+            "Get" => ApiMethodType.Get,
+            "Post" => ApiMethodType.Post,
+            "Put" => ApiMethodType.Put,
+            "Delete" => ApiMethodType.Delete,
             _ => ApiMethodType.Unknown
         };
 
@@ -102,15 +107,13 @@ internal static class ApiMethodParser
         if (namespaceName == "System.Threading.Tasks"
             && namedTypeSymbol.Name == "Task")
         {
-            if (namedTypeSymbol.IsGenericType
-                && namedTypeSymbol.Arity == 1)
-            {
-                var resultTypeFullName = namedTypeSymbol.TypeArguments[0].ToDisplayString();
-                returnType = ApiMethodReturnType.CreateTaskWithResult(fullName, resultTypeFullName);
-            }
-            else if (!namedTypeSymbol.IsGenericType)
+            if (!namedTypeSymbol.IsGenericType)
             {
                 returnType = ApiMethodReturnType.CreateTask(fullName);
+            }
+            else if (namedTypeSymbol.TryGetGenericTypeArgument(0, out var genericArgument))
+            {
+                returnType = ApiMethodReturnType.CreateTaskWithResult(fullName, genericArgument.ToDisplayString());
             }
         }
         else
@@ -138,7 +141,7 @@ internal static class ApiMethodParser
             {
                 apiMethodParameter = new CancellationTokenApiMethodParameter(name, fullName);
             }
-            else if (parameter.TryGetAttribute(AttributeSourceHelpers.AttributesNamespace, AttributeSourceHelpers.BodyAttributeName, out _))
+            else if (parameter.HasAttribute(BodyAttribute.Namespace, BodyAttribute.Name))
             {
                 apiMethodParameter = new BodyApiMethodParameter(name, fullName);
             }
@@ -174,10 +177,9 @@ internal static class ApiMethodParser
             var isNullable = property.Type.NullableAnnotation == NullableAnnotation.Annotated;
 
             var propertyType = isNullable
-                && ((INamedTypeSymbol)property.Type).IsGenericType
-                && ((INamedTypeSymbol)property.Type).Arity == 1
-                    ? ((INamedTypeSymbol)property.Type).TypeArguments[0] as INamedTypeSymbol
-                    : ((INamedTypeSymbol)property.Type);
+                && ((INamedTypeSymbol)property.Type).TryGetGenericTypeArgument(0, out var genericPropertyType)
+                    ? genericPropertyType as INamedTypeSymbol
+                    : property.Type as INamedTypeSymbol;
             if (propertyType is null)
             {
                 continue;
@@ -185,11 +187,10 @@ internal static class ApiMethodParser
 
             var propertyTypeName = propertyType.ToDisplayString();
 
-            if (property.TryGetAttribute(
-                AttributeSourceHelpers.AttributesNamespace,
-                AttributeSourceHelpers.AliasAsAttributeName,
-                out var attribute)
-                && attribute!.TryGetAttributeConstructorArgument<string>(out var altName))
+            if (property.TryGetAttributeConstructorArgument<string>(
+                AliasAsAttribute.Namespace,
+                AliasAsAttribute.Name,
+                out var altName))
             {
                 parameterName = altName!;
             }
@@ -214,11 +215,10 @@ internal static class ApiMethodParser
                     var memberName = memberSymbol.Name;
                     var displayName = memberName;
 
-                    if (memberSymbol.TryGetAttribute(
-                        AttributeSourceHelpers.AttributesNamespace,
-                        AttributeSourceHelpers.AliasAsAttributeName,
-                        out var aliasAsAttribute)
-                        && aliasAsAttribute!.TryGetAttributeConstructorArgument<string>(out var memberAltName))
+                    if (memberSymbol.TryGetAttributeConstructorArgument<string>(
+                        AliasAsAttribute.Namespace,
+                        AliasAsAttribute.Name,
+                        out var memberAltName))
                     {
                         displayName = memberAltName!;
                     }
