@@ -1,5 +1,4 @@
-﻿using System.Runtime.Serialization;
-using DiscogsApiClient.ApiClientGenerator;
+﻿using DiscogsApiClient.ApiClientGenerator;
 using static DiscogsApiClient.QueryParameters.CollectionFolderReleaseSortQueryParameters;
 
 namespace DiscogsApiClient.QueryParameters;
@@ -20,21 +19,21 @@ public sealed record CollectionFolderReleaseSortQueryParameters(
     /// </summary>
     public enum SortableProperty
     {
-        [EnumMember(Value = "label")]
+        [AliasAs("label")]
         Label,
-        [EnumMember(Value = "artist")]
+        [AliasAs("artist")]
         Artist,
-        [EnumMember(Value = "title")]
+        [AliasAs("title")]
         Title,
-        [EnumMember(Value = "catno")]
+        [AliasAs("catno")]
         CatalogNumber,
-        [EnumMember(Value = "format")]
+        [AliasAs("format")]
         Format,
-        [EnumMember(Value = "rating")]
+        [AliasAs("rating")]
         Rating,
-        [EnumMember(Value = "added")]
+        [AliasAs("added")]
         AddedAt,
-        [EnumMember(Value = "year")]
+        [AliasAs("year")]
         Year
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Runtime.Serialization;
+﻿using DiscogsApiClient.ApiClientGenerator;
 
 namespace DiscogsApiClient.Contract;
 
@@ -30,9 +30,9 @@ public sealed record Image(
 /// </summary>
 public enum ImageType : int
 {
-    [EnumMember(Value = "primary")]
+    [AliasAs("primary")]
     Primary = 1,
-    [EnumMember(Value = "secondary")]
+    [AliasAs("secondary")]
     Secondary = 2
 }
 

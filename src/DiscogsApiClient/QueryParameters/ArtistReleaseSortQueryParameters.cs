@@ -1,5 +1,4 @@
-﻿using System.Runtime.Serialization;
-using DiscogsApiClient.ApiClientGenerator;
+﻿using DiscogsApiClient.ApiClientGenerator;
 using static DiscogsApiClient.QueryParameters.ArtistReleaseSortQueryParameters;
 
 namespace DiscogsApiClient.QueryParameters;
@@ -20,11 +19,11 @@ public sealed record ArtistReleaseSortQueryParameters(
     /// </summary>
     public enum SortableProperty
     {
-        [EnumMember(Value = "year")]
+        [AliasAs("year")]
         Year,
-        [EnumMember(Value = "title")]
+        [AliasAs("title")]
         Title,
-        [EnumMember(Value = "format")]
+        [AliasAs("format")]
         Format
     }
 }

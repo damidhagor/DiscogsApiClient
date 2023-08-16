@@ -1,4 +1,4 @@
-﻿using System.Runtime.Serialization;
+﻿using DiscogsApiClient.ApiClientGenerator;
 
 namespace DiscogsApiClient.Contract.Search;
 
@@ -7,13 +7,13 @@ namespace DiscogsApiClient.Contract.Search;
 /// </summary>
 public enum SearchResultType
 {
-    [EnumMember(Value = "artist")]
+    [AliasAs("artist")]
     Artist,
-    [EnumMember(Value = "master")]
+    [AliasAs("master")]
     Master,
-    [EnumMember(Value = "release")]
+    [AliasAs("release")]
     Release,
-    [EnumMember(Value = "label")]
+    [AliasAs("label")]
     Label
 }
 

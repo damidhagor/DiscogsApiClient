@@ -1,4 +1,4 @@
-﻿using System.Runtime.Serialization;
+﻿using DiscogsApiClient.ApiClientGenerator;
 
 namespace DiscogsApiClient.QueryParameters;
 
@@ -7,8 +7,8 @@ namespace DiscogsApiClient.QueryParameters;
 /// </summary>
 public enum SortOrder
 {
-    [EnumMember(Value = "asc")]
+    [AliasAs("asc")]
     Ascending,
-    [EnumMember(Value = "desc")]
+    [AliasAs("desc")]
     Descending
 }
