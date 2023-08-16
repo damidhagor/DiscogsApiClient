@@ -19,6 +19,8 @@ internal static class QueryParameterGenerator
 
         foreach (var parameter in queryParameters)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (implementedExtensions.Contains(parameter.FullName))
             {
                 continue;
@@ -42,6 +44,8 @@ internal static class QueryParameterGenerator
 
             foreach (var property in parameter.QueryParameters)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 builder.AppendLine(
                     $$"""
                                     if ({{parameter.Name}}.{{property.PropertyName}} is not null)
@@ -70,6 +74,8 @@ internal static class QueryParameterGenerator
 
             foreach (var property in parameter.QueryParameters)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 builder.AppendLine(
                     $$"""
                                 if ({{parameter.Name}}.{{property.PropertyName}} is not null)
@@ -92,6 +98,8 @@ internal static class QueryParameterGenerator
 
                     foreach (var enumValue in property.EnumValues!)
                     {
+                        cancellationToken.ThrowIfCancellationRequested();
+
                         builder.AppendLine(
                             $$"""
                                                 { {{property.PropertyName}}: {{property.PropertyType}}.{{enumValue.MemberName}} } => "{{enumValue.DisplayName}}",
@@ -153,6 +161,8 @@ internal static class QueryParameterGenerator
 
         foreach (var parameter in queryParameters)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (implementedExtensions.Contains(parameter.PropertyType))
             {
                 continue;

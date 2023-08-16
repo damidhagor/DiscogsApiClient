@@ -29,7 +29,7 @@ internal static class ApiMethodGenerator
         builder.Append(_methodStart);
         builder.GenerateMethodReturnType(apiMethod.ReturnType);
         builder.Append(apiMethod.Name);
-        builder.GenerateMethodParameters(apiMethod.Parameters);
+        builder.GenerateMethodParameters(apiMethod.Parameters, cancellationToken);
 
         builder.AppendLine(_methodBodyStart);
         builder.GenerateApiMethodBody(apiMethod, cancellationToken);
@@ -47,12 +47,14 @@ internal static class ApiMethodGenerator
         builder.Append(_space);
     }
 
-    private static void GenerateMethodParameters(this StringBuilder builder, List<ApiMethodParameter> parameters)
+    private static void GenerateMethodParameters(this StringBuilder builder, List<ApiMethodParameter> parameters, CancellationToken cancellationToken)
     {
         builder.Append(_openParenthesis);
 
         for (var i = 0; i < parameters.Count; i++)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var parameter = parameters[i];
 
             builder.Append(parameter.FullName);

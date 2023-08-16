@@ -152,7 +152,7 @@ internal static class ApiMethodParser
             }
             else
             {
-                var queryParameters = parameter.Type.ParseAsQueryParameters();
+                var queryParameters = parameter.Type.ParseAsQueryParameters(cancellationToken);
                 apiMethodParameter = new QueryApiMethodParameter(name, fullName, typeFullName, queryParameters);
             }
 
@@ -162,7 +162,7 @@ internal static class ApiMethodParser
         return parameters;
     }
 
-    private static List<QueryParameter> ParseAsQueryParameters(this ITypeSymbol type)
+    private static List<QueryParameter> ParseAsQueryParameters(this ITypeSymbol type, CancellationToken cancellationToken)
     {
         var parameters = new List<QueryParameter>();
 
@@ -173,6 +173,8 @@ internal static class ApiMethodParser
 
         foreach (var property in properties.OfType<IPropertySymbol>())
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var propertyName = property.Name;
             var parameterName = property.Name;
             var isNullable = property.Type.NullableAnnotation == NullableAnnotation.Annotated;
@@ -213,6 +215,8 @@ internal static class ApiMethodParser
                 var enumValues = new List<(string MemberName, string DisplayName)>();
                 foreach (var memberSymbol in memberSymbols)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     var memberName = memberSymbol.Name;
                     var displayName = memberName;
 

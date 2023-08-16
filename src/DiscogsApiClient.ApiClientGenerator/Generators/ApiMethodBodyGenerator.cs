@@ -9,7 +9,7 @@ internal static class ApiMethodBodyGenerator
                 string route = $"{0}";
         """;
 
-    public static void GenerateApiMethodBody(this StringBuilder builder, ApiMethod apiMethod, CancellationToken cancellationToken)
+    public static void GenerateApiMethodBody(this StringBuilder builder, ApiMethod apiMethod)
     {
         builder.GenerateRoute(apiMethod, apiMethod.Parameters);
         builder.AppendLine();
