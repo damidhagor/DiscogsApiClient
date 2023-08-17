@@ -34,7 +34,8 @@ public class ApiClientSourceGenerator : IIncrementalGenerator
                .AddHttpPutAttribute()
                .AddHttpDeleteAttribute()
                .AddBodyAttribute()
-               .AddAliasAsAttribute();
+               .AddAliasAsAttribute()
+               .AddApiClientSettings();
     }
 
     private static bool IsSyntaxNodeGenerationTarget(SyntaxNode syntaxNode)

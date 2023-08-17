@@ -1,4 +1,8 @@
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
 using DiscogsApiClient.Authentication.OAuth;
 using DiscogsApiClient.Authentication.PersonalAccessToken;
@@ -94,8 +98,45 @@ public abstract class ApiBaseTestFixture
         };
         clientHttpClient.DefaultRequestHeaders.UserAgent.ParseAdd(clientUserAgent);
 
-        var discogsApiClient = new DiscogsClient(clientHttpClient);
+        var apiClientSettings = new ApiClientGenerator.ApiClientSettings<IDiscogsClient>
+        {
+            JsonSerializerOptions = new()
+            {
+                //Converters = { new DiscogsImageTypeConverter() }
+            }
+        };
+
+        var discogsApiClient = new DiscogsClient(clientHttpClient, apiClientSettings);
 
         return (discogsApiClient, authHttpClient, clientHttpClient);
     }
 }
+
+
+//public class DiscogsImageTypeConverter : JsonConverter<ImageType>
+//{
+//    public override ImageType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+//    {
+//        ImageType imageType;
+
+//        if (reader.ValueTextEquals("primary"))
+//        {
+//            imageType = ImageType.Primary;
+//        }
+//        else if(reader.ValueTextEquals("secondary"))
+//        {
+//            imageType = ImageType.Secondary;
+//        }
+//        else
+//        {
+//            throw new JsonException($"Value '{reader.GetString()}' can not be serialized as {typeof(ImageType).FullName}.");
+//        }
+
+//        return imageType;
+//    }
+
+//    public override void Write(Utf8JsonWriter writer, ImageType value, JsonSerializerOptions options)
+//    {
+
+//    }
+//}

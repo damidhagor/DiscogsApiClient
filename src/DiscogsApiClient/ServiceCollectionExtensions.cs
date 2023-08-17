@@ -1,4 +1,5 @@
 ﻿using System.Threading.RateLimiting;
+using DiscogsApiClient.ApiClientGenerator;
 using DiscogsApiClient.Authentication.OAuth;
 using DiscogsApiClient.Authentication.PersonalAccessToken;
 using DiscogsApiClient.Middleware;
@@ -40,6 +41,14 @@ public static partial class ServiceCollectionExtensions
             var options = serviceProvider.GetRequiredService<DiscogsApiClientOptions>();
             httpClient.BaseAddress = new Uri(options.BaseUrl);
             httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent);
+        });
+
+        services.AddSingleton(new ApiClientSettings<IDiscogsClient>
+        {
+            JsonSerializerOptions = new()
+            {
+                
+            }
         });
 
         var httpClientBuilder = services.AddHttpClient<IDiscogsClient, DiscogsClient>()

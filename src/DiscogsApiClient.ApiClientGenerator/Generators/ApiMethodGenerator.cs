@@ -32,7 +32,7 @@ internal static class ApiMethodGenerator
         builder.GenerateMethodParameters(apiMethod.Parameters, cancellationToken);
 
         builder.AppendLine(_methodBodyStart);
-        builder.GenerateApiMethodBody(apiMethod, cancellationToken);
+        builder.GenerateApiMethodBody(apiMethod);
         builder.AppendLine(_methodBodyEnd);
     }
 

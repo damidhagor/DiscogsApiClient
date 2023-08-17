@@ -41,13 +41,17 @@ internal static class ApiClientGenerator
 
             namespace {{apiClient.NamespaceName}};
         
-            public partial class {{apiClient.ClientName}} : {{apiClient.InterfaceName}}
+            internal partial class {{apiClient.ClientName}} : {{apiClient.InterfaceName}}
             {
                 private readonly System.Net.Http.HttpClient _httpClient;
+                private readonly {{ApiClientSettingsGenerator.Namespace}}.{{ApiClientSettingsGenerator.Name}}<{{apiClient.InterfaceName}}> _apiClientSettings;
 
-                public {{apiClient.ClientName}}(System.Net.Http.HttpClient httpClient)
+                public {{apiClient.ClientName}}(
+                    System.Net.Http.HttpClient httpClient,
+                    {{ApiClientSettingsGenerator.Namespace}}.{{ApiClientSettingsGenerator.Name}}<{{apiClient.InterfaceName}}> apiClientSettings)
                 {
                     _httpClient = httpClient;
+                    _apiClientSettings = apiClientSettings;
                 }
             """);
     }
@@ -63,7 +67,7 @@ internal static class ApiClientGenerator
 
                 if (payload is not null)
                 {
-                    var content = System.Text.Json.JsonSerializer.Serialize(payload);
+                    var content = System.Text.Json.JsonSerializer.Serialize(payload, _apiClientSettings.JsonSerializerOptions);
                     request.Content = new StringContent(content, System.Text.Encoding.UTF8, "application/json");
                 }
 
@@ -77,7 +81,7 @@ internal static class ApiClientGenerator
         
                 if (payload is not null)
                 {
-                    var content = System.Text.Json.JsonSerializer.Serialize(payload);
+                    var content = System.Text.Json.JsonSerializer.Serialize(payload, _apiClientSettings.JsonSerializerOptions);
                     request.Content = new StringContent(content, System.Text.Encoding.UTF8, "application/json");
                 }
         
@@ -86,7 +90,7 @@ internal static class ApiClientGenerator
 
                 var responseStream = response.Content.ReadAsStream();
 
-                return System.Text.Json.JsonSerializer.Deserialize<T>(responseStream);
+                return System.Text.Json.JsonSerializer.Deserialize<T>(responseStream, _apiClientSettings.JsonSerializerOptions);
             }
 
             private async Task SendAsync(System.Net.Http.HttpMethod httpMethod, string route, object? payload = null, System.Threading.CancellationToken cancellationToken = default)
@@ -95,7 +99,7 @@ internal static class ApiClientGenerator
         
                 if (payload is not null)
                 {
-                    var content = System.Text.Json.JsonSerializer.Serialize(payload);
+                    var content = System.Text.Json.JsonSerializer.Serialize(payload, _apiClientSettings.JsonSerializerOptions);
                     request.Content = new StringContent(content, System.Text.Encoding.UTF8, "application/json");
                 }
         
@@ -109,7 +113,7 @@ internal static class ApiClientGenerator
         
                 if (payload is not null)
                 {
-                    var content = System.Text.Json.JsonSerializer.Serialize(payload);
+                    var content = System.Text.Json.JsonSerializer.Serialize(payload, _apiClientSettings.JsonSerializerOptions);
                     request.Content = new StringContent(content, System.Text.Encoding.UTF8, "application/json");
                 }
         
@@ -118,7 +122,7 @@ internal static class ApiClientGenerator
 
                 var responseStream = response.Content.ReadAsStream();
         
-                return await System.Text.Json.JsonSerializer.DeserializeAsync<T>(responseStream, cancellationToken: cancellationToken);
+                return await System.Text.Json.JsonSerializer.DeserializeAsync<T>(responseStream, _apiClientSettings.JsonSerializerOptions, cancellationToken);
             }
         }
         """);
