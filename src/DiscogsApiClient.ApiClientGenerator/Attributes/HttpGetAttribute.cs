@@ -2,8 +2,6 @@
 
 internal static class HttpGetAttribute
 {
-    public const string Namespace = "DiscogsApiClient.ApiClientGenerator";
-
     public const string Name = "HttpGetAttribute";
 
     public const string SourceHint = "HttpGetAttribute.g.cs";
@@ -12,7 +10,7 @@ internal static class HttpGetAttribute
         $$"""
         #nullable enable
         
-        namespace {{Namespace}};
+        namespace {{Constants.GeneratorNamespace}};
 
         [System.AttributeUsage(System.AttributeTargets.Method)]
         public sealed class {{Name}} : global::{{HttpMethodBaseAttribute.Namespace}}.{{HttpMethodBaseAttribute.Name}}

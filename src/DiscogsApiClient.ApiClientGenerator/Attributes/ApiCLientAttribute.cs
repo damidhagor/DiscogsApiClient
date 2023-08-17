@@ -2,8 +2,6 @@
 
 internal static class ApiCLientAttribute
 {
-    public const string Namespace = "DiscogsApiClient.ApiClientGenerator";
-
     public const string Name = "ApiClientAttribute";
 
     public const string SourceHint = "ApiClientAttribute.g.cs";
@@ -12,7 +10,7 @@ internal static class ApiCLientAttribute
         $$"""
         #nullable enable
         
-        namespace {{Namespace}};
+        namespace {{Constants.GeneratorNamespace}};
 
         [System.AttributeUsage(System.AttributeTargets.Interface)]
         public sealed class {{Name}} : System.Attribute { }

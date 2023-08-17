@@ -2,8 +2,6 @@
 
 internal static class AliasAsAttribute
 {
-    public const string Namespace = "DiscogsApiClient.ApiClientGenerator";
-
     public const string Name = "AliasAsAttribute";
 
     public const string SourceHint = "AliasAsAttribute.g.cs";
@@ -12,7 +10,7 @@ internal static class AliasAsAttribute
         $$"""
         #nullable enable
 
-        namespace {{Namespace}};
+        namespace {{Constants.GeneratorNamespace}};
 
         [System.AttributeUsage(System.AttributeTargets.Property | System.AttributeTargets.Field)]
         public sealed class {{Name}} : System.Attribute

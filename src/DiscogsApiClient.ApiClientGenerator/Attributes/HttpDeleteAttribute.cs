@@ -2,8 +2,6 @@
 
 internal static class HttpDeleteAttribute
 {
-    public const string Namespace = "DiscogsApiClient.ApiClientGenerator";
-
     public const string Name = "HttpDeleteAttribute";
 
     public const string SourceHint = "HttpDeleteAttribute.g.cs";
@@ -12,7 +10,7 @@ internal static class HttpDeleteAttribute
         $$"""
         #nullable enable
         
-        namespace {{Namespace}};
+        namespace {{Constants.GeneratorNamespace}};
 
         [System.AttributeUsage(System.AttributeTargets.Method)]
         public sealed class {{Name}} : global::{{HttpMethodBaseAttribute.Namespace}}.{{HttpMethodBaseAttribute.Name}}
