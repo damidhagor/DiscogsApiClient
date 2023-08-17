@@ -1,4 +1,4 @@
-﻿using DiscogsApiClient.ApiClientGenerator;
+﻿using DiscogsApiClient.SourceGenerator.Shared;
 using static DiscogsApiClient.QueryParameters.ArtistReleaseSortQueryParameters;
 
 namespace DiscogsApiClient.QueryParameters;

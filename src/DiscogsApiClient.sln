@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiscogsApiClient", "Discogs
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiscogsApiClient.Tests", "DiscogsApiClient.Tests\DiscogsApiClient.Tests.csproj", "{489F8E2F-5533-4136-9155-925D1A44BFB8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscogsApiClient.ApiClientGenerator", "DiscogsApiClient.ApiClientGenerator\DiscogsApiClient.ApiClientGenerator.csproj", "{D4EB4732-1883-4711-AC03-8D2B559E0736}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscogsApiClient.SourceGenerator", "DiscogsApiClient.SourceGenerator\DiscogsApiClient.SourceGenerator.csproj", "{D4EB4732-1883-4711-AC03-8D2B559E0736}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

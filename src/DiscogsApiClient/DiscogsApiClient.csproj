@@ -38,7 +38,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\DiscogsApiClient.ApiClientGenerator\DiscogsApiClient.ApiClientGenerator.csproj"
+	  <ProjectReference Include="..\DiscogsApiClient.SourceGenerator\DiscogsApiClient.SourceGenerator.csproj"
 						ReferenceOutputAssembly="false"
 						OutputItemType="Analyzer" />
 	</ItemGroup>
