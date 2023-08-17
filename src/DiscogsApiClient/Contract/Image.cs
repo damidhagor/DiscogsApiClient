@@ -1,4 +1,5 @@
 ﻿using DiscogsApiClient.SourceGenerator.Shared;
+using DiscogsApiClient.SourceGenerator.JsonSerialization;
 
 namespace DiscogsApiClient.Contract;
 
@@ -28,6 +29,7 @@ public sealed record Image(
 /// <summary>
 /// The possible types of <see cref="Image"/>s.
 /// </summary>
+[GenerateJsonConverter]
 public enum ImageType : int
 {
     [AliasAs("primary")]
