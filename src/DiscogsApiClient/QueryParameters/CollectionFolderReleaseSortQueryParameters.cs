@@ -1,4 +1,5 @@
-﻿using DiscogsApiClient.SourceGenerator.Shared;
+﻿using DiscogsApiClient.SourceGenerator.JsonSerialization;
+using DiscogsApiClient.SourceGenerator.Shared;
 using static DiscogsApiClient.QueryParameters.CollectionFolderReleaseSortQueryParameters;
 
 namespace DiscogsApiClient.QueryParameters;
@@ -17,6 +18,7 @@ public sealed record CollectionFolderReleaseSortQueryParameters(
     /// <summary>
     /// Release properties which can be used to sort the results with.
     /// </summary>
+    [GenerateJsonConverter]
     public enum SortableProperty
     {
         [AliasAs("label")]

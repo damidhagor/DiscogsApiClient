@@ -1,5 +1,5 @@
-﻿using DiscogsApiClient.SourceGenerator.Shared;
-using DiscogsApiClient.SourceGenerator.JsonSerialization;
+﻿using DiscogsApiClient.SourceGenerator.JsonSerialization;
+using DiscogsApiClient.SourceGenerator.Shared;
 
 namespace DiscogsApiClient.Contract;
 

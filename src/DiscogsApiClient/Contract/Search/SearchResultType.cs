@@ -1,10 +1,12 @@
-﻿using DiscogsApiClient.SourceGenerator.Shared;
+﻿using DiscogsApiClient.SourceGenerator.JsonSerialization;
+using DiscogsApiClient.SourceGenerator.Shared;
 
 namespace DiscogsApiClient.Contract.Search;
 
 /// <summary>
 /// The type a search result can be
 /// </summary>
+[GenerateJsonConverter]
 public enum SearchResultType
 {
     [AliasAs("artist")]

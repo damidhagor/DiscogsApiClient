@@ -101,10 +101,11 @@ public abstract class ApiBaseTestFixture
         var apiClientSettings = new ApiClientGenerator.ApiClientSettings<IDiscogsClient>
         {
             JsonSerializerOptions = new()
-            {
-                //Converters = { new DiscogsImageTypeConverter() }
-            }
         };
+        foreach (var jsonConverter in EnumJsonConverters.Converters)
+        {
+            apiClientSettings.JsonSerializerOptions.Converters.Add(jsonConverter);
+        }
 
         var discogsApiClient = new DiscogsClient(clientHttpClient, apiClientSettings);
 
@@ -112,31 +113,3 @@ public abstract class ApiBaseTestFixture
     }
 }
 
-
-//public class DiscogsImageTypeConverter : JsonConverter<ImageType>
-//{
-//    public override ImageType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-//    {
-//        ImageType imageType;
-
-//        if (reader.ValueTextEquals("primary"))
-//        {
-//            imageType = ImageType.Primary;
-//        }
-//        else if(reader.ValueTextEquals("secondary"))
-//        {
-//            imageType = ImageType.Secondary;
-//        }
-//        else
-//        {
-//            throw new JsonException($"Value '{reader.GetString()}' can not be serialized as {typeof(ImageType).FullName}.");
-//        }
-
-//        return imageType;
-//    }
-
-//    public override void Write(Utf8JsonWriter writer, ImageType value, JsonSerializerOptions options)
-//    {
-
-//    }
-//}
