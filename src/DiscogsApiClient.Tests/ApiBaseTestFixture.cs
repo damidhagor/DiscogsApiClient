@@ -1,9 +1,6 @@
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Reflection;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
+using DiscogsApiClient.ApiClientGenerator;
 using DiscogsApiClient.Authentication.OAuth;
 using DiscogsApiClient.Authentication.PersonalAccessToken;
 using DiscogsApiClient.Middleware;
@@ -98,14 +95,8 @@ public abstract class ApiBaseTestFixture
         };
         clientHttpClient.DefaultRequestHeaders.UserAgent.ParseAdd(clientUserAgent);
 
-        var apiClientSettings = new ApiClientGenerator.ApiClientSettings<IDiscogsClient>
-        {
-            JsonSerializerOptions = new()
-        };
-        foreach (var jsonConverter in EnumJsonConverters.Converters)
-        {
-            apiClientSettings.JsonSerializerOptions.Converters.Add(jsonConverter);
-        }
+        var apiClientSettings = new ApiClientSettings<IDiscogsClient>()
+            .AddGeneratedJsonConverters();
 
         var discogsApiClient = new DiscogsClient(clientHttpClient, apiClientSettings);
 

@@ -16,7 +16,20 @@ internal static class ApiClientSettingsGenerator
 
         internal sealed class {{Name}}<T>
         {
-            public global::System.Text.Json.JsonSerializerOptions JsonSerializerOptions { get; init; }
+            public global::System.Text.Json.JsonSerializerOptions JsonSerializerOptions { get; init; } = new();
+        }
+
+        internal static class {{Name}}Extensions
+        {
+            public static {{Name}}<T> AddGeneratedJsonConverters<T>(this {{Name}}<T> settings)
+            {
+                foreach (var jsonConverter in {{"DiscogsApiClient"}}.EnumJsonConverters.Converters)
+                {
+                    settings.JsonSerializerOptions.Converters.Add(jsonConverter);
+                }
+
+                return settings;
+            }
         }
         """;
 

@@ -43,17 +43,8 @@ public static partial class ServiceCollectionExtensions
             httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent);
         });
 
-
-        var apiClientSettings = new ApiClientSettings<IDiscogsClient>
-        {
-            JsonSerializerOptions = new()
-        };
-
-        foreach (var jsonConverter in EnumJsonConverters.Converters)
-        {
-            apiClientSettings.JsonSerializerOptions.Converters.Add(jsonConverter);
-        }
-
+        var apiClientSettings = new ApiClientSettings<IDiscogsClient>()
+            .AddGeneratedJsonConverters();
         services.AddSingleton(apiClientSettings);
 
         var httpClientBuilder = services.AddHttpClient<IDiscogsClient, DiscogsClient>()
