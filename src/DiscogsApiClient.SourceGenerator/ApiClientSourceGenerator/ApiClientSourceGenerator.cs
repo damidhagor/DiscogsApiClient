@@ -47,25 +47,9 @@ public class ApiClientSourceGenerator : IIncrementalGenerator
     {
         var interfaceSyntax = (InterfaceDeclarationSyntax)context.Node;
 
-        foreach (var attributeListSyntax in interfaceSyntax.AttributeLists)
-        {
-            foreach (var attributeSyntax in attributeListSyntax.Attributes)
-            {
-                if (IsMarkerAttribute(attributeSyntax, context))
-                {
-                    return interfaceSyntax;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    private static bool IsMarkerAttribute(AttributeSyntax attributeSyntax, GeneratorSyntaxContext context)
-    {
-        return context.SemanticModel.GetSymbolInfo(attributeSyntax).Symbol is IMethodSymbol attributeSymbol
-                    && attributeSymbol.ContainingNamespace.ToDisplayString() == Constants.ApiClientNamespace
-                    && attributeSymbol.ContainingType.Name == ApiCLientAttribute.Name;
+        return interfaceSyntax.HasMarkerAttribute(context, Constants.ApiClientNamespace, ApiCLientAttribute.Name)
+            ? interfaceSyntax
+            : null;
     }
 
     private static void Execute(Compilation compilation, ImmutableArray<InterfaceDeclarationSyntax> interfaceDeclarations, SourceProductionContext context)

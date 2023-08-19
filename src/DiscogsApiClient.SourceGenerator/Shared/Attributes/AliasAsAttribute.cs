@@ -13,7 +13,7 @@ internal static class AliasAsAttribute
         namespace {{Constants.SharedNamespace}};
 
         [System.AttributeUsage(System.AttributeTargets.Property | System.AttributeTargets.Field)]
-        public sealed class {{Name}} : System.Attribute
+        internal sealed class {{Name}} : System.Attribute
         {
             public string Alias { get; set; }
         

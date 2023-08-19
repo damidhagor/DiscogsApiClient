@@ -1,4 +1,6 @@
-﻿namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Generators;
+﻿using DiscogsApiClient.SourceGenerator.JsonSerialization.Generators;
+
+namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Generators;
 
 internal static class ApiClientSettingsGenerator
 {
@@ -23,7 +25,7 @@ internal static class ApiClientSettingsGenerator
         {
             public static {{Name}}<T> AddGeneratedJsonConverters<T>(this {{Name}}<T> settings)
             {
-                foreach (var jsonConverter in {{"DiscogsApiClient"}}.EnumJsonConverters.Converters)
+                foreach (var jsonConverter in {{EnumJsonConverterGenerator.Namespace}}.{{EnumJsonConverterGenerator.ClassName}}.Converters)
                 {
                     settings.JsonSerializerOptions.Converters.Add(jsonConverter);
                 }

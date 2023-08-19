@@ -35,17 +35,13 @@ internal static class EnumParser
             cancellationToken.ThrowIfCancellationRequested();
 
             var enumMember = fieldSymbol.ParseEnumMember(cancellationToken);
-
-            if (enumMember is not null)
-            {
-                enumMembers.Add(enumMember);
-            }
+            enumMembers.Add(enumMember);
         }
 
         return enumMembers;
     }
 
-    public static EnumerationMember? ParseEnumMember(this IFieldSymbol memberSymbol, CancellationToken cancellationToken)
+    public static EnumerationMember ParseEnumMember(this IFieldSymbol memberSymbol, CancellationToken cancellationToken)
     {
         var fieldName = memberSymbol.Name;
         var displayName = fieldName;

@@ -2,21 +2,27 @@
 
 namespace DiscogsApiClient.SourceGenerator.JsonSerialization.Generators;
 
-internal static class JsonConverterGenerator
+internal static class EnumJsonConverterGenerator
 {
-    public static (string hint, SourceText) GenerateJsonConverters(this List<Enumeration> enums, CancellationToken cancellationToken)
+    public const string Namespace = Constants.JsonSerializationNamespace;
+
+    public const string ClassName = "EnumJsonConverters";
+
+    public const string SourceHint = $"{ClassName}.g.cs";
+
+    public static (string hint, SourceText) GenerateEnumJsonConverters(this List<Enumeration> enums, CancellationToken cancellationToken)
     {
-        var source = GenerateJsonConverterSource(enums, cancellationToken);
-        var hint = $"JsonConverters.g.cs";
+        var source = GenerateEnumJsonConvertersSource(enums, cancellationToken);
+        var hint = SourceHint;
 
         return (hint, SourceText.From(source, Encoding.UTF8));
     }
 
-    private static string GenerateJsonConverterSource(this List<Enumeration> enums, CancellationToken cancellationToken)
+    private static string GenerateEnumJsonConvertersSource(this List<Enumeration> enums, CancellationToken cancellationToken)
     {
         var builder = new StringBuilder();
 
-        builder.GenerateJsonConverterStart(enums, cancellationToken);
+        builder.GenerateEnumJsonConvertersStart(enums, cancellationToken);
 
         foreach (var enumeration in enums)
         {
@@ -24,20 +30,20 @@ internal static class JsonConverterGenerator
             builder.GenerateEnumJsonConverter(enumeration, cancellationToken);
         }
 
-        builder.GenerateJsonConverterEnd();
+        builder.AppendLine("}");
 
         return builder.ToString();
     }
 
-    private static void GenerateJsonConverterStart(this StringBuilder builder, List<Enumeration> enums, CancellationToken cancellationToken)
+    private static void GenerateEnumJsonConvertersStart(this StringBuilder builder, List<Enumeration> enums, CancellationToken cancellationToken)
     {
         builder.AppendLine(
             $$"""
             #nullable enable
 
-            namespace {{"DiscogsApiClient"}};
+            namespace {{Namespace}};
         
-            internal static class {{"EnumJsonConverters"}}
+            internal static class {{ClassName}}
             {
                 public static global::System.Collections.Generic.IReadOnlyList<global::System.Text.Json.Serialization.JsonConverter> Converters { get; } = new global::System.Collections.Generic.List<global::System.Text.Json.Serialization.JsonConverter>
                 {
@@ -46,20 +52,7 @@ internal static class JsonConverterGenerator
         for (var i = 0; i < enums.Count; i++)
         {
             cancellationToken.ThrowIfCancellationRequested();
-
-            var enumeration = enums[i];
-            var className = $"{enumeration.FullName.Replace(".", "")}JsonConverter";
-
-            builder.Append($"\t\tnew {className}()");
-
-            if (i < enums.Count - 1)
-            {
-                builder.AppendLine(",");
-            }
-            else
-            {
-                builder.AppendLine();
-            }
+            builder.Append($"\t\tnew {enums[i].GetJsonConverterClassName()}(),");
         }
 
         builder.AppendLine(
@@ -68,14 +61,9 @@ internal static class JsonConverterGenerator
             """);
     }
 
-    private static void GenerateJsonConverterEnd(this StringBuilder builder)
-    {
-        builder.AppendLine("}");
-    }
-
     private static void GenerateEnumJsonConverter(this StringBuilder builder, Enumeration enumeration, CancellationToken cancellationToken)
     {
-        var className = $"{enumeration.FullName.Replace(".", "")}JsonConverter";
+        var className = enumeration.GetJsonConverterClassName();
 
         builder.AppendLine(
             $$"""
@@ -135,4 +123,7 @@ internal static class JsonConverterGenerator
                 }
             """);
     }
+
+    private static string GetJsonConverterClassName(this Enumeration enumeration)
+        => $"{enumeration.FullName.Replace(".", "")}JsonConverter";
 }
