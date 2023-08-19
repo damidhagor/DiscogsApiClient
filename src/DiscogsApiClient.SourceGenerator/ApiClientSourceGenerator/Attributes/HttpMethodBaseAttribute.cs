@@ -13,7 +13,7 @@ internal static class HttpMethodBaseAttribute
         namespace {{Constants.ApiClientNamespace}};
 
         [System.AttributeUsage(System.AttributeTargets.Method)]
-        public abstract class {{Name}} : System.Attribute
+        internal abstract class {{Name}} : System.Attribute
         {
             public string Route { get; set; }
         

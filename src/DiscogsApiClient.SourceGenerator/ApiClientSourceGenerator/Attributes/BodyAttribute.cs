@@ -13,6 +13,6 @@ internal static class BodyAttribute
         namespace {{Constants.ApiClientNamespace}};
 
         [System.AttributeUsage(System.AttributeTargets.Parameter)]
-        public sealed class {{Name}} : System.Attribute { }
+        internal sealed class {{Name}} : System.Attribute { }
         """;
 }

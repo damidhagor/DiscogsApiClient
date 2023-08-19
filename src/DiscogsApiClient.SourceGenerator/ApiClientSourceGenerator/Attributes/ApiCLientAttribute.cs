@@ -13,6 +13,6 @@ internal static class ApiCLientAttribute
         namespace {{Constants.ApiClientNamespace}};
 
         [System.AttributeUsage(System.AttributeTargets.Interface)]
-        public sealed class {{Name}} : System.Attribute { }
+        internal sealed class {{Name}} : System.Attribute { }
         """;
 }

@@ -13,7 +13,7 @@ internal static class HttpGetAttribute
         namespace {{Constants.ApiClientNamespace}};
 
         [System.AttributeUsage(System.AttributeTargets.Method)]
-        public sealed class {{Name}} : global::{{Constants.ApiClientNamespace}}.{{HttpMethodBaseAttribute.Name}}
+        internal sealed class {{Name}} : global::{{Constants.ApiClientNamespace}}.{{HttpMethodBaseAttribute.Name}}
         {
             public const string Method = "Get";
 
