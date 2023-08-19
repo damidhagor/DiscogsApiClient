@@ -37,7 +37,7 @@ internal static class QueryParameterGenerator
                 internal static class {{parameter.TypeFullName.Replace(".", "").Replace("?", "")}}Extensions
                 #endif
                 {
-                    public static void CalculateQuerySize(this {{parameter.FullName}}, ref int capacity, ref int parameterCount)
+                    public static void CalculateQuerySize(this global::{{parameter.FullName}}, ref int capacity, ref int parameterCount)
                     {
                         if ({{parameter.Name}} is not null)
                         {
@@ -67,7 +67,7 @@ internal static class QueryParameterGenerator
             builder.AppendLine(
                 $$"""
 
-                    public static void AppendQuery(this {{parameter.FullName}}, System.Text.StringBuilder queryBuilder, int routeLength)
+                    public static void AppendQuery(this global::{{parameter.FullName}}, global::System.Text.StringBuilder queryBuilder, int routeLength)
                     {
                         if ({{parameter.Name}} is not null)
                         {
@@ -103,7 +103,7 @@ internal static class QueryParameterGenerator
 
                         builder.AppendLine(
                             $$"""
-                                                { {{property.PropertyName}}: {{property.PropertyType}}.{{enumValue.MemberName}} } => "{{enumValue.DisplayName}}",
+                                                { {{property.PropertyName}}: global::{{property.PropertyType}}.{{enumValue.MemberName}} } => "{{enumValue.DisplayName}}",
                             """);
                     }
 
@@ -193,7 +193,7 @@ internal static class QueryParameterGenerator
             {
                 builder.AppendLine(
                     $$"""
-                        public static int CalculateQuerySize({{parameter.PropertyType}} enumValue)
+                        public static int CalculateQuerySize(global::{{parameter.PropertyType}} enumValue)
                         {
                             return enumValue switch
                             {
@@ -205,21 +205,21 @@ internal static class QueryParameterGenerator
                     {
                         builder.AppendLine(
                             $$"""
-                                        {{parameter.PropertyType}}.{{enumValue.MemberName}} => {{enumValue.DisplayName.Length}}, // {{enumValue.DisplayName}}
+                                        global::{{parameter.PropertyType}}.{{enumValue.MemberName}} => {{enumValue.DisplayName.Length}}, // {{enumValue.DisplayName}}
                             """);
                     }
                 }
 
                 builder.AppendLine(
                     $$"""
-                                _ => throw new ArgumentOutOfRangeException(nameof(enumValue))
+                                _ => throw new global::System.ArgumentOutOfRangeException(nameof(enumValue))
                             };
                         }
                     """);
 
                 builder.AppendLine(
                     $$"""
-                        public static int CalculateQuerySize({{parameter.PropertyType}}? enumValue)
+                        public static int CalculateQuerySize(global::{{parameter.PropertyType}}? enumValue)
                         {
                             return enumValue is not null ? CalculateQuerySize(enumValue.Value) : 0;
                         }

@@ -54,10 +54,10 @@ internal static class ApiMethodBodyGenerator
     {
         var httpMethod = apiMethod switch
         {
-            { Method: ApiMethodType.Get } => "System.Net.Http.HttpMethod.Get",
-            { Method: ApiMethodType.Post } => "System.Net.Http.HttpMethod.Post",
-            { Method: ApiMethodType.Put } => "System.Net.Http.HttpMethod.Put",
-            { Method: ApiMethodType.Delete } => "System.Net.Http.HttpMethod.Delete",
+            { Method: ApiMethodType.Get } => "global::System.Net.Http.HttpMethod.Get",
+            { Method: ApiMethodType.Post } => "global::System.Net.Http.HttpMethod.Post",
+            { Method: ApiMethodType.Put } => "global::System.Net.Http.HttpMethod.Put",
+            { Method: ApiMethodType.Delete } => "global::System.Net.Http.HttpMethod.Delete",
             _ => ""
         };
 
@@ -80,12 +80,12 @@ internal static class ApiMethodBodyGenerator
         if (apiMethod.ReturnType.IsTask
             && apiMethod.ReturnType.HasResult)
         {
-            builder.Append($"<{apiMethod.ReturnType.TaskResultTypeFullName}>(");
+            builder.Append($"<global::{apiMethod.ReturnType.TaskResultTypeFullName}>(");
         }
         else if (!apiMethod.ReturnType.IsVoid
             && !apiMethod.ReturnType.IsTask)
         {
-            builder.Append($"<{apiMethod.ReturnType.FullName}>(");
+            builder.Append($"<global::{apiMethod.ReturnType.FullName}>(");
         }
         else
         {

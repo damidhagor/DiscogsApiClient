@@ -52,7 +52,7 @@ internal static class EnumJsonConverterGenerator
         for (var i = 0; i < enums.Count; i++)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            builder.Append($"\t\tnew {enums[i].GetJsonConverterClassName()}(),");
+            builder.AppendLine($"\t\tnew {enums[i].GetJsonConverterClassName()}(),");
         }
 
         builder.AppendLine(
@@ -118,7 +118,7 @@ internal static class EnumJsonConverterGenerator
                         global::{{enumeration.FullName}} value,
                         global::System.Text.Json.JsonSerializerOptions options)
                     {
-                        throw new global::System.NotImplementedException("Serializing to Json is not support for '{{className}}'.");
+                        throw new global::System.NotImplementedException("Serializing to Json is not supported for '{{className}}'.");
                     }
                 }
             """);

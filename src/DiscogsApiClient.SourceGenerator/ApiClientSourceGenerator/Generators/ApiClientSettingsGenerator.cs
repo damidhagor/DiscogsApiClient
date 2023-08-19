@@ -25,7 +25,7 @@ internal static class ApiClientSettingsGenerator
         {
             public static {{Name}}<T> AddGeneratedJsonConverters<T>(this {{Name}}<T> settings)
             {
-                foreach (var jsonConverter in {{EnumJsonConverterGenerator.Namespace}}.{{EnumJsonConverterGenerator.ClassName}}.Converters)
+                foreach (var jsonConverter in global::{{EnumJsonConverterGenerator.Namespace}}.{{EnumJsonConverterGenerator.ClassName}}.Converters)
                 {
                     settings.JsonSerializerOptions.Converters.Add(jsonConverter);
                 }

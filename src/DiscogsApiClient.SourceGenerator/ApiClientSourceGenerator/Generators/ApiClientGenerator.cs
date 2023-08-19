@@ -42,14 +42,14 @@ internal static class ApiClientGenerator
 
             namespace {{apiClient.NamespaceName}};
         
-            internal partial class {{apiClient.ClientName}} : {{apiClient.InterfaceName}}
+            internal partial class {{apiClient.ClientName}} : global::{{apiClient.NamespaceName}}.{{apiClient.InterfaceName}}
             {
-                private readonly System.Net.Http.HttpClient _httpClient;
-                private readonly {{ApiClientSettingsGenerator.Namespace}}.{{ApiClientSettingsGenerator.Name}}<{{apiClient.InterfaceName}}> _apiClientSettings;
+                private readonly global::System.Net.Http.HttpClient _httpClient;
+                private readonly global::{{ApiClientSettingsGenerator.Namespace}}.{{ApiClientSettingsGenerator.Name}}<global::{{apiClient.NamespaceName}}.{{apiClient.InterfaceName}}> _apiClientSettings;
 
                 public {{apiClient.ClientName}}(
-                    System.Net.Http.HttpClient httpClient,
-                    {{ApiClientSettingsGenerator.Namespace}}.{{ApiClientSettingsGenerator.Name}}<{{apiClient.InterfaceName}}> apiClientSettings)
+                    global::System.Net.Http.HttpClient httpClient,
+                    global::{{ApiClientSettingsGenerator.Namespace}}.{{ApiClientSettingsGenerator.Name}}<global::{{apiClient.NamespaceName}}.{{apiClient.InterfaceName}}> apiClientSettings)
                 {
                     _httpClient = httpClient;
                     _apiClientSettings = apiClientSettings;
@@ -62,28 +62,28 @@ internal static class ApiClientGenerator
         builder.Append(
             """
 
-            private void Send(System.Net.Http.HttpMethod httpMethod, string route, object? payload = null, System.Threading.CancellationToken cancellationToken = default)
+            private void Send(global::System.Net.Http.HttpMethod httpMethod, string route, object? payload = null, global::System.Threading.CancellationToken cancellationToken = default)
             {
-                var request = new HttpRequestMessage(httpMethod, route);
+                var request = new global::System.Net.Http.HttpRequestMessage(httpMethod, route);
 
                 if (payload is not null)
                 {
-                    var content = System.Text.Json.JsonSerializer.Serialize(payload, _apiClientSettings.JsonSerializerOptions);
-                    request.Content = new StringContent(content, System.Text.Encoding.UTF8, "application/json");
+                    var content = global::System.Text.Json.JsonSerializer.Serialize(payload, _apiClientSettings.JsonSerializerOptions);
+                    request.Content = new global::System.Net.Http.StringContent(content, global::System.Text.Encoding.UTF8, "application/json");
                 }
 
                 var response = _httpClient.Send(request, cancellationToken);
                 response.EnsureSuccessStatusCode();
             }
 
-            private T Send<T>(System.Net.Http.HttpMethod httpMethod, string route, object? payload = null, System.Threading.CancellationToken cancellationToken = default)
+            private T Send<T>(global::System.Net.Http.HttpMethod httpMethod, string route, object? payload = null, global::System.Threading.CancellationToken cancellationToken = default)
             {
-                var request = new System.Net.Http.HttpRequestMessage(httpMethod, route);
+                var request = new global::System.Net.Http.HttpRequestMessage(httpMethod, route);
         
                 if (payload is not null)
                 {
-                    var content = System.Text.Json.JsonSerializer.Serialize(payload, _apiClientSettings.JsonSerializerOptions);
-                    request.Content = new StringContent(content, System.Text.Encoding.UTF8, "application/json");
+                    var content = global::System.Text.Json.JsonSerializer.Serialize(payload, _apiClientSettings.JsonSerializerOptions);
+                    request.Content = new global::System.Net.Http.StringContent(content, global::System.Text.Encoding.UTF8, "application/json");
                 }
         
                 var response = _httpClient.Send(request, cancellationToken);
@@ -91,31 +91,31 @@ internal static class ApiClientGenerator
 
                 var responseStream = response.Content.ReadAsStream();
 
-                return System.Text.Json.JsonSerializer.Deserialize<T>(responseStream, _apiClientSettings.JsonSerializerOptions);
+                return global::System.Text.Json.JsonSerializer.Deserialize<T>(responseStream, _apiClientSettings.JsonSerializerOptions);
             }
 
-            private async Task SendAsync(System.Net.Http.HttpMethod httpMethod, string route, object? payload = null, System.Threading.CancellationToken cancellationToken = default)
+            private async Task SendAsync(global::System.Net.Http.HttpMethod httpMethod, string route, object? payload = null, global::System.Threading.CancellationToken cancellationToken = default)
             {
-                var request = new HttpRequestMessage(httpMethod, route);
+                var request = new global::System.Net.Http.HttpRequestMessage(httpMethod, route);
         
                 if (payload is not null)
                 {
-                    var content = System.Text.Json.JsonSerializer.Serialize(payload, _apiClientSettings.JsonSerializerOptions);
-                    request.Content = new StringContent(content, System.Text.Encoding.UTF8, "application/json");
+                    var content = global::System.Text.Json.JsonSerializer.Serialize(payload, _apiClientSettings.JsonSerializerOptions);
+                    request.Content = new global::System.Net.Http.StringContent(content, global::System.Text.Encoding.UTF8, "application/json");
                 }
         
                 var response = await _httpClient.SendAsync(request, cancellationToken);
                 response.EnsureSuccessStatusCode();
             }
         
-            private async Task<T> SendAsync<T>(System.Net.Http.HttpMethod httpMethod, string route, object? payload = null, System.Threading.CancellationToken cancellationToken = default)
+            private async Task<T> SendAsync<T>(global::System.Net.Http.HttpMethod httpMethod, string route, object? payload = null, global::System.Threading.CancellationToken cancellationToken = default)
             {
-                var request = new System.Net.Http.HttpRequestMessage(httpMethod, route);
+                var request = new global::System.Net.Http.HttpRequestMessage(httpMethod, route);
         
                 if (payload is not null)
                 {
-                    var content = System.Text.Json.JsonSerializer.Serialize(payload, _apiClientSettings.JsonSerializerOptions);
-                    request.Content = new StringContent(content, System.Text.Encoding.UTF8, "application/json");
+                    var content = global::System.Text.Json.JsonSerializer.Serialize(payload, _apiClientSettings.JsonSerializerOptions);
+                    request.Content = new global::System.Net.Http.StringContent(content, global::System.Text.Encoding.UTF8, "application/json");
                 }
         
                 var response = await _httpClient.SendAsync(request, cancellationToken);
@@ -123,7 +123,7 @@ internal static class ApiClientGenerator
 
                 var responseStream = response.Content.ReadAsStream();
         
-                return await System.Text.Json.JsonSerializer.DeserializeAsync<T>(responseStream, _apiClientSettings.JsonSerializerOptions, cancellationToken);
+                return await global::System.Text.Json.JsonSerializer.DeserializeAsync<T>(responseStream, _apiClientSettings.JsonSerializerOptions, cancellationToken);
             }
         }
         """);
@@ -145,6 +145,7 @@ internal static class ApiClientGenerator
                 {
                     var queryParameter = queryParameters[i];
 
+                    builder.Append("global::");
                     builder.Append(queryParameter.FullName);
 
                     if (i < queryParameters.Length - 1)
@@ -171,7 +172,7 @@ internal static class ApiClientGenerator
                     
                             capacity += parameterCount;
 
-                            var queryBuilder = new System.Text.StringBuilder(route, capacity);
+                            var queryBuilder = new global::System.Text.StringBuilder(route, capacity);
                             queryBuilder.Append('?');
 
                     """);
