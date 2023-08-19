@@ -12,8 +12,8 @@ internal static class AliasAsAttribute
 
         namespace {{Constants.SharedNamespace}};
 
-        [System.AttributeUsage(System.AttributeTargets.Property | System.AttributeTargets.Field)]
-        internal sealed class {{Name}} : System.Attribute
+        [global::System.AttributeUsage(global::System.AttributeTargets.Property | global::System.AttributeTargets.Field)]
+        internal sealed class {{Name}} : global::System.Attribute
         {
             public string Alias { get; set; }
         

@@ -12,7 +12,7 @@ internal static class ApiCLientAttribute
         
         namespace {{Constants.ApiClientNamespace}};
 
-        [System.AttributeUsage(System.AttributeTargets.Interface)]
-        internal sealed class {{Name}} : System.Attribute { }
+        [global::System.AttributeUsage(global::System.AttributeTargets.Interface)]
+        internal sealed class {{Name}} : global::System.Attribute { }
         """;
 }

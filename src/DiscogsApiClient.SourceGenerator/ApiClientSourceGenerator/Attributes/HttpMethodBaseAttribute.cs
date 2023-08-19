@@ -12,8 +12,8 @@ internal static class HttpMethodBaseAttribute
         
         namespace {{Constants.ApiClientNamespace}};
 
-        [System.AttributeUsage(System.AttributeTargets.Method)]
-        internal abstract class {{Name}} : System.Attribute
+        [global::System.AttributeUsage(global::System.AttributeTargets.Method)]
+        internal abstract class {{Name}} : global::System.Attribute
         {
             public string Route { get; set; }
         

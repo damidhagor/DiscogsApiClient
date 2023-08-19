@@ -12,7 +12,7 @@ internal static class HttpDeleteAttribute
         
         namespace {{Constants.ApiClientNamespace}};
 
-        [System.AttributeUsage(System.AttributeTargets.Method)]
+        [global::System.AttributeUsage(global::System.AttributeTargets.Method)]
         internal sealed class {{Name}} : global::{{Constants.ApiClientNamespace}}.{{HttpMethodBaseAttribute.Name}}
         {
             public const string Method = "Delete";

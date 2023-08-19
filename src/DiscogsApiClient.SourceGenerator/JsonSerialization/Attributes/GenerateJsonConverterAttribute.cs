@@ -12,7 +12,7 @@ internal static class GenerateJsonConverterAttribute
 
         namespace {{Constants.JsonSerializationNamespace}};
 
-        [System.AttributeUsage(System.AttributeTargets.Enum)]
-        internal sealed class {{Name}} : System.Attribute { }
+        [global::System.AttributeUsage(global::System.AttributeTargets.Enum)]
+        internal sealed class {{Name}} : global::System.Attribute { }
         """;
 }
