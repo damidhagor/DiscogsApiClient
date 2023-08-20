@@ -1,4 +1,6 @@
-﻿namespace DiscogsApiClient.SourceGenerator.Shared.Helpers;
+﻿using DiscogsApiClient.SourceGenerator.Shared.Models;
+
+namespace DiscogsApiClient.SourceGenerator.Shared.Helpers;
 
 internal static class SymbolExtensions
 {
@@ -42,5 +44,43 @@ internal static class SymbolExtensions
 
         genericArgument = symbol.TypeArguments[index];
         return true;
+    }
+
+    public static ParsedTypeInfo GetSymbolTypeInfo(this ISymbol symbol)
+    {
+        using var writer = FileOutputDebugHelper.GetOutputStreamWriter("typeinfos.txt", true);
+
+        var name = symbol.Name;
+        var @namespace = symbol.GetNamespace();
+        var needsGlobalPrefix = true;
+
+        writer.WriteLine($"{symbol.ToDisplayString()} ({symbol.GetType().FullName})");
+        writer.WriteLine($"\tName: {name}");
+        writer.WriteLine($"\tNamespace: {@namespace}");
+        writer.WriteLine($"\tGlobal: {needsGlobalPrefix}");
+
+        return new(name, @namespace, needsGlobalPrefix);
+    }
+
+    public static string GetNamespace(this ISymbol symbol)
+    {
+        var namespaceParts = new List<string>();
+
+        var currentSymbol = symbol;
+        while (currentSymbol.ContainingType is not null)
+        {
+            namespaceParts.Add(currentSymbol.ContainingType.Name);
+            currentSymbol = currentSymbol.ContainingType;
+        }
+
+        var currentNamespaceSymbol = currentSymbol.ContainingNamespace;
+        while (currentNamespaceSymbol is not null && !currentNamespaceSymbol.IsGlobalNamespace)
+        {
+            namespaceParts.Add(currentNamespaceSymbol.Name);
+            currentNamespaceSymbol = currentNamespaceSymbol.ContainingNamespace;
+        }
+
+        namespaceParts.Reverse();
+        return string.Join(".", namespaceParts);
     }
 }

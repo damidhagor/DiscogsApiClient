@@ -70,14 +70,14 @@ internal static class EnumJsonConverterGenerator
 
 
                 private sealed class {{className}}
-                    : global::System.Text.Json.Serialization.JsonConverter<global::{{enumeration.FullName}}>
+                    : global::System.Text.Json.Serialization.JsonConverter<{{enumeration.TypeInfo.GetFullTypeName()}}>
                 {
-                    public override global::{{enumeration.FullName}} Read(
+                    public override {{enumeration.TypeInfo.GetFullTypeName()}} Read(
                         ref global::System.Text.Json.Utf8JsonReader reader,
                         global::System.Type typeToConvert,
                         global::System.Text.Json.JsonSerializerOptions options)
                     {
-                        global::{{enumeration.FullName}} enumValue;
+                        {{enumeration.TypeInfo.GetFullTypeName()}} enumValue;
 
             """);
 
@@ -98,7 +98,7 @@ internal static class EnumJsonConverterGenerator
                 $$"""
 
                             {
-                                enumValue = global::{{enumeration.FullName}}.{{enumMember.FieldName}};
+                                enumValue = {{enumeration.TypeInfo.GetFullTypeName()}}.{{enumMember.FieldName}};
                             }
                 """);
         }
@@ -107,7 +107,7 @@ internal static class EnumJsonConverterGenerator
             $$"""
                         else
                         {
-                            throw new global::System.Text.Json.JsonException($"Value '{reader.GetString()}' can not be serialized as {typeof(global::{{enumeration.FullName}}).FullName}.");
+                            throw new global::System.Text.Json.JsonException($"Value '{reader.GetString()}' can not be serialized as '{typeof({{enumeration.TypeInfo.GetFullTypeName()}}).FullName}'.");
                         }
 
                         return enumValue;
@@ -115,15 +115,15 @@ internal static class EnumJsonConverterGenerator
 
                     public override void Write(
                         global::System.Text.Json.Utf8JsonWriter writer,
-                        global::{{enumeration.FullName}} value,
+                        {{enumeration.TypeInfo.GetFullTypeName()}} value,
                         global::System.Text.Json.JsonSerializerOptions options)
                     {
-                        throw new global::System.NotImplementedException("Serializing to Json is not supported for '{{className}}'.");
+                        throw new global::System.NotImplementedException($"Serializing to Json is not supported for '{typeof({{enumeration.TypeInfo.GetFullTypeName()}}).FullName}'.");
                     }
                 }
             """);
     }
 
     private static string GetJsonConverterClassName(this Enumeration enumeration)
-        => $"{enumeration.FullName.Replace(".", "")}JsonConverter";
+        => $"{enumeration.TypeInfo.Namespace.Replace(".", "")}{enumeration.TypeInfo.Name}JsonConverter";
 }

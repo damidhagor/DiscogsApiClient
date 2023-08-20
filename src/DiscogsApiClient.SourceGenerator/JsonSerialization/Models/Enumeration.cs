@@ -1,20 +1,16 @@
-﻿namespace DiscogsApiClient.SourceGenerator.JsonSerialization.Models;
+﻿using DiscogsApiClient.SourceGenerator.Shared.Models;
+
+namespace DiscogsApiClient.SourceGenerator.JsonSerialization.Models;
 
 internal sealed class Enumeration
 {
-    public string FullName { get; private set; }
-
-    public string NamespaceName { get; private set; }
-
-    public string EnumName { get; private set; }
+    public ParsedTypeInfo TypeInfo { get; private set; }
 
     public List<EnumerationMember> Members { get; private set; }
 
-    public Enumeration(string fullName, string namespaceName, string enumName, List<EnumerationMember> members)
+    public Enumeration(ParsedTypeInfo typeInfo, List<EnumerationMember> members)
     {
-        FullName = fullName;
-        NamespaceName = namespaceName;
-        EnumName = enumName;
+        TypeInfo = typeInfo;
         Members = members;
     }
 }

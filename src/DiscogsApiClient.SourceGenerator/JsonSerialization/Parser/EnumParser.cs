@@ -14,12 +14,10 @@ internal static class EnumParser
             return null;
         }
 
-        var enumFullName = enumSymbol.ToDisplayString();
-        var enumName = enumSymbol.Name;
-        var enumNamespace = enumSymbol.ContainingNamespace.ToDisplayString();
+        var typeInfo = enumSymbol.GetSymbolTypeInfo();
         var members = enumSymbol.ParseEnumMembers(cancellationToken);
 
-        return new(enumFullName, enumNamespace, enumName, members);
+        return new(typeInfo, members);
     }
 
     public static List<EnumerationMember> ParseEnumMembers(this INamedTypeSymbol enumSymbol, CancellationToken cancellationToken)
