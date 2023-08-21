@@ -8,7 +8,7 @@ internal static class ApiClientGenerator
     public static (string hint, SourceText) GenerateApiClient(this ApiClient apiClient, CancellationToken cancellationToken)
     {
         var source = GenerateApiClientSource(apiClient, cancellationToken);
-        var hint = $"{apiClient.NamespaceName}.{apiClient.ClientName}.g.cs";
+        var hint = $"{apiClient.InterfaceTypeInfo.Namespace}.{apiClient.ClientName}.g.cs";
 
         return (hint, SourceText.From(source, Encoding.UTF8));
     }
@@ -40,16 +40,16 @@ internal static class ApiClientGenerator
             $$"""
             #nullable enable
 
-            namespace {{apiClient.NamespaceName}};
+            namespace {{apiClient.InterfaceTypeInfo.Namespace}};
         
-            internal partial class {{apiClient.ClientName}} : global::{{apiClient.NamespaceName}}.{{apiClient.InterfaceName}}
+            internal partial class {{apiClient.ClientName}} : {{apiClient.InterfaceTypeInfo.FullTypeName}}
             {
                 private readonly global::System.Net.Http.HttpClient _httpClient;
-                private readonly global::{{ApiClientSettingsGenerator.Namespace}}.{{ApiClientSettingsGenerator.Name}}<global::{{apiClient.NamespaceName}}.{{apiClient.InterfaceName}}> _apiClientSettings;
+                private readonly global::{{ApiClientSettingsGenerator.Namespace}}.{{ApiClientSettingsGenerator.Name}}<{{apiClient.InterfaceTypeInfo.FullTypeName}}> _apiClientSettings;
 
                 public {{apiClient.ClientName}}(
                     global::System.Net.Http.HttpClient httpClient,
-                    global::{{ApiClientSettingsGenerator.Namespace}}.{{ApiClientSettingsGenerator.Name}}<global::{{apiClient.NamespaceName}}.{{apiClient.InterfaceName}}> apiClientSettings)
+                    global::{{ApiClientSettingsGenerator.Namespace}}.{{ApiClientSettingsGenerator.Name}}<{{apiClient.InterfaceTypeInfo.FullTypeName}}> apiClientSettings)
                 {
                     _httpClient = httpClient;
                     _apiClientSettings = apiClientSettings;
@@ -145,8 +145,9 @@ internal static class ApiClientGenerator
                 {
                     var queryParameter = queryParameters[i];
 
-                    builder.Append("global::");
-                    builder.Append(queryParameter.FullName);
+                    builder.Append(queryParameter.TypeInfo.FullTypeName);
+                    builder.Append(' ');
+                    builder.Append(queryParameter.TypeInfo.ParameterName);
 
                     if (i < queryParameters.Length - 1)
                     {
@@ -164,7 +165,7 @@ internal static class ApiClientGenerator
 
                 for (var i = 0; i < queryParameters.Length; i++)
                 {
-                    builder.AppendLine($"\t\t{queryParameters[i].Name}.CalculateQuerySize(ref capacity, ref parameterCount);");
+                    builder.AppendLine($"\t\t{queryParameters[i].TypeInfo.ParameterName}.CalculateQuerySize(ref capacity, ref parameterCount);");
                 }
 
                 builder.AppendLine(
@@ -183,7 +184,7 @@ internal static class ApiClientGenerator
 
                 for (var i = 0; i < queryParameters.Length; i++)
                 {
-                    builder.AppendLine($"\t\t{queryParameters[i].Name}.AppendQuery(queryBuilder, routeLength);");
+                    builder.AppendLine($"\t\t{queryParameters[i].TypeInfo.ParameterName}.AppendQuery(queryBuilder, routeLength);");
                 }
 
                 builder.AppendLine(

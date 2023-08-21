@@ -22,7 +22,7 @@ internal static class ApiMethodBodyGenerator
         var constructedRoute = $"{apiMethod.Route}";
         foreach (var parameter in parameters.OfType<RouteApiMethodParameter>())
         {
-            constructedRoute = constructedRoute.Replace(parameter.RoutePart, $"{{{parameter.Name}}}");
+            constructedRoute = constructedRoute.Replace(parameter.RoutePart, $"{{{parameter.TypeInfo.ParameterName}}}");
         }
 
         var queryParameters = parameters.OfType<QueryApiMethodParameter>().ToArray();
@@ -34,7 +34,7 @@ internal static class ApiMethodBodyGenerator
             {
                 var queryParameter = queryParameters[i];
 
-                builder.Append(queryParameter.Name);
+                builder.Append(queryParameter.TypeInfo.ParameterName);
 
                 if (i < queryParameters.Length - 1)
                 {
@@ -63,7 +63,7 @@ internal static class ApiMethodBodyGenerator
 
         builder.Append("\t\t");
 
-        if (apiMethod.ReturnType.HasResult)
+        if (apiMethod.ReturnType.IsTaskWithResult)
         {
             builder.Append("var result = ");
         }
@@ -77,20 +77,16 @@ internal static class ApiMethodBodyGenerator
             builder.Append("Send");
         }
 
-        if (apiMethod.ReturnType.IsTask
-            && apiMethod.ReturnType.HasResult)
+        if (apiMethod.ReturnType.IsTaskWithResult)
         {
-            builder.Append($"<global::{apiMethod.ReturnType.TaskResultTypeFullName}>(");
+            builder.Append($"<{apiMethod.ReturnType.TypeInfo.GenericTypeArguments[0].FullTypeName}>");
         }
-        else if (!apiMethod.ReturnType.IsVoid
-            && !apiMethod.ReturnType.IsTask)
+        else if (apiMethod.ReturnType.IsTask)
         {
-            builder.Append($"<global::{apiMethod.ReturnType.FullName}>(");
+            builder.Append($"<{apiMethod.ReturnType.TypeInfo.FullTypeName}>");
         }
-        else
-        {
-            builder.Append("(");
-        }
+
+        builder.Append("(");
 
         builder.Append($"{httpMethod}, route");
 
@@ -99,7 +95,7 @@ internal static class ApiMethodBodyGenerator
         if (bodyParameter is not null)
         {
             builder.Append(", payload: ");
-            builder.Append(bodyParameter.Name);
+            builder.Append(bodyParameter.TypeInfo.ParameterName);
         }
 
         var cancellationTokenParameter = apiMethod.Parameters
@@ -107,12 +103,12 @@ internal static class ApiMethodBodyGenerator
         if (cancellationTokenParameter is not null)
         {
             builder.Append(", cancellationToken: ");
-            builder.Append(cancellationTokenParameter.Name);
+            builder.Append(cancellationTokenParameter.TypeInfo.ParameterName);
         }
 
         builder.AppendLine(");");
 
-        if (apiMethod.ReturnType.HasResult)
+        if (apiMethod.ReturnType.IsTaskWithResult)
         {
             builder.AppendLine();
             builder.AppendLine("\t\treturn result;");

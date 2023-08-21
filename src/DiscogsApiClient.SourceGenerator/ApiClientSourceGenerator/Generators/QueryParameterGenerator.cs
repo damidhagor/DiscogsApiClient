@@ -22,7 +22,7 @@ internal static class QueryParameterGenerator
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (implementedExtensions.Contains(parameter.FullName))
+            if (implementedExtensions.Contains(parameter.TypeInfo.FullTypeName))
             {
                 continue;
             }
@@ -32,14 +32,14 @@ internal static class QueryParameterGenerator
                 
 
                 #if NET7_0_OR_GREATER
-                file static class {{parameter.TypeFullName.Replace(".", "").Replace("?", "")}}Extensions
+                file static class {{parameter.TypeInfo.Namespace.Replace(".", "")}}{{parameter.TypeInfo.Name}}Extensions
                 #else
-                internal static class {{parameter.TypeFullName.Replace(".", "").Replace("?", "")}}Extensions
+                internal static class {{parameter.TypeInfo.Namespace.Replace(".", "")}}{{parameter.TypeInfo.Name}}Extensions
                 #endif
                 {
-                    public static void CalculateQuerySize(this global::{{parameter.FullName}}, ref int capacity, ref int parameterCount)
+                    public static void CalculateQuerySize(this {{parameter.TypeInfo.FullTypeName}} {{parameter.TypeInfo.ParameterName}}, ref int capacity, ref int parameterCount)
                     {
-                        if ({{parameter.Name}} is not null)
+                        if ({{parameter.TypeInfo.ParameterName}} is not null)
                         {
                 """);
 
@@ -49,10 +49,10 @@ internal static class QueryParameterGenerator
 
                 builder.AppendLine(
                     $$"""
-                                    if ({{parameter.Name}}.{{property.PropertyName}} is not null)
+                                    if ({{parameter.TypeInfo.ParameterName}}.{{property.TypeInfo.ParameterName}} is not null)
                                     {
-                                        capacity += {{property.ParameterName.Length + 1}}; // {{property.ParameterName}}
-                                        capacity += QueryParameterHelper.CalculateQuerySize({{parameter.Name}}.{{property.PropertyName}});
+                                        capacity += {{property.TypeInfo.ParameterName.Length + 1}}; // {{property.TypeInfo.ParameterName}}
+                                        capacity += QueryParameterHelper.CalculateQuerySize({{parameter.TypeInfo.ParameterName}}.{{property.TypeInfo.ParameterName}});
                                         parameterCount++;
                                     }
                         """);
@@ -67,9 +67,10 @@ internal static class QueryParameterGenerator
             builder.AppendLine(
                 $$"""
 
-                    public static void AppendQuery(this global::{{parameter.FullName}}, global::System.Text.StringBuilder queryBuilder, int routeLength)
+
+                    public static void AppendQuery(this {{parameter.TypeInfo.FullTypeName}} {{parameter.TypeInfo.ParameterName}}, global::System.Text.StringBuilder queryBuilder, int routeLength)
                     {
-                        if ({{parameter.Name}} is not null)
+                        if ({{parameter.TypeInfo.ParameterName}} is not null)
                         {
                 """);
 
@@ -79,31 +80,31 @@ internal static class QueryParameterGenerator
 
                 builder.AppendLine(
                     $$"""
-                                if ({{parameter.Name}}.{{property.PropertyName}} is not null)
+                                if ({{parameter.TypeInfo.ParameterName}}.{{property.TypeInfo.ParameterName}} is not null)
                                 {
                                     if (queryBuilder.Length > routeLength)
                                     {
                                         queryBuilder.Append('&');
                                     }
 
-                                    queryBuilder.Append("{{property.ParameterName}}=");
+                                    queryBuilder.Append("{{property.TypeInfo.ParameterNameAlias}}=");
                     """);
 
                 if (property.ParameterType == QueryParameterType.Enum)
                 {
                     builder.AppendLine(
                         $$"""
-                                        queryBuilder.Append({{parameter.Name}} switch
+                                        queryBuilder.Append({{parameter.TypeInfo.ParameterName}}.{{property.TypeInfo.ParameterName}} switch
                                         {
                         """);
 
-                    foreach (var enumValue in property.EnumValues!)
+                    foreach (var enumMember in property.TypeInfo.EnumMembers!)
                     {
                         cancellationToken.ThrowIfCancellationRequested();
 
                         builder.AppendLine(
                             $$"""
-                                                { {{property.PropertyName}}: global::{{property.PropertyType}}.{{enumValue.MemberName}} } => "{{enumValue.DisplayName}}",
+                                                {{property.TypeInfo.GetFullTypeName(false)}}.{{enumMember.MemberName}} => "{{enumMember.MemberNameAlias}}",
                             """);
                     }
 
@@ -116,7 +117,7 @@ internal static class QueryParameterGenerator
                 {
                     builder.AppendLine(
                         $$"""
-                                        queryBuilder.Append({{parameter.Name}}.{{property.PropertyName}});
+                                        queryBuilder.Append({{parameter.TypeInfo.ParameterName}}.{{property.TypeInfo.ParameterName}});
                         """);
                 }
 
@@ -135,7 +136,7 @@ internal static class QueryParameterGenerator
 
             builder.AppendLine("}");
 
-            implementedExtensions.Add(parameter.FullName);
+            implementedExtensions.Add(parameter.TypeInfo.FullTypeName);
         }
     }
 
@@ -164,7 +165,7 @@ internal static class QueryParameterGenerator
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (implementedExtensions.Contains(parameter.PropertyType))
+            if (implementedExtensions.Contains(parameter.TypeInfo.FullTypeName))
             {
                 continue;
             }
@@ -193,35 +194,29 @@ internal static class QueryParameterGenerator
             {
                 builder.AppendLine(
                     $$"""
-                        public static int CalculateQuerySize(global::{{parameter.PropertyType}} enumValue)
+                        public static int CalculateQuerySize({{parameter.TypeInfo.FullTypeName}} enumValue)
                         {
-                            return enumValue switch
-                            {
+                            return enumValue.HasValue
+                                ? enumValue switch
+                                {
                     """);
 
-                if (parameter.EnumValues is not null)
+                if (parameter.TypeInfo.EnumMembers is not null)
                 {
-                    foreach (var enumValue in parameter.EnumValues)
+                    foreach (var enumMember in parameter.TypeInfo.EnumMembers)
                     {
                         builder.AppendLine(
                             $$"""
-                                        global::{{parameter.PropertyType}}.{{enumValue.MemberName}} => {{enumValue.DisplayName.Length}}, // {{enumValue.DisplayName}}
+                                         {{parameter.TypeInfo.GetFullTypeName(false)}}.{{enumMember.MemberName}} => {{enumMember.MemberNameAlias.Length}}, // {{enumMember.MemberNameAlias}}
                             """);
                     }
                 }
 
                 builder.AppendLine(
                     $$"""
-                                _ => throw new global::System.ArgumentOutOfRangeException(nameof(enumValue))
-                            };
-                        }
-                    """);
-
-                builder.AppendLine(
-                    $$"""
-                        public static int CalculateQuerySize(global::{{parameter.PropertyType}}? enumValue)
-                        {
-                            return enumValue is not null ? CalculateQuerySize(enumValue.Value) : 0;
+                                    _ => throw new global::System.ArgumentOutOfRangeException(nameof(enumValue))
+                                }
+                            : 0;
                         }
                     """);
             }
@@ -230,7 +225,7 @@ internal static class QueryParameterGenerator
                 throw new ArgumentOutOfRangeException(nameof(parameter.ParameterType));
             }
 
-            implementedExtensions.Add(parameter.PropertyType);
+            implementedExtensions.Add(parameter.TypeInfo.FullTypeName);
         }
 
         builder.AppendLine("}");

@@ -6,11 +6,8 @@ internal sealed class Enumeration
 {
     public ParsedTypeInfo TypeInfo { get; private set; }
 
-    public List<EnumerationMember> Members { get; private set; }
-
-    public Enumeration(ParsedTypeInfo typeInfo, List<EnumerationMember> members)
+    public Enumeration(ParsedTypeInfo typeInfo)
     {
         TypeInfo = typeInfo;
-        Members = members;
     }
 }

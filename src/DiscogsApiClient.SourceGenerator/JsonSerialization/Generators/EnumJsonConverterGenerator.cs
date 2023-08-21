@@ -70,35 +70,35 @@ internal static class EnumJsonConverterGenerator
 
 
                 private sealed class {{className}}
-                    : global::System.Text.Json.Serialization.JsonConverter<{{enumeration.TypeInfo.GetFullTypeName()}}>
+                    : global::System.Text.Json.Serialization.JsonConverter<{{enumeration.TypeInfo.FullTypeName}}>
                 {
-                    public override {{enumeration.TypeInfo.GetFullTypeName()}} Read(
+                    public override {{enumeration.TypeInfo.FullTypeName}} Read(
                         ref global::System.Text.Json.Utf8JsonReader reader,
                         global::System.Type typeToConvert,
                         global::System.Text.Json.JsonSerializerOptions options)
                     {
-                        {{enumeration.TypeInfo.GetFullTypeName()}} enumValue;
+                        {{enumeration.TypeInfo.FullTypeName}} enumValue;
 
             """);
 
-        for (var i = 0; i < enumeration.Members.Count; i++)
+        for (var i = 0; i < enumeration.TypeInfo.EnumMembers.Count; i++)
         {
-            var enumMember = enumeration.Members[i];
+            var enumMember = enumeration.TypeInfo.EnumMembers[i];
 
             if (i == 0)
             {
-                builder.Append($"\t\t\tif (reader.ValueTextEquals(\"{enumMember.DisplayName}\"))");
+                builder.Append($"\t\t\tif (reader.ValueTextEquals(\"{enumMember.MemberNameAlias}\"))");
             }
             else
             {
-                builder.Append($"\t\t\telse if (reader.ValueTextEquals(\"{enumMember.DisplayName}\"))");
+                builder.Append($"\t\t\telse if (reader.ValueTextEquals(\"{enumMember.MemberNameAlias}\"))");
             }
 
             builder.AppendLine(
                 $$"""
 
                             {
-                                enumValue = {{enumeration.TypeInfo.GetFullTypeName()}}.{{enumMember.FieldName}};
+                                enumValue = {{enumeration.TypeInfo.GetFullTypeName(false)}}.{{enumMember.MemberName}};
                             }
                 """);
         }
@@ -107,7 +107,7 @@ internal static class EnumJsonConverterGenerator
             $$"""
                         else
                         {
-                            throw new global::System.Text.Json.JsonException($"Value '{reader.GetString()}' can not be serialized as '{typeof({{enumeration.TypeInfo.GetFullTypeName()}}).FullName}'.");
+                            throw new global::System.Text.Json.JsonException($"Value '{reader.GetString()}' can not be serialized as '{typeof({{enumeration.TypeInfo.GetFullTypeName(false)}}).FullName}'.");
                         }
 
                         return enumValue;
@@ -115,10 +115,10 @@ internal static class EnumJsonConverterGenerator
 
                     public override void Write(
                         global::System.Text.Json.Utf8JsonWriter writer,
-                        {{enumeration.TypeInfo.GetFullTypeName()}} value,
+                        {{enumeration.TypeInfo.FullTypeName}} value,
                         global::System.Text.Json.JsonSerializerOptions options)
                     {
-                        throw new global::System.NotImplementedException($"Serializing to Json is not supported for '{typeof({{enumeration.TypeInfo.GetFullTypeName()}}).FullName}'.");
+                        throw new global::System.NotImplementedException($"Serializing to Json is not supported for '{typeof({{enumeration.TypeInfo.GetFullTypeName(false)}}).FullName}'.");
                     }
                 }
             """);

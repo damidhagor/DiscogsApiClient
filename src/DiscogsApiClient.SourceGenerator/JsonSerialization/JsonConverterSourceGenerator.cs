@@ -68,8 +68,5 @@ public class JsonConverterSourceGenerator : IIncrementalGenerator
 
         var (hint, source) = enums.GenerateEnumJsonConverters(context.CancellationToken);
         context.AddSource(hint, source);
-
-        using var writer = FileOutputDebugHelper.GetOutputStreamWriter($"jsonconverter-enums.txt", false);
-        writer.WriteLine(source.ToString());
     }
 }

@@ -1,8 +1,10 @@
-﻿namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models.MethodParameters;
+﻿using DiscogsApiClient.SourceGenerator.Shared.Models;
+
+namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models.MethodParameters;
 
 internal sealed class BodyApiMethodParameter : ApiMethodParameter
 {
-    public BodyApiMethodParameter(string name, string fullName, string typeFullName)
-        : base(name, fullName, typeFullName, ApiMethodParameterType.Body)
+    public BodyApiMethodParameter(ParsedParameterTypeInfo typeInfo)
+        : base(typeInfo, ApiMethodParameterType.Body)
     { }
 }

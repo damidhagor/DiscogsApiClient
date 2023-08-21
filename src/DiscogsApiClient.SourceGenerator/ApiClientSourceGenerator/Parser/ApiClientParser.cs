@@ -1,4 +1,5 @@
 ﻿using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models;
+using DiscogsApiClient.SourceGenerator.Shared.Helpers;
 
 namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Parser;
 
@@ -12,11 +13,10 @@ internal static class ApiClientParser
             return null;
         }
 
-        var interfaceName = interfaceSymbol.Name;
-        var interfaceNamespace = interfaceSymbol.ContainingNamespace.ToDisplayString();
-        var implementationName = interfaceName.AsSpan().Slice(1, interfaceName.Length - 1).ToString();
+        var typeInfo = interfaceSymbol.GetSymbolTypeInfo();
+        var implementationName = typeInfo.Name.AsSpan().Slice(1, typeInfo.Name.Length - 1).ToString();
         var apiMethodsToGenerate = interfaceSymbol.ParseApiMethods(cancellationToken);
 
-        return new(interfaceNamespace, implementationName, interfaceName, apiMethodsToGenerate);
+        return new(typeInfo, implementationName, apiMethodsToGenerate);
     }
 }

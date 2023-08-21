@@ -1,7 +1,6 @@
 ﻿using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Attributes;
 using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models;
 using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models.MethodParameters;
-using DiscogsApiClient.SourceGenerator.Shared.Attributes;
 using DiscogsApiClient.SourceGenerator.Shared.Helpers;
 
 namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Parser;
@@ -90,40 +89,16 @@ internal static class ApiMethodParser
 
     private static bool TryParseApiMethodReturnType(this ITypeSymbol typeSymbol, out ApiMethodReturnType? returnType)
     {
-        returnType = null;
+        var typeInfo = typeSymbol.GetSymbolTypeInfo();
 
-        if (typeSymbol is not INamedTypeSymbol namedTypeSymbol)
+        if (typeSymbol.SpecialType == SpecialType.System_Void)
         {
-            return false;
-        }
-
-        if (namedTypeSymbol.SpecialType == SpecialType.System_Void)
-        {
-            returnType = ApiMethodReturnType.CreateVoid();
+            returnType = new ApiMethodReturnType(typeInfo, true);
             return true;
         }
 
-        var fullName = namedTypeSymbol.ToDisplayString();
-        var namespaceName = namedTypeSymbol.ContainingNamespace.ToDisplayString();
-
-        if (namespaceName == "System.Threading.Tasks"
-            && namedTypeSymbol.Name == "Task")
-        {
-            if (!namedTypeSymbol.IsGenericType)
-            {
-                returnType = ApiMethodReturnType.CreateTask(fullName);
-            }
-            else if (namedTypeSymbol.TryGetGenericTypeArgument(0, out var genericArgument))
-            {
-                returnType = ApiMethodReturnType.CreateTaskWithResult(fullName, genericArgument.ToDisplayString());
-            }
-        }
-        else
-        {
-            returnType = ApiMethodReturnType.CreateNoTask(fullName);
-        }
-
-        return returnType is not null;
+        returnType = new ApiMethodReturnType(typeInfo, false);
+        return true;
     }
 
     private static List<ApiMethodParameter> ParseApiMethodParameters(this IMethodSymbol methodSymbol, string route, CancellationToken cancellationToken)
@@ -134,28 +109,26 @@ internal static class ApiMethodParser
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var name = parameter.Name;
-            var fullName = parameter.ToDisplayString();
-            var typeFullName = parameter.Type.ToDisplayString();
+            var typeInfo = parameter.GetParameterSymbolTypeInfo();
 
             ApiMethodParameter apiMethodParameter;
 
-            if (parameter.Type.ToDisplayString() == "System.Threading.CancellationToken")
+            if (typeInfo.IsType<CancellationToken>())
             {
-                apiMethodParameter = new CancellationTokenApiMethodParameter(name, fullName, typeFullName);
+                apiMethodParameter = new CancellationTokenApiMethodParameter(typeInfo);
             }
             else if (parameter.HasAttribute(Constants.ApiClientNamespace, BodyAttribute.Name))
             {
-                apiMethodParameter = new BodyApiMethodParameter(name, fullName, typeFullName);
+                apiMethodParameter = new BodyApiMethodParameter(typeInfo);
             }
-            else if (route.Contains($"{{{name}}}"))
+            else if (route.Contains($"{{{typeInfo.ParameterName}}}"))
             {
-                apiMethodParameter = new RouteApiMethodParameter(name, fullName, typeFullName, $"{{{name}}}");
+                apiMethodParameter = new RouteApiMethodParameter(typeInfo, $"{{{typeInfo.ParameterName}}}");
             }
             else
             {
                 var queryParameters = parameter.Type.ParseAsQueryParameters(cancellationToken);
-                apiMethodParameter = new QueryApiMethodParameter(name, fullName, typeFullName, queryParameters);
+                apiMethodParameter = new QueryApiMethodParameter(typeInfo, queryParameters);
             }
 
             parameters.Add(apiMethodParameter);
@@ -177,63 +150,19 @@ internal static class ApiMethodParser
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var propertyName = property.Name;
-            var parameterName = property.Name;
-            var isNullable = property.Type.NullableAnnotation == NullableAnnotation.Annotated;
+            var typeInfo = property.GetParameterSymbolTypeInfo();
 
-            var propertyType = isNullable
-                && ((INamedTypeSymbol)property.Type).TryGetGenericTypeArgument(0, out var genericPropertyType)
-                    ? genericPropertyType as INamedTypeSymbol
-                    : property.Type as INamedTypeSymbol;
-            if (propertyType is null)
+            if (typeInfo.IsType<string>())
             {
-                continue;
+                parameters.Add(new QueryParameter(typeInfo, QueryParameterType.String));
             }
-
-            var propertyTypeName = propertyType.ToDisplayString();
-
-            if (property.TryGetAttributeConstructorArgument<string>(
-                Constants.SharedNamespace,
-                AliasAsAttribute.Name,
-                out var altName))
+            else if (typeInfo.IsType<int>())
             {
-                parameterName = altName!;
+                parameters.Add(new QueryParameter(typeInfo, QueryParameterType.Integer));
             }
-
-            if (propertyType.SpecialType == SpecialType.System_String)
+            else if (typeInfo.IsEnum)
             {
-                parameters.Add(new QueryParameter(parameterName, propertyName, propertyTypeName, QueryParameterType.String, isNullable));
-            }
-            else if (propertyType.SpecialType == SpecialType.System_Int32)
-            {
-                parameters.Add(new QueryParameter(parameterName, propertyName, propertyTypeName, QueryParameterType.Integer, isNullable));
-            }
-            else if (propertyType.TypeKind == TypeKind.Enum)
-            {
-                var memberSymbols = propertyType.GetMembers()
-                    .Where(m => m.Kind == SymbolKind.Field && m.IsStatic)
-                    .OfType<IFieldSymbol>();
-
-                var enumValues = new List<(string MemberName, string DisplayName)>();
-                foreach (var memberSymbol in memberSymbols)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                    var memberName = memberSymbol.Name;
-                    var displayName = memberName;
-
-                    if (memberSymbol.TryGetAttributeConstructorArgument<string>(
-                        Constants.SharedNamespace,
-                        AliasAsAttribute.Name,
-                        out var memberAltName))
-                    {
-                        displayName = memberAltName!;
-                    }
-
-                    enumValues.Add((memberName, displayName));
-                }
-
-                parameters.Add(new QueryParameter(parameterName, propertyName, propertyTypeName, QueryParameterType.Enum, isNullable, enumValues));
+                parameters.Add(new QueryParameter(typeInfo, QueryParameterType.Enum));
             }
         }
 

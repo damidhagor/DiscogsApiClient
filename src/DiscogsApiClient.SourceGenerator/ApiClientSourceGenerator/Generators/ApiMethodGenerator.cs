@@ -44,7 +44,7 @@ internal static class ApiMethodGenerator
             builder.Append(_async);
         }
 
-        builder.Append(returnType.FullName);
+        builder.Append(returnType.TypeInfo.FullTypeName);
         builder.Append(_space);
     }
 
@@ -58,7 +58,9 @@ internal static class ApiMethodGenerator
 
             var parameter = parameters[i];
 
-            builder.Append(parameter.FullName);
+            builder.Append(parameter.TypeInfo.FullTypeName);
+            builder.Append(_space);
+            builder.Append(parameter.TypeInfo.ParameterName);
 
             if (i < parameters.Count - 1)
             {

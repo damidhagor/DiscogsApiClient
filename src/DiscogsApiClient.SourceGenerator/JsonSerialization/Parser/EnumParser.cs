@@ -1,5 +1,4 @@
 ﻿using DiscogsApiClient.SourceGenerator.JsonSerialization.Models;
-using DiscogsApiClient.SourceGenerator.Shared.Attributes;
 using DiscogsApiClient.SourceGenerator.Shared.Helpers;
 
 namespace DiscogsApiClient.SourceGenerator.JsonSerialization.Parser;
@@ -15,43 +14,7 @@ internal static class EnumParser
         }
 
         var typeInfo = enumSymbol.GetSymbolTypeInfo();
-        var members = enumSymbol.ParseEnumMembers(cancellationToken);
 
-        return new(typeInfo, members);
-    }
-
-    public static List<EnumerationMember> ParseEnumMembers(this INamedTypeSymbol enumSymbol, CancellationToken cancellationToken)
-    {
-        var fieldSymbols = enumSymbol
-            .GetMembers()
-            .Where(m => m.Kind == SymbolKind.Field && m.IsStatic)
-            .Cast<IFieldSymbol>();
-
-        var enumMembers = new List<EnumerationMember>();
-        foreach (var fieldSymbol in fieldSymbols)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            var enumMember = fieldSymbol.ParseEnumMember(cancellationToken);
-            enumMembers.Add(enumMember);
-        }
-
-        return enumMembers;
-    }
-
-    public static EnumerationMember ParseEnumMember(this IFieldSymbol memberSymbol, CancellationToken cancellationToken)
-    {
-        var fieldName = memberSymbol.Name;
-        var displayName = fieldName;
-
-        if (memberSymbol.TryGetAttributeConstructorArgument<string>(
-            Constants.SharedNamespace,
-            AliasAsAttribute.Name,
-            out var altName))
-        {
-            displayName = altName!;
-        }
-
-        return new(fieldName, displayName);
+        return new(typeInfo);
     }
 }

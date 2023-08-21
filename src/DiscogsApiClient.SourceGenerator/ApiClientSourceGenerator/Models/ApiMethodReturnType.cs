@@ -1,35 +1,22 @@
-﻿namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models;
+﻿using DiscogsApiClient.SourceGenerator.Shared.Models;
+
+namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models;
 
 internal sealed class ApiMethodReturnType
 {
-    public string FullName { get; private set; }
+    public ParsedTypeInfo TypeInfo { get; private set; }
 
     public bool IsVoid { get; private set; }
 
-    public bool HasResult { get; private set; }
-
     public bool IsTask { get; private set; }
 
-    public string TaskResultTypeFullName { get; private set; }
+    public bool IsTaskWithResult { get; private set; }
 
-    private ApiMethodReturnType(string fullName, bool isVoid, bool hasResult, bool isTask, string taskResultTypeFullName)
+    public ApiMethodReturnType(ParsedTypeInfo typeInfo, bool isVoid)
     {
-        FullName = fullName;
+        TypeInfo = typeInfo;
         IsVoid = isVoid;
-        HasResult = hasResult;
-        IsTask = isTask;
-        TaskResultTypeFullName = taskResultTypeFullName;
+        IsTask = typeInfo.IsType<Task>();
+        IsTaskWithResult = IsTask && typeInfo.GenericTypeArguments.Count == 1;
     }
-
-    public static ApiMethodReturnType CreateVoid()
-        => new("void", true, false, false, "");
-
-    public static ApiMethodReturnType CreateNoTask(string fullName)
-        => new(fullName, false, true, false, "");
-
-    public static ApiMethodReturnType CreateTask(string fullName)
-        => new(fullName, false, false, true, "");
-
-    public static ApiMethodReturnType CreateTaskWithResult(string fullName, string resultFullName)
-        => new(fullName, false, true, true, resultFullName);
 }

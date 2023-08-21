@@ -1,11 +1,13 @@
-﻿namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models.MethodParameters;
+﻿using DiscogsApiClient.SourceGenerator.Shared.Models;
+
+namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models.MethodParameters;
 
 internal sealed class RouteApiMethodParameter : ApiMethodParameter
 {
     public string RoutePart { get; private set; }
 
-    public RouteApiMethodParameter(string name, string fullName, string typeFullName, string routePart)
-        : base(name, fullName, typeFullName, ApiMethodParameterType.Route)
+    public RouteApiMethodParameter(ParsedParameterTypeInfo typeInfo, string routePart)
+        : base(typeInfo, ApiMethodParameterType.Route)
     {
         RoutePart = routePart;
     }

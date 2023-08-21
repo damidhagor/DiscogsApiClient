@@ -1,20 +1,19 @@
-﻿namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models;
+﻿using DiscogsApiClient.SourceGenerator.Shared.Models;
+
+namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models;
 
 internal sealed class ApiClient
 {
-    public string NamespaceName { get; private set; }
+    public ParsedTypeInfo InterfaceTypeInfo { get; private set; }
 
     public string ClientName { get; private set; }
 
-    public string InterfaceName { get; private set; }
-
     public List<ApiMethod> Methods { get; private set; }
 
-    public ApiClient(string namespaceName, string clientName, string interfaceName, List<ApiMethod> methods)
+    public ApiClient(ParsedTypeInfo interfaceTypeInfo, string clientName, List<ApiMethod> methods)
     {
-        NamespaceName = namespaceName;
+        InterfaceTypeInfo = interfaceTypeInfo;
         ClientName = clientName;
-        InterfaceName = interfaceName;
         Methods = methods;
     }
 }
