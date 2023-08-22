@@ -109,6 +109,11 @@ internal static class QueryParameterGenerator
                     }
 
                     builder.AppendLine(
+                        $$"""
+                                            _ => throw new global::System.ArgumentOutOfRangeException(nameof({{parameter.TypeInfo.ParameterName}}.{{property.TypeInfo.ParameterName}}))
+                        """);
+
+                    builder.AppendLine(
                         """
                                         });
                         """);

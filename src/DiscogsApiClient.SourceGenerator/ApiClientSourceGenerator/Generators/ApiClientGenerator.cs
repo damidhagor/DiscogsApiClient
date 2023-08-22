@@ -91,7 +91,8 @@ internal static class ApiClientGenerator
 
                 var responseStream = response.Content.ReadAsStream();
 
-                return global::System.Text.Json.JsonSerializer.Deserialize<T>(responseStream, _apiClientSettings.JsonSerializerOptions);
+                return global::System.Text.Json.JsonSerializer.Deserialize<T>(responseStream, _apiClientSettings.JsonSerializerOptions)
+                    ?? throw new global::System.InvalidOperationException($"The response for the request '{route}' could not be deserialized.");
             }
 
             private async Task SendAsync(global::System.Net.Http.HttpMethod httpMethod, string route, object? payload = null, global::System.Threading.CancellationToken cancellationToken = default)
@@ -123,7 +124,8 @@ internal static class ApiClientGenerator
 
                 var responseStream = response.Content.ReadAsStream();
         
-                return await global::System.Text.Json.JsonSerializer.DeserializeAsync<T>(responseStream, _apiClientSettings.JsonSerializerOptions, cancellationToken);
+                return await global::System.Text.Json.JsonSerializer.DeserializeAsync<T>(responseStream, _apiClientSettings.JsonSerializerOptions, cancellationToken)
+                    ?? throw new global::System.InvalidOperationException($"The response for the request '{route}' could not be deserialized.");
             }
         }
         """);
