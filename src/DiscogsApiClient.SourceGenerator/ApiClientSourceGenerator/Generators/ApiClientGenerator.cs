@@ -40,7 +40,7 @@ internal static class ApiClientGenerator
             $$"""
             #nullable enable
 
-            namespace {{apiClient.InterfaceTypeInfo.Namespace}};
+            namespace {{apiClient.ClientNamespace}};
         
             internal partial class {{apiClient.ClientName}} : {{apiClient.InterfaceTypeInfo.FullTypeName}}
             {

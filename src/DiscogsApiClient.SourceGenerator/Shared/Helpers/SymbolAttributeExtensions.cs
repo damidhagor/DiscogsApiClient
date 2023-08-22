@@ -68,6 +68,26 @@ internal static class SymbolAttributeExtensions
         return attribute.TryGetAttributeConstructorArgument(index, out value);
     }
 
+    public static bool TryGetAttributeNamedArgument<T>(
+        this ISymbol? symbol,
+        string attributeNamespace,
+        string attributeName,
+        string name,
+        out T? value)
+    {
+        value = default;
+
+        if (!symbol.TryGetAttribute(
+            attributeNamespace,
+            attributeName,
+            out var attribute))
+        {
+            return false;
+        }
+
+        return attribute.TryGetAttributeNamedArgument(name, out value);
+    }
+
     public static bool TryGetAttributeConstructorArgument<T>(this AttributeData? attributeData, out T? value)
         => attributeData.TryGetAttributeConstructorArgument(0, out value);
 
@@ -84,6 +104,26 @@ internal static class SymbolAttributeExtensions
         var argument = attributeData.ConstructorArguments[index].Value;
 
         if (argument is T castValue)
+        {
+            value = castValue;
+            return true;
+        }
+
+        return false;
+    }
+
+    public static bool TryGetAttributeNamedArgument<T>(this AttributeData? attributeData, string name, out T? value)
+    {
+        value = default;
+
+        if (attributeData is null || attributeData.NamedArguments.Length == 0)
+        {
+            return false;
+        }
+
+        var argument = attributeData.NamedArguments.FirstOrDefault(a => a.Key == name);
+
+        if (argument.Value.Value is T castValue)
         {
             value = castValue;
             return true;

@@ -2,8 +2,8 @@
 
 namespace DiscogsApiClient;
 
-[ApiClient]
-public interface IDiscogsClient
+[ApiClient(Name = "DiscogsApiClient", Namespace = "DiscogsApiClient.Generated")]
+public interface IDiscogsApiClient
 {
     /// <summary>
     /// Queries the <see cref="Identity"/> of the currently authenticated user.

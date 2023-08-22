@@ -1,4 +1,5 @@
-﻿using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models;
+﻿using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Attributes;
+using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models;
 using DiscogsApiClient.SourceGenerator.Shared.Helpers;
 
 namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Parser;
@@ -13,10 +14,25 @@ internal static class ApiClientParser
             return null;
         }
 
+
+        interfaceSymbol.TryGetAttributeNamedArgument<string>(
+            Constants.ApiClientNamespace,
+            ApiCLientAttribute.Name,
+            ApiCLientAttribute.NamePropertyName,
+            out var clientName);
+        interfaceSymbol.TryGetAttributeNamedArgument<string>(
+            Constants.ApiClientNamespace,
+            ApiCLientAttribute.Name,
+            ApiCLientAttribute.NamespacePropertyName,
+            out var clientNamespace);
+
         var typeInfo = interfaceSymbol.GetSymbolTypeInfo();
-        var implementationName = typeInfo.Name.AsSpan().Slice(1, typeInfo.Name.Length - 1).ToString();
+
         var apiMethodsToGenerate = interfaceSymbol.ParseApiMethods(cancellationToken);
 
-        return new(typeInfo, implementationName, apiMethodsToGenerate);
+        clientName ??= typeInfo.Name.AsSpan().Slice(1, typeInfo.Name.Length - 1).ToString();
+        clientNamespace ??= typeInfo.Namespace;
+
+        return new(typeInfo, clientName, clientNamespace, apiMethodsToGenerate);
     }
 }

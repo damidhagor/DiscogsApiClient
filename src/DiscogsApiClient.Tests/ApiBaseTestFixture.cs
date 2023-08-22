@@ -17,7 +17,7 @@ public abstract class ApiBaseTestFixture
     private HttpClient _clientHttpClient = null!;
     protected IConfiguration Configuration = null!;
 
-    protected IDiscogsClient ApiClient = null!;
+    protected IDiscogsApiClient ApiClient = null!;
 
     static ApiBaseTestFixture()
     {
@@ -51,10 +51,10 @@ public abstract class ApiBaseTestFixture
         _clientHttpClient?.Dispose();
     }
 
-    protected (IDiscogsClient discogsApiClient, HttpClient authHttpClient, HttpClient clientHttpClient) CreateUnauthenticatedDiscogsApiClient()
+    protected (IDiscogsApiClient discogsApiClient, HttpClient authHttpClient, HttpClient clientHttpClient) CreateUnauthenticatedDiscogsApiClient()
         => CreateDiscogsApiClient(userToken: "");
 
-    protected (IDiscogsClient discogsApiClient, HttpClient authHttpClient, HttpClient clientHttpClient) CreateDiscogsApiClient(
+    protected (IDiscogsApiClient discogsApiClient, HttpClient authHttpClient, HttpClient clientHttpClient) CreateDiscogsApiClient(
         string? authUserAgent = null,
         string? authBaseUrl = null,
         string? clientUserAgent = null,
@@ -95,10 +95,10 @@ public abstract class ApiBaseTestFixture
         };
         clientHttpClient.DefaultRequestHeaders.UserAgent.ParseAdd(clientUserAgent);
 
-        var apiClientSettings = new ApiClientSettings<IDiscogsClient>()
+        var apiClientSettings = new ApiClientSettings<IDiscogsApiClient>()
             .AddGeneratedJsonConverters();
 
-        var discogsApiClient = new DiscogsClient(clientHttpClient, apiClientSettings);
+        var discogsApiClient = new Generated.DiscogsApiClient(clientHttpClient, apiClientSettings);
 
         return (discogsApiClient, authHttpClient, clientHttpClient);
     }
