@@ -35,7 +35,7 @@ public static partial class ServiceCollectionExtensions
         services.AddTransient<AuthenticationDelegatingHandler>();
         services.AddSingleton<IDiscogsAuthenticationService, DiscogsAuthenticationService>();
         services.AddSingleton<IPersonalAccessTokenAuthenticationProvider, PersonalAccessTokenAuthenticationProvider>();
-
+        
         services.AddHttpClient<IOAuthAuthenticationProvider, OAuthAuthenticationProvider>((serviceProvider, httpClient) =>
         {
             var options = serviceProvider.GetRequiredService<DiscogsApiClientOptions>();
@@ -47,7 +47,7 @@ public static partial class ServiceCollectionExtensions
             .AddGeneratedJsonConverters();
         services.AddSingleton(apiClientSettings);
 
-        var httpClientBuilder = services.AddHttpClient<IDiscogsApiClient, Generated.DiscogsApiClient>()
+        services.AddHttpClient<IDiscogsApiClient, Generated.DiscogsApiClient>()
             .ConfigureHttpClient((serviceProvider, httpClient) =>
             {
                 var options = serviceProvider.GetRequiredService<DiscogsApiClientOptions>();
@@ -55,16 +55,22 @@ public static partial class ServiceCollectionExtensions
                 httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent);
             })
             .AddHttpMessageHandler<ErrorHandlingDelegatingHandler>()
-            .AddHttpMessageHandler<AuthenticationDelegatingHandler>();
+            .AddHttpMessageHandler<AuthenticationDelegatingHandler>()
+            .AddRateLimiting(services, discogsOptions);
 
-        if (discogsOptions.UseRateLimiting)
+        return services;
+    }
+
+    private static void AddRateLimiting(this IHttpClientBuilder builder, IServiceCollection services, DiscogsApiClientOptions options)
+    {
+        if (options.UseRateLimiting)
         {
             var rateLimitingOptions = new SlidingWindowRateLimiterOptions()
             {
-                Window = discogsOptions.RateLimitingWindow,
-                SegmentsPerWindow = discogsOptions.RateLimitingWindowSegments,
-                PermitLimit = discogsOptions.RateLimitingPermits,
-                QueueLimit = discogsOptions.RateLimitingQueueSize,
+                Window = options.RateLimitingWindow,
+                SegmentsPerWindow = options.RateLimitingWindowSegments,
+                PermitLimit = options.RateLimitingPermits,
+                QueueLimit = options.RateLimitingQueueSize,
                 AutoReplenishment = true,
                 QueueProcessingOrder = QueueProcessingOrder.OldestFirst
             };
@@ -73,9 +79,7 @@ public static partial class ServiceCollectionExtensions
             services.AddSingleton<RateLimiter, SlidingWindowRateLimiter>();
             services.AddTransient<RateLimitedDelegatingHandler>();
 
-            httpClientBuilder.AddHttpMessageHandler<RateLimitedDelegatingHandler>();
+            builder.AddHttpMessageHandler<RateLimitedDelegatingHandler>();
         }
-
-        return services;
     }
 }
