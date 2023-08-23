@@ -24,14 +24,24 @@ internal static class ApiClientParser
             ApiCLientAttribute.Name,
             ApiCLientAttribute.NamespacePropertyName,
             out var clientNamespace);
+        interfaceSymbol.TryGetAttributeConstructorArgument<INamedTypeSymbol>(
+            Constants.ApiClientNamespace,
+            ApiCLientAttribute.Name,
+            out var jsonSerializerContextTypeSymbol);
+
+        if (jsonSerializerContextTypeSymbol is null)
+        {
+            return null;
+        }
 
         var typeInfo = interfaceSymbol.GetSymbolTypeInfo();
+        var jsonSerializerContextTypeTypeInfo = jsonSerializerContextTypeSymbol.GetSymbolTypeInfo();
 
         clientName ??= typeInfo.Name.AsSpan().Slice(1, typeInfo.Name.Length - 1).ToString();
         clientNamespace ??= typeInfo.Namespace;
 
         var apiMethodsToGenerate = interfaceSymbol.ParseApiMethods(cancellationToken);
 
-        return new(typeInfo, clientName, clientNamespace, apiMethodsToGenerate);
+        return new(typeInfo, jsonSerializerContextTypeTypeInfo, clientName, clientNamespace, apiMethodsToGenerate);
     }
 }

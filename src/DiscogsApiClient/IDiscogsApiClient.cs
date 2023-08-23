@@ -2,7 +2,7 @@
 
 namespace DiscogsApiClient;
 
-[ApiClient(Name = "DiscogsApiClient", Namespace = "DiscogsApiClient.Generated")]
+[ApiClient(typeof(DiscogsJsonSerializerContext), Name = "DiscogsApiClient", Namespace = "DiscogsApiClient.Generated")]
 public interface IDiscogsApiClient
 {
     /// <summary>

@@ -8,6 +8,8 @@ internal static class ApiCLientAttribute
 
     public const string NamespacePropertyName = "Namespace";
 
+    public const string JsonSerializerContextTypePropertyName = "JsonSerializerContextType";
+
     public const string SourceHint = "ApiClientAttribute.g.cs";
 
     public const string Source =
@@ -22,6 +24,13 @@ internal static class ApiCLientAttribute
             public string? {{NamePropertyName}} { get; set; }
 
             public string? {{NamespacePropertyName}} { get; set; }
+
+            public Type {{JsonSerializerContextTypePropertyName}} { get; set; }
+
+            public {{Name}}(Type jsonSerializerContextType)
+            {
+                {{JsonSerializerContextTypePropertyName}} = jsonSerializerContextType;
+            }
         }
         """;
 }
