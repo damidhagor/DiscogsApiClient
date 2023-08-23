@@ -35,6 +35,7 @@ public static partial class ServiceCollectionExtensions
 
         services.AddSingleton(discogsOptions);
         services.AddTransient<AuthenticationDelegatingHandler>();
+        services.AddTransient<ErrorHandlingDelegatingHandler>();
         services.AddSingleton<IDiscogsAuthenticationService, DiscogsAuthenticationService>();
         services.AddSingleton<IPersonalAccessTokenAuthenticationProvider, PersonalAccessTokenAuthenticationProvider>();
 
