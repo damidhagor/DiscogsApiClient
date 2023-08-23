@@ -4,6 +4,10 @@
 		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<IsAotCompatible>true</IsAotCompatible>
+	</PropertyGroup>
+
+	<PropertyGroup>
 		<Title>DiscogsApiClient</Title>
 		<Authors>Alexander Jurk</Authors>
 		<Description>This is a library for authenticated access to the Discogs database.</Description>
@@ -34,12 +38,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<InternalsVisibleTo Include="DiscogsApiClient.Tests" />
+		<ProjectReference Include="..\DiscogsApiClient.SourceGenerator\DiscogsApiClient.SourceGenerator.csproj"
+						  ReferenceOutputAssembly="false"
+						  OutputItemType="Analyzer" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\DiscogsApiClient.SourceGenerator\DiscogsApiClient.SourceGenerator.csproj"
-						ReferenceOutputAssembly="false"
-						OutputItemType="Analyzer" />
+		<InternalsVisibleTo Include="DiscogsApiClient.Tests" />
 	</ItemGroup>
 </Project>
