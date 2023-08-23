@@ -74,10 +74,6 @@ public class ApiClientSourceGenerator : IIncrementalGenerator
         foreach (var apiClient in apiClients)
         {
             var (hint, source) = apiClient.GenerateApiClient(context.CancellationToken);
-
-            using var writer = FileOutputDebugHelper.GetOutputStreamWriter($"client-{hint}", false);
-            writer.WriteLine(source.ToString());
-
             context.AddSource(hint, source);
         }
     }
