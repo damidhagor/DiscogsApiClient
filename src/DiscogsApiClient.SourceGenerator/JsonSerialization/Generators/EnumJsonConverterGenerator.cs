@@ -45,19 +45,20 @@ internal static class EnumJsonConverterGenerator
         
             internal static class {{ClassName}}
             {
-                public static global::System.Collections.Generic.IReadOnlyList<global::System.Text.Json.Serialization.JsonConverter> Converters { get; } = new global::System.Collections.Generic.List<global::System.Text.Json.Serialization.JsonConverter>
+                public static global::System.Text.Json.JsonSerializerOptions AddGeneratedEnumJsonConverters(this global::System.Text.Json.JsonSerializerOptions options)
                 {
             """);
 
         for (var i = 0; i < enums.Count; i++)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            builder.AppendLine($"\t\tnew {enums[i].GetJsonConverterClassName()}(),");
+            builder.AppendLine($"\t\toptions.Converters.Add(new {enums[i].GetJsonConverterClassName()}());");
         }
 
         builder.AppendLine(
             """
-                };
+                    return options;
+                }
             """);
     }
 

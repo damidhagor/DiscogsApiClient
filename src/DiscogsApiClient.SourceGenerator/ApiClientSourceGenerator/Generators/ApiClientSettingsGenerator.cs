@@ -1,10 +1,8 @@
-﻿using DiscogsApiClient.SourceGenerator.JsonSerialization.Generators;
-
-namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Generators;
+﻿namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Generators;
 
 internal static class ApiClientSettingsGenerator
 {
-    public const string Namespace = "DiscogsApiClient.ApiClientGenerator";
+    public const string Namespace = Constants.ApiClientNamespace;
 
     public const string Name = "ApiClientSettings";
 
@@ -16,22 +14,10 @@ internal static class ApiClientSettingsGenerator
 
         namespace {{Namespace}};
 
-        internal sealed class {{Name}}<T>
+        internal sealed class {{Name}}<T, U>
+            where U : global::System.Text.Json.Serialization.JsonSerializerContext
         {
-            public global::System.Text.Json.JsonSerializerOptions JsonSerializerOptions { get; init; } = new();
-        }
-
-        internal static class {{Name}}Extensions
-        {
-            public static {{Name}}<T> AddGeneratedJsonConverters<T>(this {{Name}}<T> settings)
-            {
-                foreach (var jsonConverter in global::{{EnumJsonConverterGenerator.Namespace}}.{{EnumJsonConverterGenerator.ClassName}}.Converters)
-                {
-                    settings.JsonSerializerOptions.Converters.Add(jsonConverter);
-                }
-
-                return settings;
-            }
+            public U JsonSerializerContext { get; set; }
         }
         """;
 

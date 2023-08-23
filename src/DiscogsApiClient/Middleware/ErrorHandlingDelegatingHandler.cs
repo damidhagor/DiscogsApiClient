@@ -19,7 +19,7 @@ public sealed class ErrorHandlingDelegatingHandler : DelegatingHandler
         try
         {
             var content = await response.Content.ReadAsStringAsync(cancellationToken);
-            message = JsonSerializer.Deserialize<ErrorMessage>(content)?.Message;
+            message = JsonSerializer.Deserialize<ErrorMessage>(content, DiscogsJsonSerializerContext.Default.ErrorMessage)?.Message;
         }
         catch { }
 

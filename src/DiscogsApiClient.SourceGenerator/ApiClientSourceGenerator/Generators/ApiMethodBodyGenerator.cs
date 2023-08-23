@@ -56,6 +56,20 @@ internal static class ApiMethodBodyGenerator
             _ => ""
         };
 
+        var bodyParameter = apiMethod.Parameters
+            .FirstOrDefault(p => p.Type == ApiMethodParameterType.Body);
+
+        var cancellationTokenParameter = apiMethod.Parameters
+            .FirstOrDefault(p => p.Type == ApiMethodParameterType.CancellationToken);
+
+        if (bodyParameter is not null)
+        {
+            builder.AppendLine(
+                $$"""
+                        var content = SerializeContent({{bodyParameter.TypeInfo.ParameterName}}, _apiClientSettings.JsonSerializerContext.{{bodyParameter.TypeInfo.Name}});
+                """);
+        }
+
         builder.Append("\t\t");
 
         if (apiMethod.ReturnType.IsTaskWithResult)
@@ -85,16 +99,20 @@ internal static class ApiMethodBodyGenerator
 
         builder.Append($"{httpMethod}, route");
 
-        var bodyParameter = apiMethod.Parameters
-            .FirstOrDefault(p => p.Type == ApiMethodParameterType.Body);
-        if (bodyParameter is not null)
+        if (apiMethod.ReturnType.IsTaskWithResult)
         {
-            builder.Append(", payload: ");
-            builder.Append(bodyParameter.TypeInfo.ParameterName);
+            builder.Append($", _apiClientSettings.JsonSerializerContext.{apiMethod.ReturnType.TypeInfo.GenericTypeArguments[0].Name}");
+        }
+        else if (!apiMethod.ReturnType.TypeInfo.IsVoid && !apiMethod.ReturnType.IsTask)
+        {
+            builder.Append($", _apiClientSettings.JsonSerializerContext.{apiMethod.ReturnType.TypeInfo.Name}");
         }
 
-        var cancellationTokenParameter = apiMethod.Parameters
-            .FirstOrDefault(p => p.Type == ApiMethodParameterType.CancellationToken);
+        if (bodyParameter is not null)
+        {
+            builder.Append(", content: content");
+        }
+
         if (cancellationTokenParameter is not null)
         {
             builder.Append(", cancellationToken: ");

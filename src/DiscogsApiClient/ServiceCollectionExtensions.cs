@@ -1,8 +1,10 @@
-﻿using System.Threading.RateLimiting;
-using DiscogsApiClient.ApiClientGenerator;
+﻿using System.Text.Json;
+using System.Threading.RateLimiting;
 using DiscogsApiClient.Authentication.OAuth;
 using DiscogsApiClient.Authentication.PersonalAccessToken;
 using DiscogsApiClient.Middleware;
+using DiscogsApiClient.SourceGenerator.ApiClient;
+using DiscogsApiClient.SourceGenerator.JsonSerialization;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DiscogsApiClient;
@@ -35,7 +37,7 @@ public static partial class ServiceCollectionExtensions
         services.AddTransient<AuthenticationDelegatingHandler>();
         services.AddSingleton<IDiscogsAuthenticationService, DiscogsAuthenticationService>();
         services.AddSingleton<IPersonalAccessTokenAuthenticationProvider, PersonalAccessTokenAuthenticationProvider>();
-        
+
         services.AddHttpClient<IOAuthAuthenticationProvider, OAuthAuthenticationProvider>((serviceProvider, httpClient) =>
         {
             var options = serviceProvider.GetRequiredService<DiscogsApiClientOptions>();
@@ -43,8 +45,13 @@ public static partial class ServiceCollectionExtensions
             httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent);
         });
 
-        var apiClientSettings = new ApiClientSettings<IDiscogsApiClient>()
-            .AddGeneratedJsonConverters();
+
+        var apiClientSettings = new ApiClientSettings<IDiscogsApiClient, DiscogsJsonSerializerContext>()
+        {
+            JsonSerializerContext = new DiscogsJsonSerializerContext(
+                new JsonSerializerOptions()
+                    .AddGeneratedEnumJsonConverters())
+        };
         services.AddSingleton(apiClientSettings);
 
         services.AddHttpClient<IDiscogsApiClient, Generated.DiscogsApiClient>()
