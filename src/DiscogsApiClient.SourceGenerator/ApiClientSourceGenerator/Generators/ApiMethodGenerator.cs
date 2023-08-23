@@ -44,7 +44,15 @@ internal static class ApiMethodGenerator
             builder.Append(_async);
         }
 
-        builder.Append(returnType.TypeInfo.FullTypeName);
+        if (returnType.TypeInfo.IsVoid)
+        {
+            builder.Append("void");
+        }
+        else
+        {
+            builder.Append(returnType.TypeInfo.FullTypeName);
+        }
+
         builder.Append(_space);
     }
 

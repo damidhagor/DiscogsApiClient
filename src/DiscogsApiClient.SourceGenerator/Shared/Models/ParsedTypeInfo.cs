@@ -20,6 +20,8 @@ internal class ParsedTypeInfo
 
     public bool IsEnum { get; private set; }
 
+    public bool IsVoid { get; private set; }
+
     public ParsedTypeInfo(
         string name,
         string @namespace,
@@ -32,6 +34,7 @@ internal class ParsedTypeInfo
         Namespace = @namespace;
         NeedsGlobalPrefix = needsGlobalPrefix;
         IsNullable = isNullable;
+        IsVoid = IsType(typeof(void));
         GenericTypeArguments = genericTypeArguments ?? new();
         IsGeneric = GenericTypeArguments.Count > 0;
         EnumMembers = enumMembers ?? new();

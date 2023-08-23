@@ -76,7 +76,7 @@ internal static class ApiMethodBodyGenerator
         {
             builder.Append($"<{apiMethod.ReturnType.TypeInfo.GenericTypeArguments[0].FullTypeName}>");
         }
-        else if (apiMethod.ReturnType.IsTask)
+        else if (!apiMethod.ReturnType.TypeInfo.IsVoid && !apiMethod.ReturnType.IsTask)
         {
             builder.Append($"<{apiMethod.ReturnType.TypeInfo.FullTypeName}>");
         }
