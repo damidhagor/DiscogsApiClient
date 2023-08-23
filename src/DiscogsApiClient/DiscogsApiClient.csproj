@@ -18,10 +18,10 @@
 		<PackageTags>discogs</PackageTags>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<AssemblyVersion>3.1.0</AssemblyVersion>
-		<FileVersion>3.1.0</FileVersion>
-		<Version>$(AssemblyVersion)</Version>
-		<PackageReleaseNotes>The client now uses Refit, overhauls authentication, adds rate limiting and has many more changes.</PackageReleaseNotes>
+		<AssemblyVersion>4.0.0</AssemblyVersion>
+		<FileVersion>4.0.0</FileVersion>
+		<PackageVersion>4.0.0-beta.1</PackageVersion>
+		<PackageReleaseNotes>Refit has been removed and the library is now Aot compatible.</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<ItemGroup>
