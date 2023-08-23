@@ -160,7 +160,13 @@ public Task<string> GetVerifier(string authUrl, string callbackUrl, Cancellation
   - Reusing previously obtained Access Tokens & Secret via OAuth was moved into its own method ```Authenticate``` method.
   - Optional query parameters are now nullable and optional in the Api call.
   - Some internal interfaces and implementations were made public.
-
+- ### **4.0.0**
+  - The [Refit](https://github.com/reactiveui/refit) library has been removed because it produces a client implementation which is not Aot compatible and won't be for the forseeable future.
+  - [Refit](https://github.com/reactiveui/refit) has been replaced by a custom Source Generator which creates a client implementation at compile time.
+  - The public Api of the DiscogsApiClient library has not been changed and updating will not break existing code.
+  - Json serialization has been replaced with a source generated ``DiscogsJsonSerializerContext``.
+  - The Refit ``ExceptionFactory`` implementation has been moved into a ``ErrorHandlingDelegatingHandler`` middleware.
+  - Added Demo project for an Aot publishable console application using the DiscogsApiClient.
 ## **Breaking changes in 3.0.0**
 
 - The registration of the ```IDiscogsApiClient``` now happens in a single ```AddDiscogsApiClient``` method
