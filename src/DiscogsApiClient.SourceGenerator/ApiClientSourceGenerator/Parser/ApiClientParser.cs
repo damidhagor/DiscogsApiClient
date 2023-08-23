@@ -14,7 +14,6 @@ internal static class ApiClientParser
             return null;
         }
 
-
         interfaceSymbol.TryGetAttributeNamedArgument<string>(
             Constants.ApiClientNamespace,
             ApiCLientAttribute.Name,
@@ -28,10 +27,10 @@ internal static class ApiClientParser
 
         var typeInfo = interfaceSymbol.GetSymbolTypeInfo();
 
-        var apiMethodsToGenerate = interfaceSymbol.ParseApiMethods(cancellationToken);
-
         clientName ??= typeInfo.Name.AsSpan().Slice(1, typeInfo.Name.Length - 1).ToString();
         clientNamespace ??= typeInfo.Namespace;
+
+        var apiMethodsToGenerate = interfaceSymbol.ParseApiMethods(cancellationToken);
 
         return new(typeInfo, clientName, clientNamespace, apiMethodsToGenerate);
     }

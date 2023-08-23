@@ -85,18 +85,9 @@ internal static class EnumJsonConverterGenerator
         {
             var enumMember = enumeration.TypeInfo.EnumMembers[i];
 
-            if (i == 0)
-            {
-                builder.Append($"\t\t\tif (reader.ValueTextEquals(\"{enumMember.MemberNameAlias}\"))");
-            }
-            else
-            {
-                builder.Append($"\t\t\telse if (reader.ValueTextEquals(\"{enumMember.MemberNameAlias}\"))");
-            }
-
             builder.AppendLine(
                 $$"""
-
+                            {{(i > 0 ? "else " : "")}}if (reader.ValueTextEquals("{{enumMember.MemberNameAlias}}"))
                             {
                                 enumValue = {{enumeration.TypeInfo.GetFullTypeName(false)}}.{{enumMember.MemberName}};
                             }

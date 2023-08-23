@@ -91,13 +91,7 @@ internal static class ApiMethodParser
     {
         var typeInfo = typeSymbol.GetSymbolTypeInfo();
 
-        if (typeSymbol.SpecialType == SpecialType.System_Void)
-        {
-            returnType = new ApiMethodReturnType(typeInfo, true);
-            return true;
-        }
-
-        returnType = new ApiMethodReturnType(typeInfo, false);
+        returnType = new ApiMethodReturnType(typeInfo);
         return true;
     }
 

@@ -5,11 +5,6 @@ namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Generators;
 
 internal static class ApiMethodBodyGenerator
 {
-    private const string _route =
-        """
-                string route = $"{0}";
-        """;
-
     public static void GenerateApiMethodBody(this StringBuilder builder, ApiMethod apiMethod)
     {
         builder.GenerateRoute(apiMethod, apiMethod.Parameters);
