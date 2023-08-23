@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiscogsApiClientDemo.OAuth"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiscogsApiClient", "..\src\DiscogsApiClient\DiscogsApiClient.csproj", "{3067C26A-2701-4C38-B142-CEC056858AE8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscogsApiClientDemo.AotConsole", "DiscogsApiClientDemo.AotConsole\DiscogsApiClientDemo.AotConsole.csproj", "{E2E66FC1-1ED3-4427-9660-9F693C5DC8A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{3067C26A-2701-4C38-B142-CEC056858AE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3067C26A-2701-4C38-B142-CEC056858AE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3067C26A-2701-4C38-B142-CEC056858AE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2E66FC1-1ED3-4427-9660-9F693C5DC8A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2E66FC1-1ED3-4427-9660-9F693C5DC8A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2E66FC1-1ED3-4427-9660-9F693C5DC8A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2E66FC1-1ED3-4427-9660-9F693C5DC8A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
