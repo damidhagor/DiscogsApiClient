@@ -73,14 +73,14 @@ internal static class ApiClientGenerator
                 string? content = null,
                 global::System.Threading.CancellationToken cancellationToken = default)
             {
-                var request = new global::System.Net.Http.HttpRequestMessage(httpMethod, route);
+                using var request = new global::System.Net.Http.HttpRequestMessage(httpMethod, route);
 
                 if (content is not null)
                 {
                     request.Content = new global::System.Net.Http.StringContent(content, global::System.Text.Encoding.UTF8, "application/json");
                 }
 
-                var response = _httpClient.Send(request, cancellationToken);
+                using var response = _httpClient.Send(request, cancellationToken);
                 response.EnsureSuccessStatusCode();
             }
 
@@ -91,17 +91,17 @@ internal static class ApiClientGenerator
                 string? content = null,
                 global::System.Threading.CancellationToken cancellationToken = default)
             {
-                var request = new global::System.Net.Http.HttpRequestMessage(httpMethod, route);
+                using var request = new global::System.Net.Http.HttpRequestMessage(httpMethod, route);
         
                 if (content is not null)
                 {
                     request.Content = new global::System.Net.Http.StringContent(content, global::System.Text.Encoding.UTF8, "application/json");
                 }
         
-                var response = _httpClient.Send(request, cancellationToken);
+                using var response = _httpClient.Send(request, cancellationToken);
                 response.EnsureSuccessStatusCode();
 
-                var responseStream = response.Content.ReadAsStream();
+                using var responseStream = response.Content.ReadAsStream();
 
                 return global::System.Text.Json.JsonSerializer.Deserialize<T>(responseStream, jsonTypeInfo)
                     ?? throw new global::System.InvalidOperationException($"The response for the request '{route}' could not be deserialized.");
@@ -113,14 +113,14 @@ internal static class ApiClientGenerator
                 string? content = null,
                 global::System.Threading.CancellationToken cancellationToken = default)
             {
-                var request = new global::System.Net.Http.HttpRequestMessage(httpMethod, route);
+                using var request = new global::System.Net.Http.HttpRequestMessage(httpMethod, route);
         
                 if (content is not null)
                 {
                     request.Content = new global::System.Net.Http.StringContent(content, global::System.Text.Encoding.UTF8, "application/json");
                 }
         
-                var response = await _httpClient.SendAsync(request, cancellationToken);
+                using var response = await _httpClient.SendAsync(request, cancellationToken);
                 response.EnsureSuccessStatusCode();
             }
         
@@ -131,17 +131,17 @@ internal static class ApiClientGenerator
                 string? content = null,
                 global::System.Threading.CancellationToken cancellationToken = default)
             {
-                var request = new global::System.Net.Http.HttpRequestMessage(httpMethod, route);
+                using var request = new global::System.Net.Http.HttpRequestMessage(httpMethod, route);
         
                 if (content is not null)
                 {
                     request.Content = new global::System.Net.Http.StringContent(content, global::System.Text.Encoding.UTF8, "application/json");
                 }
         
-                var response = await _httpClient.SendAsync(request, cancellationToken);
+                using var response = await _httpClient.SendAsync(request, cancellationToken);
                 response.EnsureSuccessStatusCode();
 
-                var responseStream = response.Content.ReadAsStream();
+                using var responseStream = response.Content.ReadAsStream();
         
                 return await global::System.Text.Json.JsonSerializer.DeserializeAsync<T>(responseStream, jsonTypeInfo, cancellationToken)
                     ?? throw new global::System.InvalidOperationException($"The response for the request '{route}' could not be deserialized.");
