@@ -47,12 +47,10 @@ public static partial class ServiceCollectionExtensions
         });
 
 
-        var apiClientSettings = new ApiClientSettings<IDiscogsApiClient, DiscogsJsonSerializerContext>()
-        {
-            JsonSerializerContext = new DiscogsJsonSerializerContext(
+        var apiClientSettings = new ApiClientSettings<IDiscogsApiClient, DiscogsJsonSerializerContext>(
+            new DiscogsJsonSerializerContext(
                 new JsonSerializerOptions()
-                    .AddGeneratedEnumJsonConverters())
-        };
+                    .AddGeneratedEnumJsonConverters()));
         services.AddSingleton(apiClientSettings);
 
         services.AddHttpClient<IDiscogsApiClient, Generated.DiscogsApiClient>()

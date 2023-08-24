@@ -97,12 +97,10 @@ public abstract class ApiBaseTestFixture
         };
         clientHttpClient.DefaultRequestHeaders.UserAgent.ParseAdd(clientUserAgent);
 
-        var apiClientSettings = new ApiClientSettings<IDiscogsApiClient, DiscogsJsonSerializerContext>()
-        {
-            JsonSerializerContext = new DiscogsJsonSerializerContext(
+        var apiClientSettings = new ApiClientSettings<IDiscogsApiClient, DiscogsJsonSerializerContext>(
+            new DiscogsJsonSerializerContext(
                 new JsonSerializerOptions()
-                    .AddGeneratedEnumJsonConverters())
-        };
+                    .AddGeneratedEnumJsonConverters()));
 
         var discogsApiClient = new Generated.DiscogsApiClient(clientHttpClient, apiClientSettings);
 

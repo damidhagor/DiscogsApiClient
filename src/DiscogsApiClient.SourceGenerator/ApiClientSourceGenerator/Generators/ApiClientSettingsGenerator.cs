@@ -17,7 +17,12 @@ internal static class ApiClientSettingsGenerator
         internal sealed class {{Name}}<T, U>
             where U : global::System.Text.Json.Serialization.JsonSerializerContext
         {
-            public U JsonSerializerContext { get; set; }
+            public U JsonSerializerContext { get; init; }
+
+            public {{Name}}(U jsonSerializerContext)
+            {
+                JsonSerializerContext = jsonSerializerContext;
+            }
         }
         """;
 
