@@ -40,21 +40,19 @@ public sealed class DiscogsAuthenticationService : IDiscogsAuthenticationService
 
     /// <inheritdoc />
     /// <exception cref="AuthenticationFailedDiscogsException" />
-    public async Task<(string accessToken, string accessTokenSecret)> AuthenticateWithOAuth(
-        string consumerKey,
-        string consumerSecret,
-        string verifierCallbackUrl,
-        GetVerifierCallback getVerifierCallback,
+    public async Task<OAuthAuthenticationSession> StartOAuthAuthentication(CancellationToken cancellationToken)
+        => await _oAuthAuthenticationProvider.StartAuthentication(cancellationToken);
+
+    /// <inheritdoc />
+    /// <exception cref="AuthenticationFailedDiscogsException" />
+    public async Task<(string AccessToken, string AccessTokenSecret)> CompleteOAuthAuthentication(
+        OAuthAuthenticationSession session,
+        string verifierToken,
         CancellationToken cancellationToken)
     {
         _lastAuthenticatedWithOAuth = false;
 
-        var tokens = await _oAuthAuthenticationProvider.Authenticate(
-            consumerKey,
-            consumerSecret,
-            verifierCallbackUrl,
-            getVerifierCallback,
-            cancellationToken);
+        var tokens = await _oAuthAuthenticationProvider.CompleteAuthentication(session, verifierToken, cancellationToken);
 
         _lastAuthenticatedWithOAuth = true;
         _lastAuthenticatedWithPersonalAccessToken = false;
@@ -63,19 +61,11 @@ public sealed class DiscogsAuthenticationService : IDiscogsAuthenticationService
     }
 
     /// <inheritdoc />
-    public void AuthenticateWithOAuth(
-        string consumerKey,
-        string consumerSecret,
-        string accessToken,
-        string accessTokenSecret)
+    public void AuthenticateWithOAuth(string accessToken, string accessTokenSecret)
     {
         _lastAuthenticatedWithOAuth = false;
 
-        _oAuthAuthenticationProvider.Authenticate(
-            consumerKey,
-            consumerSecret,
-            accessToken,
-            accessTokenSecret);
+        _oAuthAuthenticationProvider.Authenticate(accessToken, accessTokenSecret);
 
         _lastAuthenticatedWithOAuth = true;
         _lastAuthenticatedWithPersonalAccessToken = false;

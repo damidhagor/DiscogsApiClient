@@ -33,6 +33,16 @@ public static partial class ServiceCollectionExtensions
             throw new InvalidOperationException("The user agent string must not be empty.");
         }
 
+        if (string.IsNullOrWhiteSpace(discogsOptions.ConsumerKey))
+        {
+            throw new InvalidOperationException("The consumer key string must not be empty.");
+        }
+
+        if (string.IsNullOrWhiteSpace(discogsOptions.ConsumerSecret))
+        {
+            throw new InvalidOperationException("The consumer secret string must not be empty.");
+        }
+
         services.AddSingleton(discogsOptions);
         services.AddTransient<AuthenticationDelegatingHandler>();
         services.AddTransient<ErrorHandlingDelegatingHandler>();

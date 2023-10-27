@@ -16,6 +16,21 @@ public sealed class DiscogsApiClientOptions
     public string UserAgent { get; set; } = "";
 
     /// <summary>
+    /// Consumer Key of the Discogs application.
+    /// </summary>
+    public string ConsumerKey { get; set; } = "";
+
+    /// <summary>
+    /// Consumer Secret of the Discogs application.
+    /// </summary>
+    public string ConsumerSecret { get; set; } = "";
+
+    /// <summary>
+    /// The url provided to the Discogs Api when initiating the OAuth flow to where the browser should be redirected to return the verifier token.
+    /// </summary>
+    public string? VerifierCallbackUrl { get; set; }
+
+    /// <summary>
     /// If the <see cref="IDiscogsApiClient"/> should be rate limited.
     /// <para/>
     /// The rate limiter uses the <see href="https://learn.microsoft.com/en-us/aspnet/core/performance/rate-limit?view=aspnetcore-8.0#slide"> sliding window algorithm</see>.
