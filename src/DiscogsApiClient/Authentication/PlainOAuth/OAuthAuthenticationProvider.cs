@@ -23,6 +23,8 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
     {
         _httpClient = httpClient;
         _discogsOptions = options.Value;
+        Guard.IsNotNullOrWhiteSpace(_discogsOptions.ConsumerKey);
+        Guard.IsNotNullOrWhiteSpace(_discogsOptions.ConsumerSecret);
     }
 
     /// <inheritdoc/>
