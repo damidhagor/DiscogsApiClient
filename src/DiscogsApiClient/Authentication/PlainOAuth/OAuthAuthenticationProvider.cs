@@ -19,12 +19,10 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
 
     public bool IsAuthenticated => !string.IsNullOrWhiteSpace(_accessToken) && !string.IsNullOrWhiteSpace(_accessTokenSecret);
 
-    public OAuthAuthenticationProvider(HttpClient httpClient, IOptions<DiscogsApiClientOptions> options)
+    public OAuthAuthenticationProvider(HttpClient httpClient, DiscogsApiClientOptions discogsOptions)
     {
         _httpClient = httpClient;
-        _discogsOptions = options.Value;
-        Guard.IsNotNullOrWhiteSpace(_discogsOptions.ConsumerKey);
-        Guard.IsNotNullOrWhiteSpace(_discogsOptions.ConsumerSecret);
+        _discogsOptions = discogsOptions;
     }
 
     /// <inheritdoc/>
@@ -80,6 +78,9 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
 
     public string CreateAuthenticationHeader()
     {
+        Guard.IsNotNullOrWhiteSpace(_discogsOptions.ConsumerKey);
+        Guard.IsNotNullOrWhiteSpace(_discogsOptions.ConsumerSecret);
+
         if (!IsAuthenticated)
             throw new UnauthenticatedDiscogsException($"The {nameof(OAuthAuthenticationProvider)} must be authenticated before creating an authentication header.");
 
@@ -105,6 +106,9 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
     /// <returns>Returns the obtained request token and secret.</returns>
     private async Task<(string requestToken, string requestTokenSecret)> GetRequestToken(HttpClient httpClient, string callback, CancellationToken cancellationToken)
     {
+        Guard.IsNotNullOrWhiteSpace(_discogsOptions.ConsumerKey);
+        Guard.IsNotNullOrWhiteSpace(_discogsOptions.ConsumerSecret);
+
         var requestToken = "";
         var requestTokenSecret = "";
 
@@ -151,6 +155,9 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
     /// <returns>The access token and secret which authenticate the logged in user.</returns>
     private async Task<(string accessToken, string accessTokenSecret)> GetAccessToken(HttpClient httpClient, string requestToken, string requestTokenSecret, string verifier, CancellationToken cancellationToken)
     {
+        Guard.IsNotNullOrWhiteSpace(_discogsOptions.ConsumerKey);
+        Guard.IsNotNullOrWhiteSpace(_discogsOptions.ConsumerSecret);
+
         var accessToken = "";
         var accessTokenSecret = "";
 

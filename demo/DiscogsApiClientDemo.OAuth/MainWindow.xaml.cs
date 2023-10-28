@@ -16,12 +16,6 @@ public partial class MainWindow : Window
     private readonly IDiscogsAuthenticationService _discogsAuthenticationService;
 
     [ObservableProperty]
-    private string _consumerKey = "";
-
-    [ObservableProperty]
-    private string _consumerSecret = "";
-
-    [ObservableProperty]
     private string _accessToken = "";
 
     [ObservableProperty]
@@ -42,13 +36,16 @@ public partial class MainWindow : Window
     {
         try
         {
-            // Authenticate/login with your consumer key  & secret from your Discogs application settings.
-            (AccessToken, AccessTokenSecret) = await _discogsAuthenticationService.AuthenticateWithOAuth(
-                ConsumerKey,
-                ConsumerSecret,
-                "http://localhost/verifier_token",
-                GetVerifier,
-                cancellationToken);
+            // Start authentication.
+            var session = await _discogsAuthenticationService.StartOAuthAuthentication(cancellationToken);
+
+            // Retrieve Verifier Token.
+            var loginWindow = new LoginWindow(session.AuthorizeUrl, session.VerifierCallbackUrl);
+            loginWindow.ShowDialog();
+            var verifierToken = loginWindow.Result;
+
+            // Complete authentication.
+            (AccessToken, AccessTokenSecret) = await _discogsAuthenticationService.CompleteOAuthAuthentication(session, verifierToken, cancellationToken);
 
             // If login successful (No Exceptions thrown) you can make calls to the Discogs Api.
             var identityResponse = await _discogsApiClient.GetIdentity(cancellationToken);
@@ -61,14 +58,5 @@ public partial class MainWindow : Window
             Username = "";
             MessageBox.Show(ex.Message, "Error");
         }
-    }
-
-    private Task<string> GetVerifier(string authenticationUrl, string verifierCallbackUrl, CancellationToken cancellationToken)
-    {
-        var loginWindow = new LoginWindow(authenticationUrl, verifierCallbackUrl);
-
-        loginWindow.ShowDialog();
-
-        return Task.FromResult(loginWindow.Result);
     }
 }
