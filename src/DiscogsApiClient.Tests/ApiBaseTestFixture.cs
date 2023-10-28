@@ -72,9 +72,11 @@ public abstract class ApiBaseTestFixture
         var authHttpClient = new HttpClient() { BaseAddress = new Uri(authBaseUrl!) };
         authHttpClient.DefaultRequestHeaders.UserAgent.ParseAdd(authUserAgent);
 
+        var options = new DiscogsApiClientOptions();
+
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider(authHttpClient));
+            new OAuthAuthenticationProvider(authHttpClient, options));
         if (!string.IsNullOrWhiteSpace(userToken))
             authService.AuthenticateWithPersonalAccessToken(userToken);
 

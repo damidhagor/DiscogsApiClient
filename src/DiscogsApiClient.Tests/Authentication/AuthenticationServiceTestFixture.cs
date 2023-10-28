@@ -12,7 +12,7 @@ public sealed class AuthenticationServiceTestFixture : ApiBaseTestFixture
     {
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider(null!));
+            new OAuthAuthenticationProvider(null!, null!));
 
         Assert.IsFalse(authService.IsAuthenticated);
         Assert.Throws<UnauthenticatedDiscogsException>(() => authService.CreateAuthenticationHeader());
@@ -25,7 +25,7 @@ public sealed class AuthenticationServiceTestFixture : ApiBaseTestFixture
         var token = "myusertoken";
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider(null!));
+            new OAuthAuthenticationProvider(null!, null!));
 
         Assert.IsFalse(authService.IsAuthenticated);
 
@@ -40,7 +40,7 @@ public sealed class AuthenticationServiceTestFixture : ApiBaseTestFixture
     {
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider(null!));
+            new OAuthAuthenticationProvider(null!, null!));
 
         Assert.Throws<ArgumentNullException>(() => authService.AuthenticateWithPersonalAccessToken(null!));
 
@@ -64,7 +64,7 @@ public sealed class AuthenticationServiceTestFixture : ApiBaseTestFixture
         var token = "myusertoken";
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider(null!));
+            new OAuthAuthenticationProvider(null!, null!));
 
         Assert.IsFalse(authService.IsAuthenticated);
 
@@ -84,14 +84,24 @@ public sealed class AuthenticationServiceTestFixture : ApiBaseTestFixture
     {
         var oauthMockHandler = new OAuthMockDelegatingHandler();
         var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
+        var options = new DiscogsApiClientOptions { ConsumerKey = "key", ConsumerSecret = "secret", VerifierCallbackUrl = "http://localhost/access_token" };
 
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider(httpClient));
+            new OAuthAuthenticationProvider(httpClient, options));
 
         Assert.IsFalse(authService.IsAuthenticated);
 
-        var (accessToken, accessTokenSecret) = await authService.AuthenticateWithOAuth("key", "secret", "http://localhost/access_token", oauthMockHandler.GetVerifierCallbackMockCaller, default);
+        var session = await authService.StartOAuthAuthentication(default);
+
+        Assert.IsFalse(authService.IsAuthenticated);
+        Assert.AreEqual("https://discogs.com/oauth/authorize?oauth_token=requesttoken", session.AuthorizeUrl);
+        Assert.AreEqual("http://localhost/access_token", session.VerifierCallbackUrl);
+        Assert.AreEqual("requesttoken", session.RequestToken);
+        Assert.AreEqual("requesttokensecret", session.RequestTokenSecret);
+
+        var (accessToken, accessTokenSecret) = await authService.CompleteOAuthAuthentication(session, "verifier", default);
+
         var authHeader = authService.CreateAuthenticationHeader();
 
         Assert.IsTrue(authService.IsAuthenticated);
@@ -102,51 +112,131 @@ public sealed class AuthenticationServiceTestFixture : ApiBaseTestFixture
     }
 
     [Theory]
-    [TestCase(null, "", "", null, typeof(ArgumentNullException), "consumerKey")]
-    [TestCase("", "", "", null, typeof(ArgumentException), "consumerKey")]
-    [TestCase("   ", "", "", null, typeof(ArgumentException), "consumerKey")]
-    [TestCase("x", null, "", null, typeof(ArgumentNullException), "consumerSecret")]
-    [TestCase("x", "", "", null, typeof(ArgumentException), "consumerSecret")]
-    [TestCase("x", "   ", "", null, typeof(ArgumentException), "consumerSecret")]
-    [TestCase("x", "x", null, null, typeof(ArgumentNullException), "verifierCallbackUrl")]
-    [TestCase("x", "x", "", null, typeof(ArgumentException), "verifierCallbackUrl")]
-    [TestCase("x", "x", "  ", null, typeof(ArgumentException), "verifierCallbackUrl")]
-    [TestCase("x", "x", "x", null, typeof(ArgumentNullException), "getVerifierCallback")]
-    public void OAuthAuthentication_Guards_Works(
+    [TestCase("", "", null, typeof(ArgumentException), "VerifierCallbackUrl")]
+    [TestCase("", "", "", typeof(ArgumentException), "VerifierCallbackUrl")]
+    [TestCase("", "", "  ", typeof(ArgumentException), "VerifierCallbackUrl")]
+    [TestCase(null, "", "x", typeof(ArgumentNullException), "ConsumerKey")]
+    [TestCase("", "", "x", typeof(ArgumentException), "ConsumerKey")]
+    [TestCase("  ", "", "x", typeof(ArgumentException), "ConsumerKey")]
+    [TestCase("x", null, "x", typeof(ArgumentNullException), "ConsumerSecret")]
+    [TestCase("x", "", "x", typeof(ArgumentException), "ConsumerSecret")]
+    [TestCase("x", "  ", "x", typeof(ArgumentException), "ConsumerSecret")]
+    public void OAuthAuthentication_Start_Guards_Work(
         string consumerKey,
         string consumerSecret,
         string verifierCallbackUrl,
-        GetVerifierCallback verifierCallback,
         Type exceptionType,
         string paramName)
     {
         var oauthMockHandler = new OAuthMockDelegatingHandler();
         var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
+        var options = new DiscogsApiClientOptions { ConsumerKey = consumerKey, ConsumerSecret = consumerSecret, VerifierCallbackUrl = verifierCallbackUrl };
 
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider(httpClient));
+            new OAuthAuthenticationProvider(httpClient, options));
 
         var exception = Assert.ThrowsAsync(
             exceptionType,
-            () => authService.AuthenticateWithOAuth(consumerKey, consumerSecret, verifierCallbackUrl, verifierCallback, default!))
+            () => authService.StartOAuthAuthentication(default))
             as ArgumentException;
         Assert.AreEqual(paramName, exception!.ParamName);
+    }
+
+    [Theory]
+    [TestCase(null, "x")]
+    [TestCase("", "x")]
+    [TestCase("  ", "x")]
+    [TestCase("x", null)]
+    [TestCase("x", "")]
+    [TestCase("x", "  ")]
+    public void OAuthAuthentication_Start_Unauthenticated(string requestToken, string requestTokenSecret)
+    {
+        var oauthMockHandler = new OAuthMockDelegatingHandler { RequestToken = requestToken, RequestTokenSecret = requestTokenSecret };
+        var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
+        var options = new DiscogsApiClientOptions { ConsumerKey = "key", ConsumerSecret = "secret", VerifierCallbackUrl = "callback" };
+
+        var authService = new DiscogsAuthenticationService(
+            new PersonalAccessTokenAuthenticationProvider(),
+            new OAuthAuthenticationProvider(httpClient, options));
+
+        Assert.ThrowsAsync<AuthenticationFailedDiscogsException>(() => authService.StartOAuthAuthentication(default));
+    }
+
+    [Theory]
+    [TestCase("", "", null, "", "", typeof(ArgumentNullException), "RequestToken")]
+    [TestCase("", "", "", "", "", typeof(ArgumentException), "RequestToken")]
+    [TestCase("", "", "  ", "", "", typeof(ArgumentException), "RequestToken")]
+    [TestCase("", "", "x", null, "", typeof(ArgumentNullException), "RequestTokenSecret")]
+    [TestCase("", "", "x", "", "", typeof(ArgumentException), "RequestTokenSecret")]
+    [TestCase("", "", "x", "  ", "", typeof(ArgumentException), "RequestTokenSecret")]
+    [TestCase("", "", "x", "x", null, typeof(ArgumentNullException), "verifierToken")]
+    [TestCase("", "", "x", "x", "", typeof(ArgumentException), "verifierToken")]
+    [TestCase("", "", "x", "x", "  ", typeof(ArgumentException), "verifierToken")]
+    [TestCase(null, "", "x", "x", "x", typeof(ArgumentNullException), "ConsumerKey")]
+    [TestCase("", "", "x", "x", "x", typeof(ArgumentException), "ConsumerKey")]
+    [TestCase("  ", "", "x", "x", "x", typeof(ArgumentException), "ConsumerKey")]
+    [TestCase("x", null, "x", "x", "x", typeof(ArgumentNullException), "ConsumerSecret")]
+    [TestCase("x", "", "x", "x", "x", typeof(ArgumentException), "ConsumerSecret")]
+    [TestCase("x", "  ", "x", "x", "x", typeof(ArgumentException), "ConsumerSecret")]
+    public void OAuthAuthentication_Complete_Guards_Work(
+        string consumerKey,
+        string consumerSecret,
+        string requestToken,
+        string requestTokenSecret,
+        string verifierToken,
+        Type exceptionType,
+        string paramName)
+    {
+        var oauthMockHandler = new OAuthMockDelegatingHandler();
+        var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
+        var options = new DiscogsApiClientOptions { ConsumerKey = consumerKey, ConsumerSecret = consumerSecret };
+        var session = new OAuthAuthenticationSession("", "", requestToken, requestTokenSecret);
+
+        var authService = new DiscogsAuthenticationService(
+            new PersonalAccessTokenAuthenticationProvider(),
+            new OAuthAuthenticationProvider(httpClient, options));
+
+        var exception = Assert.ThrowsAsync(
+            exceptionType,
+            () => authService.CompleteOAuthAuthentication(session, verifierToken, default))
+            as ArgumentException;
+        Assert.AreEqual(paramName, exception!.ParamName);
+    }
+
+    [Theory]
+    [TestCase(null, "x")]
+    [TestCase("", "x")]
+    [TestCase("  ", "x")]
+    [TestCase("x", null)]
+    [TestCase("x", "")]
+    [TestCase("x", "  ")]
+    public void OAuthAuthentication_Complete_Unauthenticated(string accessToken, string accessTokenSecret)
+    {
+        var oauthMockHandler = new OAuthMockDelegatingHandler { AccessToken = accessToken, AccessTokenSecret = accessTokenSecret };
+        var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
+        var options = new DiscogsApiClientOptions { ConsumerKey = "key", ConsumerSecret = "secret" };
+        var session = new OAuthAuthenticationSession("", "", "requesttoken", "requesttokensecret");
+
+        var authService = new DiscogsAuthenticationService(
+            new PersonalAccessTokenAuthenticationProvider(),
+            new OAuthAuthenticationProvider(httpClient, options));
+
+        Assert.ThrowsAsync<AuthenticationFailedDiscogsException>(() => authService.CompleteOAuthAuthentication(session, "verifier", default));
     }
 
     [Test]
     public void OAuthAuthentication_Short_Circuit_Successful()
     {
-        var oauthMockHandler = new OAuthMockDelegatingHandler();
-        var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
+        var options = new DiscogsApiClientOptions { ConsumerKey = "key", ConsumerSecret = "secret" };
 
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider(httpClient));
+            new OAuthAuthenticationProvider(null!, options));
 
         Assert.IsFalse(authService.IsAuthenticated);
 
-        authService.AuthenticateWithOAuth("key", "secret", "testtoken", "testsecret");
+        authService.AuthenticateWithOAuth("testtoken", "testsecret");
         var authHeader = authService.CreateAuthenticationHeader();
 
         Assert.IsTrue(authService.IsAuthenticated);
@@ -156,53 +246,44 @@ public sealed class AuthenticationServiceTestFixture : ApiBaseTestFixture
     }
 
     [Theory]
-    [TestCase(null, "", "", "", typeof(ArgumentNullException), "consumerKey")]
-    [TestCase("", "", "", "", typeof(ArgumentException), "consumerKey")]
-    [TestCase("   ", "", "", "", typeof(ArgumentException), "consumerKey")]
-    [TestCase("x", null, "", "", typeof(ArgumentNullException), "consumerSecret")]
-    [TestCase("x", "", "", "", typeof(ArgumentException), "consumerSecret")]
-    [TestCase("x", "   ", "", "", typeof(ArgumentException), "consumerSecret")]
-    [TestCase("x", "x", null, "", typeof(ArgumentNullException), "accessToken")]
-    [TestCase("x", "x", "", "", typeof(ArgumentException), "accessToken")]
-    [TestCase("x", "x", "   ", "", typeof(ArgumentException), "accessToken")]
-    [TestCase("x", "x", "x", null, typeof(ArgumentNullException), "accessTokenSecret")]
-    [TestCase("x", "x", "x", "", typeof(ArgumentException), "accessTokenSecret")]
-    [TestCase("x", "x", "x", "   ", typeof(ArgumentException), "accessTokenSecret")]
-    public void OAuthAuthentication_Short_Circuit_Guards_Works(
-        string consumerKey,
-        string consumerSecret,
+    [TestCase(null, "", typeof(ArgumentNullException), "accessToken")]
+    [TestCase("", "", typeof(ArgumentException), "accessToken")]
+    [TestCase("   ", "", typeof(ArgumentException), "accessToken")]
+    [TestCase("x", null, typeof(ArgumentNullException), "accessTokenSecret")]
+    [TestCase("x", "", typeof(ArgumentException), "accessTokenSecret")]
+    [TestCase("x", "   ", typeof(ArgumentException), "accessTokenSecret")]
+    public void OAuthAuthentication_Short_Circuit_Guards_Work(
         string accessToken,
         string accessTokenSecret,
         Type exceptionType,
         string paramName)
     {
-        var oauthMockHandler = new OAuthMockDelegatingHandler();
-        var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
-
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider(httpClient));
+            new OAuthAuthenticationProvider(null!, null!));
 
         var exception = Assert.Throws(
             exceptionType,
-            () => authService.AuthenticateWithOAuth(consumerKey, consumerSecret, accessToken, accessTokenSecret))
+            () => authService.AuthenticateWithOAuth(accessToken, accessTokenSecret))
             as ArgumentException;
         Assert.AreEqual(paramName, exception!.ParamName);
     }
 
     [Test]
-    public async Task Failed_Only_OAuth_Resets_IsAuthenticated()
+    public async Task Failed_OAuth_NotResets_IsAuthenticated()
     {
         var oauthMockHandler = new OAuthMockDelegatingHandler();
         var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
+        var options = new DiscogsApiClientOptions { ConsumerKey = "key", ConsumerSecret = "secret" };
+        var session = new OAuthAuthenticationSession("", "", "requesttoken", "requesttokensecret");
 
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider(httpClient));
+            new OAuthAuthenticationProvider(httpClient, options));
 
         Assert.IsFalse(authService.IsAuthenticated);
 
-        var (accessToken, accessTokenSecret) = await authService.AuthenticateWithOAuth("key", "secret", "http://localhost/access_token", oauthMockHandler.GetVerifierCallbackMockCaller, default);
+        var (accessToken, accessTokenSecret) = await authService.CompleteOAuthAuthentication(session, "verifierToken", default);
         var authHeader = authService.CreateAuthenticationHeader();
 
         Assert.IsTrue(authService.IsAuthenticated);
@@ -211,26 +292,29 @@ public sealed class AuthenticationServiceTestFixture : ApiBaseTestFixture
         Assert.IsTrue(authHeader.Contains("oauth_consumer_key=\"key\""));
         Assert.IsTrue(authHeader.Contains("oauth_token=\"accesstoken\""));
 
-        oauthMockHandler.RequestToken = "";
-        oauthMockHandler.RequestTokenSecret = "";
+        oauthMockHandler.AccessToken = "";
+        oauthMockHandler.AccessTokenSecret = "";
 
         Assert.ThrowsAsync<AuthenticationFailedDiscogsException>(
-            () => authService.AuthenticateWithOAuth("key", "secret", "http://localhost/access_token", oauthMockHandler.GetVerifierCallbackMockCaller, default));
-        Assert.IsFalse(authService.IsAuthenticated);
-        Assert.Throws<UnauthenticatedDiscogsException>(() => authService.CreateAuthenticationHeader());
+            () => authService.CompleteOAuthAuthentication(session, "verifierToken", default));
+        Assert.IsTrue(authService.IsAuthenticated);
+        Assert.DoesNotThrow(() => authService.CreateAuthenticationHeader());
     }
 
     [Test]
     public async Task Reauthentication_With_Different_Method_Switches_Method()
     {
         var userToken = "userToken";
+        var session = new OAuthAuthenticationSession("", "", "requesttoken", "requesttokensecret");
+        var verifierToken = "verifier";
 
         var oauthMockHandler = new OAuthMockDelegatingHandler();
         var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
+        var options = new DiscogsApiClientOptions { ConsumerKey = "key", ConsumerSecret = "secret" };
 
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider(httpClient));
+            new OAuthAuthenticationProvider(httpClient, options));
 
         Assert.IsFalse(authService.IsAuthenticated);
 
@@ -241,7 +325,7 @@ public sealed class AuthenticationServiceTestFixture : ApiBaseTestFixture
         Assert.AreEqual($"Discogs token={userToken}", authService.CreateAuthenticationHeader());
 
         // OAuth replaces personal access token
-        var (accessToken, accessTokenSecret) = await authService.AuthenticateWithOAuth("key", "secret", "http://localhost/access_token", oauthMockHandler.GetVerifierCallbackMockCaller, default);
+        var (accessToken, accessTokenSecret) = await authService.CompleteOAuthAuthentication(session, verifierToken, default);
         var authHeader = authService.CreateAuthenticationHeader();
 
         Assert.IsTrue(authService.IsAuthenticated);
@@ -255,23 +339,5 @@ public sealed class AuthenticationServiceTestFixture : ApiBaseTestFixture
 
         Assert.IsTrue(authService.IsAuthenticated);
         Assert.AreEqual($"Discogs token={userToken}", authService.CreateAuthenticationHeader());
-
-        // Unauthenticated personal access token leaves OAuth
-        Assert.Throws<ArgumentException>(() => authService.AuthenticateWithPersonalAccessToken(""));
-
-        Assert.IsTrue(authService.IsAuthenticated);
-        Assert.AreEqual("accesstoken", accessToken);
-        Assert.AreEqual("accesstokensecret", accessTokenSecret);
-        Assert.IsTrue(authHeader.Contains("oauth_consumer_key=\"key\""));
-        Assert.IsTrue(authHeader.Contains("oauth_token=\"accesstoken\""));
-
-        // Unauthenticated OAuth leaves nothing
-        oauthMockHandler.RequestToken = "";
-        oauthMockHandler.RequestTokenSecret = "";
-
-        Assert.ThrowsAsync<AuthenticationFailedDiscogsException>(
-            () => authService.AuthenticateWithOAuth("key", "secret", "http://localhost/access_token", oauthMockHandler.GetVerifierCallbackMockCaller, default));
-        Assert.IsFalse(authService.IsAuthenticated);
-        Assert.Throws<UnauthenticatedDiscogsException>(() => authService.CreateAuthenticationHeader());
     }
 }

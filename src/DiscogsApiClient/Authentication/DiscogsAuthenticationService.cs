@@ -50,8 +50,6 @@ public sealed class DiscogsAuthenticationService : IDiscogsAuthenticationService
         string verifierToken,
         CancellationToken cancellationToken)
     {
-        _lastAuthenticatedWithOAuth = false;
-
         var tokens = await _oAuthAuthenticationProvider.CompleteAuthentication(session, verifierToken, cancellationToken);
 
         _lastAuthenticatedWithOAuth = true;

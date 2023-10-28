@@ -32,7 +32,7 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
         var verifierCallbackUrl = _discogsOptions.VerifierCallbackUrl;
         if (string.IsNullOrWhiteSpace(verifierCallbackUrl))
         {
-            throw new ArgumentException($"A valid {nameof(DiscogsApiClientOptions.VerifierCallbackUrl)} must be specified in the {nameof(DiscogsApiClientOptions)}.");
+            throw new ArgumentException($"A valid {nameof(DiscogsApiClientOptions.VerifierCallbackUrl)} must be specified in the {nameof(DiscogsApiClientOptions)}.", nameof(DiscogsApiClientOptions.VerifierCallbackUrl));
         }
 
         var (requestToken, requestTokenSecret) = await GetRequestToken(_httpClient, verifierCallbackUrl, cancellationToken);
@@ -50,8 +50,8 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
         string verifierToken,
         CancellationToken cancellationToken)
     {
-        Guard.IsNotNullOrWhiteSpace(session.RequestToken);
-        Guard.IsNotNullOrWhiteSpace(session.RequestTokenSecret);
+        Guard.IsNotNullOrWhiteSpace(session.RequestToken, nameof(OAuthAuthenticationSession.RequestToken));
+        Guard.IsNotNullOrWhiteSpace(session.RequestTokenSecret, nameof(OAuthAuthenticationSession.RequestTokenSecret));
         Guard.IsNotNullOrWhiteSpace(verifierToken);
 
         var (accessToken, accessTokenSecret) = await GetAccessToken(_httpClient, session.RequestToken, session.RequestTokenSecret, verifierToken, cancellationToken);
@@ -106,8 +106,8 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
     /// <returns>Returns the obtained request token and secret.</returns>
     private async Task<(string requestToken, string requestTokenSecret)> GetRequestToken(HttpClient httpClient, string callback, CancellationToken cancellationToken)
     {
-        Guard.IsNotNullOrWhiteSpace(_discogsOptions.ConsumerKey);
-        Guard.IsNotNullOrWhiteSpace(_discogsOptions.ConsumerSecret);
+        Guard.IsNotNullOrWhiteSpace(_discogsOptions.ConsumerKey, nameof(DiscogsApiClientOptions.ConsumerKey));
+        Guard.IsNotNullOrWhiteSpace(_discogsOptions.ConsumerSecret, nameof(DiscogsApiClientOptions.ConsumerSecret));
 
         var requestToken = "";
         var requestTokenSecret = "";
@@ -155,8 +155,8 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
     /// <returns>The access token and secret which authenticate the logged in user.</returns>
     private async Task<(string accessToken, string accessTokenSecret)> GetAccessToken(HttpClient httpClient, string requestToken, string requestTokenSecret, string verifier, CancellationToken cancellationToken)
     {
-        Guard.IsNotNullOrWhiteSpace(_discogsOptions.ConsumerKey);
-        Guard.IsNotNullOrWhiteSpace(_discogsOptions.ConsumerSecret);
+        Guard.IsNotNullOrWhiteSpace(_discogsOptions.ConsumerKey, nameof(DiscogsApiClientOptions.ConsumerKey));
+        Guard.IsNotNullOrWhiteSpace(_discogsOptions.ConsumerSecret, nameof(DiscogsApiClientOptions.ConsumerSecret));
 
         var accessToken = "";
         var accessTokenSecret = "";
