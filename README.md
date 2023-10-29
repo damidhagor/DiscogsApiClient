@@ -68,10 +68,14 @@ public async Task<string> GetUsername(CancellationToken cancellationToken)
 or the OAuth flow:
 
 ```csharp
-// At startup register the DiscogsApiClient and the authentication provider.                
+// At startup register the DiscogsApiClient and the authentication provider.
+// Provide the Consumer Key & Secret & verifier callback url here.
 services.AddDiscogsApiClient(options =>
 {
     options.UserAgent = "AwesomeAppDemo/1.0.0";
+    options.ConsumerKey = "YourConsumerKey";
+    options.ConsumerSecret = "YourConsumerSecret";
+    options.VerifierCallbackUrl = "http://localhost/verifier_token";
 });
 
 // Inject the IDiscogsAuthenticationService and IDiscogsApiClient
@@ -91,23 +95,19 @@ public async Task Authenticate(
     string consumerSecret,
     CancellationToken cancellationToken)
 {
-    (accessToken, accessTokenSecret) = await _discogsAuthenticationService.AuthenticateWithOAuth(
-        consumerKey,
-        consumerSecret,
-        "http://localhost/verifier_token",
-        GetVerifier,
-        cancellationToken);
+    // Start authentication.
+    var session = await _discogsAuthenticationService.StartOAuthAuthentication(cancellationToken);
 
-    // Save and reuse the retrieved access token and secret.
-}
-
-// Demo method which handles the user login & returns the verifier token 
-public Task<string> GetVerifier(string authUrl, string callbackUrl, CancellationToken token)
-{
-    // 1) Open browser with authUrl
-    // 2) Detect redirect to callbackUrl
+    // Retrieve Verifier Token.
+    // 1) Open browser with session.AuthorizationUrl
+    // 2) Detect redirect to session.VerifierCallbackUrl
     // 3) Verifier Token will be appended to the url: http://localhost/verifier_token?oauth_token=TOKEN&oauth_verifier=VERIFIER
     // 4) Parse verifier from url and return it
+
+    // Complete authentication.
+    (AccessToken, AccessTokenSecret) = await _discogsAuthenticationService.CompleteOAuthAuthentication(session, verifierToken, cancellationToken);
+
+    // Save and reuse the retrieved access token and secret.
 }
 ```
 
@@ -162,69 +162,16 @@ public Task<string> GetVerifier(string authUrl, string callbackUrl, Cancellation
   - Some internal interfaces and implementations were made public.
 - ### **4.0.0**
   - The [Refit](https://github.com/reactiveui/refit) library has been removed because it produces a client implementation which is not Aot compatible and won't be for the forseeable future.
-  - [Refit](https://github.com/reactiveui/refit) has been replaced by a custom Source Generator which creates a client implementation at compile time.
-  - The public Api of the DiscogsApiClient library has not been changed and updating will not break existing code.
-  - Json serialization has been replaced with a source generated ``DiscogsJsonSerializerContext``.
-  - The Refit ``ExceptionFactory`` implementation has been moved into a ``ErrorHandlingDelegatingHandler`` middleware.
-  - Added Demo project for an Aot publishable console application using the DiscogsApiClient.
-## **Breaking changes in 3.0.0**
+    - [Refit](https://github.com/reactiveui/refit) has been replaced by a custom Source Generator which creates a client implementation at compile time.
+    - The public Api of the ``IDiscogsApiClient`` has not been changed and updating will not break existing code.
+    - Json serialization has been replaced with a source generated ``DiscogsJsonSerializerContext``.
+    - The Refit ``ExceptionFactory`` implementation has been moved into a ``ErrorHandlingDelegatingHandler`` middleware.
+    - Added Demo project for an Aot publishable console application using the DiscogsApiClient.
+  - The authentication flow for OAuth has been changed.
+    - The single call to ``AuthenticateWithOAuth`` using the ``GetVerifierCallback`` has been removed.
+    - It's been replaced with the two calls ``StartOAuthAuthentication`` and ``CompleteOAuthAuthentication``.
+    - With this change the OAuth authentication can be handled more linearly instead of with a callback function.
 
-- The registration of the ```IDiscogsApiClient``` now happens in a single ```AddDiscogsApiClient``` method
-  which offers configuration of the client by providing an options object.
-
-  ```csharp
-  services.AddDiscogsApiClient(options =>
-  {
-    options.UserAgent = "AwesomeApp/1.0.0";
-  });
-  ```
-
-  This also registers the needed authentication providers which before needed to be registered
-  by calling their separate extension methods.
-
-- Authentication is now extracted out of the ```IDiscogsApiClient``` into its own ```IDiscogsAuthenticationService```.
-  Instead of calling ```AuthenticateAsync``` on the client the ```IDiscogsAuthenticationService``` needs to be injected and used instead
-  which is then used by middleware in the underlying HttpClient to handle the authentication headers for the requests.
-
-  While changing the authentication flow the user token authentication was renamed to personal access token to match the naming in the Discogs developer documentation.
-
-  As another side effect the ```IAuthenticationRequest``` and ```IAuthenticationRequest``` types were removed.
-  The two authentication methods of the ```IDiscogsAuthenticationService``` now get their required parameters passed in as arguments
-  but the flows and usage of them stayed the same otherwise.
-
-  ```csharp
-  // Personal access token (Called user token before)
-  public void Foo(IDiscogsAuthenticationService authService)
-  {
-    _discogsAuthenticationService.AuthenticateWithPersonalAccessToken(UserToken);
-  }
-  
-  // OAuth 1.0a
-  public async Task Foo(IDiscogsAuthenticationService authService)
-  {
-    (token, secret) = await _discogsAuthenticationService.AuthenticateWithOAuth(
-        ConsumerKey,
-        ConsumerSecret,
-        "EmptyOrExistingAcessToken",
-        "EmptyOrExistingAccessTokenSecret",
-        "http://localhost/verifier_token",
-        GetVerifier,
-        cancellationToken);
-  }
-  ```
-
-- The whole implementation of the ```IDiscogsApiClient``` has been redone and now uses the Refit library to generate the client code.
-  In process of reimplementing the client the Api methods stayed the same but some might have a small name change.
-  Also guards are now used to validate the parameters and throw appropriate ArgumentExceptions.
-- A new ```RateLimitExceededDiscogsException``` was added to be able to handle when the rate limit of the Discogs Api is hit.
-- The Api contract DTOs where restructured into sub-namespaces to clean up the project structure.
-  With the Refit overhaul the contract DTOs now use ```JsonPropertyName``` attributes for serialization
-  so a few DTO property names could be renamed for better clarity of their purpose without breaking serialization.
-
-## **Roadmap**
-
-- CI/CD
-- Logging
 
 ## **Implemented Api Functions**
 
@@ -251,3 +198,9 @@ The current implementation of the Api surface is focused on querying the databas
 - Get master release & master release versions
 - Get release, release's community rating & release's stats
 - Discogs database search
+- 
+
+## **Roadmap**
+
+- CI/CD
+- Logging
