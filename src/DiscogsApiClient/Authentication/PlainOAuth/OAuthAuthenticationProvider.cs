@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
 using System.Web;
-using Microsoft.Extensions.Options;
 
 namespace DiscogsApiClient.Authentication.OAuth;
 
@@ -208,9 +207,3 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
         return (timestamp.ToString(), nonce.ToString());
     }
 }
-
-public sealed record OAuthAuthenticationSession(
-    string AuthorizeUrl,
-    string VerifierCallbackUrl,
-    string RequestToken,
-    string RequestTokenSecret);

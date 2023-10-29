@@ -30,7 +30,7 @@ public interface IOAuthAuthenticationProvider
     Task<(string AccessToken, string AccessTokenSecret)> CompleteAuthentication(OAuthAuthenticationSession session, string verifierToken, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Authenticates the user with already existing access token and secret without triggering the authentication flow.
+    /// Authenticates the user with already existing <see href="https://www.discogs.com/developers#page:authentication,header:authentication-oauth-flow">OAuth 1.0a</see> access token and secret without triggering the authentication flow.
     /// </summary>
     /// <param name="accessToken">The already obtained access token.</param>
     /// <param name="accessTokenSecret">The already obtained access token secret.</param>

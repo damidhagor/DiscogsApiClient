@@ -18,7 +18,7 @@ public interface IDiscogsAuthenticationService
     bool IsAuthenticated { get; }
 
     /// <summary>
-    /// Authenticates the user with a <see href="https://www.discogs.com/developers#page:authentication,header:authentication-discogs-auth-flow">Personal Access Tokens</see>.
+    /// Authenticates the user with a <see href="https://www.discogs.com/developers#page:authentication,header:authentication-discogs-auth-flow">Personal Access Token</see>.
     /// </summary>
     /// <param name="token">Personal Access Token</param>
     void AuthenticateWithPersonalAccessToken(string token);
@@ -35,7 +35,7 @@ public interface IDiscogsAuthenticationService
     /// <summary>
     /// Completes authenticating the user with <see href="https://www.discogs.com/developers#page:authentication,header:authentication-oauth-flow">OAuth 1.0a</see>.
     /// <para />
-    /// The flow is completed by providing the <see cref="OAuthAuthenticationSession"/> from starting the authentication flow and retrieved verifier token.
+    /// The flow is completed by providing the <see cref="OAuthAuthenticationSession"/> from starting the authentication flow and the retrieved verifier token.
     /// </summary>
     /// <param name="session">The session object returned from starting the authentication.</param>
     /// <param name="verifierToken">The verifier token retrieved from the user in the UI.</param>
@@ -45,9 +45,8 @@ public interface IDiscogsAuthenticationService
         string verifierToken,
         CancellationToken cancellationToken);
 
-
     /// <summary>
-    /// Authenticates the user with already existing access token and secret without triggering the authentication flow.
+    /// Authenticates the user with already existing <see href="https://www.discogs.com/developers#page:authentication,header:authentication-oauth-flow">OAuth 1.0a</see> access token and secret without triggering the authentication flow.
     /// </summary>
     /// <param name="accessToken">The already obtained access token.</param>
     /// <param name="accessTokenSecret">The already obtained access token secret.</param>
