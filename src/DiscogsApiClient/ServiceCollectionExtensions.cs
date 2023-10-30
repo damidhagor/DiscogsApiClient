@@ -39,12 +39,14 @@ public static partial class ServiceCollectionExtensions
         services.AddSingleton<IDiscogsAuthenticationService, DiscogsAuthenticationService>();
         services.AddSingleton<IPersonalAccessTokenAuthenticationProvider, PersonalAccessTokenAuthenticationProvider>();
 
-        services.AddHttpClient<IOAuthAuthenticationProvider, OAuthAuthenticationProvider>((serviceProvider, httpClient) =>
-        {
-            var options = serviceProvider.GetRequiredService<DiscogsApiClientOptions>();
-            httpClient.BaseAddress = new Uri(options.BaseUrl);
-            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent);
-        });
+        services.AddHttpClient<IOAuthAuthenticationProvider, OAuthAuthenticationProvider>()
+            .ConfigureHttpClient((serviceProvider, httpClient) =>
+             {
+                 var options = serviceProvider.GetRequiredService<DiscogsApiClientOptions>();
+                 httpClient.BaseAddress = new Uri(options.BaseUrl);
+                 httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent);
+             })
+            .AddHttpMessageHandler<ErrorHandlingDelegatingHandler>();
 
 
         var apiClientSettings = new ApiClientSettings<IDiscogsApiClient, DiscogsJsonSerializerContext>(
