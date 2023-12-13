@@ -5,7 +5,7 @@ public sealed class CollectionFoldersTestFixture : ApiBaseTestFixture
     [Test]
     public async Task GetCollectionFolders_Success()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
 
         var foldersResponse = await ApiClient.GetCollectionFolders(username);
 
@@ -30,7 +30,7 @@ public sealed class CollectionFoldersTestFixture : ApiBaseTestFixture
     public async Task GetCollectionFolders_Unauthenticated_Success()
     {
         var clients = CreateUnauthenticatedDiscogsApiClient();
-        var username = "damidhagor";
+        var username = "DamIDhagor";
 
         var foldersResponse = await clients.discogsApiClient.GetCollectionFolders(username);
 
@@ -68,7 +68,7 @@ public sealed class CollectionFoldersTestFixture : ApiBaseTestFixture
     [Test]
     public async Task GetCollectionFolder_Success()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var folderId = 1;
 
         var folder = await ApiClient.GetCollectionFolder(username, folderId);
@@ -83,7 +83,7 @@ public sealed class CollectionFoldersTestFixture : ApiBaseTestFixture
     {
         var clients = CreateUnauthenticatedDiscogsApiClient();
 
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var folderId = 1;
 
         Assert.ThrowsAsync<UnauthenticatedDiscogsException>(() => clients.discogsApiClient.GetCollectionFolder(username, folderId));
@@ -114,7 +114,7 @@ public sealed class CollectionFoldersTestFixture : ApiBaseTestFixture
     [Test]
     public void GetCollectionFolder_FolderId_Guard()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var folderId = -1;
 
         Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.GetCollectionFolder(username, folderId), "folderId");
@@ -123,7 +123,7 @@ public sealed class CollectionFoldersTestFixture : ApiBaseTestFixture
     [Test]
     public void GetCollectionFolder_NotExistingFolderId()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var folderId = 42;
 
         Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetCollectionFolder(username, folderId));
@@ -152,7 +152,7 @@ public sealed class CollectionFoldersTestFixture : ApiBaseTestFixture
     [Test]
     public void CreateCollectionFolder_FolderName_Guard()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
 
         Assert.ThrowsAsync<ArgumentNullException>(() => ApiClient.CreateCollectionFolder(username, null!), "folderName");
         Assert.ThrowsAsync<ArgumentException>(() => ApiClient.CreateCollectionFolder(username, ""), "folderName");
@@ -163,7 +163,7 @@ public sealed class CollectionFoldersTestFixture : ApiBaseTestFixture
     public void CreateCollectionFolder_Unauthenticated()
     {
         var clients = CreateUnauthenticatedDiscogsApiClient();
-        var username = "damidhagor";
+        var username = "DamIDhagor";
 
         Assert.ThrowsAsync<UnauthenticatedDiscogsException>(() => clients.discogsApiClient.CreateCollectionFolder(username, "API_TEST_CREATE_INVALID_USERNAME"));
 
@@ -196,7 +196,7 @@ public sealed class CollectionFoldersTestFixture : ApiBaseTestFixture
     [Test]
     public void UpdateCollectionFolder_FolderName_Guard()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var folderId = 999;
 
         Assert.ThrowsAsync<ArgumentNullException>(() => ApiClient.UpdateCollectionFolder(username, folderId, null!), "folderName");
@@ -207,7 +207,7 @@ public sealed class CollectionFoldersTestFixture : ApiBaseTestFixture
     [Test]
     public void UpdateCollectionFolder_FolderId_Guard()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var folderName = "API_TEST_UPDATE_INVALID_ID";
 
         Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.UpdateCollectionFolder(username, -1, folderName));
@@ -218,7 +218,7 @@ public sealed class CollectionFoldersTestFixture : ApiBaseTestFixture
     [Test]
     public void UpdateCollectionFolder_NotExistingFolderId()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var folderId = 999;
         var folderName = "API_TEST_UPDATE_NOT_EXISTING_ID";
 
@@ -229,7 +229,7 @@ public sealed class CollectionFoldersTestFixture : ApiBaseTestFixture
     public void UpdateCollectionFolder_Unauthenticated()
     {
         var clients = CreateUnauthenticatedDiscogsApiClient();
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var folderId = 999;
         var folderName = "API_TEST_UPDATE_NOT_EXISTING_ID";
 
@@ -262,7 +262,7 @@ public sealed class CollectionFoldersTestFixture : ApiBaseTestFixture
     [Test]
     public void DeleteCollectionFolder_FolderId_Guard()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
 
         Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.DeleteCollectionFolder(username, -1), "folderId");
         Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.DeleteCollectionFolder(username, 0), "folderId");
@@ -272,7 +272,7 @@ public sealed class CollectionFoldersTestFixture : ApiBaseTestFixture
     [Test]
     public void DeleteCollectionFolder_NotExistingFolderId()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var folderId = 999;
 
         Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteCollectionFolder(username, folderId));
@@ -282,7 +282,7 @@ public sealed class CollectionFoldersTestFixture : ApiBaseTestFixture
     public void DeleteCollectionFolder_Unauthenticated()
     {
         var clients = CreateUnauthenticatedDiscogsApiClient();
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var folderId = 999;
 
         Assert.ThrowsAsync<UnauthenticatedDiscogsException>(() => clients.discogsApiClient.DeleteCollectionFolder(username, folderId));
@@ -295,7 +295,7 @@ public sealed class CollectionFoldersTestFixture : ApiBaseTestFixture
     [Test]
     public async Task CreateUpdateDeleteCollectionFolder_Success()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var folderName1 = "API_TEST_WORKFLOW_CREATE";
         var folderName2 = "API_TEST_WORKFLOW_UPDATE";
 

@@ -5,7 +5,7 @@ public sealed class WantlistTestFixture : ApiBaseTestFixture
     [Test]
     public async Task GetAllWantlistReleases_Success()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
         var summedUpItemCount = 0;
 
@@ -62,7 +62,7 @@ public sealed class WantlistTestFixture : ApiBaseTestFixture
     [Test]
     public void AddWantlistRelease_ReleaseId_Guard()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
 
         Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.AddReleaseToWantlist(username, -1));
         Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.AddReleaseToWantlist(username, 0));
@@ -71,7 +71,7 @@ public sealed class WantlistTestFixture : ApiBaseTestFixture
     [Test]
     public void AddWantlistRelease_NotExistingReleaseId()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var releaseId = int.MaxValue;
 
         Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.AddReleaseToWantlist(username, releaseId));
@@ -81,7 +81,7 @@ public sealed class WantlistTestFixture : ApiBaseTestFixture
     public void AddWantlistRelease_Unauthenticated()
     {
         var clients = CreateUnauthenticatedDiscogsApiClient();
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var releaseId = 5134861;
 
         Assert.ThrowsAsync<UnauthenticatedDiscogsException>(async () => await clients.discogsApiClient.AddReleaseToWantlist(username, releaseId));
@@ -113,7 +113,7 @@ public sealed class WantlistTestFixture : ApiBaseTestFixture
     [Test]
     public void DeleteWantlistRelease_ReleaseId_Guard()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
 
         Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.DeleteReleaseFromWantlist(username, -1));
         Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.DeleteReleaseFromWantlist(username, 0));
@@ -122,17 +122,17 @@ public sealed class WantlistTestFixture : ApiBaseTestFixture
     [Test]
     public void DeleteWantlistRelease_NotExistingReleaseId()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var releaseId = int.MaxValue;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromWantlist(username, releaseId));
+        var exc = Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.DeleteReleaseFromWantlist(username, releaseId));
     }
 
     [Test]
     public void DeleteWantlistRelease_Unauthenticated()
     {
         var clients = CreateUnauthenticatedDiscogsApiClient();
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var releaseId = 5134861;
 
         Assert.ThrowsAsync<UnauthenticatedDiscogsException>(async () => await clients.discogsApiClient.DeleteReleaseFromWantlist(username, releaseId));
@@ -145,7 +145,7 @@ public sealed class WantlistTestFixture : ApiBaseTestFixture
     [Test]
     public async Task AddDeleteWantlistRelease_Success()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var releaseId = 5134861;
 
         // Add

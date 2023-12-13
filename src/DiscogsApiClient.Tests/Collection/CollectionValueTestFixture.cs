@@ -5,7 +5,7 @@ public sealed class CollectionValueTestFixture : ApiBaseTestFixture
     [Test]
     public async Task GetCollectionValue_Success()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
 
         var collectionValue = await ApiClient.GetCollectionValue(username);
 

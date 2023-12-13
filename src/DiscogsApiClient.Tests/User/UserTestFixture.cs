@@ -5,7 +5,7 @@ public sealed class UserTestFixture : ApiBaseTestFixture
     [Test]
     public async Task GetUser_Success()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
 
         var user = await ApiClient.GetUser(username);
 
@@ -22,7 +22,7 @@ public sealed class UserTestFixture : ApiBaseTestFixture
     [Test]
     public async Task GetUser_Unauthenticated()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var unauthenticatedClients = CreateUnauthenticatedDiscogsApiClient();
 
         var user = await unauthenticatedClients.discogsApiClient.GetUser(username);

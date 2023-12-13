@@ -26,7 +26,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     [Test]
     public void GetCollectionFolderReleases_FolderId_Guard()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
 
         Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.GetCollectionFolderReleases(username, -1));
     }
@@ -34,7 +34,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     [Test]
     public void GetCollectionFolderReleases_NotExistingFolderId()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var folderId = 999;
 
         Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetCollectionFolderReleases(username, folderId));
@@ -44,7 +44,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     public void GetCollectionFolderReleases_Unauthenticated()
     {
         var clients = CreateUnauthenticatedDiscogsApiClient();
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var folderId = 1;
 
         Assert.ThrowsAsync<UnauthenticatedDiscogsException>(() => clients.discogsApiClient.GetCollectionFolderReleases(username, folderId));
@@ -56,7 +56,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     [Test]
     public async Task GetCollectionFolderReleases_Sorted()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var folderId = 0;
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
 
@@ -190,7 +190,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     [Test]
     public void AddReleaseToCollectionFolder_FolderId_Guard()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var releaseId = 5134861;
 
         Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.AddReleaseToCollectionFolder(username, -1, releaseId));
@@ -200,7 +200,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     [Test]
     public void AddReleaseToCollectionFolder_NotExistingFolderId()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var folderId = 999;
         var releaseId = 5134861;
 
@@ -210,7 +210,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     [Test]
     public void AddReleaseToCollectionFolder_ReleaseId_Guard()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var folderId = 999;
 
         Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.AddReleaseToCollectionFolder(username, folderId, -1));
@@ -220,7 +220,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     [Test]
     public void AddReleaseToCollectionFolder_NotExistingReleaseId()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var folderId = 999;
         var releaseId = int.MaxValue;
 
@@ -231,7 +231,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     public void AddReleaseToCollectionFolder_Unauthenticated()
     {
         var clients = CreateUnauthenticatedDiscogsApiClient();
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var folderId = 999;
         var releaseId = 5134861;
 
@@ -268,7 +268,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     [Test]
     public void DeleteReleaseFromCollectionFolder_FolderId_Guard()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var releaseId = 5134861;
         var instanceId = -1;
 
@@ -279,7 +279,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     [Test]
     public void DeleteReleaseFromCollectionFolder_NotExistingFolderId()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var folderId = 999;
         var releaseId = 5134861;
         var instanceId = 999;
@@ -290,7 +290,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     [Test]
     public void DeleteReleaseFromCollectionFolder_ReleaseId_Guard()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var folderId = 999;
         var instanceId = 999;
 
@@ -301,7 +301,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     [Test]
     public void DeleteReleaseFromCollectionFolder_NotExistingReleaseId()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var folderId = 999;
         var releaseId = int.MaxValue;
         var instanceId = 999;
@@ -312,7 +312,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     [Test]
     public void DeleteReleaseFromCollectionFolder_InstanceId_Guard()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var folderId = 999;
         var releaseId = 5134861;
 
@@ -323,7 +323,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     [Test]
     public void DeleteReleaseFromCollectionFolder_NotExistingInstanceId()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var folderId = 999;
         var releaseId = 5134861;
         var instanceId = int.MaxValue;
@@ -335,7 +335,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     public void DeleteReleaseFromCollectionFolder_Unauthenticated()
     {
         var clients = CreateUnauthenticatedDiscogsApiClient();
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var folderId = 999;
         var releaseId = 5134861;
         var instanceId = 999;
@@ -350,7 +350,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     [Test]
     public async Task CreateDeleteReleaseFromCollectionFolder_Success()
     {
-        var username = "damidhagor";
+        var username = "DamIDhagor";
         var folderName = "CreateDeleteReleaseFromCollectionFolder_Success";
         var releaseId = 5134861;
 
