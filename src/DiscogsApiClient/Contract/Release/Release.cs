@@ -73,11 +73,11 @@ public sealed record Release(
     [property:JsonPropertyName("year")]
     int Year,
     [property:JsonPropertyName("released")]
-    string Released,
+    string? Released,
     [property:JsonPropertyName("notes")]
     string Notes,
     [property:JsonPropertyName("released_formatted")]
-    string ReleasedFormatted,
+    string? ReleasedFormatted,
     [property:JsonPropertyName("identifiers")]
     List<ReleaseIdentifier> Identifiers,
     [property:JsonPropertyName("videos")]

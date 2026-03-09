@@ -31,7 +31,7 @@ public sealed record MasterReleaseVersion(
     [property:JsonPropertyName("catno")]
     string CatalogNumber,
     [property:JsonPropertyName("released")]
-    string Released,
+    string? Released,
     [property:JsonPropertyName("status")]
     string Status,
     [property:JsonPropertyName("resource_url")]
