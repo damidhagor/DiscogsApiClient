@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Tests.Database;
+namespace DiscogsApiClient.Tests.Database;
 
 public sealed class ReleasesTestFixture : ApiBaseTestFixture
 {
@@ -18,6 +18,7 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
 
         Assert.AreEqual(1, release.Artists.Count);
         Assert.AreEqual("HammerFall", release.Artists[0].Name);
+        Assert.DoesNotThrow(() => new Uri(release.Artists[0].ThumbnailUrl));
 
         Assert.AreEqual(1, release.Labels.Count);
         Assert.AreEqual(11499, release.Labels[0].Id);

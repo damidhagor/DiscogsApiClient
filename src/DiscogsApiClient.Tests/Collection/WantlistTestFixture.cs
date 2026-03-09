@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Tests.Collection;
+namespace DiscogsApiClient.Tests.Collection;
 
 public sealed class WantlistTestFixture : ApiBaseTestFixture
 {
@@ -167,6 +167,7 @@ public sealed class WantlistTestFixture : ApiBaseTestFixture
         Assert.AreEqual(287459, addedRelease.Release.Artists[0].Id);
         Assert.AreEqual("HammerFall", addedRelease.Release.Artists[0].Name);
         Assert.IsFalse(string.IsNullOrWhiteSpace(addedRelease.Release.Artists[0].ResourceUrl));
+        Assert.DoesNotThrow(() => new Uri(addedRelease.Release.Artists[0].ThumbnailUrl));
         Assert.IsNotNull(addedRelease.Release.Formats);
         Assert.Less(0, addedRelease.Release.Formats.Count);
         Assert.Less("0", addedRelease.Release.Formats[0].Count);

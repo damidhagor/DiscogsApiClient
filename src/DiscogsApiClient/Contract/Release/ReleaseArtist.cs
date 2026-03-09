@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.Release;
+namespace DiscogsApiClient.Contract.Release;
 
 /// <summary>
 /// Artist information for a release
@@ -10,6 +10,7 @@
 /// <param name="Join"></param>
 /// <param name="Role"></param>
 /// <param name="Tracks">The tracks this artist participated in on the release</param>
+/// <param name="ThumbnailUrl">The thumbnail image URL for this artist</param>
 public sealed record ReleaseArtist(
     [property:JsonPropertyName("id")]
     int Id,
@@ -24,7 +25,9 @@ public sealed record ReleaseArtist(
     [property:JsonPropertyName("role")]
     string Role,
     [property:JsonPropertyName("tracks")]
-    string Tracks);
+    string Tracks,
+    [property:JsonPropertyName("thumbnail_url")]
+    string ThumbnailUrl);
 
 
 /**

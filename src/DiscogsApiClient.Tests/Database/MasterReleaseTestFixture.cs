@@ -1,4 +1,4 @@
-﻿using static DiscogsApiClient.QueryParameters.MasterReleaseVersionFilterQueryParameters;
+using static DiscogsApiClient.QueryParameters.MasterReleaseVersionFilterQueryParameters;
 
 namespace DiscogsApiClient.Tests.Database;
 
@@ -58,6 +58,7 @@ public sealed class MasterReleaseTestFixture : ApiBaseTestFixture
         Assert.AreEqual(287459, masterRelease.Artists[0].Id);
         Assert.AreEqual("HammerFall", masterRelease.Artists[0].Name);
         Assert.DoesNotThrow(() => new Uri(masterRelease.Artists[0].ResourceUrl));
+        Assert.DoesNotThrow(() => new Uri(masterRelease.Artists[0].ThumbnailUrl));
 
         Assert.Less(0, masterRelease.Videos.Count);
         foreach (var video in masterRelease.Videos)
