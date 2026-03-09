@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.Release;
+namespace DiscogsApiClient.Contract.Release;
 
 /// <summary>
 /// Represents a release in the Discogs database
@@ -21,8 +21,9 @@
 /// <param name="Title">Release title</param>
 /// <param name="Country">Release country</param>
 /// <param name="Year">Release year</param>
+/// <param name="Released">Release date</param>
 /// <param name="Notes">Notes for this release</param>
-/// <param name="YearFormatted">Formatted release year</param>
+/// <param name="ReleasedFormatted">Formatted release date</param>
 /// <param name="Identifiers">List of identifiers</param>
 /// <param name="Videos">List of related videos</param>
 /// <param name="Genres">List of genres</param>
@@ -69,12 +70,14 @@ public sealed record Release(
     string Title,
     [property:JsonPropertyName("country")]
     string Country,
+    [property:JsonPropertyName("year")]
+    int Year,
     [property:JsonPropertyName("released")]
-    string Year,
+    string Released,
     [property:JsonPropertyName("notes")]
     string Notes,
     [property:JsonPropertyName("released_formatted")]
-    string YearFormatted,
+    string ReleasedFormatted,
     [property:JsonPropertyName("identifiers")]
     List<ReleaseIdentifier> Identifiers,
     [property:JsonPropertyName("videos")]
