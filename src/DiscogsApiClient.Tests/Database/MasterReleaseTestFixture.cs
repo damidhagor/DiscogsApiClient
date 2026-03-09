@@ -112,7 +112,7 @@ public sealed class MasterReleaseTestFixture : ApiBaseTestFixture
         Assert.IsFalse(string.IsNullOrWhiteSpace(version.Title));
         Assert.IsFalse(string.IsNullOrWhiteSpace(version.Format));
         Assert.IsFalse(string.IsNullOrWhiteSpace(version.CatalogNumber));
-        Assert.IsFalse(string.IsNullOrWhiteSpace(version.Year));
+        Assert.IsFalse(string.IsNullOrWhiteSpace(version.Released));
         Assert.IsFalse(string.IsNullOrWhiteSpace(version.Status));
         Assert.DoesNotThrow(() => new Uri(version.ResourceUrl));
         Assert.DoesNotThrow(() => new Uri(version.ThumbnailUrl));
@@ -255,10 +255,10 @@ public sealed class MasterReleaseTestFixture : ApiBaseTestFixture
         var responseDescending = await ApiClient.GetMasterReleaseVersions(masterReleaseId, null, sortParametersDescending);
 
         Assert.That(
-            responseAscending.ReleaseVersions.Select(r => r.Year),
+            responseAscending.ReleaseVersions.Select(r => r.Released),
             Is.Ordered.Ascending);
         Assert.That(
-            responseDescending.ReleaseVersions.Select(r => r.Year),
+            responseDescending.ReleaseVersions.Select(r => r.Released),
             Is.Ordered.Descending);
 
         // Title

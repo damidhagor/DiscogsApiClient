@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.Release;
+namespace DiscogsApiClient.Contract.Release;
 
 /// <summary>
 /// A specific version of a master release
@@ -10,7 +10,7 @@
 /// <param name="MajorFormats">List of the major physical formats this release is published in</param>
 /// <param name="Format">The format of the release (or type)</param>
 /// <param name="CatalogNumber">The release's catalog number</param>
-/// <param name="Year">release year</param>
+/// <param name="Released">Release date</param>
 /// <param name="Status"></param>
 /// <param name="ResourceUrl">The Api url for this release</param>
 /// <param name="ThumbnailUrl">Thumbnail image url</param>
@@ -31,7 +31,7 @@ public sealed record MasterReleaseVersion(
     [property:JsonPropertyName("catno")]
     string CatalogNumber,
     [property:JsonPropertyName("released")]
-    string Year,
+    string? Released,
     [property:JsonPropertyName("status")]
     string Status,
     [property:JsonPropertyName("resource_url")]

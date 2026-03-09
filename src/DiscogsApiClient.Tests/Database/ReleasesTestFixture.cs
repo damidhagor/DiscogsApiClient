@@ -33,9 +33,10 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
         Assert.DoesNotThrow(() => new Uri(release.MasterUrl));
         Assert.AreEqual("Glory To The Brave", release.Title);
         Assert.AreEqual("Germany", release.Country);
-        Assert.AreEqual("1997", release.Year);
+        Assert.AreEqual(1997, release.Year);
+        Assert.AreEqual("1997", release.Released);
         Assert.IsFalse(string.IsNullOrWhiteSpace(release.Notes));
-        Assert.AreEqual("1997", release.YearFormatted);
+        Assert.AreEqual("1997", release.ReleasedFormatted);
         Assert.DoesNotThrow(() => new Uri(release.ThumbnailUrl));
         Assert.Less(0, release.EstimatedWeight);
         Assert.IsFalse(release.IsBlockedFromSale);
