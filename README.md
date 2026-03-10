@@ -172,6 +172,12 @@ public async Task Authenticate(
     - It's been replaced with the two calls ``StartOAuthAuthentication`` and ``CompleteOAuthAuthentication``.
     - With this change the OAuth authentication can be handled more linearly instead of with a callback function.
     - The ``HttpClient`` used by the ``OAuthAuthenticationProvider`` now also uses the ``ErrorHandlingDelegatingHandler`` middleware.
+- ### **4.1.0**
+  - Added ``ThumbnailUrl`` property to ``ReleaseArtist`` model.
+  - Fixed year/released property mappings in ``Release`` and ``MasterReleaseVersion`` models.
+  - **Breaking**:
+    - Renamed ``Release.YearFormatted`` → ``ReleasedFormatted``
+    - Renamed ``MasterReleaseVersion.Year`` → ``Released``
 
 
 ## **Implemented Api Functions**

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
@@ -19,10 +19,10 @@
 		<PackageTags>discogs</PackageTags>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<AssemblyVersion>4.0.0</AssemblyVersion>
-		<FileVersion>4.0.0</FileVersion>
-		<PackageVersion>4.0.0</PackageVersion>
-		<PackageReleaseNotes>Refit has been removed and the library is now Aot compatible.</PackageReleaseNotes>
+		<AssemblyVersion>4.1.0</AssemblyVersion>
+		<FileVersion>4.1.0</FileVersion>
+		<PackageVersion>4.1.0</PackageVersion>
+		<PackageReleaseNotes>Added ThumbnailUrl property to ReleaseArtist model. Fixed year/released property mappings in Release and MasterReleaseVersion models.</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<ItemGroup>
