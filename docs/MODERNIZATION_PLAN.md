@@ -168,15 +168,15 @@ Phase 6: Final Validation
 **Note:** Source generator library (DiscogsApiClient.SourceGenerator) is intentionally NOT modified in this phase. It will be addressed in Phase 4 after testing is fully modernized.
 
 ### 1.1 DiscogsApiClient Project Updates
-- [ ] Update `<TargetFrameworks>` to `net8.0;net9.0;net10.0`
-- [ ] **DO NOT** update `AssemblyVersion`, `FileVersion`, or `PackageVersion` (version update happens with release to main)
-- [ ] Update package references to latest stable versions:
-  - [ ] `CommunityToolkit.Diagnostics` (currently 8.2.2)
-  - [ ] `Microsoft.Extensions.Http` (currently 8.0.0)
-  - [ ] `System.Threading.RateLimiting` (currently 8.0.0)
-- [ ] Add `<AnalysisMode>All</AnalysisMode>` for enhanced static analysis (if not present)
-- [ ] Build and verify all target frameworks compile
-- [ ] Run existing tests to ensure no regressions
+- [x] Update `<TargetFrameworks>` to `net8.0;net9.0;net10.0`
+- [x] **DO NOT** update `AssemblyVersion`, `FileVersion`, or `PackageVersion` (version update happens with release to main)
+- [x] Update package references to latest stable versions:
+  - [x] `CommunityToolkit.Diagnostics` (currently 8.2.2) → 8.4.0
+  - [x] `Microsoft.Extensions.Http` (currently 8.0.0) → 10.0.5
+  - [x] `System.Threading.RateLimiting` (currently 8.0.0) → 10.0.5
+- [x] Add `<AnalysisMode>All</AnalysisMode>` for enhanced static analysis (if not present)
+- [x] Build and verify all target frameworks compile
+- [ ] Run existing tests to ensure no regressions (will be done after 1.2)
 
 ### 1.2 DiscogsApiClient.Tests Project Updates
 - [ ] Update `<TargetFrameworks>` to `net8.0;net9.0;net10.0`
