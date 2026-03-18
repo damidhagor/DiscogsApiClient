@@ -3,8 +3,8 @@
 **Branch Strategy:** All work is performed in the `modernization` branch. Individual tasks are completed in feature branches and merged back to `modernization` via PRs. A final PR to `main` is created only after all modernization work is complete.
 
 **Version:** 1.0  
-**Status:** Planning  
-**Last Updated:** 2024-01-XX
+**Status:** Phase 1 Complete - Ready for Phase 2  
+**Last Updated:** 2025-01-15
 
 ---
 
@@ -33,12 +33,12 @@ This document outlines the technical modernization of the DiscogsApiClient libra
 - **Package Version:** 4.1.0 (will not change until final release to main)
 
 ### Goals
-- Update target frameworks to .NET 8, 9, and 10
-- Adopt C# 12 features compatible with target frameworks
-- Migrate tests from NUnit to xUnit
-- Modernize testing infrastructure with mocking and improved coverage
-- Update source generators to follow latest Roslyn best practices
-- Ensure all code follows modern C# best practices
+- ✅ Update target frameworks to .NET 8, 9, and 10 (Complete)
+- ✅ Adopt C# 12 features compatible with target frameworks (Complete)
+- ✅ Migrate tests from NUnit to TUnit (Complete - All tests passing)
+- 🔄 Modernize testing infrastructure with mocking and improved coverage (Phase 2)
+- 🔄 Update source generators to follow latest Roslyn best practices (Phase 4)
+- 🔄 Ensure all code follows modern C# best practices (Phases 3-4)
 - **Breaking changes are acceptable** - will result in new major version (v5.0.0+)
 
 ### Strategy
@@ -77,6 +77,8 @@ The modernization follows a **risk-minimization approach**:
 - ✅ **No Breaking Changes:** Avoid breaking public API unless absolutely necessary
 
 ### Review Checklist (for each PR)
+**Note:** This is a template checklist to be used for reviewing each pull request, not a one-time completion task.
+
 - [ ] Code compiles without warnings
 - [ ] All tests pass
 - [ ] C# language features appropriate for target framework
@@ -176,44 +178,68 @@ Phase 6: Final Validation
   - [x] `System.Threading.RateLimiting` (currently 8.0.0) → 10.0.5
 - [x] Add `<AnalysisMode>All</AnalysisMode>` for enhanced static analysis (if not present)
 - [x] Build and verify all target frameworks compile
-- [ ] Run existing tests to ensure no regressions (will be done after 1.2)
+- [x] Run existing tests to ensure no regressions - **Completed with section 1.2** ✅
 
 ### 1.2 DiscogsApiClient.Tests Project Updates
-- [ ] Update `<TargetFrameworks>` to `net8.0;net9.0;net10.0`
-- [ ] **Migrate from NUnit to xUnit:**
-  - [ ] Remove NUnit packages:
-    - `NUnit` (currently 3.14.0)
-    - `NUnit3TestAdapter` (currently 4.5.0)
-  - [ ] Add xUnit packages (latest stable):
-    - `xunit`
-    - `xunit.runner.visualstudio`
-  - [ ] Update `Microsoft.NET.Test.Sdk` (currently 17.8.0)
-  - [ ] Keep `coverlet.collector` (currently 6.0.0)
-- [ ] **Convert test syntax:**
-  - [ ] Replace `[Test]` with `[Fact]`
-  - [ ] Replace `[TestCase]` with `[Theory]` and `[InlineData]`
-  - [ ] Replace `Assert.That()` with `Assert.Equal()`, `Assert.True()`, etc.
-  - [ ] Replace `[SetUp]`/`[TearDown]` with constructor/`IDisposable`
-  - [ ] Replace `[OneTimeSetUp]`/`[OneTimeTearDown]` with `IClassFixture<T>`
-- [ ] Update other dependencies:
-  - [ ] `Microsoft.Extensions.Configuration.Json` (currently 8.0.0)
-- [ ] Build and verify all target frameworks compile
-- [ ] Run all converted tests to ensure they still pass
-- [ ] **Note:** This step only migrates test framework syntax; mocking infrastructure comes in Phase 2
+- [x] Update `<TargetFrameworks>` to `net8.0;net9.0;net10.0`
+- [x] **Migrate from NUnit to TUnit:**
+  - [x] Remove NUnit packages:
+    - `NUnit` (3.14.0)
+    - `NUnit3TestAdapter` (4.5.0)
+  - [x] Add TUnit package: `TUnit` (1.19.74) - **NOTE**: Single package includes Core, Engine, and Assertions
+  - [x] Remove incompatible packages:
+    - `Microsoft.NET.Test.Sdk` - **Incompatible with TUnit**, uses native testing platform
+    - `coverlet.collector` - Not needed, TUnit has built-in coverage support via `dotnet-coverage`
+  - [x] Update `Microsoft.Extensions.Configuration.Json` to 10.0.5
+- [x] **Convert test syntax (COMPLETE):**
+  - [x] Replace `[OneTimeSetUp]`/`[OneTimeTearDown]` with `[Before(Class)]`/`[After(Class)]`
+  - [x] Replace `[Test]` with `[Test]` (TUnit uses same attribute)
+  - [x] Replace basic NUnit assertions with TUnit fluent assertions (`await Assert.That(x).IsEqualTo(y)`)
+  - [x] Convert exception assertions: `Assert.ThrowsAsync<T>()` → `await Assert.That(() => ...).Throws<T>()`
+  - [x] Fix comparison assertion parameter order (actual first, expected second)
+  - [x] Handle nullable types with `.IsNotNull().And.` chaining for fluent assertions
+  - [x] Converted all test fixture files:
+    - [x] ApiBaseTestFixture, Authentication tests (3), RateLimitingTestFixture, MockMiddleware (2), User tests (2)
+    - [x] Database tests (7 files): ArtistsTestFixture, LabelsTestFixture, MasterReleaseTestFixture, ReleasesTestFixture, SearchTestFixture
+    - [x] Collection tests (3 files): WantlistTestFixture, CollectionFoldersTestFixture, CollectionFolderReleasesTestFixture
+  - [x] Added `CancellationToken cancellationToken` parameter to all test methods
+  - [x] Updated all ApiClient method calls to pass `cancellationToken` parameter
+  - [x] Converted `[TestCase]` attributes to `[Arguments]` for parameterized tests
+  - [x] Fixed all assertion parameter order issues (TUnit uses actual-first convention)
+- [x] Build and verify all target frameworks compile
+- [x] Run all converted tests to ensure they still pass - **ALL TESTS PASSING** ✅
+
+**Rationale for TUnit:**
+- **AOT Compatible**: Works seamlessly with Native AOT compilation (aligns with library's `IsAotCompatible` setting)
+- **Source Generated**: Uses source generators for zero reflection, better performance
+- **Modern Design**: Built with latest C# features and best practices
+- **Better Integration**: Superior integration with modern .NET tooling
+- **Native Testing Platform**: Uses .NET's native testing platform, eliminating need for `Microsoft.NET.Test.Sdk`
+
+**Important TUnit Package Notes:**
+- **Single Package Setup**: Only `TUnit` package is needed - it includes Core, Engine, and Assertions as dependencies
+- **Incompatible Packages**: Remove `Microsoft.NET.Test.Sdk` and `coverlet.collector` (TUnit uses native testing platform)
+- **IDE Support**: Works out-of-box with Visual Studio 2022 17.13+, requires settings for earlier versions
+- **CLI Support**: Works with `dotnet test`, `dotnet run`, and direct execution
+- **Coverage**: Use `dotnet-coverage` tool instead of coverlet for code coverage
+
+**Note:** This step only migrates test framework syntax; mocking infrastructure comes in Phase 2
 
 ### 1.3 DiscogsApiClient.SourceGenerator Project Updates
-- [ ] **DO NOT TOUCH** - Source generator updates happen in Phase 4 after testing is fully modernized
-- [ ] Verify it still compiles and generates code correctly after other project updates
+- [x] **NOT MODIFIED** - Source generator updates happen in Phase 4 after testing is fully modernized
+- [x] Verify it still compiles and generates code correctly after other project updates - **Verified working** ✅
 
 ### Acceptance Criteria - Phase 1
 - [x] All projects compile without errors or warnings
 - [x] DiscogsApiClient targets .NET 8, 9, 10
-- [x] DiscogsApiClient.Tests targets .NET 8, 9, 10 and uses xUnit
+- [x] DiscogsApiClient.Tests targets .NET 8, 9, 10 and uses TUnit
 - [x] DiscogsApiClient.SourceGenerator untouched (verified it still works)
-- [x] All existing tests (now xUnit) pass on all target frameworks
+- [x] All existing tests (now TUnit) pass on all target frameworks - **VERIFIED ✅**
 - [x] Package versions are up to date
 - [x] No functional changes to library behavior
 - [x] Library version remains 4.1.0 (no version bump yet)
+
+**Phase 1 Status:** ✅ **COMPLETE** - All acceptance criteria met, TUnit migration successful with all tests passing.
 
 ---
 
@@ -264,10 +290,11 @@ Phase 6: Final Validation
 
 ### 2.5 Testing Best Practices
 - [ ] Follow AAA pattern (Arrange, Act, Assert) **without comments marking sections**
-- [ ] Use modern xUnit features (Theory, InlineData, ClassData)
-- [ ] **Use xUnit Assert methods only** - no FluentAssertions or other assertion libraries
+- [ ] Use TUnit's modern features (data-driven tests, fluent assertions)
+- [ ] **Use TUnit's fluent assertions** - built-in, no external assertion libraries needed
 - [ ] **Make test methods async** - avoid synchronous `.Result` or `.Wait()` calls
 - [ ] Ensure proper async/await usage throughout test code
+- [ ] Leverage TUnit's source generation for better performance and AOT compatibility
 
 ### 2.6 Optional: End-to-End Test Suite
 - [ ] **Evaluate need for E2E tests** against real Discogs API

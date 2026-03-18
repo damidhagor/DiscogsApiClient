@@ -1,8 +1,6 @@
-﻿using System.Diagnostics;
-using System.Net.Http;
-using System.Threading;
+using System.Diagnostics;
 
-namespace DiscogsApiClient.Middleware;
+namespace DiscogsApiClient.Tests.MockMiddleware;
 
 public sealed class DebugMessageContentDelegatingHandler : DelegatingHandler
 {
@@ -10,7 +8,7 @@ public sealed class DebugMessageContentDelegatingHandler : DelegatingHandler
     {
         if (Debugger.IsAttached && request.Content is not null)
         {
-            var content = await request.Content.ReadAsStringAsync();
+            var content = await request.Content.ReadAsStringAsync(cancellationToken);
             Debugger.Break();
         }
 
@@ -18,7 +16,7 @@ public sealed class DebugMessageContentDelegatingHandler : DelegatingHandler
 
         if (Debugger.IsAttached && response.IsSuccessStatusCode)
         {
-            var content = await response.Content.ReadAsStringAsync();
+            var content = await response.Content.ReadAsStringAsync(cancellationToken);
             Debugger.Break();
         }
 

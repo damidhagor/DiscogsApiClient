@@ -1,68 +1,64 @@
-﻿using DiscogsApiClient.Authentication.PersonalAccessToken;
+using DiscogsApiClient.Authentication.PersonalAccessToken;
 
 namespace DiscogsApiClient.Tests.Authentication;
 
-public sealed class PersonalAccessTokenAuthenticationProviderTestFixture : ApiBaseTestFixture
+public sealed class PersonalAccessTokenAuthenticationProviderTestFixture
 {
     [Test]
-    public void Authentication_Successful()
+    public async Task Authentication_Successful()
     {
         var token = "myusertoken";
         var authProvider = new PersonalAccessTokenAuthenticationProvider();
 
-        Assert.IsFalse(authProvider.IsAuthenticated);
+        await Assert.That(authProvider.IsAuthenticated).IsFalse();
 
         authProvider.Authenticate(token);
 
-        Assert.IsTrue(authProvider.IsAuthenticated);
-        Assert.AreEqual($"Discogs token={token}", authProvider.CreateAuthenticationHeader());
+        await Assert.That(authProvider.IsAuthenticated).IsTrue();
+        await Assert.That(authProvider.CreateAuthenticationHeader()).IsEqualTo($"Discogs token={token}");
     }
 
     [Test]
-    public void Unauthenticated_Provider_Throws_UnauthorizedException()
+    public async Task Unauthenticated_Provider_Throws_UnauthorizedException()
     {
         var authProvider = new PersonalAccessTokenAuthenticationProvider();
 
-        Assert.IsFalse(authProvider.IsAuthenticated);
-        Assert.Throws<UnauthenticatedDiscogsException>(() => authProvider.CreateAuthenticationHeader());
+        await Assert.That(authProvider.IsAuthenticated).IsFalse();
+        await Assert.That(() => authProvider.CreateAuthenticationHeader()).Throws<UnauthenticatedDiscogsException>();
     }
 
     [Test]
-    public void Token_Guard_Works()
+    [Arguments(null!, typeof(ArgumentNullException))]
+    [Arguments("", typeof(ArgumentException))]
+    [Arguments("   ", typeof(ArgumentException))]
+    public async Task Token_Guard_Works(string? token, Type expectedException)
     {
         var authProvider = new PersonalAccessTokenAuthenticationProvider();
 
-        Assert.Throws<ArgumentNullException>(() => authProvider.Authenticate(null!));
+        var exception = await Assert.That(() => authProvider.Authenticate(token!)).Throws<Exception>();
 
-        Assert.IsFalse(authProvider.IsAuthenticated);
-        Assert.Throws<UnauthenticatedDiscogsException>(() => authProvider.CreateAuthenticationHeader());
+        await Assert.That(exception).IsNotNull();
+        await Assert.That(exception).IsOfType(expectedException);
 
-        Assert.Throws<ArgumentException>(() => authProvider.Authenticate(""));
-
-        Assert.IsFalse(authProvider.IsAuthenticated);
-        Assert.Throws<UnauthenticatedDiscogsException>(() => authProvider.CreateAuthenticationHeader());
-
-        Assert.Throws<ArgumentException>(() => authProvider.Authenticate("   "));
-
-        Assert.IsFalse(authProvider.IsAuthenticated);
-        Assert.Throws<UnauthenticatedDiscogsException>(() => authProvider.CreateAuthenticationHeader());
+        await Assert.That(authProvider.IsAuthenticated).IsFalse();
+        await Assert.That(() => authProvider.CreateAuthenticationHeader()).Throws<UnauthenticatedDiscogsException>();
     }
 
     [Test]
-    public void Failed_Authentication_Resets_UserToken()
+    public async Task Failed_Authentication_Resets_UserToken()
     {
         var token = "myusertoken";
         var authProvider = new PersonalAccessTokenAuthenticationProvider();
 
-        Assert.IsFalse(authProvider.IsAuthenticated);
+        await Assert.That(authProvider.IsAuthenticated).IsFalse();
 
         authProvider.Authenticate(token);
 
-        Assert.IsTrue(authProvider.IsAuthenticated);
-        Assert.AreEqual($"Discogs token={token}", authProvider.CreateAuthenticationHeader());
+        await Assert.That(authProvider.IsAuthenticated).IsTrue();
+        await Assert.That(authProvider.CreateAuthenticationHeader()).IsEqualTo($"Discogs token={token}");
 
-        Assert.Throws<ArgumentException>(() => authProvider.Authenticate(""));
-        Assert.IsFalse(authProvider.IsAuthenticated);
-        Assert.Throws<UnauthenticatedDiscogsException>(() => authProvider.CreateAuthenticationHeader());
+        await Assert.That(() => authProvider.Authenticate("")).Throws<ArgumentException>();
+        await Assert.That(authProvider.IsAuthenticated).IsFalse();
+        await Assert.That(() => authProvider.CreateAuthenticationHeader()).Throws<UnauthenticatedDiscogsException>();
     }
 }
