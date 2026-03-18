@@ -1,4 +1,3 @@
-using System.Net.Http;
 using System.Text.Json;
 using System.Threading.RateLimiting;
 using DiscogsApiClient.Authentication.OAuth;
@@ -6,20 +5,20 @@ using DiscogsApiClient.Authentication.PersonalAccessToken;
 using DiscogsApiClient.Middleware;
 using DiscogsApiClient.SourceGenerator.ApiClient;
 using DiscogsApiClient.SourceGenerator.JsonSerialization;
+using DiscogsApiClient.Tests.MockMiddleware;
 using Microsoft.Extensions.Configuration;
 
 namespace DiscogsApiClient.Tests;
 
-[TestFixture]
 public abstract class ApiBaseTestFixture
 {
     private static readonly RateLimiter _rateLimiter;
 
-    private HttpClient _authHttpClient = null!;
-    private HttpClient _clientHttpClient = null!;
-    protected IConfiguration Configuration = null!;
+    private static HttpClient _authHttpClient = null!;
+    private static HttpClient _clientHttpClient = null!;
+    protected static IConfiguration Configuration = null!;
 
-    protected IDiscogsApiClient ApiClient = null!;
+    protected static IDiscogsApiClient ApiClient = null!;
 
     static ApiBaseTestFixture()
     {
@@ -35,8 +34,8 @@ public abstract class ApiBaseTestFixture
                 });
     }
 
-    [OneTimeSetUp]
-    public void Setup()
+    [Before(Class)]
+    public static void Setup()
     {
         Configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", false)
@@ -46,17 +45,17 @@ public abstract class ApiBaseTestFixture
         (ApiClient, _authHttpClient, _clientHttpClient) = CreateDiscogsApiClient();
     }
 
-    [OneTimeTearDown]
-    public void TearDown()
+    [After(Class)]
+    public static void TearDown()
     {
         _authHttpClient?.Dispose();
         _clientHttpClient?.Dispose();
     }
 
-    protected (IDiscogsApiClient discogsApiClient, HttpClient authHttpClient, HttpClient clientHttpClient) CreateUnauthenticatedDiscogsApiClient()
+    protected static (IDiscogsApiClient discogsApiClient, HttpClient authHttpClient, HttpClient clientHttpClient) CreateUnauthenticatedDiscogsApiClient()
         => CreateDiscogsApiClient(userToken: "");
 
-    protected (IDiscogsApiClient discogsApiClient, HttpClient authHttpClient, HttpClient clientHttpClient) CreateDiscogsApiClient(
+    protected static (IDiscogsApiClient discogsApiClient, HttpClient authHttpClient, HttpClient clientHttpClient) CreateDiscogsApiClient(
         string? authUserAgent = null,
         string? authBaseUrl = null,
         string? clientUserAgent = null,
@@ -109,4 +108,3 @@ public abstract class ApiBaseTestFixture
         return (discogsApiClient, authHttpClient, clientHttpClient);
     }
 }
-

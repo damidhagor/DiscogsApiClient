@@ -3,170 +3,180 @@ namespace DiscogsApiClient.Tests.Database;
 public sealed class ReleasesTestFixture : ApiBaseTestFixture
 {
     [Test]
-    public async Task GetRelease_Success()
+    public async Task GetRelease_Success(CancellationToken cancellationToken)
     {
         var releaseId = 5134861;
 
-        var release = await ApiClient.GetRelease(releaseId);
+        var release = await ApiClient.GetRelease(releaseId, cancellationToken);
 
-        Assert.IsNotNull(release);
-        Assert.AreEqual(releaseId, release.Id);
-        Assert.DoesNotThrow(() => new Uri(release.ResourceUrl));
-        Assert.DoesNotThrow(() => new Uri(release.Uri));
-        Assert.AreEqual("HammerFall", release.ArtistsSort);
+        await Assert.That(release).IsNotNull();
+        await Assert.That(release.Id).IsEqualTo(releaseId);
+        await Assert.That(() => new Uri(release.ResourceUrl)).ThrowsNothing();
+        await Assert.That(() => new Uri(release.Uri)).ThrowsNothing();
+        await Assert.That(release.ArtistsSort).IsEqualTo("HammerFall");
 
 
-        Assert.AreEqual(1, release.Artists.Count);
-        Assert.AreEqual("HammerFall", release.Artists[0].Name);
-        Assert.DoesNotThrow(() => new Uri(release.Artists[0].ThumbnailUrl));
+        await Assert.That(release.Artists.Count).IsEqualTo(1);
+        await Assert.That(release.Artists[0].Name).IsEqualTo("HammerFall");
+        await Assert.That(() => new Uri(release.Artists[0].ThumbnailUrl)).ThrowsNothing();
 
-        Assert.AreEqual(1, release.Labels.Count);
-        Assert.AreEqual(11499, release.Labels[0].Id);
-        Assert.AreEqual("Nuclear Blast", release.Labels[0].Name);
-        Assert.AreEqual("NB 265-2", release.Labels[0].CatalogNumber);
-        Assert.AreEqual(release.FormatCount, release.Formats.Count);
-        Assert.Less(DateTime.MinValue, release.AddedAt);
-        Assert.Less(DateTime.MinValue, release.ChangedAt);
-        Assert.Less(0, release.NumForSale);
-        Assert.Less(0, release.LowestPrice);
-        Assert.Less(0, release.MasterId);
-        Assert.DoesNotThrow(() => new Uri(release.MasterUrl));
-        Assert.AreEqual("Glory To The Brave", release.Title);
-        Assert.AreEqual("Germany", release.Country);
-        Assert.AreEqual(1997, release.Year);
-        Assert.AreEqual("1997", release.Released);
-        Assert.IsFalse(string.IsNullOrWhiteSpace(release.Notes));
-        Assert.AreEqual("1997", release.ReleasedFormatted);
-        Assert.DoesNotThrow(() => new Uri(release.ThumbnailUrl));
-        Assert.Less(0, release.EstimatedWeight);
-        Assert.IsFalse(release.IsBlockedFromSale);
-        Assert.IsFalse(string.IsNullOrWhiteSpace(release.DataQuality));
+        await Assert.That(release.Labels.Count).IsEqualTo(1);
+        await Assert.That(release.Labels[0].Id).IsEqualTo(11499);
+        await Assert.That(release.Labels[0].Name).IsEqualTo("Nuclear Blast");
+        await Assert.That(release.Labels[0].CatalogNumber).IsEqualTo("NB 265-2");
+        await Assert.That(release.Formats.Count).IsEqualTo(release.FormatCount);
+        await Assert.That(release.AddedAt).IsGreaterThan(DateTime.MinValue);
+        await Assert.That(release.ChangedAt).IsGreaterThan(DateTime.MinValue);
+        await Assert.That(release.NumForSale).IsGreaterThan(0);
+        await Assert.That(release.LowestPrice).IsNotNull();
+        await Assert.That(release.LowestPrice!.Value).IsGreaterThan(0);
+        await Assert.That(release.MasterId).IsGreaterThan(0);
+        await Assert.That(() => new Uri(release.MasterUrl)).ThrowsNothing();
+        await Assert.That(release.Title).IsEqualTo("Glory To The Brave");
+        await Assert.That(release.Country).IsEqualTo("Germany");
+        await Assert.That(release.Year).IsEqualTo(1997);
+        await Assert.That(release.Released).IsEqualTo("1997");
+        await Assert.That(release.Notes).IsNotNullOrWhiteSpace();
+        await Assert.That(release.ReleasedFormatted).IsEqualTo("1997");
+        await Assert.That(() => new Uri(release.ThumbnailUrl)).ThrowsNothing();
+        await Assert.That(release.EstimatedWeight).IsGreaterThan(0);
+        await Assert.That(release.IsBlockedFromSale).IsFalse();
+        await Assert.That(release.DataQuality).IsNotNullOrWhiteSpace();
 
-        Assert.AreEqual(1, release.Formats.Count);
-        Assert.AreEqual("CD", release.Formats[0].Name);
-        Assert.AreEqual("1", release.Formats[0].Count);
-        Assert.Less(0, release.Formats[0].Descriptions.Count);
+        await Assert.That(release.Formats.Count).IsEqualTo(1);
+        await Assert.That(release.Formats[0].Name).IsEqualTo("CD");
+        await Assert.That(release.Formats[0].Count).IsEqualTo("1");
+        await Assert.That(release.Formats[0].Descriptions.Count).IsGreaterThan(0);
 
-        Assert.IsNotNull(release.CommunityStatistics);
-        Assert.Less(0, release.CommunityStatistics.UsersOwningReleaseCount);
-        Assert.Less(0, release.CommunityStatistics.UsersWantingReleaseCount);
-        Assert.IsNotNull(release.CommunityStatistics.Rating);
-        Assert.Less(0, release.CommunityStatistics.Rating.Count);
-        Assert.Less(0, release.CommunityStatistics.Rating.Average);
+        await Assert.That(release.CommunityStatistics).IsNotNull();
+        await Assert.That(release.CommunityStatistics.UsersOwningReleaseCount).IsGreaterThan(0);
+        await Assert.That(release.CommunityStatistics.UsersWantingReleaseCount).IsGreaterThan(0);
+        await Assert.That(release.CommunityStatistics.Rating).IsNotNull();
+        await Assert.That(release.CommunityStatistics.Rating.Count).IsGreaterThan(0);
+        await Assert.That(release.CommunityStatistics.Rating.Average).IsGreaterThan(0);
 
-        Assert.Less(0, release.Identifiers.Count);
-        Assert.AreEqual("Barcode", release.Identifiers[0].Type);
-        Assert.AreEqual("7 27361 62652 5", release.Identifiers[0].Value);
+        await Assert.That(release.Identifiers.Count).IsGreaterThan(0);
+        await Assert.That(release.Identifiers[0].Type).IsEqualTo("Barcode");
+        await Assert.That(release.Identifiers[0].Value).IsEqualTo("7 27361 62652 5");
 
-        Assert.Less(0, release.Videos.Count);
+        await Assert.That(release.Videos.Count).IsGreaterThan(0);
         foreach (var video in release.Videos)
         {
-            Assert.DoesNotThrow(() => new Uri(video.Uri));
-            Assert.IsFalse(string.IsNullOrWhiteSpace(video.Title));
-            Assert.IsFalse(string.IsNullOrWhiteSpace(video.Description));
-            Assert.Less(0, video.DurationInSeconds);
+            await Assert.That(() => new Uri(video.Uri)).ThrowsNothing();
+            await Assert.That(video.Title).IsNotNullOrWhiteSpace();
+            await Assert.That(video.Description).IsNotNullOrWhiteSpace();
+            await Assert.That(video.DurationInSeconds).IsGreaterThan(0);
         }
 
-        Assert.Less(0, release.Genres.Count);
+        await Assert.That(release.Genres.Count).IsGreaterThan(0);
         foreach (var genre in release.Genres)
         {
-            Assert.IsFalse(string.IsNullOrWhiteSpace(genre));
+            await Assert.That(genre).IsNotNullOrWhiteSpace();
         }
 
-        Assert.Less(0, release.Styles.Count);
+        await Assert.That(release.Styles.Count).IsGreaterThan(0);
         foreach (var style in release.Styles)
         {
-            Assert.IsFalse(string.IsNullOrWhiteSpace(style));
+            await Assert.That(style).IsNotNullOrWhiteSpace();
         }
 
-        Assert.AreEqual(9, release.Tracklist.Count);
-        Assert.AreEqual("1", release.Tracklist[0].Position);
-        Assert.AreEqual("The Dragon Lies Bleeding", release.Tracklist[0].Title);
-        Assert.AreEqual("4:23", release.Tracklist[0].Duration);
-        Assert.AreEqual("track", release.Tracklist[0].Type);
+        await Assert.That(release.Tracklist.Count).IsEqualTo(9);
+        await Assert.That(release.Tracklist[0].Position).IsEqualTo("1");
+        await Assert.That(release.Tracklist[0].Title).IsEqualTo("The Dragon Lies Bleeding");
+        await Assert.That(release.Tracklist[0].Duration).IsEqualTo("4:23");
+        await Assert.That(release.Tracklist[0].Type).IsEqualTo("track");
 
-        Assert.AreEqual(0, release.ExtraArtists.Count);
+        await Assert.That(release.ExtraArtists).IsNull();
 
-        Assert.Less(0, release.Images.Count);
+        await Assert.That(release.Images.Count).IsGreaterThan(0);
         foreach (var image in release.Images)
         {
-            Assert.IsTrue(Enum.IsDefined(image.Type));
-            Assert.DoesNotThrow(() => new Uri(image.ResourceUrl));
-            Assert.DoesNotThrow(() => new Uri(image.ImageUri));
-            Assert.DoesNotThrow(() => new Uri(image.ImageUri150));
-            Assert.Less(0, image.Width);
-            Assert.Less(0, image.Height);
+            await Assert.That(Enum.IsDefined(image.Type)).IsTrue();
+            await Assert.That(() => new Uri(image.ResourceUrl)).ThrowsNothing();
+            await Assert.That(() => new Uri(image.ImageUri)).ThrowsNothing();
+            await Assert.That(() => new Uri(image.ImageUri150)).ThrowsNothing();
+            await Assert.That(image.Width).IsGreaterThan(0);
+            await Assert.That(image.Height).IsGreaterThan(0);
         }
     }
 
     [Test]
-    public void GetRelease_ReleaseId_Guard()
+    [Arguments(-1)]
+    [Arguments(0)]
+    public async Task GetRelease_ReleaseId_Guard(int releaseId, CancellationToken cancellationToken)
     {
-        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.GetRelease(-1));
-        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.GetRelease(0));
+        await Assert.That(async () => await ApiClient.GetRelease(releaseId, cancellationToken))
+            .Throws<ArgumentOutOfRangeException>();
     }
 
     [Test]
-    public void GetRelease_NotExistingReleaseId()
+    public async Task GetRelease_NotExistingReleaseId(CancellationToken cancellationToken)
     {
         var releaseId = int.MaxValue;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetRelease(releaseId));
+        await Assert.That(async () => await ApiClient.GetRelease(releaseId, cancellationToken))
+            .Throws<ResourceNotFoundDiscogsException>();
     }
 
 
     [Test]
-    public async Task GetReleaseCommunityRating_Success()
+    public async Task GetReleaseCommunityRating_Success(CancellationToken cancellationToken)
     {
         var releaseId = 5134861;
 
-        var ratingResponse = await ApiClient.GetReleaseCommunityRating(releaseId);
+        var ratingResponse = await ApiClient.GetReleaseCommunityRating(releaseId, cancellationToken);
 
-        Assert.IsNotNull(ratingResponse);
-        Assert.AreEqual(ratingResponse.ReleaseId, releaseId);
-        Assert.IsNotNull(ratingResponse.Rating);
-        Assert.Less(0, ratingResponse.Rating.Count);
-        Assert.Less(0, ratingResponse.Rating.Average);
+        await Assert.That(ratingResponse).IsNotNull();
+        await Assert.That(ratingResponse.ReleaseId).IsEqualTo(releaseId);
+        await Assert.That(ratingResponse.Rating).IsNotNull();
+        await Assert.That(ratingResponse.Rating.Count).IsGreaterThan(0);
+        await Assert.That(ratingResponse.Rating.Average).IsGreaterThan(0);
     }
 
     [Test]
-    public void GetReleaseCommunityRating_ReleaseId_Guard()
+    [Arguments(-1)]
+    [Arguments(0)]
+    public async Task GetReleaseCommunityRating_ReleaseId_Guard(int releaseId, CancellationToken cancellationToken)
     {
-        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.GetReleaseCommunityRating(-1));
-        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.GetReleaseCommunityRating(0));
+        await Assert.That(async () => await ApiClient.GetReleaseCommunityRating(releaseId, cancellationToken))
+            .Throws<ArgumentOutOfRangeException>();
     }
 
     [Test]
-    public void GetReleaseCommunityRating_NotExistingReleaseId()
+    public async Task GetReleaseCommunityRating_NotExistingReleaseId(CancellationToken cancellationToken)
     {
         var releaseId = int.MaxValue;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetReleaseCommunityRating(releaseId));
+        await Assert.That(async () => await ApiClient.GetReleaseCommunityRating(releaseId, cancellationToken))
+            .Throws<ResourceNotFoundDiscogsException>();
     }
 
 
     [Test]
-    public async Task GetReleaseStats_Success()
+    public async Task GetReleaseStats_Success(CancellationToken cancellationToken)
     {
         var releaseId = 5134861;
 
-        var stats = await ApiClient.GetReleaseStats(releaseId);
+        var stats = await ApiClient.GetReleaseStats(releaseId, cancellationToken);
 
-        Assert.IsNotNull(stats);
+        await Assert.That(stats).IsNotNull();
     }
 
     [Test]
-    public void GetReleaseStats_ReleaseId_Guard()
+    [Arguments(-1)]
+    [Arguments(0)]
+    public async Task GetReleaseStats_ReleaseId_Guard(int releaseId, CancellationToken cancellationToken)
     {
-        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.GetReleaseStats(-1));
-        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => ApiClient.GetReleaseStats(0));
+        await Assert.That(async () => await ApiClient.GetReleaseStats(releaseId, cancellationToken))
+            .Throws<ArgumentOutOfRangeException>();
     }
 
     [Test]
-    public void GetReleaseStats_NotExistingReleaseId()
+    public async Task GetReleaseStats_NotExistingReleaseId(CancellationToken cancellationToken)
     {
         var releaseId = int.MaxValue;
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetReleaseStats(releaseId));
+        await Assert.That(async () => await ApiClient.GetReleaseStats(releaseId, cancellationToken))
+            .Throws<ResourceNotFoundDiscogsException>();
     }
 }

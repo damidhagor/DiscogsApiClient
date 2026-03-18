@@ -1,11 +1,10 @@
-﻿namespace DiscogsApiClient.Tests.Client;
+namespace DiscogsApiClient.Tests.Client;
 
-[TestFixture]
 public sealed class RateLimitingTestFixture : ApiBaseTestFixture
 {
     [Test]
     [Explicit]
-    public async Task ClientIsRateLimited_Success()
+    public async Task ClientIsRateLimited_Success(CancellationToken cancellationToken)
     {
         var succeeded = 0;
         var failed = 0;
@@ -14,18 +13,18 @@ public sealed class RateLimitingTestFixture : ApiBaseTestFixture
         {
             try
             {
-                _ = await ApiClient.GetIdentity(default);
+                _ = await ApiClient.GetIdentity(cancellationToken);
                 succeeded++;
-                TestContext.WriteLine($"[{DateTime.Now:HH:mm:ss:fff}] {i:D2} SUCCESS");
+                TestContext.Current!.Output.WriteLine($"[{DateTime.Now:HH:mm:ss:fff}] {i:D2} SUCCESS");
             }
             catch (Exception)
             {
                 failed++;
-                TestContext.WriteLine($"[{DateTime.Now:HH:mm:ss:fff}] {i:D2} FAIL");
+                TestContext.Current!.Output.WriteLine($"[{DateTime.Now:HH:mm:ss:fff}] {i:D2} FAIL");
             }
         }
 
-        Assert.AreEqual(100, succeeded);
-        Assert.AreEqual(0, failed);
+        await Assert.That(succeeded).IsEqualTo(100);
+        await Assert.That(failed).IsEqualTo(0);
     }
 }

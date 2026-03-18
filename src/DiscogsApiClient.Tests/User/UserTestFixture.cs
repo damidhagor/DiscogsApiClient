@@ -1,58 +1,58 @@
-﻿namespace DiscogsApiClient.Tests.User;
+namespace DiscogsApiClient.Tests.User;
 
 public sealed class UserTestFixture : ApiBaseTestFixture
 {
     [Test]
-    public async Task GetUser_Success()
+    public async Task GetUser_Success(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
 
-        var user = await ApiClient.GetUser(username);
+        var user = await ApiClient.GetUser(username, cancellationToken);
 
-        Assert.IsNotNull(user);
-        Assert.AreEqual(12579295, user.Id);
-        Assert.AreEqual("DamIDhagor", user.Username);
-        Assert.AreEqual("alexander.jurk@outlook.com", user.Email);
-        Assert.AreEqual("https://api.discogs.com/users/DamIDhagor", user.ResourceUrl);
-        Assert.IsTrue(user.IsActivated);
-        Assert.IsFalse(string.IsNullOrWhiteSpace(user.AvatarUrl));
-        Assert.IsFalse(string.IsNullOrWhiteSpace(user.CollectionFoldersUrl));
+        await Assert.That(user).IsNotNull();
+        await Assert.That(user.Id).IsEqualTo(12579295);
+        await Assert.That(user.Username).IsEqualTo("DamIDhagor");
+        await Assert.That(user.Email).IsEqualTo("alexander.jurk@outlook.com");
+        await Assert.That(user.ResourceUrl).IsEqualTo("https://api.discogs.com/users/DamIDhagor");
+        await Assert.That(user.IsActivated).IsTrue();
+        await Assert.That(user.AvatarUrl).IsNotNullOrWhiteSpace();
+        await Assert.That(user.CollectionFoldersUrl).IsNotNullOrWhiteSpace();
     }
 
     [Test]
-    public async Task GetUser_Unauthenticated()
+    public async Task GetUser_Unauthenticated(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var unauthenticatedClients = CreateUnauthenticatedDiscogsApiClient();
 
-        var user = await unauthenticatedClients.discogsApiClient.GetUser(username);
+        var user = await unauthenticatedClients.discogsApiClient.GetUser(username, cancellationToken);
 
-        Assert.IsNotNull(user);
-        Assert.AreEqual(12579295, user.Id);
-        Assert.AreEqual("DamIDhagor", user.Username);
-        Assert.AreEqual(null, user.Email);
-        Assert.AreEqual("https://api.discogs.com/users/DamIDhagor", user.ResourceUrl);
-        Assert.IsTrue(user.IsActivated);
-        Assert.IsFalse(string.IsNullOrWhiteSpace(user.AvatarUrl));
-        Assert.IsFalse(string.IsNullOrWhiteSpace(user.CollectionFoldersUrl));
+        await Assert.That(user).IsNotNull();
+        await Assert.That(user.Id).IsEqualTo(12579295);
+        await Assert.That(user.Username).IsEqualTo("DamIDhagor");
+        await Assert.That(user.Email).IsNull();
+        await Assert.That(user.ResourceUrl).IsEqualTo("https://api.discogs.com/users/DamIDhagor");
+        await Assert.That(user.IsActivated).IsTrue();
+        await Assert.That(user.AvatarUrl).IsNotNullOrWhiteSpace();
+        await Assert.That(user.CollectionFoldersUrl).IsNotNullOrWhiteSpace();
 
         unauthenticatedClients.authHttpClient.Dispose();
         unauthenticatedClients.clientHttpClient.Dispose();
     }
 
     [Test]
-    public void GetUser_EmptyUsername()
+    public async Task GetUser_EmptyUsername(CancellationToken cancellationToken)
     {
         var username = "";
 
-        Assert.ThrowsAsync<ArgumentException>(() => ApiClient.GetUser(username), "Parameter \"username\" (string) must not be null or whitespace, was whitespace. (Parameter 'username')");
+        await Assert.That(async () => await ApiClient.GetUser(username, cancellationToken)).Throws<ArgumentException>();
     }
 
     [Test]
-    public void GetUser_InvalidUsername()
+    public async Task GetUser_InvalidUsername(CancellationToken cancellationToken)
     {
         var username = "awrbaerhnqw54";
 
-        Assert.ThrowsAsync<ResourceNotFoundDiscogsException>(() => ApiClient.GetUser(username));
+        await Assert.That(async () => await ApiClient.GetUser(username, cancellationToken)).Throws<ResourceNotFoundDiscogsException>();
     }
 }

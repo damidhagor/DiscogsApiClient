@@ -1,26 +1,26 @@
-﻿namespace DiscogsApiClient.Tests.User;
+namespace DiscogsApiClient.Tests.User;
 
-[TestFixture]
 public sealed class IdentityTestFixture : ApiBaseTestFixture
 {
     [Test]
-    public async Task GetIdentity_Success()
+    public async Task GetIdentity_Success(CancellationToken cancellationToken)
     {
-        var identity = await ApiClient.GetIdentity();
+        var identity = await ApiClient.GetIdentity(cancellationToken);
 
-        Assert.IsNotNull(identity);
-        Assert.AreEqual("DamIDhagor", identity.Username);
-        Assert.AreEqual("DamIDhagor", identity.ConsumerName);
-        Assert.AreEqual(12579295, identity.Id);
-        Assert.AreEqual("https://api.discogs.com/users/DamIDhagor", identity.ResourceUrl);
+        await Assert.That(identity).IsNotNull();
+        await Assert.That(identity.Username).IsEqualTo("DamIDhagor");
+        await Assert.That(identity.ConsumerName).IsEqualTo("DamIDhagor");
+        await Assert.That(identity.Id).IsEqualTo(12579295);
+        await Assert.That(identity.ResourceUrl).IsEqualTo("https://api.discogs.com/users/DamIDhagor");
     }
 
     [Test]
-    public void GetIdentity_Unauthenticated()
+    public async Task GetIdentity_Unauthenticated(CancellationToken cancellationToken)
     {
         var unauthenticatedClients = CreateUnauthenticatedDiscogsApiClient();
 
-        Assert.ThrowsAsync<UnauthenticatedDiscogsException>(() => unauthenticatedClients.discogsApiClient.GetIdentity());
+        await Assert.That(async () => await unauthenticatedClients.discogsApiClient.GetIdentity(cancellationToken))
+            .Throws<UnauthenticatedDiscogsException>();
 
         unauthenticatedClients.authHttpClient.Dispose();
         unauthenticatedClients.clientHttpClient.Dispose();
