@@ -370,13 +370,17 @@ Phase 6: Final Validation
 - [ ] Review collection usage (use appropriate collection types)
 - [ ] Consider `ArrayPool` for temporary buffers if applicable
 
+### 3.6 Service Registration Modernization
+- [ ] Refactor service registration extensions to follow modern .NET library best practices
+
 ### Acceptance Criteria - Phase 3
-- [x] All C# 12 features adopted where appropriate
-- [x] IDiscogsApiClient interface refactored and simplified
-- [x] All tests pass (validates refactoring didn't break functionality)
-- [x] No compiler warnings
-- [x] XML documentation complete and accurate
-- [x] Breaking changes documented (if any)
+- [ ] All C# 12 features adopted where appropriate
+- [ ] IDiscogsApiClient interface refactored and simplified (if decided)
+- [ ] Service registration refactored to follow modern .NET library best practices
+- [ ] All tests pass (validates refactoring didn't break functionality)
+- [ ] No compiler warnings
+- [ ] XML documentation complete and accurate
+- [ ] Breaking changes documented (if any)
 
 ---
 
@@ -568,7 +572,7 @@ Phase 6: Final Validation
 ## Progress Tracking
 
 ### Overall Status
-- **Phase 1:** ⬜ Not Started
+- **Phase 1:** ✅ Completed
 - **Phase 2:** ⬜ Not Started
 - **Phase 3:** ⬜ Not Started
 - **Phase 4:** ⬜ Not Started
