@@ -3,7 +3,7 @@ using static DiscogsApiClient.QueryParameters.ArtistReleaseSortQueryParameters;
 namespace DiscogsApiClient.Tests.Database;
 
 [ClassDataSource<DiscogsApiClientFixture>(Shared = SharedType.PerTestSession)]
-public sealed class ArtistsTestFixture(DiscogsApiClientFixture fixture)
+public sealed class ArtistsTests(DiscogsApiClientFixture fixture)
 {
     private readonly IDiscogsApiClient _apiClient = fixture.GetAuthenticatedClient();
 

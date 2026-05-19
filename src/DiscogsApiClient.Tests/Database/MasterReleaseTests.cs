@@ -3,7 +3,7 @@ using static DiscogsApiClient.QueryParameters.MasterReleaseVersionFilterQueryPar
 namespace DiscogsApiClient.Tests.Database;
 
 [ClassDataSource<DiscogsApiClientFixture>(Shared = SharedType.PerTestSession)]
-public sealed class MasterReleaseTestFixture(DiscogsApiClientFixture fixture)
+public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
 {
     private readonly IDiscogsApiClient _apiClient = fixture.GetAuthenticatedClient();
 

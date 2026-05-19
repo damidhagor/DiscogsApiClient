@@ -2,7 +2,7 @@ using DiscogsApiClient.Authentication.PersonalAccessToken;
 
 namespace DiscogsApiClient.Tests.Authentication;
 
-public sealed class PersonalAccessTokenAuthenticationProviderTestFixture
+public sealed class PersonalAccessTokenAuthenticationProviderTests
 {
     [Test]
     public async Task Authentication_Successful()

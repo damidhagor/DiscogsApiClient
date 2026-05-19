@@ -1,7 +1,7 @@
 namespace DiscogsApiClient.Tests.Client;
 
 [ClassDataSource<DiscogsApiClientFixture>(Shared = SharedType.PerTestSession)]
-public sealed class RateLimitingTestFixture(DiscogsApiClientFixture fixture)
+public sealed class RateLimitingTests(DiscogsApiClientFixture fixture)
 {
     private readonly IDiscogsApiClient _apiClient = fixture.GetAuthenticatedClient();
 

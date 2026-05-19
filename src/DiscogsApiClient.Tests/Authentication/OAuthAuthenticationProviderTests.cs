@@ -3,7 +3,7 @@ using DiscogsApiClient.Tests.MockMiddleware;
 
 namespace DiscogsApiClient.Tests.Authentication;
 
-public sealed class OAuthAuthenticationProviderTestFixture
+public sealed class OAuthAuthenticationProviderTests
 {
     [Test]
     public async Task Authentication_Successful(CancellationToken cancellationToken)

@@ -1,7 +1,7 @@
 namespace DiscogsApiClient.Tests.User;
 
 [ClassDataSource<DiscogsApiClientFixture>(Shared = SharedType.PerTestSession)]
-public sealed class IdentityTestFixture(DiscogsApiClientFixture fixture)
+public sealed class IdentityTests(DiscogsApiClientFixture fixture)
 {
     private readonly IDiscogsApiClient _apiClient = fixture.GetAuthenticatedClient();
     private readonly IDiscogsApiClient _unauthenticatedApiClient = fixture.GetUnauthenticatedClient();

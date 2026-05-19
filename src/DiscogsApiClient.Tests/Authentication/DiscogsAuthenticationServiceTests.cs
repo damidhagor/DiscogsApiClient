@@ -4,7 +4,7 @@ using DiscogsApiClient.Tests.MockMiddleware;
 
 namespace DiscogsApiClient.Tests.Authentication;
 
-public sealed class DiscogsAuthenticationServiceTestFixture
+public sealed class DiscogsAuthenticationServiceTests
 {
     [Test]
     public async Task Unauthenticated_Service_Throws_UnauthorizedException()

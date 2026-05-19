@@ -3,7 +3,7 @@ using DiscogsApiClient.Contract.Search;
 namespace DiscogsApiClient.Tests.Database;
 
 [ClassDataSource<DiscogsApiClientFixture>(Shared = SharedType.PerTestSession)]
-public sealed class SearchTestFixture(DiscogsApiClientFixture fixture)
+public sealed class SearchTests(DiscogsApiClientFixture fixture)
 {
     private readonly IDiscogsApiClient _apiClient = fixture.GetAuthenticatedClient();
 

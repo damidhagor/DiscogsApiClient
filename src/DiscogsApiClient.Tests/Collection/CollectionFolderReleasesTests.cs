@@ -3,7 +3,7 @@ using static DiscogsApiClient.QueryParameters.CollectionFolderReleaseSortQueryPa
 namespace DiscogsApiClient.Tests.Collection;
 
 [ClassDataSource<DiscogsApiClientFixture>(Shared = SharedType.PerTestSession)]
-public sealed class CollectionFolderReleasesTestFixture(DiscogsApiClientFixture fixture)
+public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixture)
 {
     private readonly IDiscogsApiClient _apiClient = fixture.GetAuthenticatedClient();
     private readonly IDiscogsApiClient _unauthenticatedApiClient = fixture.GetUnauthenticatedClient();
