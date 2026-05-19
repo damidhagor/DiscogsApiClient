@@ -1,0 +1,86 @@
+{
+  "Guid": "65b2d720-57e9-49df-8371-d36ce5c2f877",
+  "UpdatedAt": "2026-05-19T23:34:23.9008397Z",
+  "Title": "Proxy Mapping for POST /users/awrbaerhnqw54/collection/folders/999/releases/5134861",
+  "Description": "Proxy Mapping for POST /users/awrbaerhnqw54/collection/folders/999/releases/5134861",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/users/awrbaerhnqw54/collection/folders/999/releases/5134861",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "POST"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Authorization",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "Discogs token=*",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Content-Length",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ],
+    "Body": {
+      "Matcher": {
+        "Name": "ExactMatcher",
+        "Pattern": "",
+        "IgnoreCase": true
+      }
+    }
+  },
+  "Response": {
+    "StatusCode": 404,
+    "BodyAsJson": {
+      "message": "User does not exist or may have been deleted."
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Date": "Tue, 19 May 2026 23:34:24 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "x-discogs-ratelimit": "60",
+      "x-discogs-ratelimit-remaining": "38",
+      "x-discogs-ratelimit-used": "22",
+      "Set-Cookie": "__cf_bm=qcEBPqXsfzLMP96qTyPXlxL9nUSmzFQTW..GZ8CqPl4-1779233664.1658967-1.0.1.1-NdHQK_1e3Rwz_fB3hSqSobbc64EcWPzzChdruvMUL.28aatXYDOIOFYTKI4nhrrmuNm4jGRZpqVpqtNpHmf5Z.QdjyDNvCWCl2r.gx5Hs6fcmhoIs6gyebxhHGMYzIVo; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:04:24 GMT",
+      "cf-cache-status": "DYNAMIC",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6e9810973f958-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

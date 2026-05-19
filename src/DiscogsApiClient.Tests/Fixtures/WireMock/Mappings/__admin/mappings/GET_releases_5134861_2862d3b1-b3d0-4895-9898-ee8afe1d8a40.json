@@ -1,0 +1,305 @@
+{
+  "Guid": "2862d3b1-b3d0-4895-9898-ee8afe1d8a40",
+  "UpdatedAt": "2026-05-19T23:31:54.6780561Z",
+  "Title": "Proxy Mapping for GET /releases/5134861",
+  "Description": "Proxy Mapping for GET /releases/5134861",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/releases/5134861",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "GET"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Authorization",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "Discogs token=*",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ]
+  },
+  "Response": {
+    "StatusCode": 200,
+    "BodyAsJson": {
+      "id": 5134861,
+      "status": "Accepted",
+      "year": 1997,
+      "resource_url": "https://api.discogs.com/releases/5134861",
+      "uri": "https://www.discogs.com/release/5134861-HammerFall-Glory-To-The-Brave",
+      "artists": [
+        {
+          "name": "HammerFall",
+          "anv": "",
+          "join": "",
+          "role": "",
+          "tracks": "",
+          "id": 287459,
+          "resource_url": "https://api.discogs.com/artists/287459",
+          "thumbnail_url": "https://i.discogs.com/RDQAZC0moF-6OPsWKvI1GkZUW8WcteG2kfazZmEvJwE/rs:fit/g:sm/q:90/h:550/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTI4NzQ1/OS0xNzI0NDI5MjMy/LTU5ODEuanBlZw.jpeg"
+        }
+      ],
+      "artists_sort": "HammerFall",
+      "labels": [
+        {
+          "name": "Nuclear Blast",
+          "catno": "NB 265-2",
+          "entity_type": "1",
+          "entity_type_name": "Label",
+          "id": 11499,
+          "resource_url": "https://api.discogs.com/labels/11499",
+          "thumbnail_url": "https://i.discogs.com/pDTsV8iZuPrNkDNKbOYsOIqEEvA4ybN0NG-vGEYCEiY/rs:fit/g:sm/q:90/h:45/w:120/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTExNDk5/LTExMDU5ODI4MTku/anBn.jpeg"
+        }
+      ],
+      "series": [],
+      "companies": [],
+      "formats": [
+        {
+          "name": "CD",
+          "qty": "1",
+          "descriptions": [
+            "Album",
+            "Promo"
+          ]
+        }
+      ],
+      "data_quality": "Correct",
+      "community": {
+        "have": 401,
+        "want": 37,
+        "rating": {
+          "count": 25,
+          "average": 4.04
+        },
+        "submitter": {
+          "username": "zolike",
+          "resource_url": "https://api.discogs.com/users/zolike"
+        },
+        "contributors": [
+          {
+            "username": "zolike",
+            "resource_url": "https://api.discogs.com/users/zolike"
+          },
+          {
+            "username": "ReuterBJ",
+            "resource_url": "https://api.discogs.com/users/ReuterBJ"
+          },
+          {
+            "username": "Erlantzgur",
+            "resource_url": "https://api.discogs.com/users/Erlantzgur"
+          },
+          {
+            "username": "RudyVanGinneken",
+            "resource_url": "https://api.discogs.com/users/RudyVanGinneken"
+          }
+        ],
+        "data_quality": "Correct",
+        "status": "Accepted"
+      },
+      "format_quantity": 1,
+      "date_added": "2013-11-25T19:13:03-08:00",
+      "date_changed": "2024-08-18T06:53:36-07:00",
+      "num_for_sale": 13,
+      "lowest_price": 6.98,
+      "master_id": 156551,
+      "master_url": "https://api.discogs.com/masters/156551",
+      "title": "Glory To The Brave",
+      "country": "Germany",
+      "released": "1997",
+      "notes": "Promotional version in a cardboard sleeve.\r\n",
+      "released_formatted": "1997",
+      "identifiers": [
+        {
+          "type": "Barcode",
+          "value": "7 27361 62652 5"
+        }
+      ],
+      "videos": [
+        {
+          "uri": "https://www.youtube.com/watch?v=YLQtS84ccyk",
+          "title": "HAMMERFALL - Glory To The Brave (OFFICIAL MUSIC VIDEO)",
+          "description": "Official Music Video for Glory To The Brave by Hammerfall\nSUBSCRIBE to HAMMERFALL: http://bit.ly/subs-ham-yt\nSUBSCRIBE to NUCLEAR BLAST: http://bit.ly/subs-nb-yt\n\nTaken from the album \"Glory To The Brave\"",
+          "duration": 346,
+          "embed": true
+        },
+        {
+          "uri": "https://www.youtube.com/watch?v=n9k_HUq1Kd4",
+          "title": "Hammerfall - Glory To The Brave",
+          "description": "Una Canción De Hammerfall que me gusta mucho, que la disfruteis, aqui os dejo la letra:\r\n\r\nSnow is falling down on this glorious land\r\ncolors fading, turning into white again\r\nTo fallen heroes angels sting, they cry their winter tears\r\nendless mourning d",
+          "duration": 441,
+          "embed": true
+        },
+        {
+          "uri": "https://www.youtube.com/watch?v=YeySMqUqeWw",
+          "title": "HAMMERFALL - Glory to the Brave [Full Album 1997] + Bönus tracks",
+          "description": "0:00:00 - 01.The Dragon Lies Bleeding\n0:04:22 - 02.The Metal Age\n0:08:51 - 03.HammeFall\n0:13:38 - 04.I Believe\n0:18:32 - 05.Child Of The Damned (Warlord cover)\n0:22:15 - 06.Steel Meets Steel\n0:26:17 - 07.Stone Cold\n*\n0:32:00 - 09.Glory To The Brave\n0:39:2",
+          "duration": 3273,
+          "embed": true
+        },
+        {
+          "uri": "https://www.youtube.com/watch?v=QD1j8c3GBAo",
+          "title": "HAMMERFALL - GLORY TO THE BRAVE: 20TH ANNIVERSARY LTD. BOXSET EDITION unboxing",
+          "description": "All rights reserved!\nⓅ + Ⓒ 2017\nN u c l e a r    B l a s t   G m b H\n\nB U Y     T H E    M U S I C!\nR E S P E C T    T H E   A R T I S T S! \n\nBUY THE BOXSET HERE: http://www.nuclearblast.de/en/products/tontraeger/cd/2cd-digi-dvd/hammerfall-glory-to-th",
+          "duration": 121,
+          "embed": true
+        }
+      ],
+      "genres": [
+        "Rock"
+      ],
+      "styles": [
+        "Heavy Metal"
+      ],
+      "tracklist": [
+        {
+          "position": "1",
+          "type_": "track",
+          "title": "The Dragon Lies Bleeding",
+          "duration": "4:23"
+        },
+        {
+          "position": "2",
+          "type_": "track",
+          "title": "The Metal Age",
+          "duration": "4:29"
+        },
+        {
+          "position": "3",
+          "type_": "track",
+          "title": "Hammerfall",
+          "duration": "4:47"
+        },
+        {
+          "position": "4",
+          "type_": "track",
+          "title": "I Believe",
+          "duration": "4:54"
+        },
+        {
+          "position": "5",
+          "type_": "track",
+          "title": "Child Of The Damned",
+          "duration": "3:43"
+        },
+        {
+          "position": "6",
+          "type_": "track",
+          "title": "Steel Meets Steel",
+          "duration": "4:02"
+        },
+        {
+          "position": "7",
+          "type_": "track",
+          "title": "Stone Cold",
+          "duration": "5:43"
+        },
+        {
+          "position": "8",
+          "type_": "track",
+          "title": "Unchained",
+          "duration": "5:38"
+        },
+        {
+          "position": "9",
+          "type_": "track",
+          "title": "Glory To The Brave",
+          "duration": "7:20"
+        }
+      ],
+      "images": [
+        {
+          "type": "primary",
+          "uri": "https://i.discogs.com/UETvnaefHj6HfXSgYx8R1pc-juBrScOdt79dOSeH3gk/rs:fit/g:sm/q:90/h:596/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny04MTkyLmpwZWc.jpeg",
+          "resource_url": "https://i.discogs.com/UETvnaefHj6HfXSgYx8R1pc-juBrScOdt79dOSeH3gk/rs:fit/g:sm/q:90/h:596/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny04MTkyLmpwZWc.jpeg",
+          "uri150": "https://i.discogs.com/z-WOVc6-4Jj7uQfLfZlcOLKmTR6Pdal_cBRJm5WoBKY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny04MTkyLmpwZWc.jpeg",
+          "width": 600,
+          "height": 596
+        },
+        {
+          "type": "secondary",
+          "uri": "https://i.discogs.com/1b3kMvA0st-DAqrnqBqsFrSe4ZvabCMd0DYe6v16P9c/rs:fit/g:sm/q:90/h:588/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny0yODUxLmpwZWc.jpeg",
+          "resource_url": "https://i.discogs.com/1b3kMvA0st-DAqrnqBqsFrSe4ZvabCMd0DYe6v16P9c/rs:fit/g:sm/q:90/h:588/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny0yODUxLmpwZWc.jpeg",
+          "uri150": "https://i.discogs.com/KW3nH3jSVjAPP3m1WPlfb8RMIZ3RWX1be5mIWLfWvNI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny0yODUxLmpwZWc.jpeg",
+          "width": 600,
+          "height": 588
+        },
+        {
+          "type": "secondary",
+          "uri": "https://i.discogs.com/OpS402sG3McMd-M_EMah9klpxKh_eN8m9ef4Wm90UQU/rs:fit/g:sm/q:90/h:595/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny0zMDIxLmpwZWc.jpeg",
+          "resource_url": "https://i.discogs.com/OpS402sG3McMd-M_EMah9klpxKh_eN8m9ef4Wm90UQU/rs:fit/g:sm/q:90/h:595/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny0zMDIxLmpwZWc.jpeg",
+          "uri150": "https://i.discogs.com/f1vyTJ1vpQUPi_q4lHbrnXQxXuQJVuiI5gH4odUrKDw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny0zMDIxLmpwZWc.jpeg",
+          "width": 600,
+          "height": 595
+        },
+        {
+          "type": "secondary",
+          "uri": "https://i.discogs.com/nAo9UrKFpC3nxLJVz2lcn3ed_yRz-U5LuPbMy3fQRZs/rs:fit/g:sm/q:90/h:500/w:500/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTM4NTQzNTQ0/Ny0yNjU5LmpwZWc.jpeg",
+          "resource_url": "https://i.discogs.com/nAo9UrKFpC3nxLJVz2lcn3ed_yRz-U5LuPbMy3fQRZs/rs:fit/g:sm/q:90/h:500/w:500/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTM4NTQzNTQ0/Ny0yNjU5LmpwZWc.jpeg",
+          "uri150": "https://i.discogs.com/_Pf2rdQKautGW5sCYFQhJNuuCY6dp0dwqrdGaJSW2zk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTM4NTQzNTQ0/Ny0yNjU5LmpwZWc.jpeg",
+          "width": 500,
+          "height": 500
+        },
+        {
+          "type": "secondary",
+          "uri": "https://i.discogs.com/BlvNyfyW95VQsYv2Umv-Ax7sgwtPD-Ygw6MU0wqpoBs/rs:fit/g:sm/q:90/h:600/w:595/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTM4NTQzNTQz/Ni03ODc1LmpwZWc.jpeg",
+          "resource_url": "https://i.discogs.com/BlvNyfyW95VQsYv2Umv-Ax7sgwtPD-Ygw6MU0wqpoBs/rs:fit/g:sm/q:90/h:600/w:595/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTM4NTQzNTQz/Ni03ODc1LmpwZWc.jpeg",
+          "uri150": "https://i.discogs.com/rW3Cj8C8ow8bdVoktodUT-0WePjcCCkZYF56cm7pzJ8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTM4NTQzNTQz/Ni03ODc1LmpwZWc.jpeg",
+          "width": 595,
+          "height": 600
+        },
+        {
+          "type": "secondary",
+          "uri": "https://i.discogs.com/UNJOuHXwvEiEA1VNpHi-d5S7MBR72rZxwv1kKTvmHOs/rs:fit/g:sm/q:90/h:600/w:587/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcxOTY2NDQ3/Ny00NTkzLmpwZWc.jpeg",
+          "resource_url": "https://i.discogs.com/UNJOuHXwvEiEA1VNpHi-d5S7MBR72rZxwv1kKTvmHOs/rs:fit/g:sm/q:90/h:600/w:587/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcxOTY2NDQ3/Ny00NTkzLmpwZWc.jpeg",
+          "uri150": "https://i.discogs.com/pMct_YAwnpNqr7hk9vzgglUK6okvVbjh85UuUoDLYXQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcxOTY2NDQ3/Ny00NTkzLmpwZWc.jpeg",
+          "width": 587,
+          "height": 600
+        }
+      ],
+      "thumb": "https://i.discogs.com/z-WOVc6-4Jj7uQfLfZlcOLKmTR6Pdal_cBRJm5WoBKY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny04MTkyLmpwZWc.jpeg",
+      "estimated_weight": 85,
+      "blocked_from_sale": false,
+      "is_offensive": false
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Date": "Tue, 19 May 2026 23:31:55 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "x-discogs-ratelimit": "60",
+      "x-discogs-ratelimit-remaining": "37",
+      "x-discogs-ratelimit-used": "23",
+      "Set-Cookie": "__cf_bm=KAjaMuzYSp0PSsUSksF4LsP837Hqy1uWjaj2Y5sExeQ-1779233514.5956726-1.0.1.1-lLW44y5bQmv5u8jUq.0kqXr5U4ozcbUXT.UPUCVtKeJluqvfTXEFZl6Rsgem5JrdaKXVF1228HAarix60cj39gAYbWG98Ud1cCMPR1iC0yg3I2Yql22SukAAyxAnpL1f; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:01:55 GMT",
+      "cf-cache-status": "DYNAMIC",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6e5da3a1dd804-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

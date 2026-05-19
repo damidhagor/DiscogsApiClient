@@ -1,0 +1,1258 @@
+{
+  "Guid": "1ad06f8b-a4ce-4e84-87bd-657319d94eab",
+  "UpdatedAt": "2026-05-19T23:31:54.6482622Z",
+  "Title": "Proxy Mapping for GET /artists/287459/releases",
+  "Description": "Proxy Mapping for GET /artists/287459/releases",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/artists/287459/releases",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "GET"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Authorization",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "Discogs token=*",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ],
+    "Params": [
+      {
+        "Name": "page",
+        "Matchers": [
+          {
+            "Name": "ExactMatcher",
+            "Pattern": "2",
+            "IgnoreCase": false
+          }
+        ]
+      },
+      {
+        "Name": "per_page",
+        "Matchers": [
+          {
+            "Name": "ExactMatcher",
+            "Pattern": "50",
+            "IgnoreCase": false
+          }
+        ]
+      }
+    ]
+  },
+  "Response": {
+    "StatusCode": 200,
+    "BodyAsJson": {
+      "pagination": {
+        "page": 2,
+        "pages": 9,
+        "per_page": 50,
+        "items": 436,
+        "urls": {
+          "first": "https://api.discogs.com/artists/287459/releases?page=1&per_page=50",
+          "last": "https://api.discogs.com/artists/287459/releases?page=9&per_page=50",
+          "prev": "https://api.discogs.com/artists/287459/releases?page=1&per_page=50",
+          "next": "https://api.discogs.com/artists/287459/releases?page=3&per_page=50"
+        }
+      },
+      "releases": [
+        {
+          "id": 1591458,
+          "title": "Dominion",
+          "type": "master",
+          "main_release": 14344492,
+          "artist": "HammerFall",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/1591458",
+          "year": 2019,
+          "thumb": "https://i.discogs.com/1iGJUKEVRN-i9wM2Ds5MVYXEQZO87DZxwuakRx3kmcg/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0MzQ0/NDkyLTE1ODM3Nzk3/ODQtMTc2NS5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 24,
+              "in_collection": 20
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 1829615,
+          "title": "Second To One",
+          "type": "master",
+          "main_release": 14739140,
+          "artist": "HammerFall",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/1829615",
+          "year": 2020,
+          "thumb": "https://i.discogs.com/wIx-y8NJ7cOoGR3OxCR1m0pHGrmgdiez5aJeQpQ2wvg/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0NzM5/MTQwLTE1ODA2NDM3/NzQtNDc4OC5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 42,
+              "in_collection": 73
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 1826779,
+          "title": "Live! Against The World",
+          "type": "master",
+          "main_release": 16044049,
+          "artist": "HammerFall",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/1826779",
+          "year": 2020,
+          "thumb": "https://i.discogs.com/AX4zNcpP_BshaDWa2Zvz8rJsX87i6fB-Uclo37Cs3aQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE2MDQ0/MDQ5LTE2MDI0MzM4/NDAtNTI5My5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 50,
+              "in_collection": 332
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 27685044,
+          "status": "Accepted",
+          "type": "release",
+          "format": "12\", S/Sided",
+          "label": "Napalm Records",
+          "title": "Brotherhood",
+          "resource_url": "https://api.discogs.com/releases/27685044",
+          "role": "Main",
+          "artist": "HammerFall",
+          "year": 2022,
+          "thumb": "https://i.discogs.com/R5FR5dlxHkcPQJOL3GbSx9q52rOoQCgk818TKBxJe4o/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI3Njg1/MDQ0LTE2OTgwMTA1/NTMtMjY1Ni5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 23,
+              "in_collection": 28
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 2523925,
+          "title": "Hammer Of Dawn",
+          "type": "master",
+          "main_release": 22279540,
+          "artist": "HammerFall",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/2523925",
+          "year": 2022,
+          "thumb": "https://i.discogs.com/afe0M2XlquMu4epPiWACBoEg_JDykFfMQkx-BMWKmak/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIyMjc5/NTQwLTE2NDY2MDY5/ODktNTcwNy5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 70,
+              "in_collection": 964
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 31853666,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Single",
+          "label": "Nuclear Blast Records",
+          "title": "Game Of Thrones",
+          "resource_url": "https://api.discogs.com/releases/31853666",
+          "role": "Main",
+          "artist": "HammerFall",
+          "year": 2024,
+          "thumb": "https://i.discogs.com/k8N5HRBzXSwqMTxpfd72aAWvJLnFa8EtI7oCxpaeMVM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMxODUz/NjY2LTE3Mjc1MzA4/MzEtMjU1OC5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 12,
+              "in_collection": 29
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 3565319,
+          "title": "Avenge The Fallen",
+          "type": "master",
+          "main_release": 31441397,
+          "artist": "HammerFall",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/3565319",
+          "year": 2024,
+          "thumb": "https://i.discogs.com/O8EcxvQ4Ey6Mt9gti0pxmccOd6HxHXClesRy8EqzQBA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMxNDQx/Mzk3LTE3MjMyMjYy/MDItMjY0OC5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 40,
+              "in_collection": 375
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 10001148,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD",
+          "label": "Nuclear Blast",
+          "title": "Untitled",
+          "resource_url": "https://api.discogs.com/releases/10001148",
+          "role": "Main",
+          "artist": "HammerFall",
+          "thumb": "https://i.discogs.com/HIpO7WJvxXzDXJXC7v_DxeSb4V0LQdQ9NOOxNG3O-fw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEwMDAx/MTQ4LTE1MTI4NDEy/MDgtMjQzOS5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 21,
+              "in_collection": 16
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 29417545,
+          "status": "Accepted",
+          "type": "release",
+          "format": "DVD, Promo",
+          "label": "Acuvue",
+          "title": "The Fire Burns Forever",
+          "resource_url": "https://api.discogs.com/releases/29417545",
+          "role": "Main",
+          "artist": "HammerFall",
+          "thumb": "https://i.discogs.com/vQ654CWhcyy4rdADb-jRbv54dvkDWHXEromdCE15RH4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI5NDE3/NTQ1LTE3MDQ2Mjcy/OTItODE2NC5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 1,
+              "in_collection": 1
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 12157031,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Comp, Promo",
+          "label": "The Album Network",
+          "title": "Aggro-Active Tuneup Number 8",
+          "resource_url": "https://api.discogs.com/releases/12157031",
+          "role": "Producer",
+          "artist": "Various",
+          "trackinfo": "Legacy Of Kings",
+          "year": 1998,
+          "thumb": "https://i.discogs.com/ibDI7To7lQThdBHxTQ676wuk1oWq0442Wguxv_Ubco0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEyMTU3/MDMxLTE1NTMxNDIz/NTMtMTI2OS5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 4,
+              "in_collection": 4
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 425931,
+          "title": "Power From The North - Sweden Rocks The World",
+          "type": "master",
+          "main_release": 1683710,
+          "artist": "Various",
+          "role": "Producer",
+          "resource_url": "https://api.discogs.com/masters/425931",
+          "year": 2000,
+          "thumb": "https://i.discogs.com/io3qL7rbxcM0r1C6uFOhaL3cA8MJNywvzk2yJyRbRzk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE2ODM3/MTAtMTIzNjcwMjc3/MC5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 26,
+              "in_collection": 178
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 532370,
+          "title": "Twisted Forever: A Tribute To The Legendary Twisted Sister",
+          "type": "master",
+          "main_release": 10538960,
+          "artist": "Various",
+          "role": "Producer",
+          "resource_url": "https://api.discogs.com/masters/532370",
+          "year": 2001,
+          "thumb": "https://i.discogs.com/Ibi968SslqkxSXBew1qfWXuZNizXsIZ8w4g3nvxC77M/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEwNTM4/OTYwLTE0OTk1MDA5/NTktMTE5OS5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 8,
+              "in_collection": 23
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 596643,
+          "title": "A Tribute To The Priest",
+          "type": "master",
+          "main_release": 5073882,
+          "artist": "Various",
+          "role": "Producer",
+          "resource_url": "https://api.discogs.com/masters/596643",
+          "year": 2002,
+          "thumb": "https://i.discogs.com/y3P2_1_Fia9WTDcnOC5LqC8et_7AJPdIKslpTXHomp4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUwNzM4/ODItMTU0OTc5ODAw/MS0yMTcwLmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 4,
+              "in_collection": 10
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 2732405,
+          "title": "Metal Dreams Vol. 4",
+          "type": "master",
+          "main_release": 3493318,
+          "artist": "Various",
+          "role": "Producer",
+          "resource_url": "https://api.discogs.com/masters/2732405",
+          "year": 2002,
+          "thumb": "https://i.discogs.com/22yvr0yruFt_SKJrhYXPmm0Ajlk-Q_tf-4wUTM0-K0E/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM0OTMz/MTgtMTY2MTQ2MzE2/Ny01NDYzLmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 19,
+              "in_collection": 104
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 746421,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Album",
+          "label": "Universal",
+          "title": "Alla Tiders Melodifestival",
+          "resource_url": "https://api.discogs.com/releases/746421",
+          "role": "Producer",
+          "artist": "Various",
+          "trackinfo": "När Vindarna Viskar Mi...",
+          "year": 2005,
+          "thumb": "https://i.discogs.com/pMfBee7nAeQ9f-tUuWg9haIfx2GcIYKR6Hm_Fa0WGJo/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTc0NjQy/MS0xMzIwOTUwNzA5/LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 8,
+              "in_collection": 41
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 13486116,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Comp",
+          "label": "NEMS Enterprises",
+          "title": "A Tribute To Priest",
+          "resource_url": "https://api.discogs.com/releases/13486116",
+          "role": "Producer",
+          "artist": "Various",
+          "trackinfo": "Breaking The Law",
+          "year": 2005,
+          "thumb": "https://i.discogs.com/9inozeiVC376FX1tNBxDXzCg80ot9WMsKqgLkd120aQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzNDg2/MTE2LTE1ODYxMTc1/MjktNTQ5OS5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 5,
+              "in_collection": 5
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 532370,
+          "title": "Twisted Forever: A Tribute To The Legendary Twisted Sister",
+          "type": "master",
+          "main_release": 10538960,
+          "artist": "Various",
+          "role": "Mixed by",
+          "resource_url": "https://api.discogs.com/masters/532370",
+          "year": 2001,
+          "thumb": "https://i.discogs.com/Ibi968SslqkxSXBew1qfWXuZNizXsIZ8w4g3nvxC77M/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEwNTM4/OTYwLTE0OTk1MDA5/NTktMTE5OS5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 8,
+              "in_collection": 23
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 36546811,
+          "status": "Accepted",
+          "type": "release",
+          "format": "VHS, Comp, PAL",
+          "label": "Samson video Productions",
+          "title": "Metal warriors  Video Magazine Volume 1",
+          "resource_url": "https://api.discogs.com/releases/36546811",
+          "role": "Appearance",
+          "artist": "Various",
+          "year": 1998,
+          "thumb": "https://i.discogs.com/ox4zyBQjI47HuEZbsVnP0RNmm1VtMZ2fgpZ6Cv2y2zA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM2NTQ2/ODExLTE3NzE0NTgz/NjktMjQxMy5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 0,
+              "in_collection": 1
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 7919410,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CDr, Album",
+          "label": "Not On Label (Epitaf (2) Self-Released)",
+          "title": "Bludička",
+          "resource_url": "https://api.discogs.com/releases/7919410",
+          "role": "Appearance",
+          "artist": "Epitaf (2)",
+          "trackinfo": "Budík",
+          "year": 2001,
+          "thumb": "https://i.discogs.com/Csykd5sBH7SNKLtY3k-uXlHQGb-3GKMrIN1RweBdr60/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTc5MTk0/MTAtMTQ1MTY3MzA3/Mi0xOTgzLmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 6,
+              "in_collection": 2
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 532370,
+          "title": "Twisted Forever: A Tribute To The Legendary Twisted Sister",
+          "type": "master",
+          "main_release": 10538960,
+          "artist": "Various",
+          "role": "Appearance",
+          "resource_url": "https://api.discogs.com/masters/532370",
+          "year": 2001,
+          "thumb": "https://i.discogs.com/Ibi968SslqkxSXBew1qfWXuZNizXsIZ8w4g3nvxC77M/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEwNTM4/OTYwLTE0OTk1MDA5/NTktMTE5OS5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 8,
+              "in_collection": 23
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 301024,
+          "title": "Hearts On Fire",
+          "type": "master",
+          "main_release": 6296588,
+          "artist": "Hammerfall",
+          "role": "Appearance",
+          "resource_url": "https://api.discogs.com/masters/301024",
+          "year": 2002,
+          "thumb": "https://i.discogs.com/LHJb9s1ZaX0wM6mJgZNMKOqrUp76pUd37ajoK2da3Nw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYyOTY1/ODgtMTU4NTU5ODUz/Ni00MzQwLmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 13,
+              "in_collection": 35
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 934826,
+          "title": "Way To The Sun",
+          "type": "master",
+          "main_release": 7902136,
+          "artist": "Holdaar",
+          "role": "Appearance",
+          "resource_url": "https://api.discogs.com/masters/934826",
+          "year": 2015,
+          "thumb": "https://i.discogs.com/S6Y8RDu9CcH-HVUqL3nH9TcuAVKXvXfsisU1Sfe_UYw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTc5MDIx/MzYtMTQ1MTMwMzgw/My01NDg4LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 18,
+              "in_collection": 18
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 14253362,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CDr, EP",
+          "label": "Not On Label (Burning Shadows Self-released)",
+          "title": "The Last One To Fall: Forgotten Lore",
+          "resource_url": "https://api.discogs.com/releases/14253362",
+          "role": "Appearance",
+          "artist": "Burning Shadows",
+          "trackinfo": "Dreamland, Legacy Of K...",
+          "year": 2016,
+          "thumb": "https://i.discogs.com/Qh9iNYtzLGtkzvxeQTEKltAb3nR6jTTzk2pILKssmKk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0MjUz/MzYyLTE1NzA4MDM3/NjEtOTIzNS5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 9,
+              "in_collection": 4
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 1300204,
+          "title": "Into The Fire",
+          "type": "master",
+          "main_release": 14287004,
+          "artist": "Don't Drop The Sword",
+          "role": "Appearance",
+          "resource_url": "https://api.discogs.com/masters/1300204",
+          "year": 2019,
+          "thumb": "https://i.discogs.com/krP_SxfcMh3Lk3nlhi7LKtwftzC2naMFfcf36FeXScQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0Mjg3/MDA0LTE1NzE0OTIy/MDUtNDc0NC5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 9,
+              "in_collection": 51
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 553088,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Comp, Promo",
+          "label": "Metal Hammer",
+          "title": "Off Road Tracks Vol.  4",
+          "resource_url": "https://api.discogs.com/releases/553088",
+          "role": "TrackAppearance",
+          "artist": "Various",
+          "trackinfo": "Hammerfall",
+          "year": 1997,
+          "thumb": "https://i.discogs.com/M_flrurf9POzdasTEaeBGLjJvfWl0IjHWshNyERAz2c/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU1MzA4/OC0xMjkwMjc0NTM5/LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 12,
+              "in_collection": 176
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 714555,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Comp",
+          "label": "Spinefarm Records",
+          "title": "Metalliliitto",
+          "resource_url": "https://api.discogs.com/releases/714555",
+          "role": "TrackAppearance",
+          "artist": "Various",
+          "trackinfo": "Hammerfall",
+          "year": 1997,
+          "thumb": "https://i.discogs.com/8JPfPkwfVwM3L-m8ynVIrnlZFGn33MMKmm9ZFeGkLCs/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTcxNDU1/NS0xNDY0MzU0NDc0/LTQ2NTYuanBlZw.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 20,
+              "in_collection": 153
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 948040,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Smplr",
+          "label": "Nuclear Blast",
+          "title": "Nuclear Blast Soundcheck - Series - Volume 11",
+          "resource_url": "https://api.discogs.com/releases/948040",
+          "role": "TrackAppearance",
+          "artist": "Various",
+          "trackinfo": "Hammerfall",
+          "year": 1997,
+          "thumb": "https://i.discogs.com/uSiIGqixXb6oDNsj9DtG5I2vRhmtlirA5bM4d9wRfGM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTk0ODA0/MC0xMTc2NTY1OTQx/LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 11,
+              "in_collection": 91
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 1191191,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Promo, Smplr",
+          "label": "Nuclear Blast",
+          "title": "Nuclear Blast Festivals",
+          "resource_url": "https://api.discogs.com/releases/1191191",
+          "role": "TrackAppearance",
+          "artist": "Various",
+          "trackinfo": "Hammerfall",
+          "year": 1997,
+          "thumb": "https://i.discogs.com/VwAkZIE2iEG0VHvdYLXworTXKhZ7nngtCxg79QHymqo/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExOTEx/OTEtMTE5OTYxMTE3/Ni5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 2,
+              "in_collection": 21
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 1349371,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Comp",
+          "label": "RockHard",
+          "title": "Dynamit Vol. 7",
+          "resource_url": "https://api.discogs.com/releases/1349371",
+          "role": "TrackAppearance",
+          "artist": "Various",
+          "trackinfo": "Hammerfall",
+          "year": 1997,
+          "thumb": "https://i.discogs.com/rZqyu1K_OZEUOd6ymZwUFrFqnil8DcR_KCR1AjjSdi0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzNDkz/NzEtMTIxMTgwMTE3/OC5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 11,
+              "in_collection": 268
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 1538446,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Smplr",
+          "label": "Nuclear Blast, Close-Up Magazine",
+          "title": "10 Years Nuclear Blast",
+          "resource_url": "https://api.discogs.com/releases/1538446",
+          "role": "TrackAppearance",
+          "artist": "Various",
+          "trackinfo": "Hammerfall",
+          "year": 1997,
+          "thumb": "https://i.discogs.com/dM6r6KegutHzR78lpgLwO8BktK1JJZ8rYhhbjOKOx3E/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE1Mzg0/NDYtMTIyNjkzMTI0/Mi5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 4,
+              "in_collection": 81
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 3222971,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Comp, Enh, Promo",
+          "label": "Rock Extremum Records",
+          "title": "Rock Extremum 3/97",
+          "resource_url": "https://api.discogs.com/releases/3222971",
+          "role": "TrackAppearance",
+          "artist": "Various",
+          "trackinfo": "The Dragon Lies Bleeding",
+          "year": 1997,
+          "thumb": "https://i.discogs.com/VZqGBzfXUSbwHQaNiuQxW0jNP7J0rPvtppcvxUMj0ng/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMyMjI5/NzEtMTMyMTE0NDAy/MC5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 4,
+              "in_collection": 11
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 7763196,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Mini, Club, Smplr",
+          "label": "Pure Metal Club",
+          "title": "Pure Metal Sampler (Club Members' Edition 1997 Vol. 2)",
+          "resource_url": "https://api.discogs.com/releases/7763196",
+          "role": "TrackAppearance",
+          "artist": "Various",
+          "trackinfo": "The Dragon Lies Bleeding",
+          "year": 1997,
+          "thumb": "https://i.discogs.com/OPrhN8OmOLQ8JVjgcTlqoGRIbw-jWyHJE2h6GYVV0i8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTc3NjMx/OTYtMTc1MTUxNzk1/OC03MTcyLmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 0,
+              "in_collection": 2
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 9453243,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Comp",
+          "label": "Rockfabrik",
+          "title": "No Mercy On X-mas",
+          "resource_url": "https://api.discogs.com/releases/9453243",
+          "role": "TrackAppearance",
+          "artist": "Various",
+          "trackinfo": "Hammerfall",
+          "year": 1997,
+          "thumb": "https://i.discogs.com/iC1i5u-ciROilmfh3AbGRImBosttZQMYHgwj6cFaOxs/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTk0NTMy/NDMtMTQ4MTE0MjY3/OC02NjM5LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 3,
+              "in_collection": 10
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 12563937,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Comp",
+          "label": "Not On Label",
+          "title": "Metal Ballads",
+          "resource_url": "https://api.discogs.com/releases/12563937",
+          "role": "TrackAppearance",
+          "artist": "Various",
+          "trackinfo": "Can't Let Go, Glory To...",
+          "year": 1997,
+          "thumb": "https://i.discogs.com/cusHirb7A1ErY3Ayrs0EJ7i5apaSknMW26OQw0ixor4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEyNTYz/OTM3LTE1Mzc3MDI0/MjItMzA0MC5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 0,
+              "in_collection": 2
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 23619362,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Comp, Promo",
+          "label": "Morbid Noizz Productions",
+          "title": "Morbid Noizz 4th Issue",
+          "resource_url": "https://api.discogs.com/releases/23619362",
+          "role": "TrackAppearance",
+          "artist": "Various",
+          "trackinfo": "Hammerfall",
+          "year": 1997,
+          "thumb": "https://i.discogs.com/d_ObFwlCBPF_z49vKQVtvdVHD66IRNlntWvgoZAeY7E/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIzNjE5/MzYyLTE2NTU1ODI5/MTctNzM1OS5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 3,
+              "in_collection": 6
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 308142,
+          "title": "10 Years Nuclear Blast",
+          "type": "master",
+          "main_release": 18809389,
+          "artist": "Various",
+          "role": "TrackAppearance",
+          "resource_url": "https://api.discogs.com/masters/308142",
+          "year": 1997,
+          "thumb": "https://i.discogs.com/XrpJyl-JhBZwf1zlFeAm5-vCTEiDJftjO78Ghsyn6-Q/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE4ODA5/Mzg5LTE2MjE1MzI5/OTItMjIzMi5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 13,
+              "in_collection": 57
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 1325045,
+          "title": "Stahlmaster Vol.3",
+          "type": "master",
+          "main_release": 7885226,
+          "artist": "Various",
+          "role": "TrackAppearance",
+          "resource_url": "https://api.discogs.com/masters/1325045",
+          "year": 1997,
+          "thumb": "https://i.discogs.com/9wKqT-6aQquE5Tp9QRDn5nYcCKBXFd2-McyCY2KAGAI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTc4ODUy/MjYtMTQ1MDg5ODYw/My0xNjA5LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 7,
+              "in_collection": 61
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 417441,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Comp",
+          "label": "Nuclear Blast",
+          "title": "Nuclear Blast Soundcheck - Series - Volume 15",
+          "resource_url": "https://api.discogs.com/releases/417441",
+          "role": "TrackAppearance",
+          "artist": "Various",
+          "trackinfo": "Legacy Of Kings",
+          "year": 1998,
+          "thumb": "https://i.discogs.com/90GbmAVtHmgMkqzk2JZXMZos4O0Cu6WurJgAGaefOzs/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQxNzQ0/MS0xNTMwMTgzNDgy/LTU3NTAuanBlZw.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 14,
+              "in_collection": 114
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 561653,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Comp, Promo",
+          "label": "Metal Hammer",
+          "title": "Off Road Tracks Vol. 11",
+          "resource_url": "https://api.discogs.com/releases/561653",
+          "role": "TrackAppearance",
+          "artist": "Various",
+          "trackinfo": "Legacy Of Kings",
+          "year": 1998,
+          "thumb": "https://i.discogs.com/CXm7qmYhtA6DbqEYkQaSLa7a5fO2hYRUWTbWJsKK5mo/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU2MTY1/My0xMTMxNzUwMDgy/LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 12,
+              "in_collection": 134
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 924908,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Comp, Promo",
+          "label": "RockHard",
+          "title": "Dynamit Vol.  13",
+          "resource_url": "https://api.discogs.com/releases/924908",
+          "role": "TrackAppearance",
+          "artist": "Various",
+          "trackinfo": "Legacy Of Kings",
+          "year": 1998,
+          "thumb": "https://i.discogs.com/RT83TUvc6zayuJ5wMe7e4TL67srE79pgej8Hq8bHOGg/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTkyNDkw/OC0xMjAwMTY0OTE1/LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 14,
+              "in_collection": 253
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 1805687,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Comp, Enh, Promo",
+          "label": "Psycho!",
+          "title": "Psychosonic! Vol. 1",
+          "resource_url": "https://api.discogs.com/releases/1805687",
+          "role": "TrackAppearance",
+          "artist": "Various",
+          "trackinfo": "The Metal Age",
+          "year": 1998,
+          "thumb": "https://i.discogs.com/lWLiVw_NhGYjFTWW0N7z9SyjjabNlzLjpXjxmgpRMX0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE4MDU2/ODctMTI0NDY1OTY5/Ni5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 7,
+              "in_collection": 78
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 2766237,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Comp, Promo",
+          "label": "Hard Rock",
+          "title": "Hard Rock N°23",
+          "resource_url": "https://api.discogs.com/releases/2766237",
+          "role": "TrackAppearance",
+          "artist": "Various",
+          "trackinfo": "Steel Meets Steel (Live)",
+          "year": 1998,
+          "thumb": "https://i.discogs.com/LxbHcdpPc_h5szdSJaOhfhXggfGsCDlqxJ4JqlLzN1k/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI3NjYy/MzctMTQ5ODY3NDIy/OC04ODQwLmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 5,
+              "in_collection": 92
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 3200544,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Comp",
+          "label": "Not On Label",
+          "title": "Unbroken Metal",
+          "resource_url": "https://api.discogs.com/releases/3200544",
+          "role": "TrackAppearance",
+          "artist": "Various",
+          "trackinfo": "I Believe (Live)",
+          "year": 1998,
+          "thumb": "https://i.discogs.com/UuZqwvN7eyMwfJqrHzSC_CzZ_2cAqLrjW06FY-KMC9g/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMyMDA1/NDQtMTMyMDI3NDQy/MS5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 22,
+              "in_collection": 42
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 3380244,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Comp",
+          "label": "Spinefarm Records",
+          "title": "HellDorado II",
+          "resource_url": "https://api.discogs.com/releases/3380244",
+          "role": "TrackAppearance",
+          "artist": "Various",
+          "trackinfo": "Heeding The Call",
+          "year": 1998,
+          "thumb": "https://i.discogs.com/l04u4c1Z5uNHpQYkT7vHR-MgYPPt5cOhRmLss-LvcqE/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMzODAy/NDQtMTM2MjgzNTQy/NS0yODM2LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 7,
+              "in_collection": 78
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 5540031,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Smplr",
+          "label": "Victor, T&T, Metal Blade Records",
+          "title": "Pure Metal Sampler Vol. 11",
+          "resource_url": "https://api.discogs.com/releases/5540031",
+          "role": "TrackAppearance",
+          "artist": "Various",
+          "trackinfo": "Heeding The Call",
+          "year": 1998,
+          "thumb": "https://i.discogs.com/q7XYrIjrAXQfa3sP-24ygJvPXtzGHCx6hWGSheIyUvM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU1NDAw/MzEtMTM5NjAxMjQz/OC04NjEwLmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 7,
+              "in_collection": 4
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 6272048,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Comp, Promo",
+          "label": "Brave Words & Bloody Knuckles",
+          "title": "Blood Tracks I",
+          "resource_url": "https://api.discogs.com/releases/6272048",
+          "role": "TrackAppearance",
+          "artist": "Various",
+          "trackinfo": "Heeding The Call",
+          "year": 1998,
+          "thumb": "https://i.discogs.com/HUh_f9gTre_HwTGKqqyX-yhSx2sliTIkLMqX5EYiJXw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYyNzIw/NDgtMTQxNTI4OTgw/NS0xNDE4LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 9,
+              "in_collection": 34
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 6347075,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Comp, Smplr",
+          "label": "Magazín Whiplash",
+          "title": "Whiplash Vol. 0 ",
+          "resource_url": "https://api.discogs.com/releases/6347075",
+          "role": "TrackAppearance",
+          "artist": "Various",
+          "trackinfo": "Dreamland",
+          "year": 1998,
+          "thumb": "https://i.discogs.com/-FtP3Ib-VwK3HmJWFnZ-czkQxP8SnXbiH3UIjFyhQxA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYzNDcw/NzUtMTQ0OTM0NDk0/NC0yNDU0LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 3,
+              "in_collection": 9
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 6872267,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Album, Comp, Promo",
+          "label": "Grinder Magazine",
+          "title": "Grinder ...Extreme Metal Underground Magazine - Super Natural Extremities",
+          "resource_url": "https://api.discogs.com/releases/6872267",
+          "role": "TrackAppearance",
+          "artist": "Various",
+          "trackinfo": "Raven Lord",
+          "year": 1998,
+          "thumb": "https://i.discogs.com/ndDRuptg2dn2sCYm7ig1jOed_Do0QEF8AUSH3egdCmc/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTY4NzIy/NjctMTQyODQzMDcy/NS03MzgwLmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 7,
+              "in_collection": 6
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 6994428,
+          "status": "Accepted",
+          "type": "release",
+          "format": "VHS",
+          "label": "Nuclear Blast",
+          "title": "Live In Eindhoven",
+          "resource_url": "https://api.discogs.com/releases/6994428",
+          "role": "TrackAppearance",
+          "artist": "Various",
+          "trackinfo": "Hammerfall",
+          "year": 1998,
+          "thumb": "https://i.discogs.com/TcI2ZyQ6OHZfHm-DPEq9XBF5mI8gG-uMy2AH0t7OjPA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTY5OTQ0/MjgtMTc3ODM5Mzky/NC0yNDYyLmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 10,
+              "in_collection": 59
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 7034217,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Comp, Promo",
+          "label": "CNR Music",
+          "title": "Planete Hard",
+          "resource_url": "https://api.discogs.com/releases/7034217",
+          "role": "TrackAppearance",
+          "artist": "Various",
+          "trackinfo": "Legacy Of Kings",
+          "year": 1998,
+          "thumb": "https://i.discogs.com/Za1nA_pquwsF02c-NhZCkkIples_o6r9NLEub-LQ4pE/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTcwMzQy/MTctMTQzMjE1NTUz/Ny0yNzY2LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 4,
+              "in_collection": 43
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        }
+      ]
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Content-Language": "en",
+      "Date": "Tue, 19 May 2026 23:31:55 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Access-Control-Allow-Headers": "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID",
+      "Access-Control-Allow-Methods": "HEAD,OPTIONS,GET,OPTIONS",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Expose-Headers": "Location",
+      "Cache-Control": "public, must-revalidate",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "X-Content-Type-Options": "nosniff",
+      "x-discogs-media-type": "discogs.v2",
+      "x-discogs-ratelimit": "60",
+      "x-discogs-ratelimit-remaining": "16",
+      "x-discogs-ratelimit-used": "44",
+      "X-Frame-Options": "SAMEORIGIN",
+      "X-XSS-Protection": "1; mode=block",
+      "Set-Cookie": "__cf_bm=c90c7GLpsPc2cWZyp8BqOtpTndSEazMihIzPopjtXzw-1779233514.9385939-1.0.1.1-8q45ZWwTMThAkm42xUEW.D1.LcSDuvqTJW5P35BTxVOyr_mHuK2TB.ZXkkcKyRt77l0mDsAYK0j_4s4pf5DNvxaFjsLuVDaJAki3xpNGTLXd3dXoj4xOhWRX7TXHlDyw; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:01:55 GMT",
+      "cf-cache-status": "DYNAMIC",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6e5dc5a7af80b-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

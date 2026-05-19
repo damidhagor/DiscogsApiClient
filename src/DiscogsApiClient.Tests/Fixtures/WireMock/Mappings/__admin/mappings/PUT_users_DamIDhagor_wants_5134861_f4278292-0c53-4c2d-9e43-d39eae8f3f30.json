@@ -1,0 +1,136 @@
+{
+  "Guid": "f4278292-0c53-4c2d-9e43-d39eae8f3f30",
+  "UpdatedAt": "2026-05-19T23:36:57.9874574Z",
+  "Title": "Proxy Mapping for PUT /users/DamIDhagor/wants/5134861",
+  "Description": "Proxy Mapping for PUT /users/DamIDhagor/wants/5134861",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/users/DamIDhagor/wants/5134861",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "PUT"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Authorization",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "Discogs token=*",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Content-Length",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ],
+    "Body": {
+      "Matcher": {
+        "Name": "ExactMatcher",
+        "Pattern": "",
+        "IgnoreCase": true
+      }
+    }
+  },
+  "Response": {
+    "StatusCode": 201,
+    "BodyAsJson": {
+      "id": 5134861,
+      "resource_url": "https://api.discogs.com/users/DamIDhagor/wants/5134861",
+      "date_added": "2026-05-19T10:51:53-07:00",
+      "basic_information": {
+        "id": 5134861,
+        "master_id": 156551,
+        "master_url": "https://api.discogs.com/masters/156551",
+        "resource_url": "https://api.discogs.com/releases/5134861",
+        "title": "Glory To The Brave",
+        "year": 1997,
+        "formats": [
+          {
+            "name": "CD",
+            "qty": "1",
+            "descriptions": [
+              "Album",
+              "Promo"
+            ]
+          }
+        ],
+        "artists": [
+          {
+            "name": "HammerFall",
+            "anv": "",
+            "join": "",
+            "role": "",
+            "tracks": "",
+            "id": 287459,
+            "resource_url": "https://api.discogs.com/artists/287459"
+          }
+        ],
+        "labels": [
+          {
+            "name": "Nuclear Blast",
+            "catno": "NB 265-2",
+            "entity_type": "1",
+            "entity_type_name": "Label",
+            "id": 11499,
+            "resource_url": "https://api.discogs.com/labels/11499"
+          }
+        ],
+        "thumb": "https://i.discogs.com/z-WOVc6-4Jj7uQfLfZlcOLKmTR6Pdal_cBRJm5WoBKY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny04MTkyLmpwZWc.jpeg",
+        "cover_image": "https://i.discogs.com/UETvnaefHj6HfXSgYx8R1pc-juBrScOdt79dOSeH3gk/rs:fit/g:sm/q:90/h:596/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny04MTkyLmpwZWc.jpeg",
+        "genres": [
+          "Rock"
+        ],
+        "styles": [
+          "Heavy Metal"
+        ]
+      },
+      "rating": 0,
+      "notes": ""
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Content-Length": "1170",
+      "Date": "Tue, 19 May 2026 23:36:58 GMT",
+      "Connection": "keep-alive",
+      "Strict-Transport-Security": "max-age=15552000",
+      "x-discogs-ratelimit": "60",
+      "x-discogs-ratelimit-remaining": "57",
+      "x-discogs-ratelimit-used": "3",
+      "Set-Cookie": "__cf_bm=gWWew.Z9VvWWgPDvyNj7gxdXl_w4UTRuRmzJ3hE4Gqo-1779233818.2298691-1.0.1.1-bjp9izuqY2n4D_T6BigATp5C.2lmtdtCBaQ5e5w7MNpc3DiWDIcy_hu6gqquItxCPD0ZzaZsYlyMiDAyPm_IuDukFDQSktK_ij9PJu34LwKEgQcaYf3BQ5cFOb3GZ7q4; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:06:58 GMT",
+      "cf-cache-status": "DYNAMIC",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6ed43eaedf95e-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

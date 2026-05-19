@@ -1,0 +1,262 @@
+{
+  "Guid": "77d5b684-4c92-4550-a2d0-f57d016430d7",
+  "UpdatedAt": "2026-05-19T23:31:54.627329Z",
+  "Title": "Proxy Mapping for GET /labels/11499",
+  "Description": "Proxy Mapping for GET /labels/11499",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/labels/11499",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "GET"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Authorization",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "Discogs token=*",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ]
+  },
+  "Response": {
+    "StatusCode": 200,
+    "BodyAsJson": {
+      "id": 11499,
+      "name": "Nuclear Blast",
+      "resource_url": "https://api.discogs.com/labels/11499",
+      "uri": "https://www.discogs.com/label/11499-Nuclear-Blast",
+      "releases_url": "https://api.discogs.com/labels/11499/releases",
+      "images": [
+        {
+          "type": "primary",
+          "uri": "https://i.discogs.com/pDTsV8iZuPrNkDNKbOYsOIqEEvA4ybN0NG-vGEYCEiY/rs:fit/g:sm/q:90/h:45/w:120/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTExNDk5/LTExMDU5ODI4MTku/anBn.jpeg",
+          "resource_url": "https://i.discogs.com/pDTsV8iZuPrNkDNKbOYsOIqEEvA4ybN0NG-vGEYCEiY/rs:fit/g:sm/q:90/h:45/w:120/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTExNDk5/LTExMDU5ODI4MTku/anBn.jpeg",
+          "uri150": "https://i.discogs.com/xeNkHbejztgPhB2YKAXg08CAfgmZ2yBqH2vRXlsWTsQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTExNDk5/LTExMDU5ODI4MTku/anBn.jpeg",
+          "width": 120,
+          "height": 45
+        },
+        {
+          "type": "secondary",
+          "uri": "https://i.discogs.com/CLU8820BC01NNhH5b7RqfiG9DuOe-zUvVBU8T0OHIZM/rs:fit/g:sm/q:90/h:188/w:535/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTExNDk5/LTEzMDE0MDQxNDUu/anBlZw.jpeg",
+          "resource_url": "https://i.discogs.com/CLU8820BC01NNhH5b7RqfiG9DuOe-zUvVBU8T0OHIZM/rs:fit/g:sm/q:90/h:188/w:535/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTExNDk5/LTEzMDE0MDQxNDUu/anBlZw.jpeg",
+          "uri150": "https://i.discogs.com/PX-MW-w_acIrKAAGY_8_-_bcCKI-8nLgv5epE23Fsoo/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTExNDk5/LTEzMDE0MDQxNDUu/anBlZw.jpeg",
+          "width": 535,
+          "height": 188
+        },
+        {
+          "type": "secondary",
+          "uri": "https://i.discogs.com/7kkzgtcaYfcIMtwjh1OlLTGM07FzOOii5tRQNCASxik/rs:fit/g:sm/q:90/h:107/w:300/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTExNDk5/LTEyNjU1ODM5MTMu/anBlZw.jpeg",
+          "resource_url": "https://i.discogs.com/7kkzgtcaYfcIMtwjh1OlLTGM07FzOOii5tRQNCASxik/rs:fit/g:sm/q:90/h:107/w:300/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTExNDk5/LTEyNjU1ODM5MTMu/anBlZw.jpeg",
+          "uri150": "https://i.discogs.com/q-nKOY0mH856zDyb3avwNN4FvmscGOa-vE5O6tK4C30/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTExNDk5/LTEyNjU1ODM5MTMu/anBlZw.jpeg",
+          "width": 300,
+          "height": 107
+        }
+      ],
+      "contact_info": "[b]Germany[/b]:\r\nNuclear Blast GmbH\r\nUlmer Straße 123\r\nHaus A\r\n73037 Göppingen\r\n\r\ne-mail: info@nuclearblast.de\r\n\r\n1990:\r\nDr Freystrasse 54\r\n7322 Donzdorf\r\nW Germany\r\n(31) 15 158935\r\n\r\n[b]United States[/b]:\r\nNuclear Blast America Inc.\r\n6121 Sunset Blvd.\r\nLos Angeles, CA 90028\r\n\r\ne-mail:  mail@nuclearblast-usa.com\r\n\r\n[b]South America[/b]:\r\nLabelmanager: Gerard Werron\r\nRua Paolistania 407\r\nBR 05440-000 Sao Paulo - SP -Metro Vila Magdalena\r\n\r\ne-mail: gerard@nuclearblast.de\r\nphone: +55-11-30978117\r\nfax: +55-11-38161195",
+      "profile": "German independent label, specialised in metal and related music styles; founded in 1987 by [a252876].\r\nLabel Code: LC 7027 / LC 07027\r\nGVL-registered label name is [i][l33186][/i].\r\nFor all unofficial releases (bootlegs, counterfeits) that pretend to be releases of this label, use [l=Nuclear Blast (2)].\r\n\r\n[b]About NB and their different regional companies:[/b]\r\n\r\n[b]Nuclear Blast Europe[/b] – Label, Mailorder, Wholesale, Fulfilment Service and Distribution for several labels spread over the whole European continent; located in Donzdorf, Germany. \r\n\r\n[b]Nuclear Blast America[/b] – US Company with identical business tasks in cooperation with [l=Century Media].\r\n\r\n[b]Nuclear Blast South America[/b] – In cooperation with [l=Century Media].\r\n\r\nA typical Nuclear Blast catalogue number has the following format: \"NB XXXX-F\".\r\n\r\nNote: Earlier releases might only have 3 digits.\r\n\r\nF determines the format. This is not always consistent, but here is a general idea of what you might find:\r\n[b]-0[/b] limited first edition (Digipak, O-Card, etc.) for both CD and DVD\r\n[b]-1[/b] LP or other vinyl format\r\n[b]-2[/b] jewelcase CD or promo CD, DVD, sometimes also used for the limited first edition\r\n[b]-3[/b] video tape (VHS), tape (MC)\r\n[b]-4[/b] tape (MC)\r\n[b]-5[/b] box sets, limited mailorder editions, bonus CDs and DVDs (in general: limited bonus editions)\r\n[b]-7[/b] some vinyl 7”s carry this as format\r\n[b]-8[/b] shape CDs (not all, however)\r\n[b]-9[/b] picture vinyl (not all, however, esp. when the release was only available as a picture vinyl or comes with a cover, you may find a [b]–1[/b] here)",
+      "parent_label": {
+        "id": 222987,
+        "name": "Nuclear Blast GmbH",
+        "resource_url": "https://api.discogs.com/labels/222987"
+      },
+      "data_quality": "Needs Vote",
+      "urls": [
+        "https://www.nuclearblast.com/",
+        "https://nuclearblast.bandcamp.com/",
+        "https://www.facebook.com/nuclearblastrecords/",
+        "https://www.instagram.com/nuclearblastrecords/",
+        "https://x.com/nuclearblast",
+        "https://www.youtube.com/nuclearblastrecords",
+        "https://www.linkedin.com/company/nuclear-blast-records/"
+      ],
+      "sublabels": [
+        {
+          "id": 281114,
+          "name": "Anstalt Records",
+          "resource_url": "https://api.discogs.com/labels/281114"
+        },
+        {
+          "id": 1380275,
+          "name": "Beautiful Voices",
+          "resource_url": "https://api.discogs.com/labels/1380275"
+        },
+        {
+          "id": 14356,
+          "name": "Blank Your Mind",
+          "resource_url": "https://api.discogs.com/labels/14356"
+        },
+        {
+          "id": 1008884,
+          "name": "Blast! Presents",
+          "resource_url": "https://api.discogs.com/labels/1008884"
+        },
+        {
+          "id": 1812120,
+          "name": "Blood Blast Distribution",
+          "resource_url": "https://api.discogs.com/labels/1812120"
+        },
+        {
+          "id": 103225,
+          "name": "Caipiranha Records",
+          "resource_url": "https://api.discogs.com/labels/103225"
+        },
+        {
+          "id": 4077543,
+          "name": "Cannibalised Serial Killer Records",
+          "resource_url": "https://api.discogs.com/labels/4077543"
+        },
+        {
+          "id": 35045,
+          "name": "Deathwish Office",
+          "resource_url": "https://api.discogs.com/labels/35045"
+        },
+        {
+          "id": 33616,
+          "name": "Gore Records",
+          "resource_url": "https://api.discogs.com/labels/33616"
+        },
+        {
+          "id": 35782,
+          "name": "Grind Syndicate Media",
+          "resource_url": "https://api.discogs.com/labels/35782"
+        },
+        {
+          "id": 1980672,
+          "name": "Metal Blast Records (3)",
+          "resource_url": "https://api.discogs.com/labels/1980672"
+        },
+        {
+          "id": 935705,
+          "name": "Metal Dreams",
+          "resource_url": "https://api.discogs.com/labels/935705"
+        },
+        {
+          "id": 35926,
+          "name": "Mind Control Records (2)",
+          "resource_url": "https://api.discogs.com/labels/35926"
+        },
+        {
+          "id": 461868,
+          "name": "Monsters Of Metal",
+          "resource_url": "https://api.discogs.com/labels/461868"
+        },
+        {
+          "id": 1257831,
+          "name": "NB Classics Digipak Series",
+          "resource_url": "https://api.discogs.com/labels/1257831"
+        },
+        {
+          "id": 1898362,
+          "name": "NoiseBangers Extreme Recordings",
+          "resource_url": "https://api.discogs.com/labels/1898362"
+        },
+        {
+          "id": 35507,
+          "name": "Nuclear Blast America",
+          "resource_url": "https://api.discogs.com/labels/35507"
+        },
+        {
+          "id": 883743,
+          "name": "Nuclear Blast Archive Series",
+          "resource_url": "https://api.discogs.com/labels/883743"
+        },
+        {
+          "id": 877124,
+          "name": "Nuclear Blast Australia",
+          "resource_url": "https://api.discogs.com/labels/877124"
+        },
+        {
+          "id": 981704,
+          "name": "Nuclear Blast Brasil",
+          "resource_url": "https://api.discogs.com/labels/981704"
+        },
+        {
+          "id": 1048611,
+          "name": "Nuclear Blast Classic Series",
+          "resource_url": "https://api.discogs.com/labels/1048611"
+        },
+        {
+          "id": 1271927,
+          "name": "Nuclear Blast Classic Series (2 For 1)",
+          "resource_url": "https://api.discogs.com/labels/1271927"
+        },
+        {
+          "id": 603304,
+          "name": "Nuclear Blast Europe",
+          "resource_url": "https://api.discogs.com/labels/603304"
+        },
+        {
+          "id": 311768,
+          "name": "Nuclear Blast USA",
+          "resource_url": "https://api.discogs.com/labels/311768"
+        },
+        {
+          "id": 37120,
+          "name": "Radiation Records",
+          "resource_url": "https://api.discogs.com/labels/37120"
+        },
+        {
+          "id": 72957,
+          "name": "Rebelution Entertainment",
+          "resource_url": "https://api.discogs.com/labels/72957"
+        },
+        {
+          "id": 69695,
+          "name": "Revolution Entertainment",
+          "resource_url": "https://api.discogs.com/labels/69695"
+        }
+      ]
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Content-Language": "en",
+      "Date": "Tue, 19 May 2026 23:31:55 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Access-Control-Allow-Headers": "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID",
+      "Access-Control-Allow-Methods": "HEAD,OPTIONS,GET,OPTIONS",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Expose-Headers": "Location",
+      "Cache-Control": "public, must-revalidate",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "X-Content-Type-Options": "nosniff",
+      "x-discogs-media-type": "discogs.v2",
+      "x-discogs-ratelimit": "60",
+      "x-discogs-ratelimit-remaining": "17",
+      "x-discogs-ratelimit-used": "43",
+      "X-Frame-Options": "SAMEORIGIN",
+      "X-XSS-Protection": "1; mode=block",
+      "cf-cache-status": "DYNAMIC",
+      "Set-Cookie": "__cf_bm=EuIP6OjD0lBLl9bAzCL3ym8S8gNazQ5G9cteYYlmGHM-1779233514.5920472-1.0.1.1-VE55zx0bFgZLqwVhPTGahhiJOJeeM4sSLtmvRY11YI1JnzEztzZeG6NplxMMaQ9BRWZQU_na9vqhj5YSxUGvqX_vytZp3fFaLMwbhGQJIyU7HobejjvgQEFOWfn5CoYv; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:01:55 GMT",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6e5da384ff956-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

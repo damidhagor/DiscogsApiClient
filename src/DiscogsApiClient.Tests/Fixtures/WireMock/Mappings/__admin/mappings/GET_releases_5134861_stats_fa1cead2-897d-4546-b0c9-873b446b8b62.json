@@ -1,0 +1,78 @@
+{
+  "Guid": "fa1cead2-897d-4546-b0c9-873b446b8b62",
+  "UpdatedAt": "2026-05-19T23:31:54.5904314Z",
+  "Title": "Proxy Mapping for GET /releases/5134861/stats",
+  "Description": "Proxy Mapping for GET /releases/5134861/stats",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/releases/5134861/stats",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "GET"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Authorization",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "Discogs token=*",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ]
+  },
+  "Response": {
+    "StatusCode": 200,
+    "BodyAsJson": {
+      "is_offensive": false
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Content-Language": "en",
+      "Date": "Tue, 19 May 2026 23:31:55 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Access-Control-Allow-Headers": "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID",
+      "Access-Control-Allow-Methods": "HEAD,OPTIONS,GET,OPTIONS",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Expose-Headers": "Location",
+      "Cache-Control": "public, must-revalidate",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "X-Content-Type-Options": "nosniff",
+      "x-discogs-media-type": "discogs.v2",
+      "x-discogs-ratelimit": "60",
+      "x-discogs-ratelimit-remaining": "31",
+      "x-discogs-ratelimit-used": "29",
+      "X-Frame-Options": "SAMEORIGIN",
+      "X-XSS-Protection": "1; mode=block",
+      "Set-Cookie": "__cf_bm=w1rkFR3AD2uUHhe8s_LsNPrApoW_3d4R3.RjfGbdYyc-1779233514.6129735-1.0.1.1-EkwRLuVds1Luz8yDtZfCi9mUwypM8lyBeF5toOFWq44kPTzWOFTOHwxwMZH.ODq9YO6wNOxo9D5vbuuk7SaotM0uyL3J42ozm.uPG7NnC5oASy5xSrgcYYyNPCqYWqRL; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:01:55 GMT",
+      "cf-cache-status": "DYNAMIC",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6e5da5f2c519f-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "Guid": "2cfffd84-5dcd-4a3a-bc45-e04855e37b71",
+  "UpdatedAt": "2026-05-19T23:33:09.5788539Z",
+  "Title": "Proxy Mapping for POST /users/DamIDhagor/collection/folders/9350037",
+  "Description": "Proxy Mapping for POST /users/DamIDhagor/collection/folders/9350037",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/users/DamIDhagor/collection/folders/9350037",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "POST"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Authorization",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "Discogs token=*",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Content-Type",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "application/json; charset=utf-8",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Content-Length",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "35",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ],
+    "Body": {
+      "Matcher": {
+        "Name": "JsonMatcher",
+        "Pattern": {
+          "name": "API_TEST_WORKFLOW_UPDATE"
+        },
+        "IgnoreCase": true,
+        "Regex": false
+      }
+    }
+  },
+  "Response": {
+    "StatusCode": 200,
+    "BodyAsJson": {
+      "id": 9350037,
+      "name": "API_TEST_WORKFLOW_UPDATE",
+      "count": 0,
+      "resource_url": "https://api.discogs.com/users/DamIDhagor/collection/folders/9350037"
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Date": "Tue, 19 May 2026 23:33:10 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Set-Cookie": "__cf_bm=e9pTqLv6rHRaLIFesbSHtjN0aT23dkE.gDWFxQ.fN6M-1779233589.7778044-1.0.1.1-Bmhz2lFm__II0X8L9fg8.XeWD.E8zMabdcpV8fKcH_CvNJemd5JbxvCmJ5N6TN3H.OzDCKvfGW7QjmErciKHskAwv4OsLE1PPyV2mczBNHXq5FmYZ_FJBXoLa.HwczBu; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:03:10 GMT",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "x-discogs-ratelimit": "60",
+      "x-discogs-ratelimit-remaining": "44",
+      "x-discogs-ratelimit-used": "16",
+      "cf-cache-status": "DYNAMIC",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6e7b01e11519f-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

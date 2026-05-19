@@ -1,0 +1,64 @@
+{
+  "Guid": "e14e6a9c-4565-4af4-81af-902f47d32e11",
+  "UpdatedAt": "2026-05-19T23:33:09.2316695Z",
+  "Title": "Proxy Mapping for DELETE /users/DamIDhagor/collection/folders/999",
+  "Description": "Proxy Mapping for DELETE /users/DamIDhagor/collection/folders/999",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/users/DamIDhagor/collection/folders/999",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "DELETE"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ],
+    "Body": {
+      "Matcher": {
+        "Name": "ExactMatcher",
+        "Pattern": "",
+        "IgnoreCase": true
+      }
+    }
+  },
+  "Response": {
+    "StatusCode": 403,
+    "BodyAsJson": {
+      "message": "You are not allowed to view this resource. Please authenticate as the owner to view this content."
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Date": "Tue, 19 May 2026 23:33:09 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Set-Cookie": "__cf_bm=R23NtzWmOPmJDyEIDeOg_W9kNTR1Ov4BTAMy_vcKsEc-1779233589.108291-1.0.1.1-RR0GIKHYidF.H99FjmapOtEViiy66Vn_MasG4J1VGvJ0AtN.81yPdTvOBSvCpoSUnj4EMSa6lhGiRzzU._JmXi.cnE4kzoIt93aJp7Kj2dXaMgYL1xoL4_cqju35qLTJ; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:03:09 GMT",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "x-discogs-ratelimit": "25",
+      "x-discogs-ratelimit-remaining": "14",
+      "x-discogs-ratelimit-used": "11",
+      "cf-cache-status": "DYNAMIC",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6e7abed8e7552-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

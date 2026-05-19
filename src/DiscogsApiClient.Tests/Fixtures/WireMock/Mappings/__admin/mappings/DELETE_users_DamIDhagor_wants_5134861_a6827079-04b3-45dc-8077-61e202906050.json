@@ -1,0 +1,70 @@
+{
+  "Guid": "a6827079-04b3-45dc-8077-61e202906050",
+  "UpdatedAt": "2026-05-19T23:36:58.3064021Z",
+  "Title": "Proxy Mapping for DELETE /users/DamIDhagor/wants/5134861",
+  "Description": "Proxy Mapping for DELETE /users/DamIDhagor/wants/5134861",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/users/DamIDhagor/wants/5134861",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "DELETE"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Authorization",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "Discogs token=*",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ],
+    "Body": {
+      "Matcher": {
+        "Name": "ExactMatcher",
+        "Pattern": "",
+        "IgnoreCase": true
+      }
+    }
+  },
+  "Response": {
+    "StatusCode": 204,
+    "Headers": {
+      "Content-Type": "application/json",
+      "Date": "Tue, 19 May 2026 23:36:58 GMT",
+      "Connection": "keep-alive",
+      "Strict-Transport-Security": "max-age=15552000",
+      "x-discogs-ratelimit": "60",
+      "x-discogs-ratelimit-remaining": "52",
+      "x-discogs-ratelimit-used": "8",
+      "cf-cache-status": "DYNAMIC",
+      "Set-Cookie": "__cf_bm=uvLQrZhHxq53GY2JYGH84mrOy.70NcR3Y_mNuUn02Os-1779233818.5431144-1.0.1.1-WX2AUfhxjSxsQPa09MOkXY2xJ9cX8Gd87XGYtYRE2ZD9HvmE2etCof3_WEsthJlcj8zr5G3FJlXzeW4tO_zbQfCtvOGEp1WvexiSxEGfRRZG1pg06uZCLCoI.WZFvTi6; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:06:58 GMT",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6ed45ea15f80d-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

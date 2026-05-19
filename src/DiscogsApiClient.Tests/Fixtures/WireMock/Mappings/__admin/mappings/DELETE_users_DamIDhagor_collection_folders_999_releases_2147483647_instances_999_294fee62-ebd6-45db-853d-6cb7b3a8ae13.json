@@ -1,0 +1,75 @@
+{
+  "Guid": "294fee62-ebd6-45db-853d-6cb7b3a8ae13",
+  "UpdatedAt": "2026-05-19T23:34:23.9279254Z",
+  "Title": "Proxy Mapping for DELETE /users/DamIDhagor/collection/folders/999/releases/2147483647/instances/999",
+  "Description": "Proxy Mapping for DELETE /users/DamIDhagor/collection/folders/999/releases/2147483647/instances/999",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/users/DamIDhagor/collection/folders/999/releases/2147483647/instances/999",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "DELETE"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Authorization",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "Discogs token=*",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ],
+    "Body": {
+      "Matcher": {
+        "Name": "ExactMatcher",
+        "Pattern": "",
+        "IgnoreCase": true
+      }
+    }
+  },
+  "Response": {
+    "StatusCode": 404,
+    "BodyAsJson": {
+      "message": "The requested collection item does not exist in this user's collection."
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Date": "Tue, 19 May 2026 23:34:24 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "x-discogs-ratelimit": "60",
+      "x-discogs-ratelimit-remaining": "40",
+      "x-discogs-ratelimit-used": "20",
+      "Set-Cookie": "__cf_bm=_0vSUi2eKAZ34HB71FpcwDqWv7MTNOAKcEGuFFC_WW4-1779233664.1662104-1.0.1.1-q04abjpM1BXHSa.5xFpfQNhd3iFqRfxFcYQycW96aaM8TISsxGEp4yVQEo5A6ANyYD5k.N9GIhV_h6Z0wn1mHk2yv61sCICoJnMrqwxXKskcbbRoEN3EdjTSuJ7U7prt; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:04:24 GMT",
+      "cf-cache-status": "DYNAMIC",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6e9810af3709f-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

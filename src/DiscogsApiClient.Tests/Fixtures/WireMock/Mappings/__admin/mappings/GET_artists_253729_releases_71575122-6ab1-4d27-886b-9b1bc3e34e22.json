@@ -1,0 +1,1198 @@
+{
+  "Guid": "71575122-6ab1-4d27-886b-9b1bc3e34e22",
+  "UpdatedAt": "2026-05-19T23:31:54.569293Z",
+  "Title": "Proxy Mapping for GET /artists/253729/releases",
+  "Description": "Proxy Mapping for GET /artists/253729/releases",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/artists/253729/releases",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "GET"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Authorization",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "Discogs token=*",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ],
+    "Params": [
+      {
+        "Name": "sort",
+        "Matchers": [
+          {
+            "Name": "ExactMatcher",
+            "Pattern": "title",
+            "IgnoreCase": false
+          }
+        ]
+      },
+      {
+        "Name": "sort_order",
+        "Matchers": [
+          {
+            "Name": "ExactMatcher",
+            "Pattern": "asc",
+            "IgnoreCase": false
+          }
+        ]
+      }
+    ]
+  },
+  "Response": {
+    "StatusCode": 200,
+    "BodyAsJson": {
+      "pagination": {
+        "page": 1,
+        "pages": 8,
+        "per_page": 50,
+        "items": 361,
+        "urls": {
+          "last": "https://api.discogs.com/artists/253729/releases?sort=title&sort_order=asc&page=8&per_page=50",
+          "next": "https://api.discogs.com/artists/253729/releases?sort=title&sort_order=asc&page=2&per_page=50"
+        }
+      },
+      "releases": [
+        {
+          "id": 2299588,
+          "title": "30 Years Live Anniversary",
+          "type": "master",
+          "main_release": 20186821,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/2299588",
+          "year": 2021,
+          "thumb": "https://i.discogs.com/3cTY97tmBMCpfndxmonI4-U4IvvC4wsEBLcjjA0xA4U/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIwMTg2/ODIxLTE2MzMxMzM5/MDQtODE1Mi5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 52,
+              "in_collection": 353
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 5102840,
+          "status": "Accepted",
+          "type": "release",
+          "format": "4xCD, Album + DVD-V + Box, Comp",
+          "label": "Ear Music",
+          "title": "3In1 Limited Edition Boxset",
+          "resource_url": "https://api.discogs.com/releases/5102840",
+          "role": "Main",
+          "artist": "Gamma Ray",
+          "year": 2013,
+          "thumb": "https://i.discogs.com/UPhULluqw2mQ4GRx7_kgtlx0C6XSOJg5IN4W-1-Invo/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMDI4/NDAtMTM4NDU1Njcz/NC04NDIyLmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 33,
+              "in_collection": 71
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 458822,
+          "title": "Alive '95",
+          "type": "master",
+          "main_release": 3100327,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/458822",
+          "year": 1996,
+          "thumb": "https://i.discogs.com/DFmgtiRmuljerbPlgYMjNodbZbTVeAXPd4s48U9xf9k/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMxMDAz/MjctMTM2NzU2NzM5/OC05NjA0LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 54,
+              "in_collection": 672
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 5153856,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Comp + DVD-V",
+          "label": "Victor",
+          "title": "Alright! 20 Years Of Universe",
+          "resource_url": "https://api.discogs.com/releases/5153856",
+          "role": "Main",
+          "artist": "Gamma Ray",
+          "year": 2010,
+          "thumb": "https://i.discogs.com/Ia7KjhKKmJPTTYUq9VfifRhCytnIBkhP2XorQbCkb3w/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxNTM4/NTYtMTU2MDk3OTgz/MC0zNDcwLmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 35,
+              "in_collection": 48
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 5763034,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CDr, Single, Promo",
+          "label": "Edel",
+          "title": "Avalon",
+          "resource_url": "https://api.discogs.com/releases/5763034",
+          "role": "Main",
+          "artist": "Gamma Ray",
+          "year": 2014,
+          "thumb": "https://i.discogs.com/EuQqdWedx2e2Sg7JPFin1KSrggmcMd_sof-3WhAOF8U/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU3NjMw/MzQtMTQwMTk3Mjc4/Mi03Nzk2LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 33,
+              "in_collection": 1
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 31852712,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Single, Promo",
+          "label": "Noise Records",
+          "title": "Beyond The Black Hole",
+          "resource_url": "https://api.discogs.com/releases/31852712",
+          "role": "Main",
+          "artist": "Gamma Ray",
+          "year": 1997,
+          "thumb": "https://i.discogs.com/3sJgAThVdOvJVpx9Tp96cSNTbHbj5UN35cr1b5ERXf8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMxODUy/NzEyLTE3Mjc1MjU1/MDYtODc4Mi5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 16,
+              "in_collection": 3
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 346863,
+          "title": "Blast From The Past",
+          "type": "master",
+          "main_release": 2371622,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/346863",
+          "year": 2000,
+          "thumb": "https://i.discogs.com/5niMwnV3_ZnKzPP_2kgpwiYr9-QCD0-d9NUv3Vb4w2s/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIzNzE2/MjItMTQ5NjY4OTQ2/Mi03OTA0LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 57,
+              "in_collection": 1611
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 12297934,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CDr, Promo, Smplr",
+          "label": "Verycords",
+          "title": "Empire Of The Undead",
+          "resource_url": "https://api.discogs.com/releases/12297934",
+          "role": "Main",
+          "artist": "Gamma Ray",
+          "thumb": "https://i.discogs.com/GBGFVHJzdzHQoaADwIDoze4LibaDAYXydMBxLZvF6F4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEyMjk3/OTM0LTE1MzI0MTg0/MjMtNDgzOC5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 18,
+              "in_collection": 3
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 669918,
+          "title": "Empire Of The Undead",
+          "type": "master",
+          "main_release": 5550517,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/669918",
+          "year": 2014,
+          "thumb": "https://i.discogs.com/-Mk_4J0pFIEyzGNxb1HIiw9IiqYY4thWezb10xNePa4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU1NTA1/MTctMTQ3MzUzMjMy/MC02NTE1LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 102,
+              "in_collection": 989
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 5572999,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CDr, Single, Promo",
+          "label": "Ear Music",
+          "title": "Empire Of The Undead - Die Finalen Studio Sessions",
+          "resource_url": "https://api.discogs.com/releases/5572999",
+          "role": "Main",
+          "artist": "Gamma Ray",
+          "year": 2014,
+          "thumb": "https://i.discogs.com/QzOVl_3DVTTripZzYKDRJ6pLdkJvgQSrJGiFNUEYJ_c/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU1NzI5/OTktMTQwMTM2MjYy/OS0xNzQ1LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 38,
+              "in_collection": 1
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 664326,
+          "title": "Future Madhouse",
+          "type": "master",
+          "main_release": 5490131,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/664326",
+          "year": 1993,
+          "thumb": "https://i.discogs.com/KZz33f9QVs5zIYFiHP2FgCz6rTJlsFtXJCyjspXc18s/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU0OTAx/MzEtMTM5NDcyNjAw/MC0zODE4LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 32,
+              "in_collection": 113
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 19085917,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CDr",
+          "label": "Not On Label (Gamma Ray Self-released)",
+          "title": "Heading For Christmas ",
+          "resource_url": "https://api.discogs.com/releases/19085917",
+          "role": "Main",
+          "artist": "Gamma Ray",
+          "year": 1997,
+          "thumb": "https://i.discogs.com/zT7N8a-Q_C4gr14hXxjwniBU88R5FUZSOOnZ0U89_Xs/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5MDg1/OTE3LTE2MjMzMTEy/ODUtOTE2Ni5wbmc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 24,
+              "in_collection": 4
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 553089,
+          "title": "Heading For The East",
+          "type": "master",
+          "main_release": 5366525,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/553089",
+          "year": 1991,
+          "thumb": "https://i.discogs.com/lyPj7iPNdA2oDyHK-VoPg5Y_UDpR1cT5uyI8bAVAay0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUzNjY1/MjUtMTQzODc4OTUy/OC0zMDgzLmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 12,
+              "in_collection": 59
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 106140,
+          "title": "Heading For Tomorrow",
+          "type": "master",
+          "main_release": 369651,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/106140",
+          "year": 1990,
+          "thumb": "https://i.discogs.com/FzzGUIEeXVpWGyWyiEsYUjjQ0XdkjjwwT5IRjoMsoMg/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM2OTY1/MS0xNjgzNTUwODk1/LTMwMDYuanBlZw.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 60,
+              "in_collection": 294
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 1680619,
+          "title": "Heading For Tomorrow / Space Eater",
+          "type": "master",
+          "main_release": 4389359,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/1680619",
+          "year": 1989,
+          "thumb": "https://i.discogs.com/ocM6vzZU7viW17ifAFVs7l8grO0YfvWOxIWbsOzXK8E/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQzODkz/NTktMTM2MzU4MDgw/Mi0xOTg0LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 85,
+              "in_collection": 47
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 919325,
+          "title": "Heading For Tomorrow • Sigh No More",
+          "type": "master",
+          "main_release": 3766140,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/919325",
+          "year": 2010,
+          "thumb": "https://i.discogs.com/ovGOmgDVT7GA3anUw1d9jcoKlh5RtB94QATS4TASXBs/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM3NjYx/NDAtMTM0MzU0OTYy/My03NTA1LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 15,
+              "in_collection": 294
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 15852082,
+          "status": "Accepted",
+          "type": "release",
+          "format": "10\", Single, Ltd, Num",
+          "label": "Ear Music",
+          "title": "Heaven Can Wait",
+          "resource_url": "https://api.discogs.com/releases/15852082",
+          "role": "Main",
+          "artist": "Gamma Ray",
+          "year": 2020,
+          "thumb": "https://i.discogs.com/_1RhCZrrJwbQzHVoKNtX9-pAF89dosz8L5d0G6iu4iY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE1ODUy/MDgyLTE1OTg5Nzgx/MjEtMzAxMS5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 38,
+              "in_collection": 156
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 198566,
+          "title": "Heaven Can Wait",
+          "type": "master",
+          "main_release": 1199486,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/198566",
+          "year": 1990,
+          "thumb": "https://i.discogs.com/_m9B1jJp-d3wbRLZdO3L0RdbgEwPheT5KrRrC8m0Hvc/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExOTk0/ODYtMTIwMDE5MDYy/OS5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 44,
+              "in_collection": 554
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 1215156,
+          "title": "Heaven Can Wait / Mr. Outlaw",
+          "type": "master",
+          "main_release": 4332513,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/1215156",
+          "year": 1990,
+          "thumb": "https://i.discogs.com/V1fHrL0vYmvCFa1vSxW6Ojynf5xw660ZLngT2woUWlA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQzMzI1/MTMtMTQwMDI5MTYw/Ni03NTU5LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 41,
+              "in_collection": 54
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 496657,
+          "title": "Heaven Or Hell",
+          "type": "master",
+          "main_release": 4073296,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/496657",
+          "year": 2001,
+          "thumb": "https://i.discogs.com/k8Cg-HISY0vD2_nfr1UKM9Q9faSXsTlxZD9ZJv3tXs8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQwNzMy/OTYtMTM2NzkwMTAx/MC0xNTE1LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 36,
+              "in_collection": 120
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 496655,
+          "title": "Hell Yeah!!! The Awesome Foursome - Live In Montreal",
+          "type": "master",
+          "main_release": 3571996,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/496655",
+          "year": 2008,
+          "thumb": "https://i.discogs.com/_BlanajF7bKilZzB3K6GQOGywt-g7zvsz_bkvbC14Yo/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM1NzE5/OTYtMTM2NzkxMjA4/OS02NzYzLmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 60,
+              "in_collection": 615
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 5763077,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CDr, Single, Promo",
+          "label": "Edel",
+          "title": "I Will Return",
+          "resource_url": "https://api.discogs.com/releases/5763077",
+          "role": "Main",
+          "artist": "Gamma Ray",
+          "year": 2014,
+          "thumb": "https://i.discogs.com/DMiGeSAeWKXYJVqj8589llIQYSEQ0jDJdTMbYZq8YtY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU3NjMw/NzctMTQwMTk3MzU4/MC05MjYyLmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 32,
+              "in_collection": 1
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 7033548,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Promo, Smplr",
+          "label": "Noise (3)",
+          "title": "Insanity And Genius",
+          "resource_url": "https://api.discogs.com/releases/7033548",
+          "role": "Main",
+          "artist": "Gamma Ray",
+          "year": 1993,
+          "thumb": "https://i.discogs.com/m0y_DKFAccf98d69Ce5z_tng4XvQVr6TBmAkb3tzyFY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTcwMzM1/NDgtMTQ2NzYxOTIz/OC03NDY3LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 38,
+              "in_collection": 21
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 198567,
+          "title": "Insanity And Genius",
+          "type": "master",
+          "main_release": 5069193,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/198567",
+          "year": 1993,
+          "thumb": "https://i.discogs.com/bjMYvfbEEYXaZ0CtkREiAQlvMwZV8pLI5M5fIRFQbZI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUwNjkx/OTMtMTQ4NzkyNDIx/Ny0zODgxLmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 98,
+              "in_collection": 1225
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 801507,
+          "title": "Insanity And Genius / Land Of The Free",
+          "type": "master",
+          "main_release": 3766160,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/801507",
+          "year": 2010,
+          "thumb": "https://i.discogs.com/KVi3YsWJ0gxY-NLOPc2wGffzQzWfFKdSEctZeSBzD2s/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM3NjYx/NjAtMTQ2MDQwMDIz/OC00MTM1LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 13,
+              "in_collection": 222
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 25814941,
+          "status": "Accepted",
+          "type": "release",
+          "format": "Betacam SP, Advance, PAL",
+          "label": "SPV",
+          "title": "Into The Storm",
+          "resource_url": "https://api.discogs.com/releases/25814941",
+          "role": "Main",
+          "artist": "Gamma Ray",
+          "year": 2007,
+          "thumb": "https://i.discogs.com/cHFMC22nkkQt-gazWfuR-OhoMOAiN5tmlvJwMmZXv9w/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI1ODE0/OTQxLTE2NzQxMjg4/OTItNzQ4My5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 1,
+              "in_collection": 2
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 9566272,
+          "status": "Accepted",
+          "type": "release",
+          "format": "Cass, Single, Promo",
+          "label": "Noise International",
+          "title": "Land Of The Free",
+          "resource_url": "https://api.discogs.com/releases/9566272",
+          "role": "Main",
+          "artist": "Gamma Ray",
+          "year": 1995,
+          "thumb": "https://i.discogs.com/_YQLCxGV3yx6NzD7A14-69BdhY5ZS7_1b8Zsmbb-rtI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTk1NjYy/NzItMTQ4Mjg3MDI4/MC00NzE3LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 17,
+              "in_collection": 5
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 106142,
+          "title": "Land Of The Free",
+          "type": "master",
+          "main_release": 2665443,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/106142",
+          "year": 1995,
+          "thumb": "https://i.discogs.com/jYT5Pkk7RM2GsgFqMAqh7h-R5F9PGx4RBm37M_viTZ8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI2NjU0/NDMtMTU5NDQ0MTcz/Ny05MzA1LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 565,
+              "in_collection": 371
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 235111,
+          "title": "Land Of The Free II",
+          "type": "master",
+          "main_release": 2192356,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/235111",
+          "year": 2007,
+          "thumb": "https://i.discogs.com/ZcAj2k-h74fhDqlFCDNqlMEKS5rPZU2TJdz8P9cfTAk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIxOTIz/NTYtMTQ3NDI0MDM5/OC0zMDUyLmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 213,
+              "in_collection": 468
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 11110889,
+          "status": "Accepted",
+          "type": "release",
+          "format": "Cass, Comp, S/Edition",
+          "label": "Valentine Sound Productions, Noise International",
+          "title": "Live",
+          "resource_url": "https://api.discogs.com/releases/11110889",
+          "role": "Main",
+          "artist": "Gamma Ray",
+          "year": 1994,
+          "thumb": "https://i.discogs.com/X_fDcXJzcUXzfYPVIO5_fd1CvzYnpE6b88oZz1Ec7iI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExMTEw/ODg5LTE1MTAwNDc0/NDAtODYyMy5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 21,
+              "in_collection": 3
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 553090,
+          "title": "Lust For Live",
+          "type": "master",
+          "main_release": 5366541,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/553090",
+          "year": 1994,
+          "thumb": "https://i.discogs.com/4oUjREfBB5cwQ2edjVkUYGmMh26HKwGkxS3ufqDKaz8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUzNjY1/NDEtMTQzODc4ODMz/NC01MjEzLmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 11,
+              "in_collection": 58
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 297271,
+          "title": "Majestic",
+          "type": "master",
+          "main_release": 815689,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/297271",
+          "year": 2005,
+          "thumb": "https://i.discogs.com/DFr5ynCYBjc5KdbfUUM1o1rxzrslKVIczbx-zJj_UrM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTgxNTY4/OS0xMTYxNjcxMDI4/LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 86,
+              "in_collection": 1439
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 588047,
+          "title": "Master Of Confusion",
+          "type": "master",
+          "main_release": 4382746,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/588047",
+          "year": 2013,
+          "thumb": "https://i.discogs.com/m4Pmrcus2s-wrhoFe_kcdspavTKYnz97iZdG_nTbqo8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQzODI3/NDYtMTQ0OTY2MjIz/MC0xNTU2LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 45,
+              "in_collection": 981
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 274084,
+          "title": "No World Order",
+          "type": "master",
+          "main_release": 821673,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/274084",
+          "year": 2001,
+          "thumb": "https://i.discogs.com/9YWp0V428d6WnFklnfPNJkyVVr4_m9-h2WMNrZiXkJw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTgyMTY3/My0xNDk3Mjg3Mzc5/LTQxMTIuanBlZw.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 176,
+              "in_collection": 2205
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 1719397,
+          "title": "No World Order",
+          "type": "master",
+          "main_release": 5630178,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/1719397",
+          "year": 2001,
+          "thumb": "https://i.discogs.com/1UBot9b-uGe_fvGMFckmC_I3lKNUyiQoqk2y3loTco4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU2MzAx/NzgtMTM5ODQzNjc4/Mi03Mjk2LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 23,
+              "in_collection": 4
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 2101847,
+          "status": "Accepted",
+          "type": "release",
+          "format": "7\", Single, Promo",
+          "label": "Noise International",
+          "title": "One With The World",
+          "resource_url": "https://api.discogs.com/releases/2101847",
+          "role": "Main",
+          "artist": "Gamma Ray",
+          "year": 1991,
+          "thumb": "https://i.discogs.com/kcXPMnvIr35qLGii0sOE9h-gTYSWfx7B0PASH4wJaOA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIxMDE4/NDctMTI2NDEwNDA0/NC5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 62,
+              "in_collection": 119
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 4281489,
+          "status": "Accepted",
+          "type": "release",
+          "format": "Flexi, 7\"",
+          "label": "Kerrang!",
+          "title": "Outlaw / Gypsy Rider",
+          "resource_url": "https://api.discogs.com/releases/4281489",
+          "role": "Main",
+          "artist": "Kai Hansen / Gamma Ray / Lisa Dominique",
+          "year": 1990,
+          "thumb": "https://i.discogs.com/nKJm0dZaFw8Bk6A8_JGU-RNoyOlRC-E96N8nUJZXIEc/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQyODE0/ODktMTQwMTM5MjE2/My02NTE1LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 36,
+              "in_collection": 259
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 5763065,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CDr, Single, Promo",
+          "label": "Edel",
+          "title": "Pale Rider",
+          "resource_url": "https://api.discogs.com/releases/5763065",
+          "role": "Main",
+          "artist": "Gamma Ray",
+          "year": 2014,
+          "thumb": "https://i.discogs.com/J3cDXrzB5kwobjZwDgOGfY5xC30Myl5uEZ3mNBibf2A/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU3NjMw/NjUtMTQwMTk3MzUw/MC03NTY4LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 32,
+              "in_collection": 1
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 3938821,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Promo, Smplr, Sli",
+          "label": "Noise Records",
+          "title": "Power Plant",
+          "resource_url": "https://api.discogs.com/releases/3938821",
+          "role": "Main",
+          "artist": "Gamma Ray",
+          "year": 1999,
+          "thumb": "https://i.discogs.com/lJOOjk5w6m68mSpFrUl5aIB0W7SoSDhKvnBKeUs6sNk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM5Mzg4/MjEtMTU2Mjk0OTEy/Ny0yMTU0LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 28,
+              "in_collection": 73
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 106149,
+          "title": "Power Plant",
+          "type": "master",
+          "main_release": 595245,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/106149",
+          "year": 1999,
+          "thumb": "https://i.discogs.com/8OAG_NYwuCy1wmT4bDZ5hxLjW47LRWZJjQAHRAJWwUY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU5NTI0/NS0xNDk4MDcwNzE2/LTMzNjAuanBlZw.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 183,
+              "in_collection": 1899
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 527071,
+          "title": "Rebellion In Dreamland",
+          "type": "master",
+          "main_release": 3583297,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/527071",
+          "year": 1995,
+          "thumb": "https://i.discogs.com/QyZVYon7i-AqY7essi9zOIIXR7dZZ64-IIDACptOOeY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM1ODMy/OTctMTQ5OTQ1NTYw/Mi04NjI1LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 33,
+              "in_collection": 276
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 4936860,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Maxi, Promo",
+          "label": "Noise International",
+          "title": "Sigh No More",
+          "resource_url": "https://api.discogs.com/releases/4936860",
+          "role": "Main",
+          "artist": "Gamma Ray",
+          "year": 1991,
+          "thumb": "https://i.discogs.com/m5Vy8IhTH-Qc8RpMKf6FkO1zXX4tMBnaJyib2vzwWo0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ5MzY4/NjAtMTM3OTk1Mjg4/OS00OTUwLmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 39,
+              "in_collection": 65
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 229451,
+          "title": "Sigh No More",
+          "type": "master",
+          "main_release": 2082597,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/229451",
+          "year": 1991,
+          "thumb": "https://i.discogs.com/zREhfgXndLSTpN0RykSeg3nWd_GiF3adBbo4ONvZJDU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIwODI1/OTctMTM4NTYzNDE5/Ny02Nzc4LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 108,
+              "in_collection": 1226
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 308134,
+          "title": "Silent Miracles",
+          "type": "master",
+          "main_release": 2027401,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/308134",
+          "year": 1996,
+          "thumb": "https://i.discogs.com/sGnGbtNh-y1EmLZkLesFTD9NVXmoKUddLsWaqOx79-4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIwMjc0/MDEtMTQ5OTQ1MDA4/MS02NjUzLmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 43,
+              "in_collection": 603
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 621181,
+          "title": "Skeletons & Majesties Live",
+          "type": "master",
+          "main_release": 5105473,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/621181",
+          "year": 2012,
+          "thumb": "https://i.discogs.com/UOqpymfDRtW09ohAtp2vembcyU_eo7uG6hDj_kWfSac/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMDU0/NzMtMTQ4NjMwNzA5/MS0zNzE1LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 52,
+              "in_collection": 446
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 516663,
+          "title": "Skeletons And Majesties",
+          "type": "master",
+          "main_release": 2886702,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/516663",
+          "year": 2011,
+          "thumb": "https://i.discogs.com/g6XrOJQCWUOpbjMmwnf-SaYUsQaw0-I6F3yBnuP8nRU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI4ODY3/MDItMTY3MDMwMTUw/Mi02MzAxLmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 40,
+              "in_collection": 497
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 382398,
+          "title": "Skeletons In The Closet",
+          "type": "master",
+          "main_release": 4430621,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/382398",
+          "year": 2003,
+          "thumb": "https://i.discogs.com/RzZp43iqHsmE9_XCc2s-MAjY23XJ0X3QY_tac2A350g/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ0MzA2/MjEtMTYxNTIxNTk1/NS0zNDAyLmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 19,
+              "in_collection": 64
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 2870134,
+          "title": "Someday",
+          "type": "master",
+          "main_release": 22134601,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/2870134",
+          "year": 2014,
+          "thumb": "https://i.discogs.com/YDXHGgtQVCloMsFk2Pk2Vk-ryZb4NJZ9yrwaBws43NA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIyMTM0/NjAxLTE2NDU1NDQ5/ODEtMTU4MC5qcGVn.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 15,
+              "in_collection": 13
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 9177196,
+          "status": "Accepted",
+          "type": "release",
+          "format": "CD, Promo",
+          "label": "SPV GmbH",
+          "title": "Somewhere Out In Space",
+          "resource_url": "https://api.discogs.com/releases/9177196",
+          "role": "Main",
+          "artist": "Gamma Ray",
+          "year": 1997,
+          "thumb": "https://i.discogs.com/3S6adjEV9To2IbnqDd04Xlhev7ux54AmbekoX7_yfoY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTkxNzcx/OTYtMTQ3NjEyMzg3/Ni01OTU1LmpwZWc.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 29,
+              "in_collection": 24
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "id": 106147,
+          "title": "Somewhere Out In Space",
+          "type": "master",
+          "main_release": 821680,
+          "artist": "Gamma Ray",
+          "role": "Main",
+          "resource_url": "https://api.discogs.com/masters/106147",
+          "year": 1997,
+          "thumb": "https://i.discogs.com/-8r4ecHlJCkKJGZmmgWl0HZ4jlEwumOwa3ihffpZxfQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTgyMTY4/MC0xMzk5MDYxNTU2/LTE5MTQuanBlZw.jpeg",
+          "stats": {
+            "community": {
+              "in_wantlist": 139,
+              "in_collection": 1309
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        }
+      ]
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Content-Language": "en",
+      "Date": "Tue, 19 May 2026 23:31:55 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Access-Control-Allow-Headers": "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID",
+      "Access-Control-Allow-Methods": "HEAD,OPTIONS,GET,OPTIONS",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Expose-Headers": "Location",
+      "Cache-Control": "public, must-revalidate",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "X-Content-Type-Options": "nosniff",
+      "x-discogs-media-type": "discogs.v2",
+      "x-discogs-ratelimit": "60",
+      "x-discogs-ratelimit-remaining": "39",
+      "x-discogs-ratelimit-used": "21",
+      "X-Frame-Options": "SAMEORIGIN",
+      "X-XSS-Protection": "1; mode=block",
+      "Set-Cookie": "__cf_bm=OzRaNLKkaNJGVbUSFXcb2jF5ta0._wR6maIvorovBJ0-1779233514.612105-1.0.1.1-mlxjb0MfrNxus4XFQqpXxuU90NMzD8.kicGkqMzj4YA1SbICEYpPpkwwibk005Fd.qvMru_G5P38pLbxQrr9RRDq_26wCqunC9xsKp0h5Ria9WihJTTBZaS10l1lXSPX; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:01:55 GMT",
+      "cf-cache-status": "DYNAMIC",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6e5da5d054f64-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "Guid": "ba89ce5e-2120-4d2e-8c42-e5be0a2f8177",
+  "UpdatedAt": "2026-05-19T23:34:23.9379812Z",
+  "Title": "Proxy Mapping for POST /users/DamIDhagor/collection/folders/999/releases/5134861",
+  "Description": "Proxy Mapping for POST /users/DamIDhagor/collection/folders/999/releases/5134861",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/users/DamIDhagor/collection/folders/999/releases/5134861",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "POST"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Content-Length",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ],
+    "Body": {
+      "Matcher": {
+        "Name": "ExactMatcher",
+        "Pattern": "",
+        "IgnoreCase": true
+      }
+    }
+  },
+  "Response": {
+    "StatusCode": 403,
+    "BodyAsJson": {
+      "message": "You are not allowed to view this resource. Please authenticate as the owner to view this content."
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Date": "Tue, 19 May 2026 23:34:24 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Set-Cookie": "__cf_bm=HPSTtyuMM3E.G6YUxrFVtJha2uz5v3dTNv5v1GtXMZg-1779233664.1662076-1.0.1.1-biof.RP93NvRXFkprvWLK92bhs35qQRHMtnG_uKSLKkfD14Nher291pUPqcS1hPGtuZGyCUr63PNEIeiaoUIRtQhtXuxj_sGDVIi2LhrlB.tjEy1i16gS0Ja_Rjj5YZ7; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:04:24 GMT",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "x-discogs-ratelimit": "25",
+      "x-discogs-ratelimit-remaining": "10",
+      "x-discogs-ratelimit-used": "15",
+      "cf-cache-status": "DYNAMIC",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6e9810988c7dc-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

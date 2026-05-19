@@ -1,0 +1,71 @@
+{
+  "Guid": "dc0a177d-df20-4612-ab1f-0922baeb4061",
+  "UpdatedAt": "2026-05-19T23:33:09.2508665Z",
+  "Title": "Proxy Mapping for GET /users/DamIDhagor/collection/folders/1",
+  "Description": "Proxy Mapping for GET /users/DamIDhagor/collection/folders/1",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/users/DamIDhagor/collection/folders/1",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "GET"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Authorization",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "Discogs token=*",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ]
+  },
+  "Response": {
+    "StatusCode": 200,
+    "BodyAsJson": {
+      "id": 1,
+      "name": "Uncategorized",
+      "count": 0,
+      "resource_url": "https://api.discogs.com/users/DamIDhagor/collection/folders/1"
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Date": "Tue, 19 May 2026 23:33:09 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Set-Cookie": "__cf_bm=4uiyLhbCqFsOnATeFtUCtELxRnjFqqvS_siEOYjq6HE-1779233589.1390784-1.0.1.1-lM4NWy78RxUzmDq_1iN0mFRdoTcm7ovHUBwPoF2zag29DNjRcHdiN9S_9sbzhzzAW9cs5lh0CZ7itvlwngl0nxy7EiHuPATMd70F06Xz9quanbIJ_d7SYt3tNqVu4chp; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:03:09 GMT",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "x-discogs-ratelimit": "60",
+      "x-discogs-ratelimit-remaining": "47",
+      "x-discogs-ratelimit-used": "13",
+      "cf-cache-status": "DYNAMIC",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6e7ac1ec2f807-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

@@ -1,0 +1,2211 @@
+{
+  "Guid": "5c7c1f6d-a0cf-4dc5-9299-e09ee2973881",
+  "UpdatedAt": "2026-05-19T23:31:54.6002896Z",
+  "Title": "Proxy Mapping for GET /labels/11499/releases",
+  "Description": "Proxy Mapping for GET /labels/11499/releases",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/labels/11499/releases",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "GET"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Authorization",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "Discogs token=*",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ],
+    "Params": [
+      {
+        "Name": "page",
+        "Matchers": [
+          {
+            "Name": "ExactMatcher",
+            "Pattern": "1",
+            "IgnoreCase": false
+          }
+        ]
+      },
+      {
+        "Name": "per_page",
+        "Matchers": [
+          {
+            "Name": "ExactMatcher",
+            "Pattern": "100",
+            "IgnoreCase": false
+          }
+        ]
+      }
+    ]
+  },
+  "Response": {
+    "StatusCode": 200,
+    "BodyAsJson": {
+      "pagination": {
+        "page": 1,
+        "pages": 298,
+        "per_page": 100,
+        "items": 29798,
+        "urls": {
+          "last": "https://api.discogs.com/labels/11499/releases?page=298&per_page=100",
+          "next": "https://api.discogs.com/labels/11499/releases?page=2&per_page=100"
+        }
+      },
+      "releases": [
+        {
+          "status": "Accepted",
+          "format": "2xCD, Comp",
+          "catno": "089-26312",
+          "thumb": "https://i.discogs.com/ITckBtRZY1HF5vZ7UG7yGJyuydIKaJBsEyUiHxCbYJw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzNjY4/NS0xNjI2ODA0MTM2/LTg3MjMuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/136685",
+          "title": "Zillo Dark Summer (Best Of Goth Open Airs 2000)",
+          "id": 136685,
+          "year": 2000,
+          "artist": "Various",
+          "stats": {
+            "community": {
+              "in_wantlist": 28,
+              "in_collection": 124
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "BYM 004, 27361 62012",
+          "thumb": "https://i.discogs.com/aBm2WIV9ajalSdBB1BG-4Nvkq7HK8Djkp2oHpQwwk3o/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE4MzE2/My0xMTQ3NTIzMjYw/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/183163",
+          "title": "Pankow",
+          "id": 183163,
+          "year": 1996,
+          "artist": "Pankow",
+          "stats": {
+            "community": {
+              "in_wantlist": 64,
+              "in_collection": 237
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album, RE",
+          "catno": "MICP-10101, MICY-1101",
+          "thumb": "https://i.discogs.com/c_voOHNTvX_qAvgORSDnR8y1K1LcEBUfCejdufVp3cE/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM2ODAz/Mi0xNDk1MDg2NDEx/LTg4MDMuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/368032",
+          "title": "Spiritual Black Dimensions",
+          "id": 368032,
+          "year": 2000,
+          "artist": "Dimmu Borgir",
+          "stats": {
+            "community": {
+              "in_wantlist": 55,
+              "in_collection": 71
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "7\", Ltd",
+          "catno": "NB 023",
+          "thumb": "https://i.discogs.com/vT6xCprcFJj4UEnxpDlkSqbLStqIBODJ3-HmaFeEI-8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM2ODE2/MC0xNjY2MDIwNjk0/LTQyMDUuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/368160",
+          "title": "Blue Blood",
+          "id": 368160,
+          "year": 1989,
+          "artist": "Atrocity",
+          "stats": {
+            "community": {
+              "in_wantlist": 145,
+              "in_collection": 438
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "7\", Ltd",
+          "catno": "NB 023",
+          "thumb": "https://i.discogs.com/vT6xCprcFJj4UEnxpDlkSqbLStqIBODJ3-HmaFeEI-8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM2ODE2/MC0xNjY2MDIwNjk0/LTQyMDUuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/368160",
+          "title": "Blue Blood",
+          "id": 368160,
+          "year": 1989,
+          "artist": "Atrocity",
+          "stats": {
+            "community": {
+              "in_wantlist": 145,
+              "in_collection": 438
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "NB 336-2, 27361 63362",
+          "thumb": "https://i.discogs.com/yg90ZX-c9ywZI5LRc5xe1-tYrymE6rK02RcufF-8pB0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM2ODc3/OS0xNDIzNjY0MzI3/LTc2MDAuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/368779",
+          "title": "Chaosphere",
+          "id": 368779,
+          "year": 1998,
+          "artist": "Meshuggah",
+          "stats": {
+            "community": {
+              "in_wantlist": 285,
+              "in_collection": 1664
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "NB 336-2, 27361 63362",
+          "thumb": "https://i.discogs.com/yg90ZX-c9ywZI5LRc5xe1-tYrymE6rK02RcufF-8pB0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM2ODc3/OS0xNDIzNjY0MzI3/LTc2MDAuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/368779",
+          "title": "Chaosphere",
+          "id": 368779,
+          "year": 1998,
+          "artist": "Meshuggah",
+          "stats": {
+            "community": {
+              "in_wantlist": 285,
+              "in_collection": 1664
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, EP",
+          "catno": "AV011",
+          "thumb": "https://i.discogs.com/1YouejYTFlfqF7dF1svTCMxOgVLZp6kD4elgWCYJmBc/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM2ODky/Ni0xMzQ1Njk4MjM3/LTk2NjAuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/368926",
+          "title": "Through Chasm, Caves And Titan Woods",
+          "id": 368926,
+          "year": 1995,
+          "artist": "Carpathian Forest",
+          "stats": {
+            "community": {
+              "in_wantlist": 373,
+              "in_collection": 1736
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "27361 63172",
+          "thumb": "https://i.discogs.com/TVjQh3NgQoXCvSLRMTLjEzMmAWtqom7rBc2ul9atjRM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM2OTMy/My0xMTQ0MTM5NTYy/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/369323",
+          "title": "Vovin",
+          "id": 369323,
+          "year": 1998,
+          "artist": "Therion",
+          "stats": {
+            "community": {
+              "in_wantlist": 156,
+              "in_collection": 1177
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, EP, Dig",
+          "catno": "HOLY09 CD, HOLY 09 CD",
+          "thumb": "https://i.discogs.com/BjIchqqSDlYD2b_SrO_OvHHG-fIiyMqUwJjotW0e3AA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM2OTM0/MS0xMjg5NDkwMjUy/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/369341",
+          "title": "Eons Aura",
+          "id": 369341,
+          "year": 1995,
+          "artist": "Nightfall",
+          "stats": {
+            "community": {
+              "in_wantlist": 95,
+              "in_collection": 373
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album, Ltd, Sli",
+          "catno": "TFCK-87214",
+          "thumb": "https://i.discogs.com/ePyXAraawF2B6cvEWoqzON716nf54ywTUFQvSNSZa9o/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM2OTg2/Ni0xMjg2MzAzNDQ3/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/369866",
+          "title": "Clayman",
+          "id": 369866,
+          "year": 2000,
+          "artist": "In Flames",
+          "stats": {
+            "community": {
+              "in_wantlist": 106,
+              "in_collection": 115
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, EP",
+          "catno": "NIHIL6 CD",
+          "thumb": "https://i.discogs.com/7X9E7aBBv4nSEc6aSg4IFUG549Th6I7qZN0_luqlPBY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM2OTg5/OC0xMzcxNTk2NDEz/LTcxMjkuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/369898",
+          "title": "Vempire Or Dark Faerytales In Phallustein",
+          "id": 369898,
+          "year": 1996,
+          "artist": "Cradle Of Filth",
+          "stats": {
+            "community": {
+              "in_wantlist": 298,
+              "in_collection": 3698
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "HOLY12CD",
+          "thumb": "https://i.discogs.com/S0Yo5NHKipj_uxTsR6S7DB9CjJ4LvNfxS1bqDkQrwt8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM3MDMy/OS0xMzYwMzE4NTU2/LTM0NzQuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/370329",
+          "title": "Sounds Of Beautiful Experience",
+          "id": 370329,
+          "year": 1995,
+          "artist": "On Thorns I Lay",
+          "stats": {
+            "community": {
+              "in_wantlist": 140,
+              "in_collection": 334
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "7\", Ltd, Num",
+          "catno": "GORE 002",
+          "thumb": "https://i.discogs.com/kb679ZNaQDKZJhcDNPiwc8vwt1MpBFOQSpk8pwQE9H0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM3MjU5/My0xNzE2NjI0NzE3/LTgzNTcuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/372593",
+          "title": "Incubus",
+          "id": 372593,
+          "year": 1989,
+          "artist": "Incubus (5)",
+          "stats": {
+            "community": {
+              "in_wantlist": 284,
+              "in_collection": 228
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, EP, RP",
+          "catno": "AV009",
+          "thumb": "https://i.discogs.com/b9UGDm84BxqFy80UV3kpmVKHX0C4vy_B-QuKLmpbTpA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM3Mjc3/Ni0xNDQ5MzQ1NzMy/LTEyMTguanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/372776",
+          "title": "For Funerals To Come...",
+          "id": 372776,
+          "year": 1995,
+          "artist": "Katatonia",
+          "stats": {
+            "community": {
+              "in_wantlist": 187,
+              "in_collection": 806
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "FOG 012",
+          "thumb": "https://i.discogs.com/9sGXEhY-svS36qFmKefycZTL8oyQqhE5ayXC8SBZM3g/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM3MzQ5/Mi0xMzM3NDc0MjU0/LTgzOTcuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/373492",
+          "title": "Nemesis Divina",
+          "id": 373492,
+          "year": 1996,
+          "artist": "Satyricon",
+          "stats": {
+            "community": {
+              "in_wantlist": 502,
+              "in_collection": 2960
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "FOG 011",
+          "thumb": "https://i.discogs.com/3OlWRMY4TIdhm0HxCz4tyWyZ1e43aHfqNAwFLLN4x6o/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM3OTg1/OC0xMzg2MDc4NjEw/LTk1MjMuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/379858",
+          "title": "Total Death",
+          "id": 379858,
+          "year": 1996,
+          "artist": "Darkthrone",
+          "stats": {
+            "community": {
+              "in_wantlist": 461,
+              "in_collection": 1928
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "Cass, Album",
+          "catno": "MP-NB 040",
+          "thumb": "https://i.discogs.com/HwJIked7KXTeGHu8lxp16Koen4QxuIuZakzgDHbddg4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4MDI4/Ny0xNTU3NjU2Nzcw/LTY1OTYuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/380287",
+          "title": "Animatronic",
+          "id": 380287,
+          "year": 1999,
+          "artist": "The Kovenant",
+          "stats": {
+            "community": {
+              "in_wantlist": 36,
+              "in_collection": 53
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "Cass, Album",
+          "catno": "MP-NB 040",
+          "thumb": "https://i.discogs.com/HwJIked7KXTeGHu8lxp16Koen4QxuIuZakzgDHbddg4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4MDI4/Ny0xNTU3NjU2Nzcw/LTY1OTYuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/380287",
+          "title": "Animatronic",
+          "id": 380287,
+          "year": 1999,
+          "artist": "The Kovenant",
+          "stats": {
+            "community": {
+              "in_wantlist": 36,
+              "in_collection": 53
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "Cass, Album",
+          "catno": "MP-NB 040",
+          "thumb": "https://i.discogs.com/HwJIked7KXTeGHu8lxp16Koen4QxuIuZakzgDHbddg4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4MDI4/Ny0xNTU3NjU2Nzcw/LTY1OTYuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/380287",
+          "title": "Animatronic",
+          "id": 380287,
+          "year": 1999,
+          "artist": "The Kovenant",
+          "stats": {
+            "community": {
+              "in_wantlist": 36,
+              "in_collection": 53
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "6618-2",
+          "thumb": "https://i.discogs.com/qhOw9ETaT_fwIPeSl4CV3k0KFu7kuHG9HsSG6XjII2A/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4MDk1/Ny0xNDkxNjc0NTM2/LTYyNjkuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/380957",
+          "title": "Poets & Madmen",
+          "id": 380957,
+          "year": 2001,
+          "artist": "Savatage",
+          "stats": {
+            "community": {
+              "in_wantlist": 65,
+              "in_collection": 391
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, EP",
+          "catno": "SHAGRATH 005",
+          "thumb": "https://i.discogs.com/aCx-FV2vpAqC87AVPU9S1xCx721OBPa_rkLaRIce3xw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4MzM2/OC0xNjg1MTYxMjc3/LTM3MjkuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/383368",
+          "title": "In The Shades Of Life",
+          "id": 383368,
+          "year": 1996,
+          "artist": "Old Man's Child",
+          "stats": {
+            "community": {
+              "in_wantlist": 243,
+              "in_collection": 524
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, EP",
+          "catno": "AV008",
+          "thumb": "https://i.discogs.com/1I9bvWJKG2Ob9u44LnkA1I6SM9ug5n6uw6F4EI80yo0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4MzUw/Ni0xMjgwNjU2MTAx/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/383506",
+          "title": "Dream II",
+          "id": 383506,
+          "year": 1995,
+          "artist": "Pan.Thy.Monium",
+          "stats": {
+            "community": {
+              "in_wantlist": 175,
+              "in_collection": 388
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "12\", EP, Ltd",
+          "catno": "FOG 014",
+          "thumb": "https://i.discogs.com/0E4fIWAyd1_E4-HGZilFPETUqPs5w3oMAJHZc9pR9Rg/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4MzYx/MC0xMjI4NTk2MDMz/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/383610",
+          "title": "Megiddo - Mother North In The Dawn Of A New Age -",
+          "id": 383610,
+          "year": 1997,
+          "artist": "Satyricon",
+          "stats": {
+            "community": {
+              "in_wantlist": 285,
+              "in_collection": 545
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "2xLP, Album, Ltd, Pur",
+          "catno": "NB 527-1, 27361 65271",
+          "thumb": "https://i.discogs.com/qcAPRrjAAGKxpMVWPGtU7849zZhHClG8VsFI1ZSDn7s/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4NDEz/NC0xMTA2MjQ4MTI3/LmpwZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/384134",
+          "title": "Puritanical Euphoric Misanthropia",
+          "id": 384134,
+          "year": 2001,
+          "artist": "Dimmu Borgir",
+          "stats": {
+            "community": {
+              "in_wantlist": 555,
+              "in_collection": 670
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "2xLP, Album, Ltd, Pur",
+          "catno": "NB 527-1, 27361 65271",
+          "thumb": "https://i.discogs.com/qcAPRrjAAGKxpMVWPGtU7849zZhHClG8VsFI1ZSDn7s/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4NDEz/NC0xMTA2MjQ4MTI3/LmpwZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/384134",
+          "title": "Puritanical Euphoric Misanthropia",
+          "id": 384134,
+          "year": 2001,
+          "artist": "Dimmu Borgir",
+          "stats": {
+            "community": {
+              "in_wantlist": 555,
+              "in_collection": 670
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "12\", Ltd, Red",
+          "catno": "NB 698-1, 27361 66981",
+          "thumb": "https://i.discogs.com/UIWTwFgZgdTu3d0be7kkQbU7ImIKJsUclta74shZGFg/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4NDIy/OS0xMzA2Mjg2Njg0/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/384229",
+          "title": "Warriors Of The World United",
+          "id": 384229,
+          "year": 2002,
+          "artist": "Manowar",
+          "stats": {
+            "community": {
+              "in_wantlist": 182,
+              "in_collection": 288
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "Cass, Album",
+          "catno": "074",
+          "thumb": "https://i.discogs.com/Gpli_kYagoaZG7AK0fulfQ7eeACzicI0ZG77PgA1EU0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4NDcy/OS0xMzkyNTUyMDk0/LTQ3NzMuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/384729",
+          "title": "Tales From The Thousand Lakes",
+          "id": 384729,
+          "year": 1995,
+          "artist": "Amorphis",
+          "stats": {
+            "community": {
+              "in_wantlist": 71,
+              "in_collection": 61
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "Cass, Album",
+          "catno": "074",
+          "thumb": "https://i.discogs.com/Gpli_kYagoaZG7AK0fulfQ7eeACzicI0ZG77PgA1EU0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4NDcy/OS0xMzkyNTUyMDk0/LTQ3NzMuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/384729",
+          "title": "Tales From The Thousand Lakes",
+          "id": 384729,
+          "year": 1995,
+          "artist": "Amorphis",
+          "stats": {
+            "community": {
+              "in_wantlist": 71,
+              "in_collection": 61
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "Cass, Album",
+          "catno": "074",
+          "thumb": "https://i.discogs.com/Gpli_kYagoaZG7AK0fulfQ7eeACzicI0ZG77PgA1EU0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4NDcy/OS0xMzkyNTUyMDk0/LTQ3NzMuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/384729",
+          "title": "Tales From The Thousand Lakes",
+          "id": 384729,
+          "year": 1995,
+          "artist": "Amorphis",
+          "stats": {
+            "community": {
+              "in_wantlist": 71,
+              "in_collection": 61
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album, RE",
+          "catno": "AV005",
+          "thumb": "https://i.discogs.com/eA9bNDfRKrLpSPOaDYI_pN-0zPTufhKiqH0ZUm4Ls1A/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4OTYw/OS0xMzI4NTk5Njc2/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/389609",
+          "title": "The Second Ring Of Power",
+          "id": 389609,
+          "year": 1995,
+          "artist": "Unholy",
+          "stats": {
+            "community": {
+              "in_wantlist": 98,
+              "in_collection": 203
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "I.R. 015",
+          "thumb": "https://i.discogs.com/f1AH1EHmaqa06WU2wkMOgdX-oEg4cBlmHFdATf_DZE4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM5MjM1/Ni0xNTQ3NDcwNjI2/LTkzMDUuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/392356",
+          "title": "Totentanz",
+          "id": 392356,
+          "year": 1995,
+          "artist": "Lunatic Invasion",
+          "stats": {
+            "community": {
+              "in_wantlist": 101,
+              "in_collection": 258
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "LP, Album, Ltd, Pic",
+          "catno": "NB 269-1, LP 27361 62691",
+          "thumb": "https://i.discogs.com/IuwkDEc7xjPR5GVptxmfUP03_eAZv56I0grav2jbXgE/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM5NDEz/OS0xMTg1ODEyNzI0/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/394139",
+          "title": "Awake",
+          "id": 394139,
+          "year": 1997,
+          "artist": "Crematory",
+          "stats": {
+            "community": {
+              "in_wantlist": 98,
+              "in_collection": 267
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "LP, Comp",
+          "catno": "MIND 003",
+          "thumb": "https://i.discogs.com/wbA51hpWRnWsTIpl2sRz7BGzEOS7B1PqndZC4Vf6UWI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM5NDI4/OS0xMjUxNzIwMzcw/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/394289",
+          "title": "No Fraud",
+          "id": 394289,
+          "year": 1991,
+          "artist": "No Fraud",
+          "stats": {
+            "community": {
+              "in_wantlist": 78,
+              "in_collection": 208
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "SPI 020 CD",
+          "thumb": "https://i.discogs.com/MMMpNm5bwDBVPb4us1Usrj1tm6YDALrrpMGZJIBi1h4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM5NDgz/MC0xMzA1Mjk2Mjk5/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/394830",
+          "title": "De Luxe",
+          "id": 394830,
+          "year": 1994,
+          "artist": "Xysma",
+          "stats": {
+            "community": {
+              "in_wantlist": 99,
+              "in_collection": 265
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "NB 077-2, NB 077 / 2, NB 077CD",
+          "thumb": "https://i.discogs.com/UKC2rG2jMqRisxrWifZpkxPPlWoWHQXc84M5_gFRVqY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM5NzM5/My0xMjgwNTE5NzUy/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/397393",
+          "title": "Indecent And Obscene",
+          "id": 397393,
+          "year": 1993,
+          "artist": "Dismember",
+          "stats": {
+            "community": {
+              "in_wantlist": 405,
+              "in_collection": 1644
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "NB 077-2, NB 077 / 2, NB 077CD",
+          "thumb": "https://i.discogs.com/UKC2rG2jMqRisxrWifZpkxPPlWoWHQXc84M5_gFRVqY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM5NzM5/My0xMjgwNTE5NzUy/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/397393",
+          "title": "Indecent And Obscene",
+          "id": 397393,
+          "year": 1993,
+          "artist": "Dismember",
+          "stats": {
+            "community": {
+              "in_wantlist": 405,
+              "in_collection": 1644
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "IROND CD 01-115",
+          "thumb": "https://i.discogs.com/pL794zJcnERpuSKgriNRS0rAtrCdCYqhl_bXB8ZaA5w/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM5OTQz/Mi0xNTMyODUyMjg3/LTIxMTUuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/399432",
+          "title": "Fassade",
+          "id": 399432,
+          "year": 2001,
+          "artist": "Lacrimosa",
+          "stats": {
+            "community": {
+              "in_wantlist": 19,
+              "in_collection": 112
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "IROND CD 01-115",
+          "thumb": "https://i.discogs.com/pL794zJcnERpuSKgriNRS0rAtrCdCYqhl_bXB8ZaA5w/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM5OTQz/Mi0xNTMyODUyMjg3/LTIxMTUuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/399432",
+          "title": "Fassade",
+          "id": 399432,
+          "year": 2001,
+          "artist": "Lacrimosa",
+          "stats": {
+            "community": {
+              "in_wantlist": 19,
+              "in_collection": 112
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "IROND CD 01-115",
+          "thumb": "https://i.discogs.com/pL794zJcnERpuSKgriNRS0rAtrCdCYqhl_bXB8ZaA5w/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM5OTQz/Mi0xNTMyODUyMjg3/LTIxMTUuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/399432",
+          "title": "Fassade",
+          "id": 399432,
+          "year": 2001,
+          "artist": "Lacrimosa",
+          "stats": {
+            "community": {
+              "in_wantlist": 19,
+              "in_collection": 112
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "Cass, Album",
+          "catno": "047",
+          "thumb": "https://i.discogs.com/eQeKHFDEv0EjpV1YqXIeGHyPZel8aqyT-XC5kyqErKs/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQwMTAy/OC0xMzk2ODg2MjI3/LTEzNDIuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/401028",
+          "title": "Sorcery",
+          "id": 401028,
+          "year": 1995,
+          "artist": "Kataklysm",
+          "stats": {
+            "community": {
+              "in_wantlist": 54,
+              "in_collection": 37
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "Cass, Album",
+          "catno": "047",
+          "thumb": "https://i.discogs.com/eQeKHFDEv0EjpV1YqXIeGHyPZel8aqyT-XC5kyqErKs/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQwMTAy/OC0xMzk2ODg2MjI3/LTEzNDIuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/401028",
+          "title": "Sorcery",
+          "id": 401028,
+          "year": 1995,
+          "artist": "Kataklysm",
+          "stats": {
+            "community": {
+              "in_wantlist": 54,
+              "in_collection": 37
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Comp",
+          "catno": "NBCHECK02",
+          "thumb": "https://i.discogs.com/YNIJt32WrMrC9iBE3f633p_gBm5sq_QpQ2kieTqqGEg/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQwNDkz/Mi0xNTI5MjkwNzgx/LTkzMTMuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/404932",
+          "title": "Nuclear Blast Soundcheck - Series - Volume 2",
+          "id": 404932,
+          "year": 1995,
+          "artist": "Various",
+          "stats": {
+            "community": {
+              "in_wantlist": 24,
+              "in_collection": 66
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Comp",
+          "catno": "NBCHECK02",
+          "thumb": "https://i.discogs.com/YNIJt32WrMrC9iBE3f633p_gBm5sq_QpQ2kieTqqGEg/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQwNDkz/Mi0xNTI5MjkwNzgx/LTkzMTMuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/404932",
+          "title": "Nuclear Blast Soundcheck - Series - Volume 2",
+          "id": 404932,
+          "year": 1995,
+          "artist": "Various",
+          "stats": {
+            "community": {
+              "in_wantlist": 24,
+              "in_collection": 66
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "LP, Album",
+          "catno": "NB 349-1",
+          "thumb": "https://i.discogs.com/z2PFTpI9Zu4J60E2plDXDWBSy6niVZHa9XyYW41YYoc/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQxMzgx/Mi0xNjkxNTAxNTIw/LTg4ODAuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/413812",
+          "title": "Spiritual Black Dimensions",
+          "id": 413812,
+          "year": 1999,
+          "artist": "Dimmu Borgir",
+          "stats": {
+            "community": {
+              "in_wantlist": 333,
+              "in_collection": 497
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "LP, Album",
+          "catno": "NB 349-1",
+          "thumb": "https://i.discogs.com/z2PFTpI9Zu4J60E2plDXDWBSy6niVZHa9XyYW41YYoc/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQxMzgx/Mi0xNjkxNTAxNTIw/LTg4ODAuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/413812",
+          "title": "Spiritual Black Dimensions",
+          "id": 413812,
+          "year": 1999,
+          "artist": "Dimmu Borgir",
+          "stats": {
+            "community": {
+              "in_wantlist": 333,
+              "in_collection": 497
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Comp",
+          "catno": "NB 362-2",
+          "thumb": "https://i.discogs.com/90GbmAVtHmgMkqzk2JZXMZos4O0Cu6WurJgAGaefOzs/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQxNzQ0/MS0xNTMwMTgzNDgy/LTU3NTAuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/417441",
+          "title": "Nuclear Blast Soundcheck - Series - Volume 15",
+          "id": 417441,
+          "year": 1998,
+          "artist": "Various",
+          "stats": {
+            "community": {
+              "in_wantlist": 14,
+              "in_collection": 114
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Comp",
+          "catno": "NB 362-2",
+          "thumb": "https://i.discogs.com/90GbmAVtHmgMkqzk2JZXMZos4O0Cu6WurJgAGaefOzs/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQxNzQ0/MS0xNTMwMTgzNDgy/LTU3NTAuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/417441",
+          "title": "Nuclear Blast Soundcheck - Series - Volume 15",
+          "id": 417441,
+          "year": 1998,
+          "artist": "Various",
+          "stats": {
+            "community": {
+              "in_wantlist": 14,
+              "in_collection": 114
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Smplr",
+          "catno": "NB 478-2",
+          "thumb": "https://i.discogs.com/PVldxY_wDEOlWG2_gZVv0EogWHYHWGj0vXTIuR-snhQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQyMjI1/My0xNTkzNzEyMjcx/LTQ1MTEuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/422253",
+          "title": "News From Dr. Blast - Vol. 6",
+          "id": 422253,
+          "year": 2001,
+          "artist": "Various",
+          "stats": {
+            "community": {
+              "in_wantlist": 10,
+              "in_collection": 207
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "NB 531-2, 27361 65312, NB 533-2",
+          "thumb": "https://i.discogs.com/ruw73wJmhemNCMuyTHwhRomo2QLauRGkZgw7cNPf6ZA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQzOTUw/Ny0xNDMzMDE0MDY0/LTkyNzMuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/439507",
+          "title": "Round 6",
+          "id": 439507,
+          "year": 2000,
+          "artist": "Pro-Pain",
+          "stats": {
+            "community": {
+              "in_wantlist": 39,
+              "in_collection": 789
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "NB 531-2, 27361 65312, NB 533-2",
+          "thumb": "https://i.discogs.com/ruw73wJmhemNCMuyTHwhRomo2QLauRGkZgw7cNPf6ZA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQzOTUw/Ny0xNDMzMDE0MDY0/LTkyNzMuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/439507",
+          "title": "Round 6",
+          "id": 439507,
+          "year": 2000,
+          "artist": "Pro-Pain",
+          "stats": {
+            "community": {
+              "in_wantlist": 39,
+              "in_collection": 789
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "Ltd, RP, S/Edition, Sli + 2xCD, Album + CD, EP",
+          "catno": "NB 379-9, 27361 63799",
+          "thumb": "https://i.discogs.com/BKzU0kfQOX_LOUZzwm6HqMVtLpKCJ7sBAdkDJv-n5WQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ0MjM1/OS0xNTU5NjQ2MDYx/LTc0OTAuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/442359",
+          "title": "Hell On Stage Live",
+          "id": 442359,
+          "year": 1999,
+          "artist": "Manowar",
+          "stats": {
+            "community": {
+              "in_wantlist": 57,
+              "in_collection": 226
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "Ltd, RP, S/Edition, Sli + 2xCD, Album + CD, EP",
+          "catno": "NB 379-9, 27361 63799",
+          "thumb": "https://i.discogs.com/BKzU0kfQOX_LOUZzwm6HqMVtLpKCJ7sBAdkDJv-n5WQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ0MjM1/OS0xNTU5NjQ2MDYx/LTc0OTAuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/442359",
+          "title": "Hell On Stage Live",
+          "id": 442359,
+          "year": 1999,
+          "artist": "Manowar",
+          "stats": {
+            "community": {
+              "in_wantlist": 57,
+              "in_collection": 226
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "7\"",
+          "catno": "RR010",
+          "thumb": "https://i.discogs.com/Qq1ueSc9sIfcHXmluIXqMGFm5YmpPDEo1in9KJfhXVI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ0Mzc0/Ni0xNzUzMDkzOTk3/LTIwNDAuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/443746",
+          "title": "Excruciation",
+          "id": 443746,
+          "year": 1991,
+          "artist": "Repulsion",
+          "stats": {
+            "community": {
+              "in_wantlist": 630,
+              "in_collection": 731
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Comp",
+          "catno": "NB 311-2, 27361 63112, DW 311",
+          "thumb": "https://i.discogs.com/wqwHtEWe7jhpk6YbACxiIP70KRICwd4UHEQxNgBkrnE/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ0NTg5/OC0xNjk4NDM1NDIz/LTkzMzQuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/445898",
+          "title": "Call On The Dark 2",
+          "id": 445898,
+          "year": 1998,
+          "artist": "Various",
+          "stats": {
+            "community": {
+              "in_wantlist": 27,
+              "in_collection": 221
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Comp",
+          "catno": "NB 311-2, 27361 63112, DW 311",
+          "thumb": "https://i.discogs.com/wqwHtEWe7jhpk6YbACxiIP70KRICwd4UHEQxNgBkrnE/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ0NTg5/OC0xNjk4NDM1NDIz/LTkzMzQuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/445898",
+          "title": "Call On The Dark 2",
+          "id": 445898,
+          "year": 1998,
+          "artist": "Various",
+          "stats": {
+            "community": {
+              "in_wantlist": 27,
+              "in_collection": 221
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album, Ltd",
+          "catno": "NR008",
+          "thumb": "https://i.discogs.com/ITWPeclD-TLm6RLz0K_YMo6s9eQlXyQPpIDzD_NYR48/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ1NTEw/MC0xMTM2ODk2MzI0/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/455100",
+          "title": "Fran Marder",
+          "id": 455100,
+          "year": 1995,
+          "artist": "Arckanum",
+          "stats": {
+            "community": {
+              "in_wantlist": 424,
+              "in_collection": 391
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Comp, Smplr",
+          "catno": "SUBPRO 023, SUPPRO 023",
+          "thumb": "https://i.discogs.com/cveAkmvMtCmSoNZqabUHMbesZo0_YuwzKcCyKQDwtp0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ1NzU1/Ni0xMTM4MjAyNzQ4/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/457556",
+          "title": "Large Compilation CD # 8",
+          "id": 457556,
+          "year": 2005,
+          "artist": "Various",
+          "stats": {
+            "community": {
+              "in_wantlist": 12,
+              "in_collection": 63
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "SON 0156-2",
+          "thumb": "https://i.discogs.com/Ton9GsjKSF9ZgwZH0PxSwO6O7ihWYEqXZA2aP-kwzXU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ1ODQx/OC0xNTY1Nzc1OTg4/LTQ2MTAuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/458418",
+          "title": "Long Forgotten World",
+          "id": 458418,
+          "year": 1996,
+          "artist": "In Mitra Medusa Inri",
+          "stats": {
+            "community": {
+              "in_wantlist": 48,
+              "in_collection": 111
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album, Dig",
+          "catno": "NB 529-2, 27361 65292",
+          "thumb": "https://i.discogs.com/P4cW0CUmWPRtVXSdnlwYwXzvSMKAQ96yK3sHH2B4ulc/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ2NDYy/Ni0xMzQzNzYxMTU2/LTI0MDEuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/464626",
+          "title": "Into The Abyss",
+          "id": 464626,
+          "year": 2000,
+          "artist": "Hypocrisy",
+          "stats": {
+            "community": {
+              "in_wantlist": 119,
+              "in_collection": 1377
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album, Dig",
+          "catno": "NB 529-2, 27361 65292",
+          "thumb": "https://i.discogs.com/P4cW0CUmWPRtVXSdnlwYwXzvSMKAQ96yK3sHH2B4ulc/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ2NDYy/Ni0xMzQzNzYxMTU2/LTI0MDEuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/464626",
+          "title": "Into The Abyss",
+          "id": 464626,
+          "year": 2000,
+          "artist": "Hypocrisy",
+          "stats": {
+            "community": {
+              "in_wantlist": 119,
+              "in_collection": 1377
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "DW 075-2, none",
+          "thumb": "https://i.discogs.com/drgIS0GUcTCFyrcWEvXRnnxyuuvQHIdud94SIm8MieQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ3NDA3/Ny0xMTQyOTcyNDM3/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/474077",
+          "title": "Gedanken Eines Vampirs",
+          "id": 474077,
+          "year": 1995,
+          "artist": "Umbra Et Imago",
+          "stats": {
+            "community": {
+              "in_wantlist": 30,
+              "in_collection": 209
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "NB 047 CD",
+          "thumb": "https://i.discogs.com/pja3hyHTDXHIxmcSOIyA5TmZvd3BZdcD3an0UZFXXuY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ3NTQ3/NC0xNTA2NTQzNDYw/LTc0NjcuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/475474",
+          "title": "Like An Ever Flowing Stream",
+          "id": 475474,
+          "year": 1991,
+          "artist": "Dismember",
+          "stats": {
+            "community": {
+              "in_wantlist": 583,
+              "in_collection": 840
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "NB 047 CD",
+          "thumb": "https://i.discogs.com/pja3hyHTDXHIxmcSOIyA5TmZvd3BZdcD3an0UZFXXuY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ3NTQ3/NC0xNTA2NTQzNDYw/LTc0NjcuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/475474",
+          "title": "Like An Ever Flowing Stream",
+          "id": 475474,
+          "year": 1991,
+          "artist": "Dismember",
+          "stats": {
+            "community": {
+              "in_wantlist": 583,
+              "in_collection": 840
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "7\", Ltd, Num, Whi",
+          "catno": "GORE 001",
+          "thumb": "https://i.discogs.com/1J8f4D1BoK4F2fXMc2oeiZo68uiE72liMUTCybjYj4Q/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ4MjMz/MS0xNTU0ODEwMzM1/LTExODMuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/482331",
+          "title": "Shitlist",
+          "id": 482331,
+          "year": 1990,
+          "artist": "Macabre",
+          "stats": {
+            "community": {
+              "in_wantlist": 360,
+              "in_collection": 227
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "NB 034",
+          "thumb": "https://i.discogs.com/SGF7XMkuncbpqh3H5-S0JjaSdpeGuklPLoGlDM1VGQM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ4OTA4/OS0xMTg2MTUzMTU3/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/489089",
+          "title": "Spontaneous Underground",
+          "id": 489089,
+          "year": 1990,
+          "artist": "Deathcore",
+          "stats": {
+            "community": {
+              "in_wantlist": 92,
+              "in_collection": 120
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "NB 034",
+          "thumb": "https://i.discogs.com/SGF7XMkuncbpqh3H5-S0JjaSdpeGuklPLoGlDM1VGQM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ4OTA4/OS0xMTg2MTUzMTU3/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/489089",
+          "title": "Spontaneous Underground",
+          "id": 489089,
+          "year": 1990,
+          "artist": "Deathcore",
+          "stats": {
+            "community": {
+              "in_wantlist": 92,
+              "in_collection": 120
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "I.R. 016",
+          "thumb": "https://i.discogs.com/5M_A9jdTtmdBEPrTNPilohiLy29ye8w77IlgIVvDWyQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ5NDA5/OS0xNjU3OTc1NDE3/LTQzMDUuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/494099",
+          "title": "Myst",
+          "id": 494099,
+          "year": 1995,
+          "artist": "Fermenting Innards",
+          "stats": {
+            "community": {
+              "in_wantlist": 244,
+              "in_collection": 252
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "LP, Album, Ltd, Pic",
+          "catno": "NB 298-1",
+          "thumb": "https://i.discogs.com/2CTccwGsiCuZG_KGX2lxzIKj32pxPFgQA_vqWbYWCpk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMjgw/OC0xMjA2MzQ5NzAw/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/512808",
+          "title": "Blacken The Angel",
+          "id": 512808,
+          "year": 1998,
+          "artist": "Agathodaimon",
+          "stats": {
+            "community": {
+              "in_wantlist": 98,
+              "in_collection": 159
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "LP, Album, Ltd, Pic",
+          "catno": "NB 298-1",
+          "thumb": "https://i.discogs.com/2CTccwGsiCuZG_KGX2lxzIKj32pxPFgQA_vqWbYWCpk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMjgw/OC0xMjA2MzQ5NzAw/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/512808",
+          "title": "Blacken The Angel",
+          "id": 512808,
+          "year": 1998,
+          "artist": "Agathodaimon",
+          "stats": {
+            "community": {
+              "in_wantlist": 98,
+              "in_collection": 159
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "NB 055 CD",
+          "thumb": "https://i.discogs.com/lBCibmaqGn2X_ysFOHd7pKga4VR0R3lcn1EtEP8nWRQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzMy/My0xMTg2MTYxNTc5/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/513323",
+          "title": "Imperial Doom",
+          "id": 513323,
+          "year": 1992,
+          "artist": "Monstrosity",
+          "stats": {
+            "community": {
+              "in_wantlist": 660,
+              "in_collection": 933
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "NB 055 CD",
+          "thumb": "https://i.discogs.com/lBCibmaqGn2X_ysFOHd7pKga4VR0R3lcn1EtEP8nWRQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzMy/My0xMTg2MTYxNTc5/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/513323",
+          "title": "Imperial Doom",
+          "id": 513323,
+          "year": 1992,
+          "artist": "Monstrosity",
+          "stats": {
+            "community": {
+              "in_wantlist": 660,
+              "in_collection": 933
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "NB 381-2, 27361 63812",
+          "thumb": "https://i.discogs.com/twU3lulME9DoDDrL4MByHSa24eiLp_7fc9FRa-yAUCY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUyNDk4/MS0xNDMzMDU4ODg0/LTIwNTQuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/524981",
+          "title": "Feind Hört Mit",
+          "id": 524981,
+          "year": 1999,
+          "artist": "Stahlhammer",
+          "stats": {
+            "community": {
+              "in_wantlist": 18,
+              "in_collection": 177
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "NB 381-2, 27361 63812",
+          "thumb": "https://i.discogs.com/twU3lulME9DoDDrL4MByHSa24eiLp_7fc9FRa-yAUCY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUyNDk4/MS0xNDMzMDU4ODg0/LTIwNTQuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/524981",
+          "title": "Feind Hört Mit",
+          "id": 524981,
+          "year": 1999,
+          "artist": "Stahlhammer",
+          "stats": {
+            "community": {
+              "in_wantlist": 18,
+              "in_collection": 177
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Comp, M/Print",
+          "catno": "6586-2",
+          "thumb": "https://i.discogs.com/DBtrvk3xvo_8y6ZCxq5vx04VeMKsCSobejFOEhjsJ1Y/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU0NzM5/MC0xNzA2NDc3NTUy/LTQ0MjMuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/547390",
+          "title": "Intermission",
+          "id": 547390,
+          "year": 2001,
+          "artist": "Stratovarius",
+          "stats": {
+            "community": {
+              "in_wantlist": 16,
+              "in_collection": 287
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Comp, M/Print",
+          "catno": "6586-2",
+          "thumb": "https://i.discogs.com/DBtrvk3xvo_8y6ZCxq5vx04VeMKsCSobejFOEhjsJ1Y/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU0NzM5/MC0xNzA2NDc3NTUy/LTQ0MjMuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/547390",
+          "title": "Intermission",
+          "id": 547390,
+          "year": 2001,
+          "artist": "Stratovarius",
+          "stats": {
+            "community": {
+              "in_wantlist": 16,
+              "in_collection": 287
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Comp, M/Print",
+          "catno": "6586-2",
+          "thumb": "https://i.discogs.com/DBtrvk3xvo_8y6ZCxq5vx04VeMKsCSobejFOEhjsJ1Y/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU0NzM5/MC0xNzA2NDc3NTUy/LTQ0MjMuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/547390",
+          "title": "Intermission",
+          "id": 547390,
+          "year": 2001,
+          "artist": "Stratovarius",
+          "stats": {
+            "community": {
+              "in_wantlist": 16,
+              "in_collection": 287
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "NB 1199-2, 27361 11992",
+          "thumb": "https://i.discogs.com/dM4toJPtY5YHniybrUxJEvS-sjcZHm56Q9c6ghw4DkQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU0OTcy/OC0xMjQ4OTQ5MTIy/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/549728",
+          "title": "The Garden Of Unearthly Delights",
+          "id": 549728,
+          "year": 2005,
+          "artist": "Cathedral",
+          "stats": {
+            "community": {
+              "in_wantlist": 67,
+              "in_collection": 445
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "NB 1199-2, 27361 11992",
+          "thumb": "https://i.discogs.com/dM4toJPtY5YHniybrUxJEvS-sjcZHm56Q9c6ghw4DkQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU0OTcy/OC0xMjQ4OTQ5MTIy/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/549728",
+          "title": "The Garden Of Unearthly Delights",
+          "id": 549728,
+          "year": 2005,
+          "artist": "Cathedral",
+          "stats": {
+            "community": {
+              "in_wantlist": 67,
+              "in_collection": 445
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, EP",
+          "catno": "NB 059 CD",
+          "thumb": "https://i.discogs.com/clqyL9ivfwhg8Ip5xpmZybBcX_DGMtMBq4XiiODUeaU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU1OTQ1/My0xMTg2MTYxNzI5/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/559453",
+          "title": "Dark Is The Season",
+          "id": 559453,
+          "year": 1992,
+          "artist": "Benediction",
+          "stats": {
+            "community": {
+              "in_wantlist": 225,
+              "in_collection": 672
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, EP",
+          "catno": "NB 059 CD",
+          "thumb": "https://i.discogs.com/clqyL9ivfwhg8Ip5xpmZybBcX_DGMtMBq4XiiODUeaU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU1OTQ1/My0xMTg2MTYxNzI5/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/559453",
+          "title": "Dark Is The Season",
+          "id": 559453,
+          "year": 1992,
+          "artist": "Benediction",
+          "stats": {
+            "community": {
+              "in_wantlist": 225,
+              "in_collection": 672
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "2xLP, Album, Pic",
+          "catno": "BOBV035DPD",
+          "thumb": "https://i.discogs.com/8pPLND2LPAvX3NglXUlSlWzfO5NnUiBylWw89ybZw5A/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU4MDMx/NC0xNjgxNTg3NzU0/LTMyODguanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/580314",
+          "title": "Once",
+          "id": 580314,
+          "year": 2005,
+          "artist": "Nightwish",
+          "stats": {
+            "community": {
+              "in_wantlist": 212,
+              "in_collection": 217
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album + CD, EP + Ltd",
+          "catno": "RPS 010 CD, RPS010B MCD",
+          "thumb": "https://i.discogs.com/YLOslFUD9dHLfd01CiSYgqOW3sJPCoDcYlTk_dK_8qg/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU4NDQ1/My0xMjY4OTE1NzI4/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/584453",
+          "title": "Rated-X",
+          "id": 584453,
+          "year": 1995,
+          "artist": "Deranged",
+          "stats": {
+            "community": {
+              "in_wantlist": 145,
+              "in_collection": 210
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album, Dig",
+          "catno": "NB 269-0, CD 27361 62690, NB 269-2",
+          "thumb": "https://i.discogs.com/YH5yOjY3x-Dhp62YgIvrZb-ZmSmnJCnYFvqiXLsawyo/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU5MzI3/Mi0xMTYxNzgxODEz/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/593272",
+          "title": "Awake",
+          "id": 593272,
+          "year": 1997,
+          "artist": "Crematory",
+          "stats": {
+            "community": {
+              "in_wantlist": 53,
+              "in_collection": 509
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "CD AR 024, 27361-69612",
+          "thumb": "https://i.discogs.com/V_jwnmCvPeSu2u4sifIWqpeWsGfKVj_JX5BuLC0lP_M/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYxMDg5/NS0xMjc1OTg0Mjg0/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/610895",
+          "title": "Daemoonseth Act II",
+          "id": 610895,
+          "year": 1995,
+          "artist": "Christ Agony",
+          "stats": {
+            "community": {
+              "in_wantlist": 120,
+              "in_collection": 402
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "CD AR 030",
+          "thumb": "https://i.discogs.com/1mhoA8W1v7puDFoMUgatZMYfsRF0Q1qyRLrUMzfFwnA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYxMTM1/Ni0xMjAwMzY0MDky/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/611356",
+          "title": "Divine Symphonies",
+          "id": 611356,
+          "year": 1995,
+          "artist": "Akhenaton (2)",
+          "stats": {
+            "community": {
+              "in_wantlist": 62,
+              "in_collection": 323
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Comp",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/pxNaL_u9JwaN7YwqWa7ezYrcCumt9OjzFHpjUrbd_Mw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYxNTE2/NS0xNTc3NDgyNDM1/LTk2OTkuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/615165",
+          "title": "All Areas Volume 55",
+          "id": 615165,
+          "year": 2004,
+          "artist": "Various",
+          "stats": {
+            "community": {
+              "in_wantlist": 6,
+              "in_collection": 131
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album, Dig",
+          "catno": "SON 228-2",
+          "thumb": "https://i.discogs.com/zqG_D-ZF9Q02zM-hYFXj-Vpvlh-cPIw6pvIB6aaofNE/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYxNTM1/My0xNzA2OTg1NDYx/LTU5MDcuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/615353",
+          "title": "Cantica Lunae - Songs Of The Moon",
+          "id": 615353,
+          "year": 1996,
+          "artist": "Impressions Of Winter",
+          "stats": {
+            "community": {
+              "in_wantlist": 32,
+              "in_collection": 98
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "CD AR 027, 27361-69732",
+          "thumb": "https://i.discogs.com/lnmz4nrZZL_1daQl0EXyxtjEo-2QMeSQm_DyzLRdzLE/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYyMDEw/NS0xNTI1NjA5MTky/LTIyMTcuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/620105",
+          "title": "My Dear Succubus",
+          "id": 620105,
+          "year": 1995,
+          "artist": "Let Me Dream",
+          "stats": {
+            "community": {
+              "in_wantlist": 56,
+              "in_collection": 198
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "NB 108 - 2, 27361 68772",
+          "thumb": "https://i.discogs.com/j0Y7_EmugjSazEHQeRBWVWfe4bM6HddlMj8cdR3qcUo/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYyNDkx/Ny0xNDcwNTAyMzg1/LTk2MzEuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/624917",
+          "title": "Sorcery",
+          "id": 624917,
+          "year": 1995,
+          "artist": "Kataklysm",
+          "stats": {
+            "community": {
+              "in_wantlist": 229,
+              "in_collection": 605
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "NB 108 - 2, 27361 68772",
+          "thumb": "https://i.discogs.com/j0Y7_EmugjSazEHQeRBWVWfe4bM6HddlMj8cdR3qcUo/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYyNDkx/Ny0xNDcwNTAyMzg1/LTk2MzEuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/624917",
+          "title": "Sorcery",
+          "id": 624917,
+          "year": 1995,
+          "artist": "Kataklysm",
+          "stats": {
+            "community": {
+              "in_wantlist": 229,
+              "in_collection": 605
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "95001",
+          "thumb": "https://i.discogs.com/qdTm-VrQu_JCJF6wMUyZS3sqVQYkGknxOgNhRkjeZvA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYyNTQx/NC0xMTQwMTE0OTc5/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/625414",
+          "title": "The Last Prostitute",
+          "id": 625414,
+          "year": 1995,
+          "artist": "Decision D",
+          "stats": {
+            "community": {
+              "in_wantlist": 51,
+              "in_collection": 69
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album, Cen",
+          "catno": "NB079-2V2, NB079-2 V2",
+          "thumb": "https://i.discogs.com/nT7VYJjijtV-G5EkxZH3MSGjv-KdiKuCCBalaz1uzFI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYyNjg0/My0xMzY2NTIxNTc0/LTkwODEuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/626843",
+          "title": "\"Club Mondo Bizarre\" For Members Only",
+          "id": 626843,
+          "year": 1994,
+          "artist": "Pungent Stench",
+          "stats": {
+            "community": {
+              "in_wantlist": 62,
+              "in_collection": 237
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album, Cen",
+          "catno": "NB079-2V2, NB079-2 V2",
+          "thumb": "https://i.discogs.com/nT7VYJjijtV-G5EkxZH3MSGjv-KdiKuCCBalaz1uzFI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYyNjg0/My0xMzY2NTIxNTc0/LTkwODEuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/626843",
+          "title": "\"Club Mondo Bizarre\" For Members Only",
+          "id": 626843,
+          "year": 1994,
+          "artist": "Pungent Stench",
+          "stats": {
+            "community": {
+              "in_wantlist": 62,
+              "in_collection": 237
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album, RE",
+          "catno": "NB 086-2",
+          "thumb": "https://i.discogs.com/BXPcw9Jq-9JFrt_RE1YUW3vB0G_aV78_f5baq9TsZRU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYyNjky/OC0xNDAzMzY3OTYw/LTk4MjUuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/626928",
+          "title": "Mindloss",
+          "id": 626928,
+          "year": 1993,
+          "artist": "Gorefest",
+          "stats": {
+            "community": {
+              "in_wantlist": 161,
+              "in_collection": 524
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album, RE",
+          "catno": "NB 086-2",
+          "thumb": "https://i.discogs.com/BXPcw9Jq-9JFrt_RE1YUW3vB0G_aV78_f5baq9TsZRU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYyNjky/OC0xNDAzMzY3OTYw/LTk4MjUuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/626928",
+          "title": "Mindloss",
+          "id": 626928,
+          "year": 1993,
+          "artist": "Gorefest",
+          "stats": {
+            "community": {
+              "in_wantlist": 161,
+              "in_collection": 524
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "HOS043, DW076-2, 27361-6988-2",
+          "thumb": "https://i.discogs.com/xqLkMawM4M9-uYEkyRzgTlbSDyl0eSIRPmm314q8_yA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYzMDgy/MS0xMTc1NjM2NTM2/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/630821",
+          "title": "Lost Children",
+          "id": 630821,
+          "year": 1996,
+          "artist": "The Breath Of Life",
+          "stats": {
+            "community": {
+              "in_wantlist": 24,
+              "in_collection": 223
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "2xCD, Comp",
+          "catno": "Fog 010",
+          "thumb": "https://i.discogs.com/anSqiwjws-86xTW4Txp5Eu7P31zl08VlIOUAqltf9eY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYzMDg1/NS0xNDU0NzA3NzE4/LTYxNzguanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/630855",
+          "title": "Crusade From The North",
+          "id": 630855,
+          "year": 1996,
+          "artist": "Various",
+          "stats": {
+            "community": {
+              "in_wantlist": 213,
+              "in_collection": 366
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Comp",
+          "catno": "NBCHECK03",
+          "thumb": "https://i.discogs.com/pOv8MRVVSFGoa8hgNMQ6bxg0CTMa9kr7GDXM0DlqiPA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYzMzc3/OC0xMTQxMjMyMzkz/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/633778",
+          "title": "Nuclear Blast Soundcheck - Series - Volume 3",
+          "id": 633778,
+          "year": 1995,
+          "artist": "Various",
+          "stats": {
+            "community": {
+              "in_wantlist": 23,
+              "in_collection": 51
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Comp",
+          "catno": "NBCHECK03",
+          "thumb": "https://i.discogs.com/pOv8MRVVSFGoa8hgNMQ6bxg0CTMa9kr7GDXM0DlqiPA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYzMzc3/OC0xMTQxMjMyMzkz/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/633778",
+          "title": "Nuclear Blast Soundcheck - Series - Volume 3",
+          "id": 633778,
+          "year": 1995,
+          "artist": "Various",
+          "stats": {
+            "community": {
+              "in_wantlist": 23,
+              "in_collection": 51
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        }
+      ]
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Content-Language": "en",
+      "Date": "Tue, 19 May 2026 23:31:55 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Access-Control-Allow-Headers": "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID",
+      "Access-Control-Allow-Methods": "HEAD,OPTIONS,GET,OPTIONS",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Expose-Headers": "Location",
+      "Cache-Control": "public, must-revalidate",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "X-Content-Type-Options": "nosniff",
+      "x-discogs-media-type": "discogs.v2",
+      "x-discogs-ratelimit": "60",
+      "x-discogs-ratelimit-remaining": "36",
+      "x-discogs-ratelimit-used": "24",
+      "X-Frame-Options": "SAMEORIGIN",
+      "X-XSS-Protection": "1; mode=block",
+      "cf-cache-status": "DYNAMIC",
+      "Set-Cookie": "__cf_bm=C6SQT_fsEN6QiJ8hyyo0OqEtobJ8iDm0_FJg1ZjWHxQ-1779233514.5738049-1.0.1.1-x38ioFmT988ZksqZYjLs1Ryyh8xw3j7fBQASwuz60WRh5_fBp.LqX14mZPMYHu75MIzEH26qyJbWI6wTbRWuozBbM8B9_zWhwZ.fYcB4gXooe0KeDOZGsDnltwxkHi6x; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:01:55 GMT",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6e5da1e62cdeb-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

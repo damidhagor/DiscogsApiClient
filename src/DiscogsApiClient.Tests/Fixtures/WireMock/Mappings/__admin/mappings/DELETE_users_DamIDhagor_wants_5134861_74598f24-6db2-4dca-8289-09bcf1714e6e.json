@@ -1,0 +1,64 @@
+{
+  "Guid": "74598f24-6db2-4dca-8289-09bcf1714e6e",
+  "UpdatedAt": "2026-05-19T23:36:58.2738756Z",
+  "Title": "Proxy Mapping for DELETE /users/DamIDhagor/wants/5134861",
+  "Description": "Proxy Mapping for DELETE /users/DamIDhagor/wants/5134861",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/users/DamIDhagor/wants/5134861",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "DELETE"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ],
+    "Body": {
+      "Matcher": {
+        "Name": "ExactMatcher",
+        "Pattern": "",
+        "IgnoreCase": true
+      }
+    }
+  },
+  "Response": {
+    "StatusCode": 403,
+    "BodyAsJson": {
+      "message": "You are not allowed to view this resource. Please authenticate as the owner to view this content."
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Date": "Tue, 19 May 2026 23:36:58 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Set-Cookie": "__cf_bm=LC7u60uHdBYtPRPyH1xq20Fdcukk4gAE2bQDMaB4LFQ-1779233818.2252002-1.0.1.1-nZyAxQ9PsvOe.TDd5460fNfYVNghLZB5W.uBj1aFtQKYPGjck.92MsjujkfjzQ86nT5TLpfsBJGDbQguBCLrYMrMz0mhuZX1PDZNZjNZLPLlXek8envFVL7TrdanC6Cn; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:06:58 GMT",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "x-discogs-ratelimit": "25",
+      "x-discogs-ratelimit-remaining": "18",
+      "x-discogs-ratelimit-used": "7",
+      "cf-cache-status": "DYNAMIC",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6ed43ebc4f5d3-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

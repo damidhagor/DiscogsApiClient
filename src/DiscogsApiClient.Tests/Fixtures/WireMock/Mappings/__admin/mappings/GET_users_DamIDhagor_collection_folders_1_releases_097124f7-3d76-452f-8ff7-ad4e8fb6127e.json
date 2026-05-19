@@ -1,0 +1,64 @@
+{
+  "Guid": "097124f7-3d76-452f-8ff7-ad4e8fb6127e",
+  "UpdatedAt": "2026-05-19T23:34:23.9668583Z",
+  "Title": "Proxy Mapping for GET /users/DamIDhagor/collection/folders/1/releases",
+  "Description": "Proxy Mapping for GET /users/DamIDhagor/collection/folders/1/releases",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/users/DamIDhagor/collection/folders/1/releases",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "GET"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ]
+  },
+  "Response": {
+    "StatusCode": 200,
+    "BodyAsJson": {
+      "pagination": {
+        "page": 1,
+        "pages": 1,
+        "per_page": 50,
+        "items": 0,
+        "urls": {}
+      },
+      "releases": []
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Date": "Tue, 19 May 2026 23:34:24 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "x-discogs-ratelimit": "25",
+      "x-discogs-ratelimit-remaining": "9",
+      "x-discogs-ratelimit-used": "16",
+      "Set-Cookie": "__cf_bm=AGhlodcIgbgx2cYOouiXNogPYn.Qn7oeA2sDfsCG8Ig-1779233664.1660733-1.0.1.1-BbsFv.6XOfq3DLVkLCBRF83Ov9YLHW8uMo7XPoU8WinMzS8n5Q23Rg2W8L_bWT8InVsU0qvOzWewazFJuZdfHT3wfoGkXsv3UEWb83WleqPz11admrbLLX8V37TLYhvq; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:04:24 GMT",
+      "cf-cache-status": "DYNAMIC",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6e9810a73f80b-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

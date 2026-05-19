@@ -1,0 +1,113 @@
+{
+  "Guid": "d8ee69b5-3f55-4a33-91d0-859fc97df598",
+  "UpdatedAt": "2026-05-19T23:30:39.9331932Z",
+  "Title": "Proxy Mapping for GET /users/DamIDhagor",
+  "Description": "Proxy Mapping for GET /users/DamIDhagor",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/users/DamIDhagor",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "GET"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Authorization",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "Discogs token=*",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ]
+  },
+  "Response": {
+    "StatusCode": 200,
+    "BodyAsJson": {
+      "id": 12579295,
+      "resource_url": "https://api.discogs.com/users/DamIDhagor",
+      "uri": "https://www.discogs.com/user/DamIDhagor",
+      "username": "DamIDhagor",
+      "name": "Alexander",
+      "home_page": "",
+      "location": "",
+      "profile": "",
+      "registered": "2021-12-17T15:24:46-08:00",
+      "rank": 0.0,
+      "num_pending": 0,
+      "num_for_sale": 0,
+      "num_lists": 0,
+      "releases_contributed": 0,
+      "releases_rated": 0,
+      "rating_avg": 0.0,
+      "inventory_url": "https://api.discogs.com/users/DamIDhagor/inventory",
+      "collection_folders_url": "https://api.discogs.com/users/DamIDhagor/collection/folders",
+      "collection_fields_url": "https://api.discogs.com/users/DamIDhagor/collection/fields",
+      "wantlist_url": "https://api.discogs.com/users/DamIDhagor/wants",
+      "avatar_url": "https://i.discogs.com/W0OR6Z5OewEwKpar3QyLVCuXbhw2_uNLIwahkmSKqNk/rs:fill/g:sm/q:40/h:500/w:500/czM6Ly9kaXNjb2dz/LXVzZXItYXZhdGFy/cy9VLTEyNTc5Mjk1/LTE2Mzk3ODM2MTIu/anBlZw.jpeg",
+      "curr_abbr": "EUR",
+      "activated": true,
+      "marketplace_suspended": false,
+      "banner_url": "",
+      "buyer_rating": 100.0,
+      "buyer_rating_stars": 5.0,
+      "buyer_num_ratings": 1,
+      "seller_rating": 0.0,
+      "seller_rating_stars": 0.0,
+      "seller_num_ratings": 0,
+      "is_staff": false,
+      "num_collection": 0,
+      "num_wantlist": 1,
+      "email": "alexander.jurk@outlook.com",
+      "num_unread": 0
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Content-Language": "en",
+      "Date": "Tue, 19 May 2026 23:30:40 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Access-Control-Allow-Headers": "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID",
+      "Access-Control-Allow-Methods": "HEAD,OPTIONS,GET,OPTIONS,PATCH,POST",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Expose-Headers": "Location",
+      "Cache-Control": "public, must-revalidate",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "X-Content-Type-Options": "nosniff",
+      "x-discogs-media-type": "discogs.v2",
+      "x-discogs-ratelimit": "60",
+      "x-discogs-ratelimit-remaining": "58",
+      "x-discogs-ratelimit-used": "2",
+      "X-Frame-Options": "SAMEORIGIN",
+      "X-XSS-Protection": "1; mode=block",
+      "Set-Cookie": "__cf_bm=8wuRy9VYg1C7IyC4eWkazrexYDTP7KvqU4B5s7o8.E4-1779233440.1980655-1.0.1.1-DV1c0n5ZsJmtOKcfGSydOswgVzEEiLJK4WoayJZcINVhQSo_VtG399YZG0gIbeTck6P2E0yDbQZLsgBHvVQR2lUNEpDcibASYgIVELxMijspqK23C_mc.3zUZKIyKpDG; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:00:40 GMT",
+      "cf-cache-status": "DYNAMIC",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6e4093daaf94c-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

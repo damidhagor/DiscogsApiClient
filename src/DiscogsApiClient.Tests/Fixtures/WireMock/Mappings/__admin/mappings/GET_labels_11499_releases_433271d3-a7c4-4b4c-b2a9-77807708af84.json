@@ -1,0 +1,99 @@
+{
+  "Guid": "433271d3-a7c4-4b4c-b2a9-77807708af84",
+  "UpdatedAt": "2026-05-19T23:31:54.6266293Z",
+  "Title": "Proxy Mapping for GET /labels/11499/releases",
+  "Description": "Proxy Mapping for GET /labels/11499/releases",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/labels/11499/releases",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "GET"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Authorization",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "Discogs token=*",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ],
+    "Params": [
+      {
+        "Name": "page",
+        "Matchers": [
+          {
+            "Name": "ExactMatcher",
+            "Pattern": "2147483647",
+            "IgnoreCase": false
+          }
+        ]
+      },
+      {
+        "Name": "per_page",
+        "Matchers": [
+          {
+            "Name": "ExactMatcher",
+            "Pattern": "50",
+            "IgnoreCase": false
+          }
+        ]
+      }
+    ]
+  },
+  "Response": {
+    "StatusCode": 404,
+    "BodyAsJson": {
+      "message": "Page 2147483647 is outside of valid range [1, 596]."
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Content-Language": "en",
+      "Date": "Tue, 19 May 2026 23:31:55 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Access-Control-Allow-Headers": "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID",
+      "Access-Control-Allow-Methods": "HEAD,OPTIONS,GET,OPTIONS",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Expose-Headers": "Location",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "X-Content-Type-Options": "nosniff",
+      "x-discogs-media-type": "discogs.v2",
+      "x-discogs-ratelimit": "60",
+      "x-discogs-ratelimit-remaining": "47",
+      "x-discogs-ratelimit-used": "13",
+      "X-Frame-Options": "SAMEORIGIN",
+      "X-XSS-Protection": "1; mode=block",
+      "cf-cache-status": "DYNAMIC",
+      "Set-Cookie": "__cf_bm=ZBblLjVNHRW7tfsLmtPP70.d4kZ4Tt257Wzc4RuK_fQ-1779233514.5744476-1.0.1.1-hZpc5VrbT0zsFrOHz5B7YiU_82Pcq19B_EeD5L_OSSI2oiCaipcNC1mK42QflIYEpwIHeX1jigkIJySFz9t3uebpi1PrFDCtgZvhc4iaHKExpU8iAk33L9_pxX0ZXoM9; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:01:55 GMT",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6e5da19d233b5-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

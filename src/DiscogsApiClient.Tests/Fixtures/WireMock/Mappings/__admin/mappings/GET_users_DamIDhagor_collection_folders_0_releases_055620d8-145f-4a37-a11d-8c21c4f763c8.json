@@ -1,0 +1,172 @@
+{
+  "Guid": "055620d8-145f-4a37-a11d-8c21c4f763c8",
+  "UpdatedAt": "2026-05-19T23:34:24.6428559Z",
+  "Title": "Proxy Mapping for GET /users/DamIDhagor/collection/folders/0/releases",
+  "Description": "Proxy Mapping for GET /users/DamIDhagor/collection/folders/0/releases",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/users/DamIDhagor/collection/folders/0/releases",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "GET"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Authorization",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "Discogs token=*",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ],
+    "Params": [
+      {
+        "Name": "page",
+        "Matchers": [
+          {
+            "Name": "ExactMatcher",
+            "Pattern": "1",
+            "IgnoreCase": false
+          }
+        ]
+      },
+      {
+        "Name": "per_page",
+        "Matchers": [
+          {
+            "Name": "ExactMatcher",
+            "Pattern": "50",
+            "IgnoreCase": false
+          }
+        ]
+      },
+      {
+        "Name": "sort",
+        "Matchers": [
+          {
+            "Name": "ExactMatcher",
+            "Pattern": "label",
+            "IgnoreCase": false
+          }
+        ]
+      },
+      {
+        "Name": "sort_order",
+        "Matchers": [
+          {
+            "Name": "ExactMatcher",
+            "Pattern": "asc",
+            "IgnoreCase": false
+          }
+        ]
+      }
+    ]
+  },
+  "Response": {
+    "StatusCode": 200,
+    "BodyAsJson": {
+      "pagination": {
+        "page": 1,
+        "pages": 1,
+        "per_page": 50,
+        "items": 1,
+        "urls": {}
+      },
+      "releases": [
+        {
+          "id": 5134861,
+          "instance_id": 2147062750,
+          "date_added": "2026-05-19T16:34:25-07:00",
+          "rating": 0,
+          "basic_information": {
+            "id": 5134861,
+            "master_id": 156551,
+            "master_url": "https://api.discogs.com/masters/156551",
+            "resource_url": "https://api.discogs.com/releases/5134861",
+            "thumb": "https://i.discogs.com/z-WOVc6-4Jj7uQfLfZlcOLKmTR6Pdal_cBRJm5WoBKY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny04MTkyLmpwZWc.jpeg",
+            "cover_image": "https://i.discogs.com/UETvnaefHj6HfXSgYx8R1pc-juBrScOdt79dOSeH3gk/rs:fit/g:sm/q:90/h:596/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny04MTkyLmpwZWc.jpeg",
+            "title": "Glory To The Brave",
+            "year": 1997,
+            "formats": [
+              {
+                "name": "CD",
+                "qty": "1",
+                "descriptions": [
+                  "Album",
+                  "Promo"
+                ]
+              }
+            ],
+            "labels": [
+              {
+                "name": "Nuclear Blast",
+                "catno": "NB 265-2",
+                "entity_type": "1",
+                "entity_type_name": "Label",
+                "id": 11499,
+                "resource_url": "https://api.discogs.com/labels/11499"
+              }
+            ],
+            "artists": [
+              {
+                "name": "HammerFall",
+                "anv": "",
+                "join": "",
+                "role": "",
+                "tracks": "",
+                "id": 287459,
+                "resource_url": "https://api.discogs.com/artists/287459"
+              }
+            ],
+            "genres": [
+              "Rock"
+            ],
+            "styles": [
+              "Heavy Metal"
+            ]
+          },
+          "folder_id": 9350040
+        }
+      ]
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Date": "Tue, 19 May 2026 23:34:25 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Set-Cookie": "__cf_bm=_U_h38nsjMZTIPjuATc93dCv5akccP0kfBtaUqSHe_8-1779233664.8307974-1.0.1.1-Z4YmJ8moxev7uMAqSbiRPR_71fuHCIyxdoNedDlzejAgFJUs2DpOgyHQJfUeC5P9Fx_7ijm29GNlKpuRrNXb4akBwRaMH0MQ_6.TJp6Y3S1vGk.oK.O754y6VYKO7y9I; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:04:25 GMT",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "x-discogs-ratelimit": "60",
+      "x-discogs-ratelimit-remaining": "32",
+      "x-discogs-ratelimit-used": "28",
+      "cf-cache-status": "DYNAMIC",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6e98538b4f943-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

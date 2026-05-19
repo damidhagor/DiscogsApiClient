@@ -1,0 +1,100 @@
+{
+  "Guid": "8b578e2b-09cf-4f35-afe5-314e3ad8c3dc",
+  "UpdatedAt": "2026-05-19T23:33:09.2024196Z",
+  "Title": "Proxy Mapping for POST /users/DamIDhagor/collection/folders/999",
+  "Description": "Proxy Mapping for POST /users/DamIDhagor/collection/folders/999",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/users/DamIDhagor/collection/folders/999",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "POST"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Authorization",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "Discogs token=*",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Content-Type",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "application/json; charset=utf-8",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Content-Length",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "42",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ],
+    "Body": {
+      "Matcher": {
+        "Name": "JsonMatcher",
+        "Pattern": {
+          "name": "API_TEST_UPDATE_NOT_EXISTING_ID"
+        },
+        "IgnoreCase": true,
+        "Regex": false
+      }
+    }
+  },
+  "Response": {
+    "StatusCode": 404,
+    "BodyAsJson": {
+      "message": "The requested folder does not exist."
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Date": "Tue, 19 May 2026 23:33:09 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Set-Cookie": "__cf_bm=a44EwJUxBRcw.kO02e4Th3dcp944Ss9PANFyF_B7cpo-1779233589.127101-1.0.1.1-s8yCcN6dnG7e_uIPlzJTkhmI9KnVXwOCly89nxj09WCDSrwizgE14IVLA9b.SeoXajZ2uJe_z5dZPyZXuE0eORheB6uWfmmtE6jw2.Ghqs5b7KhLlb9Fu7Vlqfg2wdW9; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:03:09 GMT",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "x-discogs-ratelimit": "60",
+      "x-discogs-ratelimit-remaining": "50",
+      "x-discogs-ratelimit-used": "10",
+      "cf-cache-status": "DYNAMIC",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6e7ac0e76f948-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

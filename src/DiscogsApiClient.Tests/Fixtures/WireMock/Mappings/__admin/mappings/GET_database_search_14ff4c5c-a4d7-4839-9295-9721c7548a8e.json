@@ -1,0 +1,136 @@
+{
+  "Guid": "14ff4c5c-a4d7-4839-9295-9721c7548a8e",
+  "UpdatedAt": "2026-05-19T23:31:54.3169162Z",
+  "Title": "Proxy Mapping for GET /database/search",
+  "Description": "Proxy Mapping for GET /database/search",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/database/search",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "GET"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Authorization",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "Discogs token=*",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ],
+    "Params": [
+      {
+        "Name": "q",
+        "Matchers": [
+          {
+            "Name": "ExactMatcher",
+            "Pattern": "hammerfall",
+            "IgnoreCase": false
+          }
+        ]
+      },
+      {
+        "Name": "page",
+        "Matchers": [
+          {
+            "Name": "ExactMatcher",
+            "Pattern": "1",
+            "IgnoreCase": false
+          }
+        ]
+      },
+      {
+        "Name": "per_page",
+        "Matchers": [
+          {
+            "Name": "ExactMatcher",
+            "Pattern": "1",
+            "IgnoreCase": false
+          }
+        ]
+      }
+    ]
+  },
+  "Response": {
+    "StatusCode": 200,
+    "BodyAsJson": {
+      "pagination": {
+        "page": 1,
+        "pages": 1294,
+        "per_page": 1,
+        "items": 1294,
+        "urls": {
+          "last": "https://api.discogs.com/database/search?q=hammerfall&page=1294&per_page=1",
+          "next": "https://api.discogs.com/database/search?q=hammerfall&page=2&per_page=1"
+        }
+      },
+      "results": [
+        {
+          "id": 287459,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": true,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/287459-HammerFall",
+          "title": "HammerFall",
+          "thumb": "https://i.discogs.com/DHXUrHfWHSb9a7DDoRO7pA00R5Zkd13rF56JM3NBThU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTI4NzQ1/OS0xNzI0NDI5MjMy/LTU5ODEuanBlZw.jpeg",
+          "cover_image": "https://i.discogs.com/RDQAZC0moF-6OPsWKvI1GkZUW8WcteG2kfazZmEvJwE/rs:fit/g:sm/q:90/h:550/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTI4NzQ1/OS0xNzI0NDI5MjMy/LTU5ODEuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/artists/287459"
+        }
+      ]
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Content-Language": "en",
+      "Date": "Tue, 19 May 2026 23:31:54 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Access-Control-Allow-Headers": "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID",
+      "Access-Control-Allow-Methods": "HEAD,OPTIONS,GET,OPTIONS",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Expose-Headers": "Location",
+      "Cache-Control": "public, must-revalidate",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "X-Content-Type-Options": "nosniff",
+      "x-discogs-media-type": "discogs.v2",
+      "x-discogs-ratelimit": "60",
+      "x-discogs-ratelimit-remaining": "59",
+      "x-discogs-ratelimit-used": "1",
+      "X-Frame-Options": "SAMEORIGIN",
+      "X-XSS-Protection": "1; mode=block",
+      "cf-cache-status": "DYNAMIC",
+      "Set-Cookie": "__cf_bm=87WDDgVYhTwVAE0kjdHp8HuTNN.4EuDcWp9_dJrk970-1779233514.569529-1.0.1.1-MVrUks0GUOkwCYFjjSapofW80gtrRNjGJ0VIp7e4plmGzAER5eofmCAZXW6qvOwGX.EjX4Z.uHtSegj3yWJgodldNHrt4OfCoZ8QcGV8TiLJbQFjAoQFK1qPTlXom1aI; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:01:54 GMT",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6e5da0df4060b-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

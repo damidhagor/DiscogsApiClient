@@ -1,0 +1,123 @@
+{
+  "Guid": "6c13a7fa-8a9c-437a-9ff7-29bdb34b3f55",
+  "UpdatedAt": "2026-05-19T23:33:09.2785468Z",
+  "Title": "Proxy Mapping for GET /users/DamIDhagor/collection/folders",
+  "Description": "Proxy Mapping for GET /users/DamIDhagor/collection/folders",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/users/DamIDhagor/collection/folders",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "GET"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Authorization",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "Discogs token=*",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ]
+  },
+  "Response": {
+    "StatusCode": 200,
+    "BodyAsJson": {
+      "folders": [
+        {
+          "id": 0,
+          "name": "All",
+          "count": 0,
+          "resource_url": "https://api.discogs.com/users/DamIDhagor/collection/folders/0"
+        },
+        {
+          "id": 9348410,
+          "name": "API_TEST_WORKFLOW_CREATE",
+          "count": 0,
+          "resource_url": "https://api.discogs.com/users/DamIDhagor/collection/folders/9348410"
+        },
+        {
+          "id": 9350037,
+          "name": "API_TEST_WORKFLOW_CREATE",
+          "count": 0,
+          "resource_url": "https://api.discogs.com/users/DamIDhagor/collection/folders/9350037"
+        },
+        {
+          "id": 6639133,
+          "name": "CreateDeleteReleaseFromCollectionFolder_Success",
+          "count": 0,
+          "resource_url": "https://api.discogs.com/users/DamIDhagor/collection/folders/6639133"
+        },
+        {
+          "id": 6639223,
+          "name": "CreateDeleteReleaseFromCollectionFolder_Success",
+          "count": 0,
+          "resource_url": "https://api.discogs.com/users/DamIDhagor/collection/folders/6639223"
+        },
+        {
+          "id": 6639238,
+          "name": "CreateDeleteReleaseFromCollectionFolder_Success",
+          "count": 0,
+          "resource_url": "https://api.discogs.com/users/DamIDhagor/collection/folders/6639238"
+        },
+        {
+          "id": 9239760,
+          "name": "CreateDeleteReleaseFromCollectionFolder_Success",
+          "count": 0,
+          "resource_url": "https://api.discogs.com/users/DamIDhagor/collection/folders/9239760"
+        },
+        {
+          "id": 9348411,
+          "name": "CreateDeleteReleaseFromCollectionFolder_Success",
+          "count": 0,
+          "resource_url": "https://api.discogs.com/users/DamIDhagor/collection/folders/9348411"
+        },
+        {
+          "id": 1,
+          "name": "Uncategorized",
+          "count": 0,
+          "resource_url": "https://api.discogs.com/users/DamIDhagor/collection/folders/1"
+        }
+      ]
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Date": "Tue, 19 May 2026 23:33:09 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Set-Cookie": "__cf_bm=10EX9RnmNim9EJGLQifOi_B_Lg5rBjoN2Puksn_zQws-1779233589.1391623-1.0.1.1-tbjk7JqyrIJnFa9TUXOEKNYUkSUtO0Qc44S3R1QOsAyFRU3GUdVT.hb74hIS4QGAVAiNqdX5EDQMCHx3nX.g2zFpj6Ckxf1Hxj3442agKV1LdUsx0xphxAt25W0wL4W6; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:03:09 GMT",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "x-discogs-ratelimit": "60",
+      "x-discogs-ratelimit-remaining": "45",
+      "x-discogs-ratelimit-used": "15",
+      "cf-cache-status": "DYNAMIC",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6e7ac19db519f-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

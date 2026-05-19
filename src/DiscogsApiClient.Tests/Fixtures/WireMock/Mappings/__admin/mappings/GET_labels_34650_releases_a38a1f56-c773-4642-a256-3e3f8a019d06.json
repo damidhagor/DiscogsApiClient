@@ -1,0 +1,1161 @@
+{
+  "Guid": "a38a1f56-c773-4642-a256-3e3f8a019d06",
+  "UpdatedAt": "2026-05-19T23:31:54.3169339Z",
+  "Title": "Proxy Mapping for GET /labels/34650/releases",
+  "Description": "Proxy Mapping for GET /labels/34650/releases",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/labels/34650/releases",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "GET"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Authorization",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "Discogs token=*",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ],
+    "Params": [
+      {
+        "Name": "page",
+        "Matchers": [
+          {
+            "Name": "ExactMatcher",
+            "Pattern": "1",
+            "IgnoreCase": false
+          }
+        ]
+      },
+      {
+        "Name": "per_page",
+        "Matchers": [
+          {
+            "Name": "ExactMatcher",
+            "Pattern": "50",
+            "IgnoreCase": false
+          }
+        ]
+      }
+    ]
+  },
+  "Response": {
+    "StatusCode": 200,
+    "BodyAsJson": {
+      "pagination": {
+        "page": 1,
+        "pages": 3,
+        "per_page": 50,
+        "items": 125,
+        "urls": {
+          "last": "https://api.discogs.com/labels/34650/releases?page=3&per_page=50",
+          "next": "https://api.discogs.com/labels/34650/releases?page=2&per_page=50"
+        }
+      },
+      "releases": [
+        {
+          "status": "Accepted",
+          "format": "CD, Album, Num",
+          "catno": "PGR 027",
+          "thumb": "https://i.discogs.com/VsIfRHsUaHssC-l9hXbLfQe2gHYgBb-6XNA90xfr118/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4NjI5/OS0xMjc2OTgwNDY1/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/386299",
+          "title": "Invaze",
+          "id": 386299,
+          "year": 1999,
+          "artist": "Maniac Butcher",
+          "stats": {
+            "community": {
+              "in_wantlist": 69,
+              "in_collection": 137
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "CD, Album",
+          "catno": "AP007",
+          "thumb": "https://i.discogs.com/xocvdErU5h2J-d5uL5RtYc-2cowwiHPOQ9FMY47XJrI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI2NzM2/MjAtMTU2NTAwODAz/Ny0yMzUyLmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/2673620",
+          "title": "Hell Satan Blasphemy",
+          "id": 2673620,
+          "year": 2006,
+          "artist": "Dark Storm",
+          "stats": {
+            "community": {
+              "in_wantlist": 36,
+              "in_collection": 153
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "Cass, Album, Ltd, RE",
+          "catno": "DSR 174, LUNAR 7",
+          "thumb": "https://i.discogs.com/vuEvTjpO2EaN0JPgpf1-z59reHe8MWqyx8bT1qhXDM4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMyMTY3/MjYzLTE3MzA0NzA2/MzAtOTc1MC5qcGVn.jpeg",
+          "resource_url": "https://api.discogs.com/releases/32167263",
+          "title": "Blut & Krieg",
+          "id": 32167263,
+          "year": 2023,
+          "artist": "Moonblood",
+          "stats": {
+            "community": {
+              "in_wantlist": 22,
+              "in_collection": 9
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "Cass, S/Sided, Ltd, Num",
+          "catno": "007",
+          "thumb": "https://i.discogs.com/gj-fmJ39jorntK0ikhm8FkhghQfnh9FtmC_f8bybYMw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM1Njgz/MDItMTUyNjMxNTM2/MC05OTY1LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/3568302",
+          "title": "Live In Bernhausen",
+          "id": 3568302,
+          "year": 1997,
+          "artist": "Mayhemic Truth",
+          "stats": {
+            "community": {
+              "in_wantlist": 95,
+              "in_collection": 39
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "Cass, Album, Ltd",
+          "catno": "013",
+          "thumb": "https://i.discogs.com/DhBJaO9e3Qya-ZBh1RdPrr81RYnNa3xiZCsO01--a8I/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM1MzI5/MjItMTMzNDE3MDIx/MS5qcGVn.jpeg",
+          "resource_url": "https://api.discogs.com/releases/3532922",
+          "title": "Welcome To Hurusoma World",
+          "id": 3532922,
+          "year": 1998,
+          "artist": "Hurusoma",
+          "stats": {
+            "community": {
+              "in_wantlist": 81,
+              "in_collection": 71
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "Cass, Ltd, RE",
+          "catno": "014",
+          "thumb": "https://i.discogs.com/4oyTgm_7-SOyFcYRjsFav19jY5hwLWWtGMJYvrdlJIM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI3NzQ2/ODQtMTQxNTc4ODA4/NC0xMTQ0LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/2774684",
+          "title": "Bez Ohne",
+          "id": 2774684,
+          "year": 1998,
+          "artist": "Black Rain (3)",
+          "stats": {
+            "community": {
+              "in_wantlist": 26,
+              "in_collection": 18
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "Cass, Num",
+          "catno": "015",
+          "thumb": "https://i.discogs.com/KMeej_QzAbSgkMVZaAMKjH7lXPnElQEim5h1nsEiz6Y/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMxODM0/NjAtMTU4OTI4NzE4/OC03MTE1LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/3183460",
+          "title": "Trident Trinity",
+          "id": 3183460,
+          "year": 1999,
+          "artist": "Katharsis (3) / Deathcult (3)",
+          "stats": {
+            "community": {
+              "in_wantlist": 258,
+              "in_collection": 135
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "7\", EP, Ltd",
+          "catno": "EP 002",
+          "thumb": "https://i.discogs.com/HDWTtt1GUS-550w7ua8kouXCJeU8eCigaWYMGP6Uyg0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTY1MDQ5/Ni0xMjExMDQyNzIz/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/650496",
+          "title": "Forever Lost My Dying Love",
+          "id": 650496,
+          "year": 1997,
+          "artist": "Shadows Toward My Sky",
+          "stats": {
+            "community": {
+              "in_wantlist": 59,
+              "in_collection": 196
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "7\", EP, Ltd",
+          "catno": "EP 003",
+          "thumb": "https://i.discogs.com/8txRg0ihiZTWTa-OkKzcgbjgThYexDH8CjeFPJaLADk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTY0MDA0/MC0xNjE1NzU4NDU2/LTk0ODEuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/640040",
+          "title": "As Roses' Garden In Late Fall's Decay / Nur Ein See",
+          "id": 640040,
+          "year": 1997,
+          "artist": "Dark Embrace / Nagelfar",
+          "stats": {
+            "community": {
+              "in_wantlist": 136,
+              "in_collection": 116
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "LP, Album, Ltd, Num, RE",
+          "catno": "LP o10",
+          "thumb": "https://i.discogs.com/ViopugZtAowpy0ZVIdHl7Mqtj39fxITdyB1pCB2b6X4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE1NDc2/MDEtMTc1ODU0MTg3/MC01MDkwLmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/1547601",
+          "title": "Saturn Sector",
+          "id": 1547601,
+          "year": 2001,
+          "artist": "Blackdeath",
+          "stats": {
+            "community": {
+              "in_wantlist": 111,
+              "in_collection": 115
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "7\", EP, Ltd, Num",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/1RW2pNrAWIU98sEHRl0qFx6vDkKhl3i0tBGDnKuSqBk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4MDM4/MC0xMTMyMzk3MDAy/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/380380",
+          "title": "Eternity / Wolfsmond",
+          "id": 380380,
+          "year": 2001,
+          "artist": "Eternity (6) / Wolfsmond",
+          "stats": {
+            "community": {
+              "in_wantlist": 118,
+              "in_collection": 184
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "LP, Album, Ltd",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/Z0rybDRCdr2AntdxYmnKtSQ3zOw4y17-SWZiDZHe5UQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4MjY4/NC0xMzkxMjMyMTQ1/LTQ4MjYuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/382684",
+          "title": "Sacrophobic Initiation",
+          "id": 382684,
+          "year": 2001,
+          "artist": "Goatfire",
+          "stats": {
+            "community": {
+              "in_wantlist": 52,
+              "in_collection": 112
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "7\", EP, Ltd, Num",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/qhqeyIWqO24Y3t_qXlpsuhBwf89u-LMPqFeo3lLig5Q/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4Mjc3/MC0xNjE1NzA3NjQ1/LTU1NzkuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/382770",
+          "title": "Black Metal Endsieg II",
+          "id": 382770,
+          "year": 2001,
+          "artist": "Nargaroth / Godless North / Decayed / Apolokia",
+          "stats": {
+            "community": {
+              "in_wantlist": 176,
+              "in_collection": 260
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "Cass, Ltd, Num",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/tWL4rG7P0cTK726ngSWBAwu3u1wZ2hI_tgNHUmnt_Nk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4MzM0/OS0xMjU0NzcxNDk0/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/383349",
+          "title": "Live In Bitterfeld",
+          "id": 383349,
+          "year": 2000,
+          "artist": "Inferno (2)",
+          "stats": {
+            "community": {
+              "in_wantlist": 39,
+              "in_collection": 58
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "Cass, S/Sided, Promo",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/ZE0J-Iv4XtUNnPeUNvgAVN6NPn4iCEktIZ2Vx0Wk5-o/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM4MzU0/NS0xNzYyMDk0MDgy/LTQyNTAuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/383545",
+          "title": "Promo '98",
+          "id": 383545,
+          "year": 1998,
+          "artist": "Blackdeath",
+          "stats": {
+            "community": {
+              "in_wantlist": 38,
+              "in_collection": 20
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "LP, Album, Ltd, RE, Unofficial",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/KueOJiTj9T-6ZZ-cV7qCVgg6qEYP1N-ldOm254fMljo/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQxMDkw/Mi0xNDM5NjQ0MzQ0/LTg4NDIuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/410902",
+          "title": "...Taur-Nu-Fuin...",
+          "id": 410902,
+          "year": 2004,
+          "artist": "Infernum",
+          "stats": {
+            "community": {
+              "in_wantlist": 193,
+              "in_collection": 156
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "LP, Album",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/gaJfMYlQSQpvQHYMTeGiGJYQe1C9feBUP266BUaf9-A/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ1MzQ3/MC0xNjIwODQ0OTI0/LTU2NDcuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/453470",
+          "title": "Reign Of The Malicious",
+          "id": 453470,
+          "year": 2002,
+          "artist": "Nachtmystium",
+          "stats": {
+            "community": {
+              "in_wantlist": 161,
+              "in_collection": 166
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "7\", EP, Ltd",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/tCp7I1vbqOx1hFyert3x2hrjSd8mXbqCOpRB03Q20c0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ2MTgx/MS0xMTM0ODE1MzU4/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/461811",
+          "title": "Adversary",
+          "id": 461811,
+          "year": 2002,
+          "artist": "Kristallnacht",
+          "stats": {
+            "community": {
+              "in_wantlist": 183,
+              "in_collection": 150
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "7\", Ltd",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/2lmWdhsm7SJvY3h3MIkOZeLcf7Xklp76Itv-iXm2I-0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ2MTgx/Mi0xNjE1NzU2MDY0/LTQzMzQuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/461812",
+          "title": "Kawir / Nocternity",
+          "id": 461812,
+          "year": 2002,
+          "artist": "Kawir / Nocternity",
+          "stats": {
+            "community": {
+              "in_wantlist": 177,
+              "in_collection": 182
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "7\", Ltd",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/eveSLtDwkapxY4w4ZOSUAkP89O24VEUjtyHIS5W1Kmo/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ2MjM2/NS0xMTE2OTk4Mjc2/LmpwZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/462365",
+          "title": "Suicide Worship",
+          "id": 462365,
+          "year": 2004,
+          "artist": "Pogrom",
+          "stats": {
+            "community": {
+              "in_wantlist": 28,
+              "in_collection": 101
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "LP, Album",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/VWsnovFEzmT7KB1Vqx156RaH_Z5R0DC83-P7AHYhsq8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ5MzA0/OS0xNjE5MjQyOTE3/LTIxMjYuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/493049",
+          "title": "Sudentaival",
+          "id": 493049,
+          "year": 2001,
+          "artist": "Horna",
+          "stats": {
+            "community": {
+              "in_wantlist": 243,
+              "in_collection": 227
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "7\", EP, Ltd",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/NObKPhsD-CXByimW9lBsE5irjUFLI7Wj30WA-cnRgj8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTU2ODM0/OC0xMzIwMTQ5MDU1/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/568348",
+          "title": "The Portals Of Light / Untitled",
+          "id": 568348,
+          "year": 2002,
+          "artist": "Katharsis (3) / Black Witchery",
+          "stats": {
+            "community": {
+              "in_wantlist": 320,
+              "in_collection": 217
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "7\", EP, Ltd, Num",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/jLbg2hsWeYtnQPrUqPnRuJz9ki5PNrcvKeHNcNiaNRk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYxODQ2/OC0xMTM5MTY3OTIw/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/618468",
+          "title": "Lucifer's Dawn",
+          "id": 618468,
+          "year": 2003,
+          "artist": "Luror",
+          "stats": {
+            "community": {
+              "in_wantlist": 105,
+              "in_collection": 139
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "7\", EP, Ltd",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/KCiulCjZ7xXj6WHWGLZe0v_YhOXXQgUhSW24NCMsEzA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYzNzIx/Mi0xMjc2MjAzNzAy/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/637212",
+          "title": "Acherontis Avari / Hrdi A Silní",
+          "id": 637212,
+          "year": 2003,
+          "artist": "Apolokia / Inferno (2)",
+          "stats": {
+            "community": {
+              "in_wantlist": 57,
+              "in_collection": 193
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "7\", EP, Ltd",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/U9qXjPbet33_CzmKPrevUxbmgPxr1UOhDmWs3GgY7VM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTYzNzc2/NS0xMTk3ODM2ODg4/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/637765",
+          "title": "At The Edge Of Negative Existence / Missfostret Tellus",
+          "id": 637765,
+          "year": 2002,
+          "artist": "Armagedda / Woods Of Infinity",
+          "stats": {
+            "community": {
+              "in_wantlist": 233,
+              "in_collection": 346
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "7\", EP, Ltd",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/MdsBEuZYAICxHTwdO5Rs8hqPLgL6jB-PvXS2rIS9kSk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTY2NDY4/My0xMTk4ODc1NDk2/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/664683",
+          "title": "March Of The Apocalypse",
+          "id": 664683,
+          "year": 2002,
+          "artist": "Judas Iscariot",
+          "stats": {
+            "community": {
+              "in_wantlist": 301,
+              "in_collection": 336
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "7\", EP, Ltd",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/ibQLd7mwpxfmMF1mqYMgvt73IPgMiEt_qNhT1wcVx1M/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTY2OTQ3/Mi0xMzg4NzI3NTE4/LTEzODYuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/669472",
+          "title": "Blood And Fire",
+          "id": 669472,
+          "year": 2001,
+          "artist": "Hate Forest",
+          "stats": {
+            "community": {
+              "in_wantlist": 182,
+              "in_collection": 156
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "7\", EP, Ltd",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/05QhctcqQPLmV_ZEch9Y07wIsSFWJMNGjuyTt9-72ME/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTY3NjAy/MC0xNjE1NzA3NzY1/LTU1MzYuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/676020",
+          "title": "Black Metal Endsieg III",
+          "id": 676020,
+          "year": 2002,
+          "artist": "Secrets Of The Moon / Armagedda / Dark Storm / Bael",
+          "stats": {
+            "community": {
+              "in_wantlist": 203,
+              "in_collection": 288
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "7\", EP, Ltd",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/1ChPeGGn06_Q4TjI0UQTLL-UiXxscHL5jKqDNbyVkls/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTc0ODU1/MC0xMTU0ODEzNjI0/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/748550",
+          "title": "Infernal Devotion",
+          "id": 748550,
+          "year": 2002,
+          "artist": "Anael",
+          "stats": {
+            "community": {
+              "in_wantlist": 35,
+              "in_collection": 141
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "7\", EP, Ltd, Num",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/rQi0aS2gCINWul08UIdjUD0dlnVO9_wjJ240OUjMeSk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTgyOTk1/NC0xNjE1ODM5MjA1/LTYwMzYuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/829954",
+          "title": "Midnight Frost (To Rest With Eternity)",
+          "id": 829954,
+          "year": 2002,
+          "artist": "Judas Iscariot",
+          "stats": {
+            "community": {
+              "in_wantlist": 329,
+              "in_collection": 291
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "7\", EP, Ltd",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/zKqcKpbnzAwNIStLQlZlb26-yjPELygUwjVAUV0mk-I/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTg2MDc4/NS0xMTY2MzgwOTE4/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/860785",
+          "title": "Darkest Rituals",
+          "id": 860785,
+          "year": 2002,
+          "artist": "Autopsy Torment",
+          "stats": {
+            "community": {
+              "in_wantlist": 52,
+              "in_collection": 145
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "LP, Album, Ltd",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/BOjuKWUtyvVDw21M834fkwQSMnt8q62j1kKpwJLvlBk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTkxMzU2/NC0xNjE3NjAyMjEy/LTIzMTMuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/releases/913564",
+          "title": "Kult Satan / In Ceremonial Circles",
+          "id": 913564,
+          "year": 2001,
+          "artist": "Dark Storm / Apolokia",
+          "stats": {
+            "community": {
+              "in_wantlist": 83,
+              "in_collection": 246
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "LP, Album, Ltd",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/cZ-LtllwsSroyZO3lIZL_hl8PmxNaSUZNFmOyHf7uFY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEwMDQ1/MjctMTI2ODY4OTUx/OC5qcGVn.jpeg",
+          "resource_url": "https://api.discogs.com/releases/1004527",
+          "title": "Duch Slovanské Síly",
+          "id": 1004527,
+          "year": 2001,
+          "artist": "Inferno (2)",
+          "stats": {
+            "community": {
+              "in_wantlist": 80,
+              "in_collection": 124
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "Cass, S/Sided, Ltd, C90",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/bZf3G9XnUoJv9rjsgU4D8a9Xno8Rrmer4uD3CeiuuFk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExNTUz/NzYtMTE5NzIyMDQ4/Ni5qcGVn.jpeg",
+          "resource_url": "https://api.discogs.com/releases/1155376",
+          "title": "Ein Sturm Zieht Auf...",
+          "id": 1155376,
+          "year": 2001,
+          "artist": "Waffenweihe",
+          "stats": {
+            "community": {
+              "in_wantlist": 48,
+              "in_collection": 32
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "Cass, Ltd",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/iiF-zqacEIVw5WSGYRvQIFYYE-wgMfPNq4a4FSUZNks/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExNTc2/NzktMTE5NzIyMTUz/OS5qcGVn.jpeg",
+          "resource_url": "https://api.discogs.com/releases/1157679",
+          "title": "Einsamkeit",
+          "id": 1157679,
+          "year": 2001,
+          "artist": "Sterbend",
+          "stats": {
+            "community": {
+              "in_wantlist": 131,
+              "in_collection": 47
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "Cass, S/Sided, Num, C50",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/o2IigSO8p-DF3ArorbS8cyo3eiL2Sl4p2IfQFFCh9M4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExNTc2/ODgtMTUyOTY3MzI1/MS04MDYzLmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/1157688",
+          "title": "In The Chill Of The Dark Forgotten Forests",
+          "id": 1157688,
+          "year": 1996,
+          "artist": "Sadorass",
+          "stats": {
+            "community": {
+              "in_wantlist": 64,
+              "in_collection": 40
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "Cass, S/Sided, Ltd, RE, C90",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/K71zzxlrrQ9lAlkJSL4FE9hgNuuWBQRUv9DtTuz0lZE/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExNTc3/MDMtMTcwMDg0MjA2/Mi0yOTQ0LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/1157703",
+          "title": "Perdition",
+          "id": 1157703,
+          "year": 2002,
+          "artist": "Perditor",
+          "stats": {
+            "community": {
+              "in_wantlist": 13,
+              "in_collection": 39
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "Cass, S/Sided, Ltd, Num",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/l8-GV_TiTo9sOAEzy3nO5wwS4acQkqTI6h40o_j_pdw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExNTc3/MDctMTIxMDQyNTE5/MS5qcGVn.jpeg",
+          "resource_url": "https://api.discogs.com/releases/1157707",
+          "title": "Todesstoß / Imperium Sacrum",
+          "id": 1157707,
+          "year": 2001,
+          "artist": "Todesstoß / Imperium Sacrum",
+          "stats": {
+            "community": {
+              "in_wantlist": 33,
+              "in_collection": 49
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "7\", EP, Ltd",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/wkhCIsNIC1_ZTqAb1ru8R2TH7GIEwlKCYVz-M5K_yvM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTExNjkx/MDQtMTU5MzQ2OTQ1/My00MjE5LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/1169104",
+          "title": "Night Tale / Death To Macrocosm",
+          "id": 1169104,
+          "year": 2001,
+          "artist": "Azaxul / SVEST*",
+          "stats": {
+            "community": {
+              "in_wantlist": 151,
+              "in_collection": 308
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "LP, Album, Ltd, Num",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/2xodYdRZ9kxdSFgASDtz7kP8czY3SWLcYWIDBUafDic/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEyNzU1/MDMtMTIwNzAyODM2/NC5qcGVn.jpeg",
+          "resource_url": "https://api.discogs.com/releases/1275503",
+          "title": "The Final War Approaching",
+          "id": 1275503,
+          "year": 2001,
+          "artist": "Armagedda",
+          "stats": {
+            "community": {
+              "in_wantlist": 272,
+              "in_collection": 201
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "LP, Album, Ltd",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/PskczgkaS-mMkwgAIHnzb3jsmt7t9eOf6O7l8pR_77A/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE1MzQx/NzAtMTY4ODU4MTI4/OC05NzI2LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/1534170",
+          "title": "The Great Day Of Wrath",
+          "id": 1534170,
+          "year": 2003,
+          "artist": "Impious Havoc",
+          "stats": {
+            "community": {
+              "in_wantlist": 20,
+              "in_collection": 118
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "LP, Album, Ltd",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/VpfDK6bBhcnD-Hb39s_H4fZDN01UvguuII7DdGMqhEc/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE1NDc2/MTctMTYxNzIxNjYy/Ny0yNDM4LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/1547617",
+          "title": "Fucking Fullmoon Foundation",
+          "id": 1547617,
+          "year": 2003,
+          "artist": "Blackdeath",
+          "stats": {
+            "community": {
+              "in_wantlist": 90,
+              "in_collection": 122
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "LP, Album, Ltd, Num",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/Gbb8_wyNNuH9tUAyZl6_wBtwNVkzOdn4QK22AwOXW3w/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE3MTEy/MDgtMTIzODUwNTE2/My5qcGVn.jpeg",
+          "resource_url": "https://api.discogs.com/releases/1711208",
+          "title": "Lučan - Antikrist",
+          "id": 1711208,
+          "year": 2001,
+          "artist": "Maniac Butcher",
+          "stats": {
+            "community": {
+              "in_wantlist": 137,
+              "in_collection": 147
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "LP, Album, Ltd",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/oBOE1vwelf8XdU-S7VW6eoO3FOS-D5Z8YxWGqwJqviM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE4Mjkw/NTgtMTQxOTgwOTE5/MC05OTY5LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/1829058",
+          "title": "Destruction Ritual",
+          "id": 1829058,
+          "year": 2002,
+          "artist": "Krieg",
+          "stats": {
+            "community": {
+              "in_wantlist": 158,
+              "in_collection": 158
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "LP, Album, Ltd",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/u_wRNWSUnHTknJV-De1fzlIQX5Aa0xz7CzzqYNU09UM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE4ODMw/OTEtMTQ3MjU2ODk3/NS04NTc4LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/1883091",
+          "title": "Gudsforladt",
+          "id": 1883091,
+          "year": 2003,
+          "artist": "Nortt",
+          "stats": {
+            "community": {
+              "in_wantlist": 213,
+              "in_collection": 214
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "Cass, Comp, Ltd, Num",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/4RUaMXSkEuZTvttQ1Qd8CFiRpLANIkh2oJnLtB8xLUA/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5MzA1/NzYtMTUzNDY4ODkx/NC00MDQ0LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/1930576",
+          "title": "Heaven In Flames / Ancient Hatred",
+          "id": 1930576,
+          "year": 1999,
+          "artist": "Judas Iscariot / Weltmacht",
+          "stats": {
+            "community": {
+              "in_wantlist": 222,
+              "in_collection": 83
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "7\"",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/iYXCX8y8m57xtFpzXnawxs0a0_OUZ86mrWSZd64xE-g/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIwNTcx/NDItMTI2MTM0OTU3/NS5qcGVn.jpeg",
+          "resource_url": "https://api.discogs.com/releases/2057142",
+          "title": "Asakku",
+          "id": 2057142,
+          "year": 1998,
+          "artist": "Asakku",
+          "stats": {
+            "community": {
+              "in_wantlist": 95,
+              "in_collection": 131
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "LP",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/gw7LkYg0dMXRZZVoKAZaYOpPgmRJftjasTnhh5h3kbM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIxMTkx/MjAtMTI2NTA1OTA5/NS5qcGVn.jpeg",
+          "resource_url": "https://api.discogs.com/releases/2119120",
+          "title": "Metal From Hell / Chrám Nenávisti",
+          "id": 2119120,
+          "year": 2000,
+          "artist": "Maniac Butcher / Inferno (2)",
+          "stats": {
+            "community": {
+              "in_wantlist": 117,
+              "in_collection": 154
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "LP, Album",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/tebLUXSlLoiFSCV-d5Q4c21E60Zd9UjUXn8Exhyxh7w/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIxMzA1/MTQtMTYwMjYyNzcz/Mi0zMjk1LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/2130514",
+          "title": "Unnamed Quintessence Of Grimness",
+          "id": 2130514,
+          "year": 2002,
+          "artist": "Enthroning Silence",
+          "stats": {
+            "community": {
+              "in_wantlist": 36,
+              "in_collection": 102
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        },
+        {
+          "status": "Accepted",
+          "format": "LP, Album, Ltd",
+          "catno": "none",
+          "thumb": "https://i.discogs.com/_QPQMye8izSxuFiKaxy1nZTaVslPwgYY39HKywcEwqk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIxMzA1/MzAtMTc1Nzk1MjM0/MS00Nzk5LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/releases/2130530",
+          "title": "Černá Krev",
+          "id": 2130530,
+          "year": 2001,
+          "artist": "Maniac Butcher",
+          "stats": {
+            "community": {
+              "in_wantlist": 125,
+              "in_collection": 163
+            },
+            "user": {
+              "in_wantlist": 0,
+              "in_collection": 0
+            }
+          }
+        }
+      ]
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Content-Language": "en",
+      "Date": "Tue, 19 May 2026 23:31:54 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Access-Control-Allow-Headers": "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID",
+      "Access-Control-Allow-Methods": "HEAD,OPTIONS,GET,OPTIONS",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Expose-Headers": "Location",
+      "Cache-Control": "public, must-revalidate",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "X-Content-Type-Options": "nosniff",
+      "x-discogs-media-type": "discogs.v2",
+      "x-discogs-ratelimit": "60",
+      "x-discogs-ratelimit-remaining": "56",
+      "x-discogs-ratelimit-used": "4",
+      "X-Frame-Options": "SAMEORIGIN",
+      "X-XSS-Protection": "1; mode=block",
+      "Set-Cookie": "__cf_bm=h.GoZkWH8iImmoqhoYX_3JLV4BRr4rCk7h.PnM7UUb4-1779233514.5767395-1.0.1.1-q6.BWFKf9vqJ9Ev1hFlh_NBbcipGbqJ6xeLZ9yJoMBiHZLbgarXlsA.f0D0e6wgfl5nv60lAdfB5YYllQWkvpFkOB9.S.mWErSgUs0XurKmvFxJbk_pz7LoIzBFWBjd.; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:01:54 GMT",
+      "cf-cache-status": "DYNAMIC",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6e5da1be2c7ed-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

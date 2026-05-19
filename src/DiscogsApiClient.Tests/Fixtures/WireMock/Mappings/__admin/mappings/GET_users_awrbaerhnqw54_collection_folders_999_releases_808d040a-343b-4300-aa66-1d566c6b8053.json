@@ -1,0 +1,68 @@
+{
+  "Guid": "808d040a-343b-4300-aa66-1d566c6b8053",
+  "UpdatedAt": "2026-05-19T23:34:23.9138204Z",
+  "Title": "Proxy Mapping for GET /users/awrbaerhnqw54/collection/folders/999/releases",
+  "Description": "Proxy Mapping for GET /users/awrbaerhnqw54/collection/folders/999/releases",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/users/awrbaerhnqw54/collection/folders/999/releases",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "GET"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Authorization",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "Discogs token=*",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ]
+  },
+  "Response": {
+    "StatusCode": 404,
+    "BodyAsJson": {
+      "message": "User does not exist or may have been deleted."
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Date": "Tue, 19 May 2026 23:34:24 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Set-Cookie": "__cf_bm=NkBo43t7LBzs3g0URuB9Bws0GWo30kBWZ9EBB7fmFPM-1779233664.165751-1.0.1.1-fNEnTXyOamjmFzpldE2LqpQqPaP0K.Eyw.T80WLV6X3C.fDKsilFnJLZfSmRugtcRxHOwZXhiY0JeVIxLMAYMXFPZIPTm1Cg9pEW0CyJub8s.akh7HqkIdggD9.QD830; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:04:24 GMT",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "x-discogs-ratelimit": "60",
+      "x-discogs-ratelimit-remaining": "43",
+      "x-discogs-ratelimit-used": "17",
+      "cf-cache-status": "DYNAMIC",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6e9810ab7e585-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

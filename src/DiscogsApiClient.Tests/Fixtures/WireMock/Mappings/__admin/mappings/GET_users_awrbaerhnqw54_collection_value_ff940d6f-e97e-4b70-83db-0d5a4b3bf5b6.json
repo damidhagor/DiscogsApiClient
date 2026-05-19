@@ -1,0 +1,68 @@
+{
+  "Guid": "ff940d6f-e97e-4b70-83db-0d5a4b3bf5b6",
+  "UpdatedAt": "2026-05-19T23:35:44.2093664Z",
+  "Title": "Proxy Mapping for GET /users/awrbaerhnqw54/collection/value",
+  "Description": "Proxy Mapping for GET /users/awrbaerhnqw54/collection/value",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/users/awrbaerhnqw54/collection/value",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "GET"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Authorization",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "Discogs token=*",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ]
+  },
+  "Response": {
+    "StatusCode": 404,
+    "BodyAsJson": {
+      "message": "User does not exist or may have been deleted."
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Date": "Tue, 19 May 2026 23:35:44 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "x-discogs-ratelimit": "60",
+      "x-discogs-ratelimit-remaining": "50",
+      "x-discogs-ratelimit-used": "10",
+      "Set-Cookie": "__cf_bm=95omn5iL86Roo2V.x88eimozNfcd_M1rC1MmXnLzCog-1779233744.46599-1.0.1.1-8hYuHYQ9JPSiC7knnnrxbUE3V9_n_Zp9KVI6G8jYwvkq1_ZjT5XC2iZ0k1Y5c9PKQzPf7MJSPOs44RJnswfj1EkIkK6DRbjTOPHu8FyHRfHBRBOcZVEZG3mw0Jg.SX0l; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:05:44 GMT",
+      "cf-cache-status": "DYNAMIC",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6eb76ee561b4d-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

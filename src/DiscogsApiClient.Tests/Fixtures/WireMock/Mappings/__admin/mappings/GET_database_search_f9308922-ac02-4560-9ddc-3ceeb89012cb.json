@@ -1,0 +1,618 @@
+{
+  "Guid": "f9308922-ac02-4560-9ddc-3ceeb89012cb",
+  "UpdatedAt": "2026-05-19T23:31:54.617066Z",
+  "Title": "Proxy Mapping for GET /database/search",
+  "Description": "Proxy Mapping for GET /database/search",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/database/search",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "GET"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Authorization",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "Discogs token=*",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ],
+    "Params": [
+      {
+        "Name": "q",
+        "Matchers": [
+          {
+            "Name": "ExactMatcher",
+            "Pattern": "hammerfall",
+            "IgnoreCase": false
+          }
+        ]
+      },
+      {
+        "Name": "type",
+        "Matchers": [
+          {
+            "Name": "ExactMatcher",
+            "Pattern": "artist",
+            "IgnoreCase": false
+          }
+        ]
+      }
+    ]
+  },
+  "Response": {
+    "StatusCode": 200,
+    "BodyAsJson": {
+      "pagination": {
+        "page": 1,
+        "pages": 1,
+        "per_page": 50,
+        "items": 34,
+        "urls": {}
+      },
+      "results": [
+        {
+          "id": 287459,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": true,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/287459-HammerFall",
+          "title": "HammerFall",
+          "thumb": "https://i.discogs.com/DHXUrHfWHSb9a7DDoRO7pA00R5Zkd13rF56JM3NBThU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTI4NzQ1/OS0xNzI0NDI5MjMy/LTU5ODEuanBlZw.jpeg",
+          "cover_image": "https://i.discogs.com/RDQAZC0moF-6OPsWKvI1GkZUW8WcteG2kfazZmEvJwE/rs:fit/g:sm/q:90/h:550/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTI4NzQ1/OS0xNzI0NDI5MjMy/LTU5ODEuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/artists/287459"
+        },
+        {
+          "id": 2797310,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/2797310-Hammerfall-2",
+          "title": "Hammerfall (2)",
+          "thumb": "https://i.discogs.com/79f43oVYCnivI-oJE4uItvWzq1pSck-If4UepTSSXu0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTI3OTcz/MTAtMTU4MjEwOTcy/NC04MzUyLnBuZw.jpeg",
+          "cover_image": "https://i.discogs.com/79yTWfOX7JLHWtZCdRm2JiB9ijTPkUNpxAjvkhiG4qQ/rs:fit/g:sm/q:90/h:400/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTI3OTcz/MTAtMTU4MjEwOTcy/NC04MzUyLnBuZw.jpeg",
+          "resource_url": "https://api.discogs.com/artists/2797310"
+        },
+        {
+          "id": 3086974,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/3086974-Hammerfall-3",
+          "title": "Hammerfall (3)",
+          "thumb": "",
+          "cover_image": "https://st.discogs.com/52908c1cb4715a50ec3235ace5993a47bbd26c79/images/spacer.gif",
+          "resource_url": "https://api.discogs.com/artists/3086974"
+        },
+        {
+          "id": 262015,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/262015-Oscar-Dronjak",
+          "title": "Oscar Dronjak",
+          "thumb": "https://i.discogs.com/J1UbElkI1d1_VzyzTiytVbn9MQTSrqPY0gIR7NNUWFU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTI2MjAx/NS0xMjk0ODYxMjgz/LmpwZWc.jpeg",
+          "cover_image": "https://i.discogs.com/GlueruvYavULSUSa3TatwznwGOmPhjgY5gBEdYx1tVo/rs:fit/g:sm/q:90/h:298/w:224/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTI2MjAx/NS0xMjk0ODYxMjgz/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/artists/262015"
+        },
+        {
+          "id": 424958,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/424958-Magnus-Rosén",
+          "title": "Magnus Rosén",
+          "thumb": "https://i.discogs.com/Rg6cVAdeAJSTnlfA310noDbM6_kOwCDgEz3CFhZx1Aw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTQyNDk1/OC0xNjkwMDE5MDAy/LTM4MTguanBlZw.jpeg",
+          "cover_image": "https://i.discogs.com/jZhVNvFGVk_AJNRlo6IGnMeKob5KAynf5HRXOk4fq8Y/rs:fit/g:sm/q:90/h:900/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTQyNDk1/OC0xNjkwMDE5MDAy/LTM4MTguanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/artists/424958"
+        },
+        {
+          "id": 1782883,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/1782883-Johan-Larsson-4",
+          "title": "Johan Larsson (4)",
+          "thumb": "https://i.discogs.com/g8F5rYt-bQ0JKif6PVKDfEC5ztWixkMG69b2CosrzAM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTE3ODI4/ODMtMTY2Mjk3MTkx/MS01MTY1LmpwZWc.jpeg",
+          "cover_image": "https://i.discogs.com/0n2aWwP2ibglkDPfbmAPr-9RKQBPmgJkbJvg54b3Nvo/rs:fit/g:sm/q:90/h:630/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTE3ODI4/ODMtMTY2Mjk3MTkx/MS01MTY1LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/artists/1782883"
+        },
+        {
+          "id": 658081,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/658081-David-Wallin",
+          "title": "David Wallin",
+          "thumb": "https://i.discogs.com/VMMpKH33IbD-CP4PO5b-5VgyikLW5WLLdeoqu5TajkY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTY1ODA4/MS0xNzIzMjQ4NTA2/LTU2ODMucG5n.jpeg",
+          "cover_image": "https://i.discogs.com/7f64mmXiFxijhLse3gmRmRMBeKdWPgCPjAiTosN1960/rs:fit/g:sm/q:90/h:748/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTY1ODA4/MS0xNzIzMjQ4NTA2/LTU2ODMucG5n.jpeg",
+          "resource_url": "https://api.discogs.com/artists/658081"
+        },
+        {
+          "id": 392708,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/392708-Pontus-Norgren",
+          "title": "Pontus Norgren",
+          "thumb": "https://i.discogs.com/IfNSZLxNAbLIREkSNgsE_-Pz88ooFWg1sZBDxYWrlws/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM5Mjcw/OC0xNDQ1NDcwNTc5/LTgwOTEuanBlZw.jpeg",
+          "cover_image": "https://i.discogs.com/dDt9bbEwKhH4G2HyUL6z8yOdmviJNdZCPT3o1YgK8HM/rs:fit/g:sm/q:90/h:900/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM5Mjcw/OC0xNDQ1NDcwNTc5/LTgwOTEuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/artists/392708"
+        },
+        {
+          "id": 485251,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/485251-Johan-Larsson",
+          "title": "Johan Larsson",
+          "thumb": "https://i.discogs.com/JQx26kUrdhj0tmjNlwHJoSvxDafzKdzlY8pPTdmKP4c/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTQ4NTI1/MS0xNTQ3NDE0Nzk3/LTM2NDEuanBlZw.jpeg",
+          "cover_image": "https://i.discogs.com/R-KXjzyj9G9YXa-JsOiHDS-QdzgLcYRldfaLVgaowzc/rs:fit/g:sm/q:90/h:591/w:220/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTQ4NTI1/MS0xNTQ3NDE0Nzk3/LTM2NDEuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/artists/485251"
+        },
+        {
+          "id": 3146345,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/3146345-Momo-Jord",
+          "title": "Momo Jord",
+          "thumb": "",
+          "cover_image": "https://st.discogs.com/52908c1cb4715a50ec3235ace5993a47bbd26c79/images/spacer.gif",
+          "resource_url": "https://api.discogs.com/artists/3146345"
+        },
+        {
+          "id": 2993504,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/2993504-Fullforce-2",
+          "title": "Fullforce (2)",
+          "thumb": "https://i.discogs.com/iLWxmFZRpJ0yUEfhwce2ZrIDaJOLX6SXVMQVgoD7oT8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTI5OTM1/MDQtMTU2NDM3Njk5/MC05MzU5LmpwZWc.jpeg",
+          "cover_image": "https://i.discogs.com/jOJinZ9a5NhrS5Ncc19x5UES8IWs5C2JrXnQDYLVd8U/rs:fit/g:sm/q:90/h:450/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTI5OTM1/MDQtMTU2NDM3Njk5/MC05MzU5LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/artists/2993504"
+        },
+        {
+          "id": 272377,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/272377-Stefan-Elmgren",
+          "title": "Stefan Elmgren",
+          "thumb": "https://i.discogs.com/MYTM3IlkL-Z4Ni9YkspoS_Owfi-4gwKoYE4qlXcD8is/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTI3MjM3/Ny0xNDA4MTI1NDUx/LTg0OTcuanBlZw.jpeg",
+          "cover_image": "https://i.discogs.com/DUDtU_I6iaTztoa9xx5I4cJuSvrbgRM-yygVLzejyo8/rs:fit/g:sm/q:90/h:435/w:306/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTI3MjM3/Ny0xNDA4MTI1NDUx/LTg0OTcuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/artists/272377"
+        },
+        {
+          "id": 6325208,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/6325208-Jim-Johnson-39",
+          "title": "Jim Johnson (39)",
+          "thumb": "https://i.discogs.com/zBvlW2B_ooPZuEtuQa9f_8-aAxdYCie3sFELbJTSCJk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTYzMjUy/MDgtMTcyNjkzOTQw/Ny0xOTgwLmpwZWc.jpeg",
+          "cover_image": "https://i.discogs.com/kkE70CFumnNRRrKfNisMSkGSLhUCK3wd_ANj9oIeiOs/rs:fit/g:sm/q:90/h:599/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTYzMjUy/MDgtMTcyNjkzOTQw/Ny0xOTgwLmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/artists/6325208"
+        },
+        {
+          "id": 12380455,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/12380455-Burning-Sun",
+          "title": "Burning Sun",
+          "thumb": "https://i.discogs.com/i761nNOD4RyLjVORwLetXVrFeK9m9dEQ3V3HlXsrcdU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTEyMzgw/NDU1LTE3NzgyNTA4/NjYtMTAwNi5qcGVn.jpeg",
+          "cover_image": "https://i.discogs.com/b7t0_OcfdKKti1KvD53nHpy-7oNY_O4y5cUv-NsAQhM/rs:fit/g:sm/q:90/h:337/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTEyMzgw/NDU1LTE3NzgyNTA4/NjYtMTAwNi5qcGVn.jpeg",
+          "resource_url": "https://api.discogs.com/artists/12380455"
+        },
+        {
+          "id": 311161,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/311161-Ragne-Wahlquist",
+          "title": "Ragne Wahlquist",
+          "thumb": "https://i.discogs.com/nTQxJOKVyqiphykEyPx2TlWxZ6aHqDzix_Sbq1crApY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTMxMTE2/MS0xMzQxMjM2MjQx/LTk5MDEuanBlZw.jpeg",
+          "cover_image": "https://i.discogs.com/VpBJ1cLsmgvJJORXNSa31cdDZWPanGfx0s8cvL7zX78/rs:fit/g:sm/q:90/h:416/w:341/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTMxMTE2/MS0xMzQxMjM2MjQx/LTk5MDEuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/artists/311161"
+        },
+        {
+          "id": 3453464,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/3453464-Billionaires-Boys-Club",
+          "title": "Billionaires Boys Club",
+          "thumb": "https://i.discogs.com/RUrQUbvFIXwmLOoM2_eGcMQWoyigb8UpLXvycLeq4gw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM0NTM0/NjQtMTczODI5MjI3/OS0zMTQ5LmpwZWc.jpeg",
+          "cover_image": "https://i.discogs.com/Px2kj2OB6ackQIFykLQRNjCYa2o9ZDVHDykD82hxNaQ/rs:fit/g:sm/q:90/h:217/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM0NTM0/NjQtMTczODI5MjI3/OS0zMTQ5LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/artists/3453464"
+        },
+        {
+          "id": 8194037,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/8194037-At-The-Movies-2",
+          "title": "At The Movies (2)",
+          "thumb": "https://i.discogs.com/-wHYA9izWKDbtVOau59JYt4RP3VBXsHscUQPn_pElD4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTgxOTQw/MzctMTYwNzA4NjEz/MC0yNDkyLmpwZWc.jpeg",
+          "cover_image": "https://i.discogs.com/2YtwrORhI2dSt4FJkl1X1SoDGoQpFc8NH_yvDuy-McU/rs:fit/g:sm/q:90/h:315/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTgxOTQw/MzctMTYwNzA4NjEz/MC0yNDkyLmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/artists/8194037"
+        },
+        {
+          "id": 5170574,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/5170574-Armagedon-7",
+          "title": "Armagedon (7)",
+          "thumb": "https://i.discogs.com/8Xj_Yjp450xpl07dsCvHmGH8e9wujfhtRN-fH__mvQk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTUxNzA1/NzQtMTQ5MTg1OTYw/Ni05MzMyLmpwZWc.jpeg",
+          "cover_image": "https://i.discogs.com/XVKbPXnLi88sURBFKN8FnE73F1Ypt9ivr-S250dxJ_k/rs:fit/g:sm/q:90/h:500/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTUxNzA1/NzQtMTQ5MTg1OTYw/Ni05MzMyLmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/artists/5170574"
+        },
+        {
+          "id": 7396795,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/7396795-Josh-Barnett-2",
+          "title": "Josh Barnett (2)",
+          "thumb": "https://i.discogs.com/Zn2LAa_E9V2dgWSbVE3qnU9OFEbLQA6HLzJWIu7hz9o/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTczOTY3/OTUtMTU2OTYxOTAx/MS04Mzc1LmpwZWc.jpeg",
+          "cover_image": "https://i.discogs.com/-kV358U8eJK_aT4N-V8j_BPXD3STULpFDLfZcKrDdeM/rs:fit/g:sm/q:90/h:669/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTczOTY3/OTUtMTU2OTYxOTAx/MS04Mzc1LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/artists/7396795"
+        },
+        {
+          "id": 7001889,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/7001889-Måsrock",
+          "title": "Måsrock",
+          "thumb": "",
+          "cover_image": "https://st.discogs.com/52908c1cb4715a50ec3235ace5993a47bbd26c79/images/spacer.gif",
+          "resource_url": "https://api.discogs.com/artists/7001889"
+        },
+        {
+          "id": 1557798,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/1557798-Michael-Åberg",
+          "title": "Michael Åberg",
+          "thumb": "https://i.discogs.com/llvMPqSGRwR8utQD1UpXp8_5gQu0RUOVVWOEG890jWk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTE1NTc3/OTgtMTUyNzk0NTM0/NC0yOTMwLmpwZWc.jpeg",
+          "cover_image": "https://i.discogs.com/UBZ0-82cNE2uJ0-xWRJH9CCCxxWvzgTcJefBUoGFZwc/rs:fit/g:sm/q:90/h:594/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTE1NTc3/OTgtMTUyNzk0NTM0/NC0yOTMwLmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/artists/1557798"
+        },
+        {
+          "id": 3900270,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/3900270-Metalmind",
+          "title": "Metalmind",
+          "thumb": "https://i.discogs.com/3L9hLZfOUnaaARomZSo8IarDKS0tDillUr_ovPG9Jhc/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM5MDAy/NzAtMTQwNDU2MDIw/NS01MDQzLmpwZWc.jpeg",
+          "cover_image": "https://i.discogs.com/TZAEv1_NW9Am5oqYM04lrouhBKB2pFr8NFMAy51brJQ/rs:fit/g:sm/q:90/h:300/w:450/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM5MDAy/NzAtMTQwNDU2MDIw/NS01MDQzLmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/artists/3900270"
+        },
+        {
+          "id": 462630,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/462630-Ceremonial-Oath",
+          "title": "Ceremonial Oath",
+          "thumb": "https://i.discogs.com/M9hlH6HpgSQimEfTQ4ty4I_TOTlnmgjq9mWyqoMfUN0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTQ2MjYz/MC0xMTQ1NzEzNjYz/LmpwZWc.jpeg",
+          "cover_image": "https://i.discogs.com/qFtwwTM05utyhkNC1oi7hgB7qSO9_gHBOxyDWEKUHy0/rs:fit/g:sm/q:90/h:284/w:400/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTQ2MjYz/MC0xMTQ1NzEzNjYz/LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/artists/462630"
+        },
+        {
+          "id": 3810659,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/3810659-Planet-Alliance",
+          "title": "Planet Alliance",
+          "thumb": "https://i.discogs.com/xWhZiR0KHVGwPKConjaxq4dbMym2AahYuLnXRfVfpTI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4MTA2/NTktMTQzMDQ4ODU3/MC01NjAyLmpwZWc.jpeg",
+          "cover_image": "https://i.discogs.com/4AAgzlbKEuhpSjSLjMzTXcU2l46CyzE_MrhoAkAwYyo/rs:fit/g:sm/q:90/h:293/w:400/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTM4MTA2/NTktMTQzMDQ4ODU3/MC01NjAyLmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/artists/3810659"
+        },
+        {
+          "id": 2029500,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/2029500-Hammerdrill",
+          "title": "Hammerdrill",
+          "thumb": "",
+          "cover_image": "https://st.discogs.com/52908c1cb4715a50ec3235ace5993a47bbd26c79/images/spacer.gif",
+          "resource_url": "https://api.discogs.com/artists/2029500"
+        },
+        {
+          "id": 1266699,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/1266699-Standby",
+          "title": "Standby",
+          "thumb": "https://i.discogs.com/2aN95HDv_BAltQdtaWuwxFRNWzmS7ki9xeNlQhGoE7U/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTEyNjY2/OTktMTI2NDc5MjUx/My5qcGVn.jpeg",
+          "cover_image": "https://i.discogs.com/22osHTLpglbwgbbAQvEUfWWBknN5O_fyUbwlW9E5F_E/rs:fit/g:sm/q:90/h:408/w:585/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTEyNjY2/OTktMTI2NDc5MjUx/My5qcGVn.jpeg",
+          "resource_url": "https://api.discogs.com/artists/1266699"
+        },
+        {
+          "id": 1952501,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/1952501-Adrian-Weiss",
+          "title": "Adrian Weiss",
+          "thumb": "https://i.discogs.com/4CjydrPDfuRof-zIrirjgg3a8EExiTH8-yjJ79enL5Q/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTE5NTI1/MDEtMTYxMzg2OTQw/Ni05MTk3LmpwZWc.jpeg",
+          "cover_image": "https://i.discogs.com/H_zTi9QvfcR7bQpzJSwdpT-cv5SVBfBo-EXlxLof9E0/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTE5NTI1/MDEtMTYxMzg2OTQw/Ni05MTk3LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/artists/1952501"
+        },
+        {
+          "id": 4423064,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/4423064-United-15",
+          "title": "United (15)",
+          "thumb": "",
+          "cover_image": "https://st.discogs.com/52908c1cb4715a50ec3235ace5993a47bbd26c79/images/spacer.gif",
+          "resource_url": "https://api.discogs.com/artists/4423064"
+        },
+        {
+          "id": 1737643,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/1737643-Olivier-Garnier",
+          "title": "Olivier Garnier",
+          "thumb": "",
+          "cover_image": "https://st.discogs.com/52908c1cb4715a50ec3235ace5993a47bbd26c79/images/spacer.gif",
+          "resource_url": "https://api.discogs.com/artists/1737643"
+        },
+        {
+          "id": 4219535,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/4219535-Aeon-23",
+          "title": "Aeon (23)",
+          "thumb": "https://i.discogs.com/qNZAyMCg-6roFfWmPBgN4TTDjOrxhBqwIicrfepqMm0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTQyMTk1/MzUtMTQyNDU0MTI3/Mi01NTAzLmpwZWc.jpeg",
+          "cover_image": "https://i.discogs.com/0AaqjRZU7K5Smog7-KJKGpBlryhFygYYTVwaG9DYwjA/rs:fit/g:sm/q:90/h:416/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTQyMTk1/MzUtMTQyNDU0MTI3/Mi01NTAzLmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/artists/4219535"
+        },
+        {
+          "id": 7635363,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/7635363-Limbo-29",
+          "title": "Limbo (29)",
+          "thumb": "https://i.discogs.com/i0feMsaCPN4QopEUBylgEhRBBYBSGOMY6qzMtCCGc-c/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTc2MzUz/NjMtMTYwMTQ1NTg5/My0zOTkyLmpwZWc.jpeg",
+          "cover_image": "https://i.discogs.com/rktXSZwFMY3hPXkb9nb81f-JQ6qW2xUV2hUazXsTXs8/rs:fit/g:sm/q:90/h:401/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTc2MzUz/NjMtMTYwMTQ1NTg5/My0zOTkyLmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/artists/7635363"
+        },
+        {
+          "id": 4011523,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/4011523-Pictures-Of-Pain",
+          "title": "Pictures Of Pain",
+          "thumb": "https://i.discogs.com/gzY5-IouVVmpP6sBsFZwmqmr-xtqLoVtUnFg7Oj381A/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTQwMTE1/MjMtMTQ1NzI1OTg5/NC05Mjg2LmpwZWc.jpeg",
+          "cover_image": "https://i.discogs.com/lheCzP8--Oo6qU9v54Ul08mW3UK5xdVB3-QBqKjAED4/rs:fit/g:sm/q:90/h:252/w:400/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTQwMTE1/MjMtMTQ1NzI1OTg5/NC05Mjg2LmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/artists/4011523"
+        },
+        {
+          "id": 290234,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/290234-Warlord-2",
+          "title": "Warlord (2)",
+          "thumb": "https://i.discogs.com/E431upJTeilASr1wPU7OByALoCv_0833L_KPjMkE_i8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTI5MDIz/NC0xNzY5NzE0OTE4/LTIxNDcuanBlZw.jpeg",
+          "cover_image": "https://i.discogs.com/H2u0q8qO3tPqzVSBZMfGR7nJQdMUDrwL0EwPSlR0wlc/rs:fit/g:sm/q:90/h:409/w:404/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTI5MDIz/NC0xNzY5NzE0OTE4/LTIxNDcuanBlZw.jpeg",
+          "resource_url": "https://api.discogs.com/artists/290234"
+        },
+        {
+          "id": 7555047,
+          "type": "artist",
+          "user_data": {
+            "in_wantlist": false,
+            "in_collection": false
+          },
+          "master_id": null,
+          "master_url": null,
+          "uri": "/artist/7555047-Innerforce",
+          "title": "Innerforce",
+          "thumb": "https://i.discogs.com/RpCOXGVtkVak4jbN3Hby-P6wy-WCqzp0rv0rugOQVI8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTc1NTUw/NDctMTU3Njk3ODgz/NS02NzUyLmpwZWc.jpeg",
+          "cover_image": "https://i.discogs.com/YBZGt5DvAtlbSbe-xDN-HtHDFEW1Mqk5KKqu9XLSO5c/rs:fit/g:sm/q:90/h:337/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTc1NTUw/NDctMTU3Njk3ODgz/NS02NzUyLmpwZWc.jpeg",
+          "resource_url": "https://api.discogs.com/artists/7555047"
+        }
+      ]
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Content-Language": "en",
+      "Date": "Tue, 19 May 2026 23:31:55 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Access-Control-Allow-Headers": "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID",
+      "Access-Control-Allow-Methods": "HEAD,OPTIONS,GET,OPTIONS",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Expose-Headers": "Location",
+      "Cache-Control": "public, must-revalidate",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "X-Content-Type-Options": "nosniff",
+      "x-discogs-media-type": "discogs.v2",
+      "x-discogs-ratelimit": "60",
+      "x-discogs-ratelimit-remaining": "25",
+      "x-discogs-ratelimit-used": "35",
+      "X-Frame-Options": "SAMEORIGIN",
+      "X-XSS-Protection": "1; mode=block",
+      "cf-cache-status": "DYNAMIC",
+      "Set-Cookie": "__cf_bm=uqrXSA9PlK3ewVEdkIU9Tc0_EQfPhY3zh26k6ME61_8-1779233514.5950158-1.0.1.1-7bkg0y1QhZTfq50I.IpyOs73LrmizGbCCT6ZAW0YqfawuJtrOOjiREiqzrOx9B1MrwV3GxtXSk8mMQRNjDPamAbiT7yMAzx8tzoWzvGHEIgvF0ctQZhAT6aoKuvmmSqL; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Wed, 20 May 2026 00:01:55 GMT",
+      "Server": "cloudflare",
+      "CF-RAY": "9fe6e5da3be1f809-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}
