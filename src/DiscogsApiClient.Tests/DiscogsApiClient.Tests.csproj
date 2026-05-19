@@ -16,4 +16,10 @@
 		<ProjectReference Include="..\DiscogsApiClient\DiscogsApiClient.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<Content Include="DiscogsApiClient.Tests.testconfig.json" Condition="Exists('DiscogsApiClient.Tests.testconfig.json')">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
 </Project>

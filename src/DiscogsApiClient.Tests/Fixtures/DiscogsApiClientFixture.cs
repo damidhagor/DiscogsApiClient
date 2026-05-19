@@ -26,7 +26,7 @@ public sealed class DiscogsApiClientFixture : IAsyncInitializer, IAsyncDisposabl
             })
             .BuildServiceProvider();
 
-        var userToken = Environment.GetEnvironmentVariable("DISCOGS_USER_TOKEN") ?? "token";
+        var userToken = TestContext.Configuration.Get("DiscogsUserToken") ?? "token";
         _authenticatedProvider.GetRequiredService<IDiscogsAuthenticationService>()
             .AuthenticateWithPersonalAccessToken(userToken);
 
