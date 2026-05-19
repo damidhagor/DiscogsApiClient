@@ -58,27 +58,32 @@ public sealed partial class WireMockServerFixture : IAsyncInitializer, IAsyncDis
 
         if (_isRecording)
         {
-            SanitizeMappings();
+            CleanupMappings();
         }
 
         return ValueTask.CompletedTask;
     }
 
-    private void SanitizeMappings()
+    private void CleanupMappings()
     {
         if (!Directory.Exists(MappingsPath))
         {
             return;
         }
 
-        foreach (var file in Directory.GetFiles(MappingsPath, "*.json", SearchOption.AllDirectories))
+        var adminMappingsPath = Path.Combine(MappingsPath, "__admin", "mappings");
+
+        if (Directory.Exists(adminMappingsPath))
         {
-            var json = File.ReadAllText(file);
-            var sanitized = TokenPattern().Replace(json, @"""Discogs token=*""");
-            if (!ReferenceEquals(json, sanitized))
+            foreach (var file in Directory.GetFiles(adminMappingsPath, "*.json"))
             {
-                File.WriteAllText(file, sanitized);
+                var json = File.ReadAllText(file);
+                var sanitized = TokenPattern().Replace(json, @"""Discogs token=*""");
+                var destination = Path.Combine(MappingsPath, Path.GetFileName(file));
+                File.WriteAllText(destination, sanitized);
             }
+
+            Directory.Delete(Path.Combine(MappingsPath, "__admin"), recursive: true);
         }
     }
 }
