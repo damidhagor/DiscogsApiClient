@@ -38,7 +38,8 @@ public sealed partial class WireMockServerFixture : IAsyncInitializer, IAsyncDis
                 SaveMappingToFile = true,
                 SaveMappingSettings = new() { StatusCodePattern = "*" },
                 ExcludedHeaders = ["Host", "traceparent"],
-                AppendGuidToSavedMappingFile = true
+                AppendGuidToSavedMappingFile = true,
+                PrefixForSavedMappingFile = ""
             };
         }
         else
