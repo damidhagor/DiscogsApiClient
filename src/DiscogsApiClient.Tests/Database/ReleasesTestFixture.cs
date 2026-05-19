@@ -1,13 +1,16 @@
 namespace DiscogsApiClient.Tests.Database;
 
-public sealed class ReleasesTestFixture : ApiBaseTestFixture
+[ClassDataSource<DiscogsApiClientFixture>(Shared = SharedType.PerTestSession)]
+public sealed class ReleasesTestFixture(DiscogsApiClientFixture fixture)
 {
+    private readonly IDiscogsApiClient _apiClient = fixture.GetAuthenticatedClient();
+
     [Test]
     public async Task GetRelease_Success(CancellationToken cancellationToken)
     {
         var releaseId = 5134861;
 
-        var release = await ApiClient.GetRelease(releaseId, cancellationToken);
+        var release = await _apiClient.GetRelease(releaseId, cancellationToken);
 
         await Assert.That(release).IsNotNull();
         await Assert.That(release.Id).IsEqualTo(releaseId);
@@ -105,7 +108,7 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
     [Arguments(0)]
     public async Task GetRelease_ReleaseId_Guard(int releaseId, CancellationToken cancellationToken)
     {
-        await Assert.That(async () => await ApiClient.GetRelease(releaseId, cancellationToken))
+        await Assert.That(async () => await _apiClient.GetRelease(releaseId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
     }
 
@@ -114,7 +117,7 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
     {
         var releaseId = int.MaxValue;
 
-        await Assert.That(async () => await ApiClient.GetRelease(releaseId, cancellationToken))
+        await Assert.That(async () => await _apiClient.GetRelease(releaseId, cancellationToken))
             .Throws<ResourceNotFoundDiscogsException>();
     }
 
@@ -124,7 +127,7 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
     {
         var releaseId = 5134861;
 
-        var ratingResponse = await ApiClient.GetReleaseCommunityRating(releaseId, cancellationToken);
+        var ratingResponse = await _apiClient.GetReleaseCommunityRating(releaseId, cancellationToken);
 
         await Assert.That(ratingResponse).IsNotNull();
         await Assert.That(ratingResponse.ReleaseId).IsEqualTo(releaseId);
@@ -138,7 +141,7 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
     [Arguments(0)]
     public async Task GetReleaseCommunityRating_ReleaseId_Guard(int releaseId, CancellationToken cancellationToken)
     {
-        await Assert.That(async () => await ApiClient.GetReleaseCommunityRating(releaseId, cancellationToken))
+        await Assert.That(async () => await _apiClient.GetReleaseCommunityRating(releaseId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
     }
 
@@ -147,7 +150,7 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
     {
         var releaseId = int.MaxValue;
 
-        await Assert.That(async () => await ApiClient.GetReleaseCommunityRating(releaseId, cancellationToken))
+        await Assert.That(async () => await _apiClient.GetReleaseCommunityRating(releaseId, cancellationToken))
             .Throws<ResourceNotFoundDiscogsException>();
     }
 
@@ -157,7 +160,7 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
     {
         var releaseId = 5134861;
 
-        var stats = await ApiClient.GetReleaseStats(releaseId, cancellationToken);
+        var stats = await _apiClient.GetReleaseStats(releaseId, cancellationToken);
 
         await Assert.That(stats).IsNotNull();
     }
@@ -167,7 +170,7 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
     [Arguments(0)]
     public async Task GetReleaseStats_ReleaseId_Guard(int releaseId, CancellationToken cancellationToken)
     {
-        await Assert.That(async () => await ApiClient.GetReleaseStats(releaseId, cancellationToken))
+        await Assert.That(async () => await _apiClient.GetReleaseStats(releaseId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
     }
 
@@ -176,7 +179,7 @@ public sealed class ReleasesTestFixture : ApiBaseTestFixture
     {
         var releaseId = int.MaxValue;
 
-        await Assert.That(async () => await ApiClient.GetReleaseStats(releaseId, cancellationToken))
+        await Assert.That(async () => await _apiClient.GetReleaseStats(releaseId, cancellationToken))
             .Throws<ResourceNotFoundDiscogsException>();
     }
 }

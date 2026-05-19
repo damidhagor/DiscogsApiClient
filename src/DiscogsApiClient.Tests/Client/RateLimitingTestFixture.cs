@@ -1,7 +1,10 @@
 namespace DiscogsApiClient.Tests.Client;
 
-public sealed class RateLimitingTestFixture : ApiBaseTestFixture
+[ClassDataSource<DiscogsApiClientFixture>(Shared = SharedType.PerTestSession)]
+public sealed class RateLimitingTestFixture(DiscogsApiClientFixture fixture)
 {
+    private readonly IDiscogsApiClient _apiClient = fixture.GetAuthenticatedClient();
+
     [Test]
     [Explicit]
     public async Task ClientIsRateLimited_Success(CancellationToken cancellationToken)
@@ -13,7 +16,7 @@ public sealed class RateLimitingTestFixture : ApiBaseTestFixture
         {
             try
             {
-                _ = await ApiClient.GetIdentity(cancellationToken);
+                _ = await _apiClient.GetIdentity(cancellationToken);
                 succeeded++;
                 TestContext.Current!.Output.WriteLine($"[{DateTime.Now:HH:mm:ss:fff}] {i:D2} SUCCESS");
             }

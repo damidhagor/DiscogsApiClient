@@ -1,13 +1,17 @@
 namespace DiscogsApiClient.Tests.User;
 
-public sealed class UserTestFixture : ApiBaseTestFixture
+[ClassDataSource<DiscogsApiClientFixture>(Shared = SharedType.PerTestSession)]
+public sealed class UserTestFixture(DiscogsApiClientFixture fixture)
 {
+    private readonly IDiscogsApiClient _apiClient = fixture.GetAuthenticatedClient();
+    private readonly IDiscogsApiClient _unauthenticatedApiClient = fixture.GetUnauthenticatedClient();
+
     [Test]
     public async Task GetUser_Success(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
 
-        var user = await ApiClient.GetUser(username, cancellationToken);
+        var user = await _apiClient.GetUser(username, cancellationToken);
 
         await Assert.That(user).IsNotNull();
         await Assert.That(user.Id).IsEqualTo(12579295);
@@ -23,9 +27,7 @@ public sealed class UserTestFixture : ApiBaseTestFixture
     public async Task GetUser_Unauthenticated(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
-        var unauthenticatedClients = CreateUnauthenticatedDiscogsApiClient();
-
-        var user = await unauthenticatedClients.discogsApiClient.GetUser(username, cancellationToken);
+        var user = await _unauthenticatedApiClient.GetUser(username, cancellationToken);
 
         await Assert.That(user).IsNotNull();
         await Assert.That(user.Id).IsEqualTo(12579295);
@@ -35,9 +37,6 @@ public sealed class UserTestFixture : ApiBaseTestFixture
         await Assert.That(user.IsActivated).IsTrue();
         await Assert.That(user.AvatarUrl).IsNotNullOrWhiteSpace();
         await Assert.That(user.CollectionFoldersUrl).IsNotNullOrWhiteSpace();
-
-        unauthenticatedClients.authHttpClient.Dispose();
-        unauthenticatedClients.clientHttpClient.Dispose();
     }
 
     [Test]
@@ -45,7 +44,7 @@ public sealed class UserTestFixture : ApiBaseTestFixture
     {
         var username = "";
 
-        await Assert.That(async () => await ApiClient.GetUser(username, cancellationToken)).Throws<ArgumentException>();
+        await Assert.That(async () => await _apiClient.GetUser(username, cancellationToken)).Throws<ArgumentException>();
     }
 
     [Test]
@@ -53,6 +52,6 @@ public sealed class UserTestFixture : ApiBaseTestFixture
     {
         var username = "awrbaerhnqw54";
 
-        await Assert.That(async () => await ApiClient.GetUser(username, cancellationToken)).Throws<ResourceNotFoundDiscogsException>();
+        await Assert.That(async () => await _apiClient.GetUser(username, cancellationToken)).Throws<ResourceNotFoundDiscogsException>();
     }
 }

@@ -1,11 +1,15 @@
 namespace DiscogsApiClient.Tests.User;
 
-public sealed class IdentityTestFixture : ApiBaseTestFixture
+[ClassDataSource<DiscogsApiClientFixture>(Shared = SharedType.PerTestSession)]
+public sealed class IdentityTestFixture(DiscogsApiClientFixture fixture)
 {
+    private readonly IDiscogsApiClient _apiClient = fixture.GetAuthenticatedClient();
+    private readonly IDiscogsApiClient _unauthenticatedApiClient = fixture.GetUnauthenticatedClient();
+
     [Test]
     public async Task GetIdentity_Success(CancellationToken cancellationToken)
     {
-        var identity = await ApiClient.GetIdentity(cancellationToken);
+        var identity = await _apiClient.GetIdentity(cancellationToken);
 
         await Assert.That(identity).IsNotNull();
         await Assert.That(identity.Username).IsEqualTo("DamIDhagor");
@@ -17,12 +21,8 @@ public sealed class IdentityTestFixture : ApiBaseTestFixture
     [Test]
     public async Task GetIdentity_Unauthenticated(CancellationToken cancellationToken)
     {
-        var unauthenticatedClients = CreateUnauthenticatedDiscogsApiClient();
-
-        await Assert.That(async () => await unauthenticatedClients.discogsApiClient.GetIdentity(cancellationToken))
+        
+        await Assert.That(async () => await _unauthenticatedApiClient.GetIdentity(cancellationToken))
             .Throws<UnauthenticatedDiscogsException>();
-
-        unauthenticatedClients.authHttpClient.Dispose();
-        unauthenticatedClients.clientHttpClient.Dispose();
     }
 }

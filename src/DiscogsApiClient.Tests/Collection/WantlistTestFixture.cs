@@ -1,7 +1,11 @@
 namespace DiscogsApiClient.Tests.Collection;
 
-public sealed class WantlistTestFixture : ApiBaseTestFixture
+[ClassDataSource<DiscogsApiClientFixture>(Shared = SharedType.PerTestSession)]
+public sealed class WantlistTestFixture(DiscogsApiClientFixture fixture)
 {
+    private readonly IDiscogsApiClient _apiClient = fixture.GetAuthenticatedClient();
+    private readonly IDiscogsApiClient _unauthenticatedApiClient = fixture.GetUnauthenticatedClient();
+
     [Test]
     public async Task GetAllWantlistReleases_Success(CancellationToken cancellationToken)
     {
@@ -9,14 +13,14 @@ public sealed class WantlistTestFixture : ApiBaseTestFixture
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
         var summedUpItemCount = 0;
 
-        var response = await ApiClient.GetWantlistReleases(username, paginationParams, cancellationToken);
+        var response = await _apiClient.GetWantlistReleases(username, paginationParams, cancellationToken);
         var itemCount = response.Pagination.TotalItems;
         summedUpItemCount += response.Releases.Count;
 
         for (var p = 2; p <= response.Pagination.TotalPages; p++)
         {
             paginationParams = paginationParams with { Page = p };
-            response = await ApiClient.GetWantlistReleases(username, paginationParams, cancellationToken);
+            response = await _apiClient.GetWantlistReleases(username, paginationParams, cancellationToken);
             summedUpItemCount += response.Releases.Count;
         }
 
@@ -29,7 +33,7 @@ public sealed class WantlistTestFixture : ApiBaseTestFixture
     [Arguments("  ", typeof(ArgumentException))]
     public async Task GetWantlist_Username_Guard(string? username, Type expectedException, CancellationToken cancellationToken)
     {
-        var exception = await Assert.That(async () => await ApiClient.GetWantlistReleases(username!, null, cancellationToken))
+        var exception = await Assert.That(async () => await _apiClient.GetWantlistReleases(username!, null, cancellationToken))
             .Throws<Exception>()
             .WithMessageContaining("username");
 
@@ -41,7 +45,7 @@ public sealed class WantlistTestFixture : ApiBaseTestFixture
     {
         var username = "awrbaerhnqw54";
 
-        await Assert.That(async () => await ApiClient.GetWantlistReleases(username, null, cancellationToken))
+        await Assert.That(async () => await _apiClient.GetWantlistReleases(username, null, cancellationToken))
             .Throws<ResourceNotFoundDiscogsException>();
     }
 
@@ -54,7 +58,7 @@ public sealed class WantlistTestFixture : ApiBaseTestFixture
     {
         var releaseId = 5134861;
 
-        var exception = await Assert.That(async () => await ApiClient.AddReleaseToWantlist(username!, releaseId, cancellationToken))
+        var exception = await Assert.That(async () => await _apiClient.AddReleaseToWantlist(username!, releaseId, cancellationToken))
             .Throws<Exception>()
             .WithMessageContaining("username");
 
@@ -67,7 +71,7 @@ public sealed class WantlistTestFixture : ApiBaseTestFixture
         var username = "awrbaerhnqw54";
         var releaseId = 5134861;
 
-        await Assert.That(async () => await ApiClient.AddReleaseToWantlist(username, releaseId, cancellationToken))
+        await Assert.That(async () => await _apiClient.AddReleaseToWantlist(username, releaseId, cancellationToken))
             .Throws<ResourceNotFoundDiscogsException>();
     }
 
@@ -78,7 +82,7 @@ public sealed class WantlistTestFixture : ApiBaseTestFixture
     {
         var username = "DamIDhagor";
 
-        await Assert.That(async () => await ApiClient.AddReleaseToWantlist(username, releaseId, cancellationToken))
+        await Assert.That(async () => await _apiClient.AddReleaseToWantlist(username, releaseId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
     }
 
@@ -88,22 +92,18 @@ public sealed class WantlistTestFixture : ApiBaseTestFixture
         var username = "DamIDhagor";
         var releaseId = int.MaxValue;
 
-        await Assert.That(async () => await ApiClient.AddReleaseToWantlist(username, releaseId, cancellationToken))
+        await Assert.That(async () => await _apiClient.AddReleaseToWantlist(username, releaseId, cancellationToken))
             .Throws<ResourceNotFoundDiscogsException>();
     }
 
     [Test]
     public async Task AddWantlistRelease_Unauthenticated(CancellationToken cancellationToken)
     {
-        var clients = CreateUnauthenticatedDiscogsApiClient();
         var username = "DamIDhagor";
         var releaseId = 5134861;
 
-        await Assert.That(async () => await clients.discogsApiClient.AddReleaseToWantlist(username, releaseId, cancellationToken))
+        await Assert.That(async () => await _unauthenticatedApiClient.AddReleaseToWantlist(username, releaseId, cancellationToken))
             .Throws<UnauthenticatedDiscogsException>();
-
-        clients.authHttpClient.Dispose();
-        clients.clientHttpClient.Dispose();
     }
 
 
@@ -115,7 +115,7 @@ public sealed class WantlistTestFixture : ApiBaseTestFixture
     {
         var releaseId = 5134861;
 
-        var exception = await Assert.That(async () => await ApiClient.DeleteReleaseFromWantlist(username!, releaseId, cancellationToken))
+        var exception = await Assert.That(async () => await _apiClient.DeleteReleaseFromWantlist(username!, releaseId, cancellationToken))
             .Throws<Exception>()
             .WithMessageContaining("username");
 
@@ -128,7 +128,7 @@ public sealed class WantlistTestFixture : ApiBaseTestFixture
         var username = "awrbaerhnqw54";
         var releaseId = 5134861;
 
-        await Assert.That(async () => await ApiClient.DeleteReleaseFromWantlist(username, releaseId, cancellationToken))
+        await Assert.That(async () => await _apiClient.DeleteReleaseFromWantlist(username, releaseId, cancellationToken))
             .Throws<ResourceNotFoundDiscogsException>();
     }
 
@@ -139,7 +139,7 @@ public sealed class WantlistTestFixture : ApiBaseTestFixture
     {
         var username = "DamIDhagor";
 
-        await Assert.That(async () => await ApiClient.DeleteReleaseFromWantlist(username, releaseId, cancellationToken))
+        await Assert.That(async () => await _apiClient.DeleteReleaseFromWantlist(username, releaseId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
     }
 
@@ -149,22 +149,18 @@ public sealed class WantlistTestFixture : ApiBaseTestFixture
         var username = "DamIDhagor";
         var releaseId = int.MaxValue;
 
-        await Assert.That(async () => await ApiClient.DeleteReleaseFromWantlist(username, releaseId, cancellationToken))
+        await Assert.That(async () => await _apiClient.DeleteReleaseFromWantlist(username, releaseId, cancellationToken))
             .Throws<ResourceNotFoundDiscogsException>();
     }
 
     [Test]
     public async Task DeleteWantlistRelease_Unauthenticated(CancellationToken cancellationToken)
     {
-        var clients = CreateUnauthenticatedDiscogsApiClient();
         var username = "DamIDhagor";
         var releaseId = 5134861;
 
-        await Assert.That(async () => await clients.discogsApiClient.DeleteReleaseFromWantlist(username, releaseId, cancellationToken))
+        await Assert.That(async () => await _unauthenticatedApiClient.DeleteReleaseFromWantlist(username, releaseId, cancellationToken))
             .Throws<UnauthenticatedDiscogsException>();
-
-        clients.authHttpClient.Dispose();
-        clients.clientHttpClient.Dispose();
     }
 
 
@@ -175,7 +171,7 @@ public sealed class WantlistTestFixture : ApiBaseTestFixture
         var releaseId = 5134861;
 
         // Add
-        var addedRelease = await ApiClient.AddReleaseToWantlist(username, releaseId, cancellationToken);
+        var addedRelease = await _apiClient.AddReleaseToWantlist(username, releaseId, cancellationToken);
         await Assert.That(addedRelease).IsNotNull();
         await Assert.That(addedRelease.Id).IsEqualTo(releaseId);
         await Assert.That(addedRelease.Notes).IsNullOrWhiteSpace();
@@ -211,6 +207,6 @@ public sealed class WantlistTestFixture : ApiBaseTestFixture
         await Assert.That(addedRelease.Release.Labels.Count).IsGreaterThan(0);
 
         // Delete
-        await Assert.That(async () => await ApiClient.DeleteReleaseFromWantlist(username, releaseId, cancellationToken)).ThrowsNothing();
+        await Assert.That(async () => await _apiClient.DeleteReleaseFromWantlist(username, releaseId, cancellationToken)).ThrowsNothing();
     }
 }

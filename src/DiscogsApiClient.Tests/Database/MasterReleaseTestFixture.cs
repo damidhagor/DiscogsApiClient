@@ -2,14 +2,17 @@ using static DiscogsApiClient.QueryParameters.MasterReleaseVersionFilterQueryPar
 
 namespace DiscogsApiClient.Tests.Database;
 
-public sealed class MasterReleaseTestFixture : ApiBaseTestFixture
+[ClassDataSource<DiscogsApiClientFixture>(Shared = SharedType.PerTestSession)]
+public sealed class MasterReleaseTestFixture(DiscogsApiClientFixture fixture)
 {
+    private readonly IDiscogsApiClient _apiClient = fixture.GetAuthenticatedClient();
+
     [Test]
     public async Task GetMasterRelease_Success(CancellationToken cancellationToken)
     {
         var masterReleaseId = 156551;
 
-        var masterRelease = await ApiClient.GetMasterRelease(masterReleaseId, cancellationToken);
+        var masterRelease = await _apiClient.GetMasterRelease(masterReleaseId, cancellationToken);
 
         await Assert.That(masterRelease).IsNotNull();
         await Assert.That(masterRelease.Id).IsEqualTo(masterReleaseId);
@@ -76,7 +79,7 @@ public sealed class MasterReleaseTestFixture : ApiBaseTestFixture
     [Arguments(0)]
     public async Task GetMasterRelease_MasterReleaseId_Guard(int masterReleaseId, CancellationToken cancellationToken)
     {
-        await Assert.That(async () => await ApiClient.GetMasterRelease(masterReleaseId, cancellationToken))
+        await Assert.That(async () => await _apiClient.GetMasterRelease(masterReleaseId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
     }
 
@@ -85,7 +88,7 @@ public sealed class MasterReleaseTestFixture : ApiBaseTestFixture
     {
         var masterReleaseId = int.MaxValue;
 
-        await Assert.That(async () => await ApiClient.GetMasterRelease(masterReleaseId, cancellationToken))
+        await Assert.That(async () => await _apiClient.GetMasterRelease(masterReleaseId, cancellationToken))
             .Throws<ResourceNotFoundDiscogsException>();
     }
 
@@ -95,7 +98,7 @@ public sealed class MasterReleaseTestFixture : ApiBaseTestFixture
     {
         var masterReleaseId = 156551;
 
-        var response = await ApiClient.GetMasterReleaseVersions(masterReleaseId, null, null, cancellationToken);
+        var response = await _apiClient.GetMasterReleaseVersions(masterReleaseId, null, null, cancellationToken);
 
         await Assert.That(response.Pagination).IsNotNull();
         await Assert.That(response.Pagination.Page).IsEqualTo(1);
@@ -142,7 +145,7 @@ public sealed class MasterReleaseTestFixture : ApiBaseTestFixture
     [Arguments(0)]
     public async Task GetMasterReleaseVersions_MasterReleaseId_Guard(int masterReleaseId, CancellationToken cancellationToken)
     {
-        await Assert.That(async () => await ApiClient.GetMasterReleaseVersions(masterReleaseId, null, null, cancellationToken))
+        await Assert.That(async () => await _apiClient.GetMasterReleaseVersions(masterReleaseId, null, null, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
     }
 
@@ -152,7 +155,7 @@ public sealed class MasterReleaseTestFixture : ApiBaseTestFixture
         var masterReleaseId = int.MaxValue;
 
         // Should Fail!! But Discogs seems to return a list of over 6 million release versions if master release id is invalid
-        await Assert.That(async () => await ApiClient.GetMasterReleaseVersions(masterReleaseId, null, null, cancellationToken)).ThrowsNothing();
+        await Assert.That(async () => await _apiClient.GetMasterReleaseVersions(masterReleaseId, null, null, cancellationToken)).ThrowsNothing();
     }
 
     [Test]
@@ -161,7 +164,7 @@ public sealed class MasterReleaseTestFixture : ApiBaseTestFixture
         var masterReleaseId = 156551;
         var paginationParams = new PaginationQueryParameters { Page = -1, PageSize = 50 };
 
-        var response = await ApiClient.GetMasterReleaseVersions(masterReleaseId, paginationParams, null, cancellationToken);
+        var response = await _apiClient.GetMasterReleaseVersions(masterReleaseId, paginationParams, null, cancellationToken);
 
         await Assert.That(response.Pagination).IsNotNull();
         await Assert.That(response.Pagination.Page).IsEqualTo(1);
@@ -183,7 +186,7 @@ public sealed class MasterReleaseTestFixture : ApiBaseTestFixture
         var paginationParams = new PaginationQueryParameters { Page = int.MaxValue, PageSize = 50 };
 
         // Should fail with 404 but Discord seems to enounter an internal error instead!
-        var exception = await Assert.That(async () => await ApiClient.GetMasterReleaseVersions(masterReleaseId, paginationParams, null, cancellationToken))
+        var exception = await Assert.That(async () => await _apiClient.GetMasterReleaseVersions(masterReleaseId, paginationParams, null, cancellationToken))
             .Throws<DiscogsException>();
 
         await Assert.That(exception.Message).Contains("internal server error");
@@ -195,7 +198,7 @@ public sealed class MasterReleaseTestFixture : ApiBaseTestFixture
         var masterReleaseId = 156551;
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = -1 };
 
-        var response = await ApiClient.GetMasterReleaseVersions(masterReleaseId, paginationParams, null, cancellationToken);
+        var response = await _apiClient.GetMasterReleaseVersions(masterReleaseId, paginationParams, null, cancellationToken);
 
         await Assert.That(response.Pagination).IsNotNull();
         await Assert.That(response.Pagination.Page).IsEqualTo(1);
@@ -216,7 +219,7 @@ public sealed class MasterReleaseTestFixture : ApiBaseTestFixture
         var masterReleaseId = 156551;
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = int.MaxValue };
 
-        var response = await ApiClient.GetMasterReleaseVersions(masterReleaseId, paginationParams, null, cancellationToken);
+        var response = await _apiClient.GetMasterReleaseVersions(masterReleaseId, paginationParams, null, cancellationToken);
 
         await Assert.That(response.Pagination).IsNotNull();
         await Assert.That(response.Pagination.Page).IsEqualTo(1);
@@ -238,14 +241,14 @@ public sealed class MasterReleaseTestFixture : ApiBaseTestFixture
 
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
 
-        var response = await ApiClient.GetMasterReleaseVersions(masterReleaseId, paginationParams, null, cancellationToken);
+        var response = await _apiClient.GetMasterReleaseVersions(masterReleaseId, paginationParams, null, cancellationToken);
         var itemCount = response.Pagination.TotalItems;
         var summedUpItemCount = response.ReleaseVersions.Count;
 
         for (var p = 2; p <= response.Pagination.TotalPages; p++)
         {
             paginationParams = paginationParams with { Page = p };
-            response = await ApiClient.GetMasterReleaseVersions(masterReleaseId, paginationParams, null, cancellationToken);
+            response = await _apiClient.GetMasterReleaseVersions(masterReleaseId, paginationParams, null, cancellationToken);
             summedUpItemCount += response.ReleaseVersions.Count;
         }
 
@@ -259,27 +262,27 @@ public sealed class MasterReleaseTestFixture : ApiBaseTestFixture
 
         // Released
         var sortParametersAscending = new MasterReleaseVersionFilterQueryParameters { SortProperty = SortableProperty.Year, SortOrder = SortOrder.Ascending };
-        var responseAscending = await ApiClient.GetMasterReleaseVersions(masterReleaseId, null, sortParametersAscending, cancellationToken);
+        var responseAscending = await _apiClient.GetMasterReleaseVersions(masterReleaseId, null, sortParametersAscending, cancellationToken);
         var sortParametersDescending = new MasterReleaseVersionFilterQueryParameters { SortProperty = SortableProperty.Year, SortOrder = SortOrder.Descending };
-        var responseDescending = await ApiClient.GetMasterReleaseVersions(masterReleaseId, null, sortParametersDescending, cancellationToken);
+        var responseDescending = await _apiClient.GetMasterReleaseVersions(masterReleaseId, null, sortParametersDescending, cancellationToken);
 
         await Assert.That(responseAscending.ReleaseVersions.Select(r => r.Released)).IsInOrder();
         await Assert.That(responseDescending.ReleaseVersions.Select(r => r.Released)).IsInDescendingOrder();
 
         // Title
         sortParametersAscending = new MasterReleaseVersionFilterQueryParameters { SortProperty = SortableProperty.Title, SortOrder = SortOrder.Ascending };
-        responseAscending = await ApiClient.GetMasterReleaseVersions(masterReleaseId, null, sortParametersAscending, cancellationToken);
+        responseAscending = await _apiClient.GetMasterReleaseVersions(masterReleaseId, null, sortParametersAscending, cancellationToken);
         sortParametersDescending = new MasterReleaseVersionFilterQueryParameters { SortProperty = SortableProperty.Title, SortOrder = SortOrder.Descending };
-        responseDescending = await ApiClient.GetMasterReleaseVersions(masterReleaseId, null, sortParametersDescending, cancellationToken);
+        responseDescending = await _apiClient.GetMasterReleaseVersions(masterReleaseId, null, sortParametersDescending, cancellationToken);
 
         await Assert.That(responseAscending.ReleaseVersions.Select(r => r.Title)).IsInOrder();
         await Assert.That(responseDescending.ReleaseVersions.Select(r => r.Title)).IsInDescendingOrder();
 
         // Format
         sortParametersAscending = new MasterReleaseVersionFilterQueryParameters { SortProperty = SortableProperty.Format, SortOrder = SortOrder.Ascending };
-        responseAscending = await ApiClient.GetMasterReleaseVersions(masterReleaseId, null, sortParametersAscending, cancellationToken);
+        responseAscending = await _apiClient.GetMasterReleaseVersions(masterReleaseId, null, sortParametersAscending, cancellationToken);
         sortParametersDescending = new MasterReleaseVersionFilterQueryParameters { SortProperty = SortableProperty.Format, SortOrder = SortOrder.Descending };
-        responseDescending = await ApiClient.GetMasterReleaseVersions(masterReleaseId, null, sortParametersDescending, cancellationToken);
+        responseDescending = await _apiClient.GetMasterReleaseVersions(masterReleaseId, null, sortParametersDescending, cancellationToken);
 
         // Discogs does only a sudo sort of the format which is not reliably testable
         //Assert.That(
@@ -291,9 +294,9 @@ public sealed class MasterReleaseTestFixture : ApiBaseTestFixture
 
         // Label
         sortParametersAscending = new MasterReleaseVersionFilterQueryParameters { SortProperty = SortableProperty.Label, SortOrder = SortOrder.Ascending };
-        responseAscending = await ApiClient.GetMasterReleaseVersions(masterReleaseId, null, sortParametersAscending, cancellationToken);
+        responseAscending = await _apiClient.GetMasterReleaseVersions(masterReleaseId, null, sortParametersAscending, cancellationToken);
         sortParametersDescending = new MasterReleaseVersionFilterQueryParameters { SortProperty = SortableProperty.Label, SortOrder = SortOrder.Descending };
-        responseDescending = await ApiClient.GetMasterReleaseVersions(masterReleaseId, null, sortParametersDescending, cancellationToken);
+        responseDescending = await _apiClient.GetMasterReleaseVersions(masterReleaseId, null, sortParametersDescending, cancellationToken);
 
         // Discogs does only a sudo sort of the label which is not reliably testable
         //Assert.That(
@@ -305,9 +308,9 @@ public sealed class MasterReleaseTestFixture : ApiBaseTestFixture
 
         // Catalog Number
         sortParametersAscending = new MasterReleaseVersionFilterQueryParameters { SortProperty = SortableProperty.CatalogNumber, SortOrder = SortOrder.Ascending };
-        responseAscending = await ApiClient.GetMasterReleaseVersions(masterReleaseId, null, sortParametersAscending, cancellationToken);
+        responseAscending = await _apiClient.GetMasterReleaseVersions(masterReleaseId, null, sortParametersAscending, cancellationToken);
         sortParametersDescending = new MasterReleaseVersionFilterQueryParameters { SortProperty = SortableProperty.CatalogNumber, SortOrder = SortOrder.Descending };
-        responseDescending = await ApiClient.GetMasterReleaseVersions(masterReleaseId, null, sortParametersDescending, cancellationToken);
+        responseDescending = await _apiClient.GetMasterReleaseVersions(masterReleaseId, null, sortParametersDescending, cancellationToken);
 
         // Discogs does only a sudo sort of the catalog number which is not reliably testable
         //Assert.That(
@@ -319,9 +322,9 @@ public sealed class MasterReleaseTestFixture : ApiBaseTestFixture
 
         // Country
         sortParametersAscending = new MasterReleaseVersionFilterQueryParameters { SortProperty = SortableProperty.Country, SortOrder = SortOrder.Ascending };
-        responseAscending = await ApiClient.GetMasterReleaseVersions(masterReleaseId, null, sortParametersAscending, cancellationToken);
+        responseAscending = await _apiClient.GetMasterReleaseVersions(masterReleaseId, null, sortParametersAscending, cancellationToken);
         sortParametersDescending = new MasterReleaseVersionFilterQueryParameters { SortProperty = SortableProperty.Country, SortOrder = SortOrder.Descending };
-        responseDescending = await ApiClient.GetMasterReleaseVersions(masterReleaseId, null, sortParametersDescending, cancellationToken);
+        responseDescending = await _apiClient.GetMasterReleaseVersions(masterReleaseId, null, sortParametersDescending, cancellationToken);
 
         // Discogs does only a sudo sort of the format which is not reliably testable
         //Assert.That(
@@ -337,7 +340,7 @@ public sealed class MasterReleaseTestFixture : ApiBaseTestFixture
     {
         var masterReleaseId = 156551;
 
-        var response = await ApiClient.GetMasterReleaseVersions(masterReleaseId, null, null, cancellationToken);
+        var response = await _apiClient.GetMasterReleaseVersions(masterReleaseId, null, null, cancellationToken);
 
         await Assert.That(response.FilterFacets).IsNotNull();
         foreach (var facet in response.FilterFacets)
@@ -393,7 +396,7 @@ public sealed class MasterReleaseTestFixture : ApiBaseTestFixture
     {
         var masterReleaseId = 156551;
 
-        var response = await ApiClient.GetMasterReleaseVersions(masterReleaseId, null, null, cancellationToken);
+        var response = await _apiClient.GetMasterReleaseVersions(masterReleaseId, null, null, cancellationToken);
 
         await Assert.That(response.ReleaseVersions.Count).IsEqualTo(50);
 
@@ -402,7 +405,7 @@ public sealed class MasterReleaseTestFixture : ApiBaseTestFixture
         {
             Country = countryFilter?.Key
         };
-        var filteredResponse1 = await ApiClient.GetMasterReleaseVersions(masterReleaseId, null, filterParams1, cancellationToken);
+        var filteredResponse1 = await _apiClient.GetMasterReleaseVersions(masterReleaseId, null, filterParams1, cancellationToken);
 
         await Assert.That(countryFilter).IsNotNull();
         await Assert.That(filteredResponse1.ReleaseVersions.Count).IsEqualTo(countryFilter!.Value.Value);
@@ -413,7 +416,7 @@ public sealed class MasterReleaseTestFixture : ApiBaseTestFixture
             Country = countryFilter?.Key,
             Year = releasedFilter?.Key
         };
-        var filteredResponse2 = await ApiClient.GetMasterReleaseVersions(masterReleaseId, null, filterParams2, cancellationToken);
+        var filteredResponse2 = await _apiClient.GetMasterReleaseVersions(masterReleaseId, null, filterParams2, cancellationToken);
 
         await Assert.That(releasedFilter).IsNotNull();
         await Assert.That(filteredResponse2.ReleaseVersions.Count).IsEqualTo(releasedFilter!.Value.Value);

@@ -2,8 +2,12 @@ using static DiscogsApiClient.QueryParameters.CollectionFolderReleaseSortQueryPa
 
 namespace DiscogsApiClient.Tests.Collection;
 
-public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
+[ClassDataSource<DiscogsApiClientFixture>(Shared = SharedType.PerTestSession)]
+public sealed class CollectionFolderReleasesTestFixture(DiscogsApiClientFixture fixture)
 {
+    private readonly IDiscogsApiClient _apiClient = fixture.GetAuthenticatedClient();
+    private readonly IDiscogsApiClient _unauthenticatedApiClient = fixture.GetUnauthenticatedClient();
+
     [Test]
     [Arguments(null, typeof(ArgumentNullException))]
     [Arguments("", typeof(ArgumentException))]
@@ -12,7 +16,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     {
         var folderId = 999;
 
-        var exception = await Assert.That(async () => await ApiClient.GetCollectionFolderReleases(username!, folderId, null, null, cancellationToken))
+        var exception = await Assert.That(async () => await _apiClient.GetCollectionFolderReleases(username!, folderId, null, null, cancellationToken))
             .Throws<Exception>()
             .WithMessageContaining("username");
 
@@ -25,7 +29,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var username = "awrbaerhnqw54";
         var folderId = 999;
 
-        await Assert.That(async () => await ApiClient.GetCollectionFolderReleases(username, folderId, null, null, cancellationToken))
+        await Assert.That(async () => await _apiClient.GetCollectionFolderReleases(username, folderId, null, null, cancellationToken))
             .Throws<ResourceNotFoundDiscogsException>();
     }
 
@@ -34,7 +38,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
     {
         var username = "DamIDhagor";
 
-        await Assert.That(async () => await ApiClient.GetCollectionFolderReleases(username, -1, null, null, cancellationToken))
+        await Assert.That(async () => await _apiClient.GetCollectionFolderReleases(username, -1, null, null, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
     }
 
@@ -44,22 +48,18 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var username = "DamIDhagor";
         var folderId = 999;
 
-        await Assert.That(async () => await ApiClient.GetCollectionFolderReleases(username, folderId, null, null, cancellationToken))
+        await Assert.That(async () => await _apiClient.GetCollectionFolderReleases(username, folderId, null, null, cancellationToken))
             .Throws<ResourceNotFoundDiscogsException>();
     }
 
     [Test]
     public async Task GetCollectionFolderReleases_Unauthenticated(CancellationToken cancellationToken)
     {
-        var clients = CreateUnauthenticatedDiscogsApiClient();
         var username = "DamIDhagor";
         var folderId = 1;
 
-        await Assert.That(async () => await clients.discogsApiClient.GetCollectionFolderReleases(username, folderId, null, null, cancellationToken))
+        await Assert.That(async () => await _unauthenticatedApiClient.GetCollectionFolderReleases(username, folderId, null, null, cancellationToken))
             .Throws<UnauthenticatedDiscogsException>();
-
-        clients.authHttpClient.Dispose();
-        clients.clientHttpClient.Dispose();
     }
 
     [Test]
@@ -71,72 +71,72 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
 
         // Artist
         var sortParametersAscending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Artist, SortOrder = SortOrder.Ascending };
-        var responseAscending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersAscending, cancellationToken);
+        var responseAscending = await _apiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersAscending, cancellationToken);
         var sortParametersDescending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Artist, SortOrder = SortOrder.Descending };
-        var responseDescending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, cancellationToken);
+        var responseDescending = await _apiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, cancellationToken);
 
         await Assert.That(responseAscending.Releases.Select(r => r.Release.Artists.First().Name)).IsInOrder();
         await Assert.That(responseDescending.Releases.Select(r => r.Release.Artists.First().Name)).IsInDescendingOrder();
 
         // Label
         sortParametersAscending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Label, SortOrder = SortOrder.Ascending };
-        responseAscending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersAscending, cancellationToken);
+        responseAscending = await _apiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersAscending, cancellationToken);
         sortParametersDescending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Label, SortOrder = SortOrder.Descending };
-        responseDescending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, cancellationToken);
+        responseDescending = await _apiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, cancellationToken);
 
         await Assert.That(responseAscending.Releases.Select(r => r.Release.Labels.First().Name)).IsInOrder();
         await Assert.That(responseDescending.Releases.Select(r => r.Release.Labels.First().Name)).IsInDescendingOrder();
 
         // Title
         sortParametersAscending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Title, SortOrder = SortOrder.Ascending };
-        responseAscending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersAscending, cancellationToken);
+        responseAscending = await _apiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersAscending, cancellationToken);
         sortParametersDescending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Title, SortOrder = SortOrder.Descending };
-        responseDescending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, cancellationToken);
+        responseDescending = await _apiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, cancellationToken);
 
         await Assert.That(responseAscending.Releases.Select(r => r.Release.Title)).IsInOrder();
         await Assert.That(responseDescending.Releases.Select(r => r.Release.Title)).IsInDescendingOrder();
 
         // CatalogNumber
         sortParametersAscending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.CatalogNumber, SortOrder = SortOrder.Ascending };
-        responseAscending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersAscending, cancellationToken);
+        responseAscending = await _apiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersAscending, cancellationToken);
         sortParametersDescending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.CatalogNumber, SortOrder = SortOrder.Descending };
-        responseDescending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, cancellationToken);
+        responseDescending = await _apiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, cancellationToken);
 
         await Assert.That(responseAscending.Releases.Select(r => r.Release.Labels.First().CatalogNumber)).IsInOrder();
         await Assert.That(responseDescending.Releases.Select(r => r.Release.Labels.First().CatalogNumber)).IsInDescendingOrder();
 
         // Format
         sortParametersAscending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Format, SortOrder = SortOrder.Ascending };
-        responseAscending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersAscending, cancellationToken);
+        responseAscending = await _apiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersAscending, cancellationToken);
         sortParametersDescending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Format, SortOrder = SortOrder.Descending };
-        responseDescending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, cancellationToken);
+        responseDescending = await _apiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, cancellationToken);
 
         await Assert.That(responseAscending.Releases.Select(r => r.Release.Formats.First().Name)).IsInOrder();
         await Assert.That(responseDescending.Releases.Select(r => r.Release.Formats.First().Name)).IsInDescendingOrder();
 
         // Rating
         sortParametersAscending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Rating, SortOrder = SortOrder.Ascending };
-        responseAscending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersAscending, cancellationToken);
+        responseAscending = await _apiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersAscending, cancellationToken);
         sortParametersDescending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Rating, SortOrder = SortOrder.Descending };
-        responseDescending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, cancellationToken);
+        responseDescending = await _apiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, cancellationToken);
 
         await Assert.That(responseAscending.Releases.Select(r => r.Rating)).IsInOrder();
         await Assert.That(responseDescending.Releases.Select(r => r.Rating)).IsInDescendingOrder();
 
         // AddedAt
         sortParametersAscending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.AddedAt, SortOrder = SortOrder.Ascending };
-        responseAscending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersAscending, cancellationToken);
+        responseAscending = await _apiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersAscending, cancellationToken);
         sortParametersDescending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.AddedAt, SortOrder = SortOrder.Descending };
-        responseDescending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, cancellationToken);
+        responseDescending = await _apiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, cancellationToken);
 
         await Assert.That(responseAscending.Releases.Select(r => r.AddedAt)).IsInOrder();
         await Assert.That(responseDescending.Releases.Select(r => r.AddedAt)).IsInDescendingOrder();
 
         // Year
         sortParametersAscending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Year, SortOrder = SortOrder.Ascending };
-        responseAscending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersAscending, cancellationToken);
+        responseAscending = await _apiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersAscending, cancellationToken);
         sortParametersDescending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Year, SortOrder = SortOrder.Descending };
-        responseDescending = await ApiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, cancellationToken);
+        responseDescending = await _apiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, cancellationToken);
 
         await Assert.That(responseAscending.Releases.Select(r => r.Release.Year)).IsInOrder();
         await Assert.That(responseDescending.Releases.Select(r => r.Release.Year)).IsInDescendingOrder();
@@ -152,7 +152,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var folderId = 999;
         var releaseId = 5134861;
 
-        var exception = await Assert.That(async () => await ApiClient.AddReleaseToCollectionFolder(username!, folderId, releaseId, cancellationToken))
+        var exception = await Assert.That(async () => await _apiClient.AddReleaseToCollectionFolder(username!, folderId, releaseId, cancellationToken))
             .Throws<Exception>()
             .WithMessageContaining("username");
 
@@ -166,7 +166,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var folderId = 999;
         var releaseId = 5134861;
 
-        await Assert.That(async () => await ApiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, cancellationToken))
+        await Assert.That(async () => await _apiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, cancellationToken))
             .Throws<ResourceNotFoundDiscogsException>();
     }
 
@@ -178,7 +178,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var username = "DamIDhagor";
         var releaseId = 5134861;
 
-        await Assert.That(async () => await ApiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, cancellationToken))
+        await Assert.That(async () => await _apiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
     }
 
@@ -189,7 +189,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var folderId = 999;
         var releaseId = 5134861;
 
-        await Assert.That(async () => await ApiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, cancellationToken))
+        await Assert.That(async () => await _apiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, cancellationToken))
             .Throws<ResourceNotFoundDiscogsException>();
     }
 
@@ -201,7 +201,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var username = "DamIDhagor";
         var folderId = 999;
 
-        await Assert.That(async () => await ApiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, cancellationToken))
+        await Assert.That(async () => await _apiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
     }
 
@@ -212,23 +212,19 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var folderId = 999;
         var releaseId = int.MaxValue;
 
-        await Assert.That(async () => await ApiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, cancellationToken))
+        await Assert.That(async () => await _apiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, cancellationToken))
             .Throws<ResourceNotFoundDiscogsException>();
     }
 
     [Test]
     public async Task AddReleaseToCollectionFolder_Unauthenticated(CancellationToken cancellationToken)
     {
-        var clients = CreateUnauthenticatedDiscogsApiClient();
         var username = "DamIDhagor";
         var folderId = 999;
         var releaseId = 5134861;
 
-        await Assert.That(async () => await clients.discogsApiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, cancellationToken))
+        await Assert.That(async () => await _unauthenticatedApiClient.AddReleaseToCollectionFolder(username, folderId, releaseId, cancellationToken))
             .Throws<UnauthenticatedDiscogsException>();
-
-        clients.authHttpClient.Dispose();
-        clients.clientHttpClient.Dispose();
     }
 
 
@@ -242,7 +238,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var releaseId = 5134861;
         var instanceId = 999;
 
-        var exception = await Assert.That(async () => await ApiClient.DeleteReleaseFromCollectionFolder(username!, folderId, releaseId, instanceId, cancellationToken))
+        var exception = await Assert.That(async () => await _apiClient.DeleteReleaseFromCollectionFolder(username!, folderId, releaseId, instanceId, cancellationToken))
             .Throws<Exception>()
             .WithMessageContaining("username");
 
@@ -257,7 +253,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var releaseId = 5134861;
         var instanceId = 999;
 
-        await Assert.That(async () => await ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, cancellationToken))
+        await Assert.That(async () => await _apiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, cancellationToken))
             .Throws<ResourceNotFoundDiscogsException>();
     }
 
@@ -270,7 +266,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var releaseId = 5134861;
         var instanceId = -1;
 
-        await Assert.That(async () => await ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, cancellationToken))
+        await Assert.That(async () => await _apiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
     }
 
@@ -282,7 +278,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var releaseId = 5134861;
         var instanceId = 999;
 
-        await Assert.That(async () => await ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, cancellationToken))
+        await Assert.That(async () => await _apiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, cancellationToken))
             .Throws<ResourceNotFoundDiscogsException>();
     }
 
@@ -295,7 +291,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var folderId = 999;
         var instanceId = 999;
 
-        await Assert.That(async () => await ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, cancellationToken))
+        await Assert.That(async () => await _apiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
     }
 
@@ -307,7 +303,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var releaseId = int.MaxValue;
         var instanceId = 999;
 
-        await Assert.That(async () => await ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, cancellationToken))
+        await Assert.That(async () => await _apiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, cancellationToken))
             .Throws<ResourceNotFoundDiscogsException>();
     }
 
@@ -320,7 +316,7 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var folderId = 999;
         var releaseId = 5134861;
 
-        await Assert.That(async () => await ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, cancellationToken))
+        await Assert.That(async () => await _apiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
     }
 
@@ -332,24 +328,20 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var releaseId = 5134861;
         var instanceId = int.MaxValue;
 
-        await Assert.That(async () => await ApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, cancellationToken))
+        await Assert.That(async () => await _apiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, cancellationToken))
             .Throws<ResourceNotFoundDiscogsException>();
     }
 
     [Test]
     public async Task DeleteReleaseFromCollectionFolder_Unauthenticated(CancellationToken cancellationToken)
     {
-        var clients = CreateUnauthenticatedDiscogsApiClient();
         var username = "DamIDhagor";
         var folderId = 999;
         var releaseId = 5134861;
         var instanceId = 999;
 
-        await Assert.That(async () => await clients.discogsApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, cancellationToken))
+        await Assert.That(async () => await _unauthenticatedApiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, cancellationToken))
             .Throws<UnauthenticatedDiscogsException>();
-
-        clients.authHttpClient.Dispose();
-        clients.clientHttpClient.Dispose();
     }
 
 
@@ -361,19 +353,19 @@ public sealed class CollectionFolderReleasesTestFixture : ApiBaseTestFixture
         var releaseId = 5134861;
 
         // Create test folder
-        var collectionFolder = await ApiClient.CreateCollectionFolder(username, folderName, cancellationToken);
+        var collectionFolder = await _apiClient.CreateCollectionFolder(username, folderName, cancellationToken);
 
         // Add release to folder
-        var collectionFolderRelease = await ApiClient.AddReleaseToCollectionFolder(username, collectionFolder.Id, releaseId, cancellationToken);
+        var collectionFolderRelease = await _apiClient.AddReleaseToCollectionFolder(username, collectionFolder.Id, releaseId, cancellationToken);
 
         // Get release from folder
-        var collectionFolderReleaseResponse = await ApiClient.GetCollectionFolderReleases(username, collectionFolder.Id, null, null, cancellationToken);
+        var collectionFolderReleaseResponse = await _apiClient.GetCollectionFolderReleases(username, collectionFolder.Id, null, null, cancellationToken);
 
         // Delete release from folder
-        await Assert.That(async () => await ApiClient.DeleteReleaseFromCollectionFolder(username, collectionFolder.Id, collectionFolderRelease.Id, collectionFolderRelease.InstanceId, cancellationToken)).ThrowsNothing();
+        await Assert.That(async () => await _apiClient.DeleteReleaseFromCollectionFolder(username, collectionFolder.Id, collectionFolderRelease.Id, collectionFolderRelease.InstanceId, cancellationToken)).ThrowsNothing();
 
         // Delete folder
-        await Assert.That(async () => await ApiClient.DeleteCollectionFolder(username, collectionFolder.Id, cancellationToken)).ThrowsNothing();
+        await Assert.That(async () => await _apiClient.DeleteCollectionFolder(username, collectionFolder.Id, cancellationToken)).ThrowsNothing();
 
         await Assert.That(collectionFolderRelease).IsNotNull();
         await Assert.That(collectionFolderRelease.Id).IsEqualTo(releaseId);

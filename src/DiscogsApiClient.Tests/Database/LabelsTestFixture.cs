@@ -1,13 +1,16 @@
 namespace DiscogsApiClient.Tests.Database;
 
-public sealed class LabelsTestFixture : ApiBaseTestFixture
+[ClassDataSource<DiscogsApiClientFixture>(Shared = SharedType.PerTestSession)]
+public sealed class LabelsTestFixture(DiscogsApiClientFixture fixture)
 {
+    private readonly IDiscogsApiClient _apiClient = fixture.GetAuthenticatedClient();
+
     [Test]
     public async Task GetLabel_Success(CancellationToken cancellationToken)
     {
         var labelId = 11499;
 
-        var label = await ApiClient.GetLabel(labelId, cancellationToken);
+        var label = await _apiClient.GetLabel(labelId, cancellationToken);
 
         await Assert.That(label).IsNotNull();
         await Assert.That(label.Id).IsEqualTo(labelId);
@@ -46,7 +49,7 @@ public sealed class LabelsTestFixture : ApiBaseTestFixture
     [Arguments(0)]
     public async Task GetLabel_LabelId_Guard(int labelId, CancellationToken cancellationToken)
     {
-        await Assert.That(async () => await ApiClient.GetLabel(labelId, cancellationToken))
+        await Assert.That(async () => await _apiClient.GetLabel(labelId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
     }
 
@@ -55,7 +58,7 @@ public sealed class LabelsTestFixture : ApiBaseTestFixture
     {
         var labelId = int.MaxValue;
 
-        await Assert.That(async () => await ApiClient.GetLabel(labelId, cancellationToken))
+        await Assert.That(async () => await _apiClient.GetLabel(labelId, cancellationToken))
             .Throws<ResourceNotFoundDiscogsException>();
     }
 
@@ -65,7 +68,7 @@ public sealed class LabelsTestFixture : ApiBaseTestFixture
     {
         var labelId = 11499;
 
-        var response = await ApiClient.GetLabelReleases(labelId, null, cancellationToken);
+        var response = await _apiClient.GetLabelReleases(labelId, null, cancellationToken);
 
         await Assert.That(response.Pagination).IsNotNull();
         await Assert.That(response.Pagination.Page).IsEqualTo(1);
@@ -102,7 +105,7 @@ public sealed class LabelsTestFixture : ApiBaseTestFixture
     {
         var labelId = int.MaxValue;
 
-        await Assert.That(async () => await ApiClient.GetLabelReleases(labelId, null, cancellationToken))
+        await Assert.That(async () => await _apiClient.GetLabelReleases(labelId, null, cancellationToken))
             .Throws<ResourceNotFoundDiscogsException>();
     }
 
@@ -111,7 +114,7 @@ public sealed class LabelsTestFixture : ApiBaseTestFixture
     [Arguments(0)]
     public async Task GetLabelReleases_LabelId_Guard(int labelId, CancellationToken cancellationToken)
     {
-        await Assert.That(async () => await ApiClient.GetLabelReleases(labelId, null, cancellationToken))
+        await Assert.That(async () => await _apiClient.GetLabelReleases(labelId, null, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
     }
 
@@ -121,7 +124,7 @@ public sealed class LabelsTestFixture : ApiBaseTestFixture
         var labelId = 11499;
         var paginationParams = new PaginationQueryParameters { Page = -1, PageSize = 50 };
 
-        var response = await ApiClient.GetLabelReleases(labelId, paginationParams, cancellationToken);
+        var response = await _apiClient.GetLabelReleases(labelId, paginationParams, cancellationToken);
 
         await Assert.That(response.Pagination).IsNotNull();
         await Assert.That(response.Pagination.Page).IsEqualTo(1);
@@ -142,7 +145,7 @@ public sealed class LabelsTestFixture : ApiBaseTestFixture
         var labelId = 11499;
         var paginationParams = new PaginationQueryParameters { Page = int.MaxValue, PageSize = 50 };
 
-        await Assert.That(async () => await ApiClient.GetLabelReleases(labelId, paginationParams, cancellationToken))
+        await Assert.That(async () => await _apiClient.GetLabelReleases(labelId, paginationParams, cancellationToken))
             .Throws<ResourceNotFoundDiscogsException>();
     }
 
@@ -152,7 +155,7 @@ public sealed class LabelsTestFixture : ApiBaseTestFixture
         var labelId = 11499;
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = -1 };
 
-        var response = await ApiClient.GetLabelReleases(labelId, paginationParams, cancellationToken);
+        var response = await _apiClient.GetLabelReleases(labelId, paginationParams, cancellationToken);
 
         await Assert.That(response.Pagination).IsNotNull();
         await Assert.That(response.Pagination.Page).IsEqualTo(1);
@@ -173,7 +176,7 @@ public sealed class LabelsTestFixture : ApiBaseTestFixture
         var labelId = 11499;
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = int.MaxValue };
 
-        var response = await ApiClient.GetLabelReleases(labelId, paginationParams, cancellationToken);
+        var response = await _apiClient.GetLabelReleases(labelId, paginationParams, cancellationToken);
 
         await Assert.That(response.Pagination).IsNotNull();
         await Assert.That(response.Pagination.Page).IsEqualTo(1);
@@ -195,14 +198,14 @@ public sealed class LabelsTestFixture : ApiBaseTestFixture
 
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
 
-        var response = await ApiClient.GetLabelReleases(labelId, paginationParams, cancellationToken);
+        var response = await _apiClient.GetLabelReleases(labelId, paginationParams, cancellationToken);
         var itemCount = response.Pagination.TotalItems;
         var summedUpItemCount = response.Releases.Count;
 
         for (var p = 2; p <= response.Pagination.TotalPages; p++)
         {
             paginationParams = paginationParams with { Page = p };
-            response = await ApiClient.GetLabelReleases(labelId, paginationParams, cancellationToken);
+            response = await _apiClient.GetLabelReleases(labelId, paginationParams, cancellationToken);
             summedUpItemCount += response.Releases.Count;
         }
 
