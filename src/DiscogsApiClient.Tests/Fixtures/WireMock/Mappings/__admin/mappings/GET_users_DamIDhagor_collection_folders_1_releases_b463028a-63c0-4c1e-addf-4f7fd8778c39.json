@@ -1,0 +1,57 @@
+{
+  "Guid": "b463028a-63c0-4c1e-addf-4f7fd8778c39",
+  "UpdatedAt": "2026-05-21T10:32:36.7393835Z",
+  "Title": "Proxy Mapping for GET /users/DamIDhagor/collection/folders/1/releases",
+  "Description": "Proxy Mapping for GET /users/DamIDhagor/collection/folders/1/releases",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/users/DamIDhagor/collection/folders/1/releases",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "GET"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ]
+  },
+  "Response": {
+    "StatusCode": 403,
+    "BodyAsJson": {
+      "message": "You are not allowed to view this resource. Please authenticate as the owner to view this content."
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Date": "Thu, 21 May 2026 10:32:36 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "x-discogs-ratelimit": "25",
+      "x-discogs-ratelimit-remaining": "21",
+      "x-discogs-ratelimit-used": "4",
+      "Set-Cookie": "__cf_bm=g4NZ.IDMY7aParYSB.G4RQzQTHLYvW8.SnEWK8livmU-1779359556.5735037-1.0.1.1-OqEbt5OiSqAq5lbXSWdqZ53_VsY404d6SzNrm8DOodnK1sWUqaThHISjV.l_HQVWEfXaiT4A7vsmY16zHo7mm4tw9uag8_fUWLCLxpfabg5.RjK4GXiR04CLcZeU49eU; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Thu, 21 May 2026 11:02:36 GMT",
+      "cf-cache-status": "DYNAMIC",
+      "Server": "cloudflare",
+      "CF-RAY": "9ff2eb0c9aff4f41-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

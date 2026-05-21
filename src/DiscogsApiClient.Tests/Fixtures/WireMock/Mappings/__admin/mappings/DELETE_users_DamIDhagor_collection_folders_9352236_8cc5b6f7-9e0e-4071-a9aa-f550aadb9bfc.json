@@ -1,0 +1,70 @@
+{
+  "Guid": "8cc5b6f7-9e0e-4071-a9aa-f550aadb9bfc",
+  "UpdatedAt": "2026-05-21T10:32:37.9859913Z",
+  "Title": "Proxy Mapping for DELETE /users/DamIDhagor/collection/folders/9352236",
+  "Description": "Proxy Mapping for DELETE /users/DamIDhagor/collection/folders/9352236",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/users/DamIDhagor/collection/folders/9352236",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "DELETE"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Authorization",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "Discogs token=*",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ],
+    "Body": {
+      "Matcher": {
+        "Name": "ExactMatcher",
+        "Pattern": "",
+        "IgnoreCase": true
+      }
+    }
+  },
+  "Response": {
+    "StatusCode": 204,
+    "Headers": {
+      "Content-Type": "application/json",
+      "Date": "Thu, 21 May 2026 10:32:38 GMT",
+      "Connection": "keep-alive",
+      "Strict-Transport-Security": "max-age=15552000",
+      "x-discogs-ratelimit": "60",
+      "x-discogs-ratelimit-remaining": "39",
+      "x-discogs-ratelimit-used": "21",
+      "Set-Cookie": "__cf_bm=po0faNIzTRAlGpDfd4xCIfHhYgUr53KL92OMMoZac6M-1779359557.792846-1.0.1.1-MWlAdLCTijnV9TcXi9jdZ99AGvem.nfOrdmzBGm9Coiv9Mq3pEJjabF.BqsTNULf76cfZ9akH7APyrq2DY6WcqY2FlnR1FP3.MBvwaPOsEXQ3PQy0wUbAOj0jnRyVltf; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Thu, 21 May 2026 11:02:38 GMT",
+      "cf-cache-status": "DYNAMIC",
+      "Server": "cloudflare",
+      "CF-RAY": "9ff2eb143e4cf968-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "Guid": "adeeb1e7-eb42-45d7-af6e-77e20d0ece26",
+  "UpdatedAt": "2026-05-21T10:32:36.7701543Z",
+  "Title": "Proxy Mapping for GET /users/DamIDhagor/collection/folders/0/releases",
+  "Description": "Proxy Mapping for GET /users/DamIDhagor/collection/folders/0/releases",
+  "Priority": -2000000,
+  "Request": {
+    "Path": {
+      "Matchers": [
+        {
+          "Name": "WildcardMatcher",
+          "Pattern": "/users/DamIDhagor/collection/folders/0/releases",
+          "IgnoreCase": false
+        }
+      ]
+    },
+    "Methods": [
+      "GET"
+    ],
+    "HttpVersion": "1.1",
+    "Headers": [
+      {
+        "Name": "User-Agent",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "DiscogsApiClientTests/1.0",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      },
+      {
+        "Name": "Authorization",
+        "Matchers": [
+          {
+            "Name": "WildcardMatcher",
+            "Pattern": "Discogs token=*",
+            "IgnoreCase": true
+          }
+        ],
+        "IgnoreCase": true
+      }
+    ],
+    "Params": [
+      {
+        "Name": "page",
+        "Matchers": [
+          {
+            "Name": "ExactMatcher",
+            "Pattern": "1",
+            "IgnoreCase": false
+          }
+        ]
+      },
+      {
+        "Name": "per_page",
+        "Matchers": [
+          {
+            "Name": "ExactMatcher",
+            "Pattern": "50",
+            "IgnoreCase": false
+          }
+        ]
+      },
+      {
+        "Name": "sort",
+        "Matchers": [
+          {
+            "Name": "ExactMatcher",
+            "Pattern": "artist",
+            "IgnoreCase": false
+          }
+        ]
+      },
+      {
+        "Name": "sort_order",
+        "Matchers": [
+          {
+            "Name": "ExactMatcher",
+            "Pattern": "asc",
+            "IgnoreCase": false
+          }
+        ]
+      }
+    ]
+  },
+  "Response": {
+    "StatusCode": 200,
+    "BodyAsJson": {
+      "pagination": {
+        "page": 1,
+        "pages": 1,
+        "per_page": 50,
+        "items": 0,
+        "urls": {}
+      },
+      "releases": []
+    },
+    "Headers": {
+      "Content-Type": "application/json",
+      "Date": "Thu, 21 May 2026 10:32:36 GMT",
+      "Transfer-Encoding": "chunked",
+      "Connection": "keep-alive",
+      "Strict-Transport-Security": "max-age=15552000",
+      "Vary": "Accept-Encoding",
+      "x-discogs-ratelimit": "60",
+      "x-discogs-ratelimit-remaining": "58",
+      "x-discogs-ratelimit-used": "2",
+      "Set-Cookie": "__cf_bm=bOSMy1luVCdWeR5SWmkgLpAhuDpYhdBUOQyTewQUxbU-1779359556.568915-1.0.1.1-X9lk8xamasY06OqQs1c2fDfNJPpGVQI4RZzQR98uIb48xFZvUhOz0Ta0totvztYo39K.BFRGb_bPebFbtjixjkW3KSkTOHQodktPh5iR7jEN4WDaDyEXCU1IxBo4vxeQ; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Thu, 21 May 2026 11:02:36 GMT",
+      "cf-cache-status": "DYNAMIC",
+      "Server": "cloudflare",
+      "CF-RAY": "9ff2eb0c88671218-DUS",
+      "Alt-Svc": "h3=\":443\""
+    }
+  }
+}
