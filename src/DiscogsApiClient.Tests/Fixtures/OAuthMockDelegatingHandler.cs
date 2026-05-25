@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Net;
 
-namespace DiscogsApiClient.Tests.MockMiddleware;
+namespace DiscogsApiClient.Tests.Fixtures;
 
 public sealed class OAuthMockDelegatingHandler : DelegatingHandler
 {

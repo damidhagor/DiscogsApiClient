@@ -1,5 +1,4 @@
 using DiscogsApiClient.Authentication.OAuth;
-using DiscogsApiClient.Tests.MockMiddleware;
 
 namespace DiscogsApiClient.Tests.Authentication;
 
