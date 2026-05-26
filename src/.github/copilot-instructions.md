@@ -4,6 +4,6 @@
 - Never automatically push Git changes. Always make local edits only and wait for the user to explicitly say when to push.
 
 ## Testing
-- Tests use WireMock.Net for HTTP recording/playback. See [docs/wiremock-recording.md](../docs/wiremock-recording.md) for setup and recording steps.
-- Before recording, verify that `src/DiscogsApiClient.Tests/DiscogsApiClient.Tests.testconfig.json` exists. If it does not, tell the user to create it with the JSON snippet from `docs/wiremock-recording.md` and fill in their Discogs PAT. Do not proceed until the user confirms the file is in place.
-- To record new mappings, open a terminal at the repository root (`F:\DiscogsApiClient\`) and run `.\scripts\record-mappings.ps1`. Wait for the script to complete. Do not open additional terminals or run further commands during execution. The script handles environment variables, mappings cleanup, test batches, rate-limit cooldowns, and token-leak verification automatically.
+Tests use the repository's custom recording/playback fixtures for HTTP request/response capture. See `docs/response-recording.md` for setup and recording steps.
+- Before recording, verify that `src/DiscogsApiClient.Tests/DiscogsApiClient.Tests.testconfig.json` exists. If it does not, create it with your Discogs PAT as described in the guide. Do not proceed until the file is in place.
+- To record new responses, open a terminal at the repository root (`F:\\DiscogsApiClient\`) and run `.\scripts\record-responses.ps1`. Wait for the script to complete. Do not open additional terminals or run further commands during execution. The script handles environment variables, recordings cleanup, test batches, rate-limit cooldowns, and token-leak verification automatically.

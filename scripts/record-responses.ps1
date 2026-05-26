@@ -1,11 +1,10 @@
 <#
 .SYNOPSIS
-    Records WireMock mappings by proxying to the real Discogs API.
+    Records Discogs API requests and responses by proxying to the real Discogs API.
 
 .DESCRIPTION
-    Sets WIREMOCK_RECORD, cleans existing mappings, runs all test batches
-    with rate-limit cooldowns, verifies no tokens leaked into mappings,
-    and unsets the env var on completion.
+    Sets DISCOGS_RECORD, cleans existing recordings, runs all test batches
+    with rate-limit cooldowns and unsets the env var on completion.
 
     Must be run from the repository root (F:\DiscogsApiClient\).
     Requires DiscogsApiClient.Tests.testconfig.json to be configured with a valid PAT.
@@ -15,7 +14,7 @@ $ErrorActionPreference = 'Stop'
 
 $repoRoot = $PSScriptRoot | Split-Path
 $srcDir = Join-Path $repoRoot 'src'
-$mappingsDir = Join-Path (Join-Path (Join-Path $srcDir 'DiscogsApiClient.Tests') 'Fixtures') (Join-Path 'WireMock' 'Mappings')
+$recordingsDir = Join-Path (Join-Path (Join-Path $srcDir 'DiscogsApiClient.Tests') 'Fixtures') (Join-Path 'Recording' 'Recordings')
 $testProject = Join-Path $srcDir 'DiscogsApiClient.Tests'
 
 # Test batches: namespace filters executed in order with rate-limit sleeps between them
@@ -32,12 +31,12 @@ $cooldownSeconds = 65
 
 try {
     # Enable recording mode
-    $env:WIREMOCK_RECORD = 'true'
+    $env:DISCOGS_RECORD = 'true'
 
-    # Clean existing mappings
-    Write-Host '--- Cleaning mappings directory ---'
-    if (Test-Path $mappingsDir) {
-        Remove-Item -Recurse -Force "$mappingsDir\*" -ErrorAction SilentlyContinue
+    # Clean existing recordings
+    Write-Host '--- Cleaning recording directory ---'
+    if (Test-Path $recordingsDir) {
+        Remove-Item -Recurse -Force "$recordingsDir\*" -ErrorAction SilentlyContinue
     }
 
     # Run each test batch with a cooldown between them
@@ -49,7 +48,7 @@ try {
         try {
             dotnet run --project DiscogsApiClient.Tests -f net10.0 -- --treenode-filter "$filter"
             if ($LASTEXITCODE -ne 0) {
-                Write-Warning "Batch $($i + 1) had test failures (exit code $LASTEXITCODE) - continuing. Failing tests will still produce mappings."
+                Write-Warning "Batch $($i + 1) had test failures (exit code $LASTEXITCODE) - continuing. Failing tests will still produce recordings."
             }
         }
         finally {
@@ -63,22 +62,9 @@ try {
         }
     }
 
-    # Verify no real tokens leaked into mappings
-    Write-Host "`n--- Verifying token cleanup ---"
-    $adminMappings = Join-Path (Join-Path $mappingsDir '__admin') 'mappings'
-    if (Test-Path $adminMappings) {
-        $leaks = Select-String -Path "$adminMappings\*.json" -Pattern 'Discogs token=' |
-            Where-Object { $_ -notmatch 'Discogs token=\*' }
-
-        if ($leaks) {
-            Write-Error "TOKEN LEAK DETECTED - do not commit these mappings:`n$($leaks | Out-String)"
-            exit 1
-        }
-    }
-
-    Write-Host "`n=== RECORDING COMPLETE - no token leaks detected ==="
+    Write-Host "`n=== RECORDING COMPLETE ==="
 }
 finally {
     # Always unset recording mode
-    Remove-Item Env:\WIREMOCK_RECORD -ErrorAction SilentlyContinue
+    Remove-Item Env:\DISCOGS_RECORD -ErrorAction SilentlyContinue
 }

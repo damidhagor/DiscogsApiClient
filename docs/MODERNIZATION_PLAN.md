@@ -250,7 +250,7 @@ Phase 6: Final Validation
 **Branch:** `modernization/phase2-testing`
 
 ### 2.1 Setup Mock Infrastructure
-- [ ] Evaluate and add HTTP mocking library (e.g., `MockHttp`, `WireMock.Net`, or custom `HttpMessageHandler`)
+- [ ] Evaluate and add HTTP mocking library (e.g., `MockHttp`, or custom `HttpMessageHandler`). Note: the project currently uses a custom recording/playback fixture instead of WireMock.Net; consider whether to keep the custom approach or adopt a library.
 - [ ] Design mock strategy for Discogs API responses
 - [ ] Create mock data fixtures for common API responses:
   - [ ] Authentication responses
