@@ -250,25 +250,30 @@ Phase 6: Final Validation
 **Branch:** `modernization/phase2-testing`
 
 ### 2.1 Setup Mock Infrastructure
-- [ ] Evaluate and add HTTP mocking library (e.g., `MockHttp`, or custom `HttpMessageHandler`). Note: the project currently uses a custom recording/playback fixture instead of WireMock.Net; consider whether to keep the custom approach or adopt a library.
-- [ ] Design mock strategy for Discogs API responses
-- [ ] Create mock data fixtures for common API responses:
-  - [ ] Authentication responses
-  - [ ] Artist data
-  - [ ] Release data
-  - [ ] Label data
-  - [ ] Search results
-  - [ ] User collection/wantlist data
-  - [ ] Error responses (rate limits, 404s, etc.)
-- [ ] Document mock approach in test documentation
+ - [x] Decide mocking approach: keep the repository's custom recording/playback fixtures as the primary source for deterministic test responses; a separate mock-data fixture set is not required.
+ - [x] Design mock strategy for Discogs API responses — NOT REQUIRED (covered by recording/playback)
+ - [x] Create mock data fixtures for common API responses — NOT REQUIRED (recordings cover representative responses)
+   - [x] Authentication responses — covered by recordings
+   - [x] Artist data — covered by recordings
+   - [x] Release data — covered by recordings
+   - [x] Label data — covered by recordings
+   - [x] Search results — covered by recordings
+   - [x] User collection/wantlist data — covered by recordings
+   - [x] Error responses (rate limits, 404s, etc.) — covered by recordings
+ - [x] Document mock approach in test documentation (`docs/response-recording.md`)
+
+### Decision: Custom Recording/Playback Implementation
+- Decision: Use a custom recording/playback implementation (RecordingFixture/PlaybackFixture) as the primary test response source.
+- Rationale: The custom implementation provides deterministic, real-API-derived responses without requiring a separate external service. It simplifies maintenance because recordings are produced from real responses and can be sanitized automatically; it supports both integration-style tests (via recordings) and selective unit tests where hand-authored mocks are later required.
+- Impact: WireMock.Net and an external server are not required. The test project removes the WireMock.Net package. CI must avoid running recording mode and should rely on playback artifacts present in the repository.
 
 ### 2.2 Refactor Existing Tests
-- [ ] Identify all tests that make real API calls
-- [ ] Refactor tests to use mocked HTTP responses
-- [ ] Ensure test isolation (no shared state between tests)
-- [ ] Add test categories/traits (Unit, Integration, etc.)
-- [ ] Update test naming conventions to modern standards
-- [ ] Remove any hardcoded API tokens or credentials
+- [x] Identify all tests that make real API calls (all tests run in playback mode by default; recording must be explicitly enabled)
+ - [ ] Refactor tests to use mocked HTTP responses — NOT REQUIRED for most tests because playback recordings provide deterministic responses; convert only where a fast unit test is needed.
+ - [ ] Ensure test isolation (no shared state between tests)
+ - [ ] Add test categories/traits (Unit, Integration, etc.)
+ - [ ] Update test naming conventions to modern standards
+ - [x] Remove any hardcoded API tokens or credentials (test config file used, token not committed)
 
 ### 2.3 Improve Test Coverage
 - [ ] Run code coverage analysis (using built-in or Coverlet)
@@ -290,11 +295,11 @@ Phase 6: Final Validation
 
 ### 2.5 Testing Best Practices
 - [ ] Follow AAA pattern (Arrange, Act, Assert) **without comments marking sections**
-- [ ] Use TUnit's modern features (data-driven tests, fluent assertions)
-- [ ] **Use TUnit's fluent assertions** - built-in, no external assertion libraries needed
-- [ ] **Make test methods async** - avoid synchronous `.Result` or `.Wait()` calls
-- [ ] Ensure proper async/await usage throughout test code
-- [ ] Leverage TUnit's source generation for better performance and AOT compatibility
+- [x] Use TUnit's modern features (data-driven tests, fluent assertions)
+- [x] **Use TUnit's fluent assertions** - built-in, no external assertion libraries needed
+- [x] **Make test methods async** - avoid synchronous `.Result` or `.Wait()` calls
+- [ ] Ensure proper async/await usage throughout test code (spot checks done, full audit pending)
+- [x] Leverage TUnit's source generation for better performance and AOT compatibility
 
 ### 2.6 Optional: End-to-End Test Suite
 - [ ] **Evaluate need for E2E tests** against real Discogs API
@@ -311,11 +316,14 @@ Phase 6: Final Validation
 - [ ] Document decision (implement or skip) and reasoning
 
 ### Acceptance Criteria - Phase 2
-- [x] All tests use mocked HTTP responses (no real API calls)
-- [x] Test coverage is reasonable for critical paths
-- [x] All tests pass reliably and quickly
-- [x] Tests are well-organized and documented
-- [x] Testing approach documented
+- [x] Playback-based testing available and documented. Tests run in playback mode by default unless recording is explicitly enabled (`DISCOGS_RECORD=true`).
+- [x] Recording/playback is the primary mechanism for deterministic test responses (no separate mock data fixture required).
+- [ ] Test coverage is reasonable for critical paths (coverage run pending; add targeted unit tests where recordings are insufficient).
+- [ ] Tests organized into Unit vs Integration categories and CI adjusted accordingly.
+- [ ] Test coverage is reasonable for critical paths. Current state: coverage run pending; add targeted unit tests after creating mock fixtures.
+- [x] Playback-based testing available and documented. Tests run in playback mode by default unless recording is explicitly enabled (`DISCOGS_RECORD=true`).
+- [x] Documentation for recording/playback is present (`docs/response-recording.md`).
+- [ ] Tests organized into Unit vs Integration categories and CI adjusted accordingly.
 
 ---
 
