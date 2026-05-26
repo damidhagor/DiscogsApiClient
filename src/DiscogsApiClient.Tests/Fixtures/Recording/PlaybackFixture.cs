@@ -7,7 +7,7 @@ namespace DiscogsApiClient.Tests.Fixtures.Recording;
 public sealed class PlaybackFixture : IAsyncInitializer
 {
     private TextWriter _logger = null!;
-    private readonly Dictionary<string, (Recording[] Recordings, int Index)> _recordings = [];
+    private readonly Dictionary<string, Playback> _recordings = [];
 
     public async Task InitializeAsync()
     {
@@ -70,7 +70,7 @@ public sealed class PlaybackFixture : IAsyncInitializer
 
             var key = Path.GetFileNameWithoutExtension(file);
 
-            _recordings[key] = (recordings, 0);
+            _recordings[key] = new() { Recordings = recordings, Index = 0 };
         }
     }
 
