@@ -364,6 +364,26 @@ Phase 6: Final Validation
 - [ ] Consider `IAsyncEnumerable` for paginated results (if applicable)
 - [ ] Ensure cancellation tokens passed through properly
 
+### 3.4 Rate Limiting
+- Background: The repository contains an existing client-side rate limiting layer but it has been observed to behave unreliably in production-like scenarios.
+- Goal: Either rework the rate limiting implementation to be reliable across target frameworks, or remove the built-in limiter and provide first-class access to Discogs rate-limit metadata so library users can implement their own strategies.
+- Tasks:
+  - [ ] Audit current rate limiting implementation and reproduce failure modes in tests or a harness
+  - [ ] Decision: Rework or Remove (document choice and rationale)
+  - If Rework:
+    - [ ] Implement a robust, cross-target rate limiter (prefer `System.Threading.RateLimiting` primitives or a tested token-bucket implementation) integrated via an `HttpMessageHandler` or `DelegatingHandler`
+    - [ ] Add resiliency for clock skew and transient errors, and ensure behavior is deterministic under CI and AOT scenarios
+    - [ ] Add unit and integration tests that simulate high-concurrency scenarios and validate correctness
+  - If Remove:
+    - [ ] Remove the built-in rate limiter implementation
+    - [ ] Add a public model to expose parsed Discogs rate-limit headers (for example `RateLimit`, `RateLimitRemaining`, `RateLimitReset`)
+    - [ ] Surface the parsed rate-limit metadata on responses or via a light-weight client API so consumers can implement custom policies
+    - [ ] Document migration steps for consumers and update README/docs
+- Acceptance criteria:
+  - [ ] A decision is recorded (Rework or Remove) and implemented
+  - [ ] If reworked: limiter passes stress tests and is documented
+  - [ ] If removed: consumers have documented access to rate-limit metadata and examples for implementing retry/backoff
+
 ### 3.4 Code Quality Improvements
 - [ ] Enable nullable reference types verification
 - [ ] Address all analyzer warnings
