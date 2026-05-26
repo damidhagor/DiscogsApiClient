@@ -40,16 +40,30 @@ public sealed class DiscogsApiClientFixture : IAsyncInitializer, IAsyncDisposabl
     }
 
     private ServiceProvider BuildServiceProvider()
-        => new ServiceCollection()
-            .AddScoped<RecordingDelegatingHandler>()
-            .AddScoped<PlaybackDelegatingHandler>()
-            .AddSingleton(RecordingFixture)
-            .AddSingleton(PlaybackFixture)
-            .AddSingleton<IHttpMessageHandlerBuilderFilter, RecordingHttpMessageHandlerBuilderFilter>()
+    {
+        var isRecording = RecordingHelper.IsRecording;
+
+        var services = new ServiceCollection()
             .AddDiscogsApiClient(o =>
             {
                 o.BaseUrl = "https://api.discogs.com";
                 o.UserAgent = "DiscogsApiClientTests/1.0";
-            })
-            .BuildServiceProvider();
+                o.UseRateLimiting = isRecording;
+            });
+
+        if (isRecording)
+        {
+            services.AddScoped<RecordingDelegatingHandler>();
+            services.AddSingleton(RecordingFixture);
+            services.AddSingleton<IHttpMessageHandlerBuilderFilter, RecordingHttpMessageHandlerBuilderFilter>();
+        }
+        else
+        {
+            services.AddScoped<PlaybackDelegatingHandler>();
+            services.AddSingleton(PlaybackFixture);
+            services.AddSingleton<IHttpMessageHandlerBuilderFilter, PlaybackHttpMessageHandlerBuilderFilter>();
+        }
+
+        return services.BuildServiceProvider();
+    }
 }

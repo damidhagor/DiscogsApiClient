@@ -5,6 +5,8 @@ namespace DiscogsApiClient.Tests.Fixtures.Recording;
 
 public static class RecordingHelper
 {
+    public static bool IsRecording => Environment.GetEnvironmentVariable("DISCOGS_RECORD") == "true";
+
     public static string RecordingPath => Path.GetFullPath(
         Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "Fixtures", "Recording", "Recordings"));
 
