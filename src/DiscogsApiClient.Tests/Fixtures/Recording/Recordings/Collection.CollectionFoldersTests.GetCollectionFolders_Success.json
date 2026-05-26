@@ -1,0 +1,58 @@
+[
+  {
+    "requestMethod": "GET",
+    "requestUrl": "https://api.discogs.com/users/DamIDhagor/collection/folders",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 200,
+    "responseHeaders": {
+      "Date": [
+        "Tue, 26 May 2026 13:26:12 GMT"
+      ],
+      "Transfer-Encoding": [
+        "chunked"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "Vary": [
+        "Accept-Encoding"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "57"
+      ],
+      "x-discogs-ratelimit-used": [
+        "3"
+      ],
+      "Set-Cookie": [
+        "__cf_bm=8l0rqORTESQQH6DoxMKtXqIAsHyGtv77RBKswfOnna8-1779801972.646485-1.0.1.1-dq7DL5qVI3zvL29odNILgoVDBHPIN7Wm8YGloXyXQjNtnml0BAE_XQKh3L39RpV9W4R7JLN5laECTnPVtkiv.MkHSd9gINScUfn_CMgsi9UnnTZ8T4deeT3zV9hjXsv2; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Tue, 26 May 2026 13:56:12 GMT"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a01d1c390ff47b85-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022folders\u0022:[{\u0022id\u0022:0,\u0022name\u0022:\u0022All\u0022,\u0022count\u0022:7,\u0022resource_url\u0022:\u0022https://api.discogs.com/users/DamIDhagor/collection/folders/0\u0022},{\u0022id\u0022:9360600,\u0022name\u0022:\u0022API_TEST_WORKFLOW_CREATE\u0022,\u0022count\u0022:0,\u0022resource_url\u0022:\u0022https://api.discogs.com/users/DamIDhagor/collection/folders/9360600\u0022},{\u0022id\u0022:9360610,\u0022name\u0022:\u0022API_TEST_WORKFLOW_CREATE\u0022,\u0022count\u0022:0,\u0022resource_url\u0022:\u0022https://api.discogs.com/users/DamIDhagor/collection/folders/9360610\u0022},{\u0022id\u0022:9360629,\u0022name\u0022:\u0022API_TEST_WORKFLOW_CREATE\u0022,\u0022count\u0022:0,\u0022resource_url\u0022:\u0022https://api.discogs.com/users/DamIDhagor/collection/folders/9360629\u0022},{\u0022id\u0022:9360004,\u0022name\u0022:\u0022API_TEST_WORKFLOW_UPDATE\u0022,\u0022count\u0022:0,\u0022resource_url\u0022:\u0022https://api.discogs.com/users/DamIDhagor/collection/folders/9360004\u0022},{\u0022id\u0022:9358762,\u0022name\u0022:\u0022CreateDeleteReleaseFromCollectionFolder_Success\u0022,\u0022count\u0022:1,\u0022resource_url\u0022:\u0022https://api.discogs.com/users/DamIDhagor/collection/folders/9358762\u0022},{\u0022id\u0022:9358764,\u0022name\u0022:\u0022CreateDeleteReleaseFromCollectionFolder_Success\u0022,\u0022count\u0022:1,\u0022resource_url\u0022:\u0022https://api.discogs.com/users/DamIDhagor/collection/folders/9358764\u0022},{\u0022id\u0022:9359544,\u0022name\u0022:\u0022CreateDeleteReleaseFromCollectionFolder_Success\u0022,\u0022count\u0022:1,\u0022resource_url\u0022:\u0022https://api.discogs.com/users/DamIDhagor/collection/folders/9359544\u0022},{\u0022id\u0022:9359989,\u0022name\u0022:\u0022CreateDeleteReleaseFromCollectionFolder_Success\u0022,\u0022count\u0022:1,\u0022resource_url\u0022:\u0022https://api.discogs.com/users/DamIDhagor/collection/folders/9359989\u0022},{\u0022id\u0022:9360005,\u0022name\u0022:\u0022CreateDeleteReleaseFromCollectionFolder_Success\u0022,\u0022count\u0022:1,\u0022resource_url\u0022:\u0022https://api.discogs.com/users/DamIDhagor/collection/folders/9360005\u0022},{\u0022id\u0022:9360601,\u0022name\u0022:\u0022CreateDeleteReleaseFromCollectionFolder_Success\u0022,\u0022count\u0022:0,\u0022resource_url\u0022:\u0022https://api.discogs.com/users/DamIDhagor/collection/folders/9360601\u0022},{\u0022id\u0022:9360609,\u0022name\u0022:\u0022CreateDeleteReleaseFromCollectionFolder_Success\u0022,\u0022count\u0022:0,\u0022resource_url\u0022:\u0022https://api.discogs.com/users/DamIDhagor/collection/folders/9360609\u0022},{\u0022id\u0022:9360630,\u0022name\u0022:\u0022CreateDeleteReleaseFromCollectionFolder_Success\u0022,\u0022count\u0022:1,\u0022resource_url\u0022:\u0022https://api.discogs.com/users/DamIDhagor/collection/folders/9360630\u0022},{\u0022id\u0022:9360631,\u0022name\u0022:\u0022CreateDeleteReleaseFromCollectionFolder_Success\u0022,\u0022count\u0022:0,\u0022resource_url\u0022:\u0022https://api.discogs.com/users/DamIDhagor/collection/folders/9360631\u0022},{\u0022id\u0022:9360637,\u0022name\u0022:\u0022CreateDeleteReleaseFromCollectionFolder_Success\u0022,\u0022count\u0022:0,\u0022resource_url\u0022:\u0022https://api.discogs.com/users/DamIDhagor/collection/folders/9360637\u0022},{\u0022id\u0022:9360666,\u0022name\u0022:\u0022CreateDeleteReleaseFromCollectionFolder_Success\u0022,\u0022count\u0022:1,\u0022resource_url\u0022:\u0022https://api.discogs.com/users/DamIDhagor/collection/folders/9360666\u0022},{\u0022id\u0022:1,\u0022name\u0022:\u0022Uncategorized\u0022,\u0022count\u0022:0,\u0022resource_url\u0022:\u0022https://api.discogs.com/users/DamIDhagor/collection/folders/1\u0022}]}"
+  }
+]

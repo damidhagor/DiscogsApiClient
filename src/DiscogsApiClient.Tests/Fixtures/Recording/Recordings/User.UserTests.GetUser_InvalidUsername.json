@@ -1,0 +1,82 @@
+[
+  {
+    "requestMethod": "GET",
+    "requestUrl": "https://api.discogs.com/users/awrbaerhnqw54",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 404,
+    "responseHeaders": {
+      "Date": [
+        "Tue, 26 May 2026 13:21:24 GMT"
+      ],
+      "Transfer-Encoding": [
+        "chunked"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Access-Control-Allow-Headers": [
+        "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID"
+      ],
+      "Access-Control-Allow-Methods": [
+        "HEAD,OPTIONS,GET,OPTIONS,PATCH,POST"
+      ],
+      "Access-Control-Allow-Origin": [
+        "*"
+      ],
+      "Access-Control-Expose-Headers": [
+        "Location"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "Vary": [
+        "Accept-Encoding"
+      ],
+      "X-Content-Type-Options": [
+        "nosniff"
+      ],
+      "x-discogs-media-type": [
+        "discogs.v2"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "59"
+      ],
+      "x-discogs-ratelimit-used": [
+        "1"
+      ],
+      "X-Frame-Options": [
+        "SAMEORIGIN"
+      ],
+      "X-XSS-Protection": [
+        "1; mode=block"
+      ],
+      "Set-Cookie": [
+        "__cf_bm=sfeFiaIN1l44uEKEZuImUO1PjmYLPMX9JKMxOIUuchk-1779801683.9396574-1.0.1.1-016N5ZDGq_4rDqWIJlz5yMlTHxQBIG02cAGXEEQUP72cJUDLxTX5dCbp6zHskTiargbOnZXkXFXcKqb47uExcplDOaT6vRSyXuEcq5qDdSBB66132kYzTK8rFasE4w5V; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Tue, 26 May 2026 13:51:24 GMT"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a01d152c9a556a9b-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022message\u0022:\u0022User does not exist or may have been deleted.\u0022}"
+  }
+]

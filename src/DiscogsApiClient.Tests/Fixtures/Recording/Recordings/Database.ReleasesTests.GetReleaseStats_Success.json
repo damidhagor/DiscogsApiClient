@@ -1,0 +1,82 @@
+[
+  {
+    "requestMethod": "GET",
+    "requestUrl": "https://api.discogs.com/releases/5134861/stats",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 200,
+    "responseHeaders": {
+      "Date": [
+        "Tue, 26 May 2026 13:23:46 GMT"
+      ],
+      "Transfer-Encoding": [
+        "chunked"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Access-Control-Allow-Headers": [
+        "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID"
+      ],
+      "Access-Control-Allow-Methods": [
+        "HEAD,OPTIONS,GET,OPTIONS"
+      ],
+      "Access-Control-Allow-Origin": [
+        "*"
+      ],
+      "Access-Control-Expose-Headers": [
+        "Location"
+      ],
+      "Cache-Control": [
+        "public, must-revalidate"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "Vary": [
+        "Accept-Encoding"
+      ],
+      "X-Content-Type-Options": [
+        "nosniff"
+      ],
+      "x-discogs-media-type": [
+        "discogs.v2"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "46"
+      ],
+      "x-discogs-ratelimit-used": [
+        "14"
+      ],
+      "X-Frame-Options": [
+        "SAMEORIGIN"
+      ],
+      "X-XSS-Protection": [
+        "1; mode=block"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a01d18a86d63519f-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022is_offensive\u0022:false}"
+  }
+]

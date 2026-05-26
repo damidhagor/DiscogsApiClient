@@ -1,0 +1,58 @@
+[
+  {
+    "requestMethod": "PUT",
+    "requestUrl": "https://api.discogs.com/users/DamIDhagor/wants/2147483647",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 404,
+    "responseHeaders": {
+      "Date": [
+        "Tue, 26 May 2026 13:29:50 GMT"
+      ],
+      "Transfer-Encoding": [
+        "chunked"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "Vary": [
+        "Accept-Encoding"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "56"
+      ],
+      "x-discogs-ratelimit-used": [
+        "4"
+      ],
+      "Set-Cookie": [
+        "__cf_bm=qupCBB2Wd2PtAk3A6uoHU6Gp_SYFL1WJ0QE_zfCp928-1779802190.2331007-1.0.1.1-kGNvm70e58dESMhMG8oF8SHuzIBjxunbBleiS1tLnrht2SRwPL27tm56PaZezyie7ztAYrDheEr_WaO1JO9IobnUAE.YsWrWJl.j0p.sqElJl7QB5OdJz7N5VAO39TGp; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Tue, 26 May 2026 13:59:50 GMT"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a01d2188fcc2b64b-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022message\u0022:\u0022That release does not exist in the user\u0027s wantlist.\u0022}"
+  }
+]

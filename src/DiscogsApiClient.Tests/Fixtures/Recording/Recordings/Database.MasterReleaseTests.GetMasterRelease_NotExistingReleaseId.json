@@ -1,0 +1,58 @@
+[
+  {
+    "requestMethod": "GET",
+    "requestUrl": "https://api.discogs.com/masters/2147483647",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 404,
+    "responseHeaders": {
+      "Date": [
+        "Tue, 26 May 2026 13:22:37 GMT"
+      ],
+      "Transfer-Encoding": [
+        "chunked"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "Vary": [
+        "Accept-Encoding"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "32"
+      ],
+      "x-discogs-ratelimit-used": [
+        "28"
+      ],
+      "Set-Cookie": [
+        "__cf_bm=umBsx5I3BrCa3_RqPDNEPVtrTwL2XPYbugsk7aYxy0E-1779801756.788801-1.0.1.1-LNpwWZMCeOCpDutiJvWxYIgbMg7qN0EFJAFfW0chrpT6ZylfmEWSiwkGg1hZMZwiTU99GlfwAyHHpDTEyZG2sPdHLkr6MGzEgtQkJVCWqiHI3ix6bX2qyuGv_rsWccFp; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Tue, 26 May 2026 13:52:37 GMT"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a01d16f3ea50709f-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022message\u0022:\u0022That master release does not exist or may have been deleted.\u0022}"
+  }
+]

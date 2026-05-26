@@ -1,0 +1,55 @@
+[
+  {
+    "requestMethod": "DELETE",
+    "requestUrl": "https://api.discogs.com/users/DamIDhagor/collection/folders/999/releases/5134861/instances/999",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 403,
+    "responseHeaders": {
+      "Date": [
+        "Tue, 26 May 2026 13:27:25 GMT"
+      ],
+      "Transfer-Encoding": [
+        "chunked"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "Vary": [
+        "Accept-Encoding"
+      ],
+      "x-discogs-ratelimit": [
+        "25"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "11"
+      ],
+      "x-discogs-ratelimit-used": [
+        "14"
+      ],
+      "Set-Cookie": [
+        "__cf_bm=Q1_kCRvxuRJDQVBbiw1mtoPh7WFPO4rq5zOEW.grHTQ-1779802045.476876-1.0.1.1-1ztP_v3Ajb7rH.u8soS8upYoU7cg5kIsPCf94y1Zs60_kTqV4j53LpbpA68lXkLTXwI2r178EsiNd0yqeoyWjLKGR4jFlUBnZyB27XfO6EvWxq7hk4Ny8OCJkR63ucd5; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Tue, 26 May 2026 13:57:25 GMT"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a01d1e003a951dd2-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022message\u0022:\u0022You are not allowed to view this resource. Please authenticate as the owner to view this content.\u0022}"
+  }
+]

@@ -1,0 +1,58 @@
+[
+  {
+    "requestMethod": "GET",
+    "requestUrl": "https://api.discogs.com/users/awrbaerhnqw54/collection/value",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 404,
+    "responseHeaders": {
+      "Date": [
+        "Tue, 26 May 2026 13:28:38 GMT"
+      ],
+      "Transfer-Encoding": [
+        "chunked"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "Vary": [
+        "Accept-Encoding"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "54"
+      ],
+      "x-discogs-ratelimit-used": [
+        "6"
+      ],
+      "Set-Cookie": [
+        "__cf_bm=walbQKtM0ERZiwz7pJTR..T9mgIP1XpeN000n8Y2w4I-1779802118.0506136-1.0.1.1-lz_HU9M6uzRVT46Ojl6H83APmWYxdp4yq_YB4x7mhYHCNuABlX_Cxl7gOn9soYjCguD12H6ZMcyDK4cNFLx1j5ytXj.XB7nCuux3DRQOgZyxIyyP4cugy9cobne49cGN; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Tue, 26 May 2026 13:58:38 GMT"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a01d1fc5deaf9847-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022message\u0022:\u0022User does not exist or may have been deleted.\u0022}"
+  }
+]
