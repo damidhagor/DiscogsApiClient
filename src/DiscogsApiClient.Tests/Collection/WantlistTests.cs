@@ -7,7 +7,7 @@ public sealed class WantlistTests(DiscogsApiClientFixture fixture)
     private readonly IDiscogsApiClient _unauthenticatedApiClient = fixture.GetUnauthenticatedClient();
 
     [Test]
-    public async Task GetAllWantlistReleases_Success(CancellationToken cancellationToken)
+    public async Task GetWantlistReleases_ShouldReturnReleases_WhenUsernameIsValid(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = 50 };
@@ -31,7 +31,7 @@ public sealed class WantlistTests(DiscogsApiClientFixture fixture)
     [Arguments(null, typeof(ArgumentNullException))]
     [Arguments("", typeof(ArgumentException))]
     [Arguments("  ", typeof(ArgumentException))]
-    public async Task GetWantlist_Username_Guard(string? username, Type expectedException, CancellationToken cancellationToken)
+    public async Task GetWantlistReleases_ShouldThrowException_WhenUsernameIsInvalid(string? username, Type expectedException, CancellationToken cancellationToken)
     {
         var exception = await Assert.That(async () => await _apiClient.GetWantlistReleases(username!, null, cancellationToken))
             .Throws<Exception>()
@@ -41,7 +41,7 @@ public sealed class WantlistTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetWantlist_InvalidUsername(CancellationToken cancellationToken)
+    public async Task GetWantlistReleases_ShouldThrowResourceNotFoundException_WhenUsernameDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "awrbaerhnqw54";
 
@@ -54,7 +54,7 @@ public sealed class WantlistTests(DiscogsApiClientFixture fixture)
     [Arguments(null, typeof(ArgumentNullException))]
     [Arguments("", typeof(ArgumentException))]
     [Arguments("  ", typeof(ArgumentException))]
-    public async Task AddWantlistRelease_Username_Guard(string? username, Type expectedException, CancellationToken cancellationToken)
+    public async Task AddReleaseToWantlist_ShouldThrowException_WhenUsernameIsInvalid(string? username, Type expectedException, CancellationToken cancellationToken)
     {
         var releaseId = 5134861;
 
@@ -66,7 +66,7 @@ public sealed class WantlistTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task AddWantlistRelease_InvalidUsername(CancellationToken cancellationToken)
+    public async Task AddReleaseToWantlist_ShouldThrowResourceNotFoundException_WhenUsernameDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "awrbaerhnqw54";
         var releaseId = 5134861;
@@ -78,7 +78,7 @@ public sealed class WantlistTests(DiscogsApiClientFixture fixture)
     [Test]
     [Arguments(-1)]
     [Arguments(0)]
-    public async Task AddWantlistRelease_ReleaseId_Guard(int releaseId, CancellationToken cancellationToken)
+    public async Task AddReleaseToWantlist_ShouldThrowArgumentOutOfRangeException_WhenReleaseIdIsInvalid(int releaseId, CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
 
@@ -87,7 +87,7 @@ public sealed class WantlistTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task AddWantlistRelease_NotExistingReleaseId(CancellationToken cancellationToken)
+    public async Task AddReleaseToWantlist_ShouldThrowResourceNotFoundException_WhenReleaseIdDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var releaseId = int.MaxValue;
@@ -97,7 +97,7 @@ public sealed class WantlistTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task AddWantlistRelease_Unauthenticated(CancellationToken cancellationToken)
+    public async Task AddReleaseToWantlist_ShouldThrowUnauthenticatedDiscogsException_WhenUnauthenticated(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var releaseId = 5134861;
@@ -111,7 +111,7 @@ public sealed class WantlistTests(DiscogsApiClientFixture fixture)
     [Arguments(null, typeof(ArgumentNullException))]
     [Arguments("", typeof(ArgumentException))]
     [Arguments("  ", typeof(ArgumentException))]
-    public async Task DeleteWantlistRelease_Username_Guard(string? username, Type expectedException, CancellationToken cancellationToken)
+    public async Task DeleteReleaseFromWantlist_ShouldThrowException_WhenUsernameIsInvalid(string? username, Type expectedException, CancellationToken cancellationToken)
     {
         var releaseId = 5134861;
 
@@ -123,7 +123,7 @@ public sealed class WantlistTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task DeleteWantlistRelease_InvalidUsername(CancellationToken cancellationToken)
+    public async Task DeleteReleaseFromWantlist_ShouldThrowResourceNotFoundException_WhenUsernameDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "awrbaerhnqw54";
         var releaseId = 5134861;
@@ -135,7 +135,7 @@ public sealed class WantlistTests(DiscogsApiClientFixture fixture)
     [Test]
     [Arguments(-1)]
     [Arguments(0)]
-    public async Task DeleteWantlistRelease_ReleaseId_Guard(int releaseId, CancellationToken cancellationToken)
+    public async Task DeleteReleaseFromWantlist_ShouldThrowArgumentOutOfRangeException_WhenReleaseIdIsInvalid(int releaseId, CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
 
@@ -144,7 +144,7 @@ public sealed class WantlistTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task DeleteWantlistRelease_NotExistingReleaseId(CancellationToken cancellationToken)
+    public async Task DeleteReleaseFromWantlist_ShouldThrowResourceNotFoundException_WhenReleaseIdDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var releaseId = int.MaxValue;
@@ -154,7 +154,7 @@ public sealed class WantlistTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task DeleteWantlistRelease_Unauthenticated(CancellationToken cancellationToken)
+    public async Task DeleteReleaseFromWantlist_ShouldThrowUnauthenticatedDiscogsException_WhenUnauthenticated(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var releaseId = 5134861;
@@ -165,7 +165,7 @@ public sealed class WantlistTests(DiscogsApiClientFixture fixture)
 
 
     [Test]
-    public async Task AddDeleteWantlistRelease_Success(CancellationToken cancellationToken)
+    public async Task AddAndRemoveReleaseFromWantlist_ShouldSucceed_WhenParametersAreValid(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var releaseId = 5134861;

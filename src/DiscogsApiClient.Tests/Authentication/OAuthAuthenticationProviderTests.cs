@@ -5,7 +5,7 @@ namespace DiscogsApiClient.Tests.Authentication;
 public sealed class OAuthAuthenticationProviderTests
 {
     [Test]
-    public async Task Authentication_Successful(CancellationToken cancellationToken)
+    public async Task Authenticate_ShouldAuthenticate_WhenOAuthFlowCompletes(CancellationToken cancellationToken)
     {
         var oauthMockHandler = new OAuthMockDelegatingHandler();
         var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
@@ -35,7 +35,7 @@ public sealed class OAuthAuthenticationProviderTests
     }
 
     [Test]
-    public async Task Unauthenticated_Provider_Throws_UnauthorizedException()
+    public async Task CreateAuthenticationHeader_ShouldThrowUnauthenticatedDiscogsException_WhenNotAuthenticated()
     {
         var httpClient = new HttpClient(new OAuthMockDelegatingHandler());
         var options = new DiscogsApiClientOptions { ConsumerKey = "key", ConsumerSecret = "secret" };
@@ -56,7 +56,7 @@ public sealed class OAuthAuthenticationProviderTests
     [Arguments("x", null, "x", typeof(ArgumentNullException), "ConsumerSecret")]
     [Arguments("x", "", "x", typeof(ArgumentException), "ConsumerSecret")]
     [Arguments("x", "  ", "x", typeof(ArgumentException), "ConsumerSecret")]
-    public async Task Start_Guards_Work(
+    public async Task StartAuthentication_ShouldThrowException_WhenParametersAreInvalid(
         string? consumerKey,
         string? consumerSecret,
         string? verifierCallbackUrl,
@@ -85,7 +85,7 @@ public sealed class OAuthAuthenticationProviderTests
     [Arguments("x", null)]
     [Arguments("x", "")]
     [Arguments("x", "  ")]
-    public async Task Start_Unauthenticated(string? requestToken, string? requestTokenSecret, CancellationToken cancellationToken)
+    public async Task StartAuthentication_ShouldThrowAuthenticationFailedDiscogsException_WhenApiFails(string? requestToken, string? requestTokenSecret, CancellationToken cancellationToken)
     {
         var oauthMockHandler = new OAuthMockDelegatingHandler { RequestToken = requestToken!, RequestTokenSecret = requestTokenSecret! };
         var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
@@ -113,7 +113,7 @@ public sealed class OAuthAuthenticationProviderTests
     [Arguments("x", null, "x", "x", "x", typeof(ArgumentNullException), "ConsumerSecret")]
     [Arguments("x", "", "x", "x", "x", typeof(ArgumentException), "ConsumerSecret")]
     [Arguments("x", "  ", "x", "x", "x", typeof(ArgumentException), "ConsumerSecret")]
-    public async Task Complete_Guards_Work(
+    public async Task CompleteAuthentication_ShouldThrowException_WhenParametersAreInvalid(
         string? consumerKey,
         string? consumerSecret,
         string? requestToken,
@@ -145,7 +145,7 @@ public sealed class OAuthAuthenticationProviderTests
     [Arguments("x", null)]
     [Arguments("x", "")]
     [Arguments("x", "  ")]
-    public async Task Complete_Unauthenticated(string? accessToken, string? accessTokenSecret, CancellationToken cancellationToken)
+    public async Task CompleteAuthentication_ShouldThrowAuthenticationFailedDiscogsException_WhenApiFails(string? accessToken, string? accessTokenSecret, CancellationToken cancellationToken)
     {
         var oauthMockHandler = new OAuthMockDelegatingHandler { AccessToken = accessToken!, AccessTokenSecret = accessTokenSecret! };
         var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
@@ -159,7 +159,7 @@ public sealed class OAuthAuthenticationProviderTests
     }
 
     [Test]
-    public async Task Failed_Authentication_NotResets_IsAuthenticated(CancellationToken cancellationToken)
+    public async Task CompleteAuthentication_ShouldNotResetAuthenticationState_WhenReauthenticationFails(CancellationToken cancellationToken)
     {
         var oauthMockHandler = new OAuthMockDelegatingHandler();
         var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
@@ -189,7 +189,7 @@ public sealed class OAuthAuthenticationProviderTests
     }
 
     [Test]
-    public async Task Authenticate_Short_Circuit_Successfully()
+    public async Task Authenticate_ShouldAuthenticate_WhenUsingShortCircuitOAuth()
     {
         var options = new DiscogsApiClientOptions { ConsumerKey = "key", ConsumerSecret = "secret" };
 
@@ -213,7 +213,7 @@ public sealed class OAuthAuthenticationProviderTests
     [Arguments("x", null, typeof(ArgumentNullException), "accessTokenSecret")]
     [Arguments("x", "", typeof(ArgumentException), "accessTokenSecret")]
     [Arguments("x", "   ", typeof(ArgumentException), "accessTokenSecret")]
-    public async Task Short_Circuit_Guards_Work(
+    public async Task Authenticate_ShouldThrowException_WhenShortCircuitParametersAreInvalid(
         string? accessToken,
         string? accessTokenSecret,
         Type exceptionType,

@@ -6,7 +6,7 @@ public sealed class LabelsTests(DiscogsApiClientFixture fixture)
     private readonly IDiscogsApiClient _apiClient = fixture.GetAuthenticatedClient();
 
     [Test]
-    public async Task GetLabel_Success(CancellationToken cancellationToken)
+    public async Task GetLabel_ShouldReturnLabel_WhenIdIsValid(CancellationToken cancellationToken)
     {
         var labelId = 11499;
 
@@ -47,14 +47,14 @@ public sealed class LabelsTests(DiscogsApiClientFixture fixture)
     [Test]
     [Arguments(-1)]
     [Arguments(0)]
-    public async Task GetLabel_LabelId_Guard(int labelId, CancellationToken cancellationToken)
+    public async Task GetLabel_ShouldThrowArgumentOutOfRangeException_WhenIdIsInvalid(int labelId, CancellationToken cancellationToken)
     {
         await Assert.That(async () => await _apiClient.GetLabel(labelId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
     }
 
     [Test]
-    public async Task GetLabel_NotExistingLabelId(CancellationToken cancellationToken)
+    public async Task GetLabel_ShouldThrowResourceNotFoundException_WhenLabelDoesNotExist(CancellationToken cancellationToken)
     {
         var labelId = int.MaxValue;
 
@@ -64,7 +64,7 @@ public sealed class LabelsTests(DiscogsApiClientFixture fixture)
 
 
     [Test]
-    public async Task GetLabelReleases_Success(CancellationToken cancellationToken)
+    public async Task GetLabelReleases_ShouldReturnReleases_WhenIdIsValid(CancellationToken cancellationToken)
     {
         var labelId = 11499;
 
@@ -101,7 +101,7 @@ public sealed class LabelsTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetLabelReleases_NotExistingLabelId(CancellationToken cancellationToken)
+    public async Task GetLabelReleases_ShouldThrowResourceNotFoundException_WhenLabelDoesNotExist(CancellationToken cancellationToken)
     {
         var labelId = int.MaxValue;
 
@@ -112,14 +112,14 @@ public sealed class LabelsTests(DiscogsApiClientFixture fixture)
     [Test]
     [Arguments(-1)]
     [Arguments(0)]
-    public async Task GetLabelReleases_LabelId_Guard(int labelId, CancellationToken cancellationToken)
+    public async Task GetLabelReleases_ShouldThrowArgumentOutOfRangeException_WhenIdIsInvalid(int labelId, CancellationToken cancellationToken)
     {
         await Assert.That(async () => await _apiClient.GetLabelReleases(labelId, null, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
     }
 
     [Test]
-    public async Task GetLabelReleases_Success_InvalidSmallPageNumber(CancellationToken cancellationToken)
+    public async Task GetLabelReleases_ShouldReturnFirstPage_WhenPageNumberIsTooSmall(CancellationToken cancellationToken)
     {
         var labelId = 11499;
         var paginationParams = new PaginationQueryParameters { Page = -1, PageSize = 50 };
@@ -140,7 +140,7 @@ public sealed class LabelsTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetLabelReleases_InvalidBigPageNumber(CancellationToken cancellationToken)
+    public async Task GetLabelReleases_ShouldThrowResourceNotFoundException_WhenPageNumberIsTooLarge(CancellationToken cancellationToken)
     {
         var labelId = 11499;
         var paginationParams = new PaginationQueryParameters { Page = int.MaxValue, PageSize = 50 };
@@ -150,7 +150,7 @@ public sealed class LabelsTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetLabelReleases_Success_InvalidSmallPageSize(CancellationToken cancellationToken)
+    public async Task GetLabelReleases_ShouldReturnSingleItemPerPage_WhenPageSizeIsTooSmall(CancellationToken cancellationToken)
     {
         var labelId = 11499;
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = -1 };
@@ -171,7 +171,7 @@ public sealed class LabelsTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetLabelReleases_Success_InvalidBigPageSize(CancellationToken cancellationToken)
+    public async Task GetLabelReleases_ShouldReturnOneHundredItemsPerPage_WhenPageSizeIsTooLarge(CancellationToken cancellationToken)
     {
         var labelId = 11499;
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = int.MaxValue };
@@ -192,7 +192,7 @@ public sealed class LabelsTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetLabelAllReleases_Success(CancellationToken cancellationToken)
+    public async Task GetLabelAllReleases_ShouldReturnAllReleases_WhenIteratingAllPages(CancellationToken cancellationToken)
     {
         var labelId = 34650;
 

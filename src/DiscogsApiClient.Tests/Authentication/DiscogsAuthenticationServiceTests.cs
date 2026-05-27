@@ -6,7 +6,7 @@ namespace DiscogsApiClient.Tests.Authentication;
 public sealed class DiscogsAuthenticationServiceTests
 {
     [Test]
-    public async Task Unauthenticated_Service_Throws_UnauthorizedException()
+    public async Task CreateAuthenticationHeader_ShouldThrowUnauthenticatedDiscogsException_WhenNotAuthenticated()
     {
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
@@ -17,7 +17,7 @@ public sealed class DiscogsAuthenticationServiceTests
     }
 
     [Test]
-    public async Task PersonalAccessTokenAuthentication_Successful()
+    public async Task AuthenticateWithPersonalAccessToken_ShouldAuthenticate_WhenTokenIsValid()
     {
         var token = "myusertoken";
         var authService = new DiscogsAuthenticationService(
@@ -36,7 +36,7 @@ public sealed class DiscogsAuthenticationServiceTests
     [Arguments(null!)]
     [Arguments("")]
     [Arguments("   ")]
-    public async Task PersonalAccessToken_Guard_Works(string? tokene)
+    public async Task AuthenticateWithPersonalAccessToken_ShouldThrowException_WhenTokenIsInvalid(string? tokene)
     {
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
@@ -51,7 +51,7 @@ public sealed class DiscogsAuthenticationServiceTests
     }
 
     [Test]
-    public async Task Failed_Only_PersonalAccessToken_Resets_IsAuthenticated()
+    public async Task AuthenticateWithPersonalAccessToken_ShouldResetAuthenticationState_WhenAuthenticationFails()
     {
         var token = "myusertoken";
         var authService = new DiscogsAuthenticationService(
@@ -71,7 +71,7 @@ public sealed class DiscogsAuthenticationServiceTests
     }
 
     [Test]
-    public async Task OAuthAuthentication_Successful()
+    public async Task CompleteOAuthAuthentication_ShouldAuthenticate_WhenOAuthFlowCompletes()
     {
         var oauthMockHandler = new OAuthMockDelegatingHandler();
         var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
@@ -112,7 +112,7 @@ public sealed class DiscogsAuthenticationServiceTests
     [Arguments("x", null, "x", typeof(ArgumentNullException), "ConsumerSecret")]
     [Arguments("x", "", "x", typeof(ArgumentException), "ConsumerSecret")]
     [Arguments("x", "  ", "x", typeof(ArgumentException), "ConsumerSecret")]
-    public async Task OAuthAuthentication_Start_Guards_Work(
+    public async Task StartOAuthAuthentication_ShouldThrowException_WhenParametersAreInvalid(
         string? consumerKey,
         string? consumerSecret,
         string? verifierCallbackUrl,
@@ -143,7 +143,7 @@ public sealed class DiscogsAuthenticationServiceTests
     [Arguments("x", null)]
     [Arguments("x", "")]
     [Arguments("x", "  ")]
-    public async Task OAuthAuthentication_Start_Unauthenticated(string? requestToken, string? requestTokenSecret, CancellationToken cancellationToken)
+    public async Task StartOAuthAuthentication_ShouldThrowAuthenticationFailedDiscogsException_WhenApiFails(string? requestToken, string? requestTokenSecret, CancellationToken cancellationToken)
     {
         var oauthMockHandler = new OAuthMockDelegatingHandler { RequestToken = requestToken!, RequestTokenSecret = requestTokenSecret! };
         var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
@@ -173,7 +173,7 @@ public sealed class DiscogsAuthenticationServiceTests
     [Arguments("x", null, "x", "x", "x", typeof(ArgumentNullException), "ConsumerSecret")]
     [Arguments("x", "", "x", "x", "x", typeof(ArgumentException), "ConsumerSecret")]
     [Arguments("x", "  ", "x", "x", "x", typeof(ArgumentException), "ConsumerSecret")]
-    public async Task OAuthAuthentication_Complete_Guards_Work(
+    public async Task CompleteOAuthAuthentication_ShouldThrowException_WhenParametersAreInvalid(
         string? consumerKey,
         string? consumerSecret,
         string? requestToken,
@@ -207,7 +207,7 @@ public sealed class DiscogsAuthenticationServiceTests
     [Arguments("x", null)]
     [Arguments("x", "")]
     [Arguments("x", "  ")]
-    public async Task OAuthAuthentication_Complete_Unauthenticated(string? accessToken, string? accessTokenSecret, CancellationToken cancellationToken)
+    public async Task CompleteOAuthAuthentication_ShouldThrowAuthenticationFailedDiscogsException_WhenApiFails(string? accessToken, string? accessTokenSecret, CancellationToken cancellationToken)
     {
         var oauthMockHandler = new OAuthMockDelegatingHandler { AccessToken = accessToken!, AccessTokenSecret = accessTokenSecret! };
         var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
@@ -223,7 +223,7 @@ public sealed class DiscogsAuthenticationServiceTests
     }
 
     [Test]
-    public async Task OAuthAuthentication_Short_Circuit_Successful()
+    public async Task AuthenticateWithOAuth_ShouldAuthenticate_WhenUsingShortCircuitOAuth()
     {
         var options = new DiscogsApiClientOptions { ConsumerKey = "key", ConsumerSecret = "secret" };
 
@@ -249,7 +249,7 @@ public sealed class DiscogsAuthenticationServiceTests
     [Arguments("x", null, typeof(ArgumentNullException), "accessTokenSecret")]
     [Arguments("x", "", typeof(ArgumentException), "accessTokenSecret")]
     [Arguments("x", "   ", typeof(ArgumentException), "accessTokenSecret")]
-    public async Task OAuthAuthentication_Short_Circuit_Guards_Work(
+    public async Task AuthenticateWithOAuth_ShouldThrowException_WhenShortCircuitParametersAreInvalid(
         string? accessToken,
         string? accessTokenSecret,
         Type exceptionType,
@@ -268,7 +268,7 @@ public sealed class DiscogsAuthenticationServiceTests
     }
 
     [Test]
-    public async Task Failed_OAuth_NotResets_IsAuthenticated(CancellationToken cancellationToken)
+    public async Task CompleteOAuthAuthentication_ShouldNotResetAuthenticationState_WhenReauthenticationFails(CancellationToken cancellationToken)
     {
         var oauthMockHandler = new OAuthMockDelegatingHandler();
         var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
@@ -300,7 +300,7 @@ public sealed class DiscogsAuthenticationServiceTests
     }
 
     [Test]
-    public async Task Reauthentication_With_Different_Method_Switches_Method(CancellationToken cancellationToken)
+    public async Task Authenticate_ShouldSwitchMethod_WhenReauthenticatingWithDifferentMethod(CancellationToken cancellationToken)
     {
         var userToken = "userToken";
         var session = new OAuthAuthenticationSession("", "", "requesttoken", "requesttokensecret");

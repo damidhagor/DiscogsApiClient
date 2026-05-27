@@ -6,7 +6,7 @@ public sealed class ReleasesTests(DiscogsApiClientFixture fixture)
     private readonly IDiscogsApiClient _apiClient = fixture.GetAuthenticatedClient();
 
     [Test]
-    public async Task GetRelease_Success(CancellationToken cancellationToken)
+    public async Task GetRelease_ShouldReturnRelease_WhenIdIsValid(CancellationToken cancellationToken)
     {
         var releaseId = 5134861;
 
@@ -106,14 +106,14 @@ public sealed class ReleasesTests(DiscogsApiClientFixture fixture)
     [Test]
     [Arguments(-1)]
     [Arguments(0)]
-    public async Task GetRelease_ReleaseId_Guard(int releaseId, CancellationToken cancellationToken)
+    public async Task GetRelease_ShouldThrowArgumentOutOfRangeException_WhenIdIsInvalid(int releaseId, CancellationToken cancellationToken)
     {
         await Assert.That(async () => await _apiClient.GetRelease(releaseId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
     }
 
     [Test]
-    public async Task GetRelease_NotExistingReleaseId(CancellationToken cancellationToken)
+    public async Task GetRelease_ShouldThrowResourceNotFoundException_WhenIdDoesNotExist(CancellationToken cancellationToken)
     {
         var releaseId = int.MaxValue;
 
@@ -123,7 +123,7 @@ public sealed class ReleasesTests(DiscogsApiClientFixture fixture)
 
 
     [Test]
-    public async Task GetReleaseCommunityRating_Success(CancellationToken cancellationToken)
+    public async Task GetReleaseCommunityRating_ShouldReturnRating_WhenIdIsValid(CancellationToken cancellationToken)
     {
         var releaseId = 5134861;
 
@@ -139,14 +139,14 @@ public sealed class ReleasesTests(DiscogsApiClientFixture fixture)
     [Test]
     [Arguments(-1)]
     [Arguments(0)]
-    public async Task GetReleaseCommunityRating_ReleaseId_Guard(int releaseId, CancellationToken cancellationToken)
+    public async Task GetReleaseCommunityRating_ShouldThrowArgumentOutOfRangeException_WhenIdIsInvalid(int releaseId, CancellationToken cancellationToken)
     {
         await Assert.That(async () => await _apiClient.GetReleaseCommunityRating(releaseId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
     }
 
     [Test]
-    public async Task GetReleaseCommunityRating_NotExistingReleaseId(CancellationToken cancellationToken)
+    public async Task GetReleaseCommunityRating_ShouldThrowResourceNotFoundException_WhenIdDoesNotExist(CancellationToken cancellationToken)
     {
         var releaseId = int.MaxValue;
 
@@ -156,7 +156,7 @@ public sealed class ReleasesTests(DiscogsApiClientFixture fixture)
 
 
     [Test]
-    public async Task GetReleaseStats_Success(CancellationToken cancellationToken)
+    public async Task GetReleaseStats_ShouldReturnStats_WhenIdIsValid(CancellationToken cancellationToken)
     {
         var releaseId = 5134861;
 
@@ -168,14 +168,14 @@ public sealed class ReleasesTests(DiscogsApiClientFixture fixture)
     [Test]
     [Arguments(-1)]
     [Arguments(0)]
-    public async Task GetReleaseStats_ReleaseId_Guard(int releaseId, CancellationToken cancellationToken)
+    public async Task GetReleaseStats_ShouldThrowArgumentOutOfRangeException_WhenIdIsInvalid(int releaseId, CancellationToken cancellationToken)
     {
         await Assert.That(async () => await _apiClient.GetReleaseStats(releaseId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
     }
 
     [Test]
-    public async Task GetReleaseStats_NotExistingReleaseId(CancellationToken cancellationToken)
+    public async Task GetReleaseStats_ShouldThrowResourceNotFoundException_WhenIdDoesNotExist(CancellationToken cancellationToken)
     {
         var releaseId = int.MaxValue;
 

@@ -67,7 +67,5 @@ dotnet run --project DiscogsApiClient.Tests -f net10.0
 ## Implementation Notes
 
 - Environment variable: `DISCOGS_RECORD` controls recording mode. When set to `true`, the suite records; when unset the suite uses playback.
-- Recordings are organized by test/namespace keys (see `RecordingHelper.GetRecordingKey`) to keep files isolated and predictable.
+- Recordings are organized by test/namespace keys (see `RecordingHelper.GetRecordingKey`) to keep files isolated and predictable. These keys are based on the test method name. For details on test naming conventions, see the [Testing Guidelines](TESTING.md).
 - Headers like `traceparent` are excluded from recordings to avoid environment-specific mismatches.
-
-``` 

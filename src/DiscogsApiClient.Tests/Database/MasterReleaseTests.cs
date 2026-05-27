@@ -8,7 +8,7 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
     private readonly IDiscogsApiClient _apiClient = fixture.GetAuthenticatedClient();
 
     [Test]
-    public async Task GetMasterRelease_Success(CancellationToken cancellationToken)
+    public async Task GetMasterRelease_ShouldReturnMasterRelease_WhenIdIsValid(CancellationToken cancellationToken)
     {
         var masterReleaseId = 156551;
 
@@ -77,14 +77,14 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
     [Test]
     [Arguments(-1)]
     [Arguments(0)]
-    public async Task GetMasterRelease_MasterReleaseId_Guard(int masterReleaseId, CancellationToken cancellationToken)
+    public async Task GetMasterRelease_ShouldThrowArgumentOutOfRangeException_WhenIdIsInvalid(int masterReleaseId, CancellationToken cancellationToken)
     {
         await Assert.That(async () => await _apiClient.GetMasterRelease(masterReleaseId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
     }
 
     [Test]
-    public async Task GetMasterRelease_NotExistingReleaseId(CancellationToken cancellationToken)
+    public async Task GetMasterRelease_ShouldThrowResourceNotFoundException_WhenReleaseDoesNotExist(CancellationToken cancellationToken)
     {
         var masterReleaseId = int.MaxValue;
 
@@ -94,7 +94,7 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
 
 
     [Test]
-    public async Task GetMasterReleaseVersions_Success(CancellationToken cancellationToken)
+    public async Task GetMasterReleaseVersions_ShouldReturnVersions_WhenIdIsValid(CancellationToken cancellationToken)
     {
         var masterReleaseId = 156551;
 
@@ -143,14 +143,14 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
     [Test]
     [Arguments(-1)]
     [Arguments(0)]
-    public async Task GetMasterReleaseVersions_MasterReleaseId_Guard(int masterReleaseId, CancellationToken cancellationToken)
+    public async Task GetMasterReleaseVersions_ShouldThrowArgumentOutOfRangeException_WhenIdIsInvalid(int masterReleaseId, CancellationToken cancellationToken)
     {
         await Assert.That(async () => await _apiClient.GetMasterReleaseVersions(masterReleaseId, null, null, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
     }
 
     [Test]
-    public async Task GetMasterReleaseVersions_NotExistingMasterReleaseId(CancellationToken cancellationToken)
+    public async Task GetMasterReleaseVersions_ShouldSucceed_WhenMasterReleaseDoesNotExist(CancellationToken cancellationToken)
     {
         var masterReleaseId = int.MaxValue;
 
@@ -159,7 +159,7 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetMasterReleaseVersions_Success_InvalidSmallPageNumber(CancellationToken cancellationToken)
+    public async Task GetMasterReleaseVersions_ShouldReturnFirstPage_WhenPageNumberIsTooSmall(CancellationToken cancellationToken)
     {
         var masterReleaseId = 156551;
         var paginationParams = new PaginationQueryParameters { Page = -1, PageSize = 50 };
@@ -180,7 +180,7 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetMasterReleaseVersions_InvalidBigPageNumber(CancellationToken cancellationToken)
+    public async Task GetMasterReleaseVersions_ShouldThrowDiscogsException_WhenPageNumberIsTooLarge(CancellationToken cancellationToken)
     {
         var masterReleaseId = 156551;
         var paginationParams = new PaginationQueryParameters { Page = int.MaxValue, PageSize = 50 };
@@ -193,7 +193,7 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetMasterReleaseVersions_Success_InvalidSmallPageSize(CancellationToken cancellationToken)
+    public async Task GetMasterReleaseVersions_ShouldReturnSingleItemPerPage_WhenPageSizeIsTooSmall(CancellationToken cancellationToken)
     {
         var masterReleaseId = 156551;
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = -1 };
@@ -214,7 +214,7 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetMasterReleaseVersions_Success_InvalidBigPageSize(CancellationToken cancellationToken)
+    public async Task GetMasterReleaseVersions_ShouldReturnUpToOneHundredItemsPerPage_WhenPageSizeIsTooLarge(CancellationToken cancellationToken)
     {
         var masterReleaseId = 156551;
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = int.MaxValue };
@@ -235,7 +235,7 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetAllMasterReleaseVersions_Success(CancellationToken cancellationToken)
+    public async Task GetAllMasterReleaseVersions_ShouldReturnAllVersions_WhenIteratingAllPages(CancellationToken cancellationToken)
     {
         var masterReleaseId = 156551;
 
@@ -256,7 +256,7 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetMasterReleaseVersions_Sorted(CancellationToken cancellationToken)
+    public async Task GetMasterReleaseVersions_ShouldReturnSortedVersions_WhenSortParametersAreProvided(CancellationToken cancellationToken)
     {
         var masterReleaseId = 156551;
 
@@ -336,7 +336,7 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetMasterReleaseVersions_GetFilters(CancellationToken cancellationToken)
+    public async Task GetMasterReleaseVersions_ShouldReturnFilterFacets_WhenRequestingVersions(CancellationToken cancellationToken)
     {
         var masterReleaseId = 156551;
 
@@ -392,7 +392,7 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetMasterReleaseVersions_ApplyFilters(CancellationToken cancellationToken)
+    public async Task GetMasterReleaseVersions_ShouldReturnFilteredVersions_WhenFiltersAreApplied(CancellationToken cancellationToken)
     {
         var masterReleaseId = 156551;
 

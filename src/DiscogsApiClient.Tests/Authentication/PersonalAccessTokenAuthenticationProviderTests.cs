@@ -5,7 +5,7 @@ namespace DiscogsApiClient.Tests.Authentication;
 public sealed class PersonalAccessTokenAuthenticationProviderTests
 {
     [Test]
-    public async Task Authentication_Successful()
+    public async Task Authenticate_ShouldAuthenticate_WhenTokenIsValid()
     {
         var token = "myusertoken";
         var authProvider = new PersonalAccessTokenAuthenticationProvider();
@@ -19,7 +19,7 @@ public sealed class PersonalAccessTokenAuthenticationProviderTests
     }
 
     [Test]
-    public async Task Unauthenticated_Provider_Throws_UnauthorizedException()
+    public async Task CreateAuthenticationHeader_ShouldThrowUnauthenticatedDiscogsException_WhenNotAuthenticated()
     {
         var authProvider = new PersonalAccessTokenAuthenticationProvider();
 
@@ -31,7 +31,7 @@ public sealed class PersonalAccessTokenAuthenticationProviderTests
     [Arguments(null!, typeof(ArgumentNullException))]
     [Arguments("", typeof(ArgumentException))]
     [Arguments("   ", typeof(ArgumentException))]
-    public async Task Token_Guard_Works(string? token, Type expectedException)
+    public async Task Authenticate_ShouldThrowException_WhenTokenIsInvalid(string? token, Type expectedException)
     {
         var authProvider = new PersonalAccessTokenAuthenticationProvider();
 
@@ -45,7 +45,7 @@ public sealed class PersonalAccessTokenAuthenticationProviderTests
     }
 
     [Test]
-    public async Task Failed_Authentication_Resets_UserToken()
+    public async Task Authenticate_ShouldResetAuthenticationState_WhenAuthenticationFails()
     {
         var token = "myusertoken";
         var authProvider = new PersonalAccessTokenAuthenticationProvider();

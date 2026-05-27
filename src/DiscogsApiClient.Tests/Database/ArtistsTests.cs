@@ -8,7 +8,7 @@ public sealed class ArtistsTests(DiscogsApiClientFixture fixture)
     private readonly IDiscogsApiClient _apiClient = fixture.GetAuthenticatedClient();
 
     [Test]
-    public async Task GetArtist_Success(CancellationToken cancellationToken)
+    public async Task GetArtist_ShouldReturnArtist_WhenIdIsValid(CancellationToken cancellationToken)
     {
         var artistId = 287459;
 
@@ -54,14 +54,14 @@ public sealed class ArtistsTests(DiscogsApiClientFixture fixture)
     [Test]
     [Arguments(-1)]
     [Arguments(0)]
-    public async Task GetArtist_ArtistId_Guard(int artistId, CancellationToken cancellationToken)
+    public async Task GetArtist_ShouldThrowArgumentOutOfRangeException_WhenIdIsInvalid(int artistId, CancellationToken cancellationToken)
     {
         await Assert.That(async () => await _apiClient.GetArtist(artistId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
     }
 
     [Test]
-    public async Task GetArtist_NotExistingArtistId(CancellationToken cancellationToken)
+    public async Task GetArtist_ShouldThrowResourceNotFoundException_WhenArtistDoesNotExist(CancellationToken cancellationToken)
     {
         var artistId = int.MaxValue;
 
@@ -71,7 +71,7 @@ public sealed class ArtistsTests(DiscogsApiClientFixture fixture)
 
 
     [Test]
-    public async Task GetArtistReleases_Success(CancellationToken cancellationToken)
+    public async Task GetArtistReleases_ShouldReturnReleases_WhenIdIsValid(CancellationToken cancellationToken)
     {
         var artistId = 287459;
 
@@ -112,14 +112,14 @@ public sealed class ArtistsTests(DiscogsApiClientFixture fixture)
     [Test]
     [Arguments(-1)]
     [Arguments(0)]
-    public async Task GetArtistReleases_ArtistId_Guard(int artistId, CancellationToken cancellationToken)
+    public async Task GetArtistReleases_ShouldThrowArgumentOutOfRangeException_WhenIdIsInvalid(int artistId, CancellationToken cancellationToken)
     {
         await Assert.That(async () => await _apiClient.GetArtistReleases(artistId, null, null, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
     }
 
     [Test]
-    public async Task GetArtistReleases_NotExistingArtistId(CancellationToken cancellationToken)
+    public async Task GetArtistReleases_ShouldThrowResourceNotFoundException_WhenArtistDoesNotExist(CancellationToken cancellationToken)
     {
         var artistId = int.MaxValue;
 
@@ -128,7 +128,7 @@ public sealed class ArtistsTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetArtistReleases_Success_InvalidSmallPageNumber(CancellationToken cancellationToken)
+    public async Task GetArtistReleases_ShouldReturnFirstPage_WhenPageNumberIsTooSmall(CancellationToken cancellationToken)
     {
         var artistId = 287459;
         var paginationParams = new PaginationQueryParameters { Page = -1, PageSize = 50 };
@@ -149,7 +149,7 @@ public sealed class ArtistsTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetArtistReleases_InvalidBigPageNumber(CancellationToken cancellationToken)
+    public async Task GetArtistReleases_ShouldThrowResourceNotFoundException_WhenPageNumberIsTooLarge(CancellationToken cancellationToken)
     {
         var artistId = 287459;
         var paginationParams = new PaginationQueryParameters { Page = int.MaxValue, PageSize = 50 };
@@ -159,7 +159,7 @@ public sealed class ArtistsTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetArtistReleases_Success_InvalidSmallPageSize(CancellationToken cancellationToken)
+    public async Task GetArtistReleases_ShouldReturnSingleItemPerPage_WhenPageSizeIsTooSmall(CancellationToken cancellationToken)
     {
         var artistId = 287459;
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = -1 };
@@ -180,7 +180,7 @@ public sealed class ArtistsTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetArtistReleases_Success_InvalidBigPageSize(CancellationToken cancellationToken)
+    public async Task GetArtistReleases_ShouldReturnOneHundredItemsPerPage_WhenPageSizeIsTooLarge(CancellationToken cancellationToken)
     {
         var artistId = 287459;
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = int.MaxValue };
@@ -201,7 +201,7 @@ public sealed class ArtistsTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetAllArtistReleases_Success(CancellationToken cancellationToken)
+    public async Task GetAllArtistReleases_ShouldReturnAllReleases_WhenIteratingAllPages(CancellationToken cancellationToken)
     {
         var artistId = 287459;
 
@@ -222,7 +222,7 @@ public sealed class ArtistsTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetArtistReleases_Sorted(CancellationToken cancellationToken)
+    public async Task GetArtistReleases_ShouldReturnSortedReleases_WhenSortParametersAreProvided(CancellationToken cancellationToken)
     {
         var artistId = 253729;
 

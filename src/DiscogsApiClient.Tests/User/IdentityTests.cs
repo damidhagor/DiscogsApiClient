@@ -7,7 +7,7 @@ public sealed class IdentityTests(DiscogsApiClientFixture fixture)
     private readonly IDiscogsApiClient _unauthenticatedApiClient = fixture.GetUnauthenticatedClient();
 
     [Test]
-    public async Task GetIdentity_Success(CancellationToken cancellationToken)
+    public async Task GetIdentity_ShouldReturnIdentity_WhenAuthenticated(CancellationToken cancellationToken)
     {
         var identity = await _apiClient.GetIdentity(cancellationToken);
 
@@ -19,7 +19,7 @@ public sealed class IdentityTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetIdentity_Unauthenticated(CancellationToken cancellationToken)
+    public async Task GetIdentity_ShouldThrowUnauthenticatedException_WhenUnauthenticated(CancellationToken cancellationToken)
     {
         
         await Assert.That(async () => await _unauthenticatedApiClient.GetIdentity(cancellationToken))

@@ -7,7 +7,7 @@ public sealed class UserTests(DiscogsApiClientFixture fixture)
     private readonly IDiscogsApiClient _unauthenticatedApiClient = fixture.GetUnauthenticatedClient();
 
     [Test]
-    public async Task GetUser_Success(CancellationToken cancellationToken)
+    public async Task GetUser_ShouldReturnUserWithPrivateFields_WhenAuthenticatedAndRequestingOwnProfile(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
 
@@ -24,7 +24,7 @@ public sealed class UserTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetUser_Unauthenticated(CancellationToken cancellationToken)
+    public async Task GetUser_ShouldReturnUserWithoutPrivateFields_WhenUnauthenticated(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var user = await _unauthenticatedApiClient.GetUser(username, cancellationToken);
@@ -40,7 +40,7 @@ public sealed class UserTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetUser_EmptyUsername(CancellationToken cancellationToken)
+    public async Task GetUser_ShouldThrowArgumentException_WhenUsernameIsEmpty(CancellationToken cancellationToken)
     {
         var username = "";
 
@@ -48,7 +48,7 @@ public sealed class UserTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetUser_InvalidUsername(CancellationToken cancellationToken)
+    public async Task GetUser_ShouldThrowResourceNotFoundException_WhenUsernameDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "awrbaerhnqw54";
 

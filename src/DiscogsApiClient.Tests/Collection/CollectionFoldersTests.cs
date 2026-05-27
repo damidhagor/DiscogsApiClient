@@ -7,7 +7,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     private readonly IDiscogsApiClient _unauthenticatedApiClient = fixture.GetUnauthenticatedClient();
 
     [Test]
-    public async Task GetCollectionFolders_Success(CancellationToken cancellationToken)
+    public async Task GetCollectionFolders_ShouldReturnFolders_WhenUsernameIsValid(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
 
@@ -31,7 +31,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetCollectionFolders_Unauthenticated_Success(CancellationToken cancellationToken)
+    public async Task GetCollectionFolders_ShouldReturnPublicFolders_WhenUnauthenticated(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
 
@@ -52,7 +52,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     [Arguments(null, typeof(ArgumentNullException))]
     [Arguments("", typeof(ArgumentException))]
     [Arguments("  ", typeof(ArgumentException))]
-    public async Task GetCollectionFolders_Username_Guard(string? username, Type expectedException, CancellationToken cancellationToken)
+    public async Task GetCollectionFolders_ShouldThrowException_WhenUsernameIsInvalid(string? username, Type expectedException, CancellationToken cancellationToken)
     {
         var exception = await Assert.That(async () => await _apiClient.GetCollectionFolders(username!, cancellationToken))
             .Throws<Exception>()
@@ -62,7 +62,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetCollectionFolders_InvalidUsername(CancellationToken cancellationToken)
+    public async Task GetCollectionFolders_ShouldThrowResourceNotFoundException_WhenUsernameDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "awrbaerhnqw54";
 
@@ -72,7 +72,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
 
 
     [Test]
-    public async Task GetCollectionFolder_Success(CancellationToken cancellationToken)
+    public async Task GetCollectionFolder_ShouldReturnFolder_WhenFolderExists(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderId = 1;
@@ -85,7 +85,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetCollectionFolder_Unauthenticated(CancellationToken cancellationToken)
+    public async Task GetCollectionFolder_ShouldThrowUnauthenticatedDiscogsException_WhenUnauthenticated(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderId = 1;
@@ -98,7 +98,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     [Arguments(null, typeof(ArgumentNullException))]
     [Arguments("", typeof(ArgumentException))]
     [Arguments("  ", typeof(ArgumentException))]
-    public async Task GetCollectionFolder_Username_Guard(string? username, Type expectedException, CancellationToken cancellationToken)
+    public async Task GetCollectionFolder_ShouldThrowException_WhenUsernameIsInvalid(string? username, Type expectedException, CancellationToken cancellationToken)
     {
         var folderId = 0;
 
@@ -110,7 +110,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetCollectionFolder_InvalidUsername(CancellationToken cancellationToken)
+    public async Task GetCollectionFolder_ShouldThrowResourceNotFoundException_WhenUsernameDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "awrbaerhnqw54";
         var folderId = 0;
@@ -120,7 +120,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetCollectionFolder_FolderId_Guard(CancellationToken cancellationToken)
+    public async Task GetCollectionFolder_ShouldThrowArgumentOutOfRangeException_WhenFolderIdIsInvalid(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderId = -1;
@@ -130,7 +130,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetCollectionFolder_NotExistingFolderId(CancellationToken cancellationToken)
+    public async Task GetCollectionFolder_ShouldThrowResourceNotFoundException_WhenFolderDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderId = 42;
@@ -144,7 +144,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     [Arguments(null, typeof(ArgumentNullException))]
     [Arguments("", typeof(ArgumentException))]
     [Arguments("  ", typeof(ArgumentException))]
-    public async Task CreateCollectionFolder_Username_Guard(string? username, Type expectedException, CancellationToken cancellationToken)
+    public async Task CreateCollectionFolder_ShouldThrowException_WhenUsernameIsInvalid(string? username, Type expectedException, CancellationToken cancellationToken)
     {
         var folderName = "API_TEST_CREATE_EMPTY_USERNAME";
 
@@ -156,7 +156,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task CreateCollectionFolder_InvalidUsername(CancellationToken cancellationToken)
+    public async Task CreateCollectionFolder_ShouldThrowResourceNotFoundException_WhenUsernameDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "awrbaerhnqw54";
         var folderName = "API_TEST_CREATE_INVALID_USERNAME";
@@ -169,7 +169,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     [Arguments(null, typeof(ArgumentNullException))]
     [Arguments("", typeof(ArgumentException))]
     [Arguments("  ", typeof(ArgumentException))]
-    public async Task CreateCollectionFolder_FolderName_Guard(string? folderName, Type expectedException, CancellationToken cancellationToken)
+    public async Task CreateCollectionFolder_ShouldThrowException_WhenFolderNameIsInvalid(string? folderName, Type expectedException, CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
 
@@ -181,7 +181,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task CreateCollectionFolder_Unauthenticated(CancellationToken cancellationToken)
+    public async Task CreateCollectionFolder_ShouldThrowUnauthenticatedDiscogsException_WhenUnauthenticated(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
 
@@ -194,7 +194,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     [Arguments(null, typeof(ArgumentNullException))]
     [Arguments("", typeof(ArgumentException))]
     [Arguments("  ", typeof(ArgumentException))]
-    public async Task UpdateCollectionFolder_Username_Guard(string? username, Type expectedException, CancellationToken cancellationToken)
+    public async Task UpdateCollectionFolder_ShouldThrowException_WhenUsernameIsInvalid(string? username, Type expectedException, CancellationToken cancellationToken)
     {
         var folderId = 999;
         var folderName = "API_TEST_UPDATE_EMPTY_USERNAME";
@@ -207,7 +207,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task UpdateCollectionFolder_InvalidUsername(CancellationToken cancellationToken)
+    public async Task UpdateCollectionFolder_ShouldThrowResourceNotFoundException_WhenUsernameDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "awrbaerhnqw54";
         var folderId = 999;
@@ -221,7 +221,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     [Arguments(null, typeof(ArgumentNullException))]
     [Arguments("", typeof(ArgumentException))]
     [Arguments("  ", typeof(ArgumentException))]
-    public async Task UpdateCollectionFolder_FolderName_Guard(string? folderName, Type expectedException, CancellationToken cancellationToken)
+    public async Task UpdateCollectionFolder_ShouldThrowException_WhenFolderNameIsInvalid(string? folderName, Type expectedException, CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderId = 999;
@@ -237,7 +237,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     [Arguments(-1)]
     [Arguments(0)]
     [Arguments(1)]
-    public async Task UpdateCollectionFolder_FolderId_Guard(int folderId, CancellationToken cancellationToken)
+    public async Task UpdateCollectionFolder_ShouldThrowArgumentOutOfRangeException_WhenFolderIdIsInvalid(int folderId, CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderName = "API_TEST_UPDATE_INVALID_ID";
@@ -247,7 +247,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task UpdateCollectionFolder_NotExistingFolderId(CancellationToken cancellationToken)
+    public async Task UpdateCollectionFolder_ShouldThrowResourceNotFoundException_WhenFolderDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderId = 999;
@@ -258,7 +258,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task UpdateCollectionFolder_Unauthenticated(CancellationToken cancellationToken)
+    public async Task UpdateCollectionFolder_ShouldThrowUnauthenticatedDiscogsException_WhenUnauthenticated(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderId = 999;
@@ -273,7 +273,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     [Arguments(null, typeof(ArgumentNullException))]
     [Arguments("", typeof(ArgumentException))]
     [Arguments("  ", typeof(ArgumentException))]
-    public async Task DeleteCollectionFolder_Username_Guard(string? username, Type expectedException, CancellationToken cancellationToken)
+    public async Task DeleteCollectionFolder_ShouldThrowException_WhenUsernameIsInvalid(string? username, Type expectedException, CancellationToken cancellationToken)
     {
         var folderId = -1;
 
@@ -285,7 +285,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task DeleteCollectionFolder_InvalidUsername(CancellationToken cancellationToken)
+    public async Task DeleteCollectionFolder_ShouldThrowResourceNotFoundException_WhenUsernameDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "awrbaerhnqw54";
         var folderId = 999;
@@ -298,7 +298,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     [Arguments(-1)]
     [Arguments(0)]
     [Arguments(1)]
-    public async Task DeleteCollectionFolder_FolderId_Guard(int folderId, CancellationToken cancellationToken)
+    public async Task DeleteCollectionFolder_ShouldThrowArgumentOutOfRangeException_WhenFolderIdIsInvalid(int folderId, CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
 
@@ -307,7 +307,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task DeleteCollectionFolder_NotExistingFolderId(CancellationToken cancellationToken)
+    public async Task DeleteCollectionFolder_ShouldThrowResourceNotFoundException_WhenFolderDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderId = 999;
@@ -317,7 +317,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task DeleteCollectionFolder_Unauthenticated(CancellationToken cancellationToken)
+    public async Task DeleteCollectionFolder_ShouldThrowUnauthenticatedDiscogsException_WhenUnauthenticated(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderId = 999;
@@ -328,7 +328,7 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
 
 
     [Test]
-    public async Task CreateUpdateDeleteCollectionFolder_Success(CancellationToken cancellationToken)
+    public async Task CreateUpdateDeleteCollectionFolder_ShouldSucceed_WhenParametersAreValid(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderName1 = "API_TEST_WORKFLOW_CREATE";

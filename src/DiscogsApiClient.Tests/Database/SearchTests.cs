@@ -1,3 +1,4 @@
+using DiscogsApiClient.Contract;
 using DiscogsApiClient.Contract.Search;
 
 namespace DiscogsApiClient.Tests.Database;
@@ -8,7 +9,7 @@ public sealed class SearchTests(DiscogsApiClientFixture fixture)
     private readonly IDiscogsApiClient _apiClient = fixture.GetAuthenticatedClient();
 
     [Test]
-    public async Task Search_Success(CancellationToken cancellationToken)
+    public async Task SearchDatabase_ShouldReturnResults_WhenQueryIsValid(CancellationToken cancellationToken)
     {
         var queryParams = new SearchQueryParameters { Query = "hammerfall" };
 
@@ -26,7 +27,7 @@ public sealed class SearchTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task Search_NoQuery_Success(CancellationToken cancellationToken)
+    public async Task SearchDatabase_ShouldReturnResults_WhenNoQueryIsProvided(CancellationToken cancellationToken)
     {
         var queryParams = new SearchQueryParameters();
 
@@ -44,7 +45,7 @@ public sealed class SearchTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task Search_Type_Success(CancellationToken cancellationToken)
+    public async Task SearchDatabase_ShouldFilterByType_WhenTypeIsSpecified(CancellationToken cancellationToken)
     {
         // Artist
         var searchParams = new SearchQueryParameters { Query = "hammerfall", Type = "artist" };
@@ -81,7 +82,7 @@ public sealed class SearchTests(DiscogsApiClientFixture fixture)
 
 
     [Test]
-    public async Task Search_InvalidSmallPageNumber(CancellationToken cancellationToken)
+    public async Task SearchDatabase_ShouldDefaultToPageOne_WhenPageNumberIsNegative(CancellationToken cancellationToken)
     {
         var queryParams = new SearchQueryParameters { Query = "hammerfall" };
         var paginationParams = new PaginationQueryParameters { Page = -1, PageSize = 50 };
@@ -100,7 +101,7 @@ public sealed class SearchTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task Search_InvalidBigPageNumber(CancellationToken cancellationToken)
+    public async Task SearchDatabase_ShouldThrowResourceNotFoundException_WhenPageNumberIsTooLarge(CancellationToken cancellationToken)
     {
         var queryParams = new SearchQueryParameters { Query = "hammerfall" };
         var paginationParams = new PaginationQueryParameters { Page = int.MaxValue, PageSize = 50 };
@@ -111,7 +112,7 @@ public sealed class SearchTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task Search_InvalidSmallPageSize(CancellationToken cancellationToken)
+    public async Task SearchDatabase_ShouldClampPageSizeToMinimum_WhenPageSizeIsNegative(CancellationToken cancellationToken)
     {
         var queryParams = new SearchQueryParameters { Query = "hammerfall" };
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = -1 };
@@ -130,7 +131,7 @@ public sealed class SearchTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task Search_InvalidBigPageSize(CancellationToken cancellationToken)
+    public async Task SearchDatabase_ShouldClampPageSizeToMaximum_WhenPageSizeIsTooLarge(CancellationToken cancellationToken)
     {
         var queryParams = new SearchQueryParameters { Query = "hammerfall" };
         var paginationParams = new PaginationQueryParameters { Page = 1, PageSize = int.MaxValue };

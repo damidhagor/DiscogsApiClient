@@ -6,7 +6,7 @@ public sealed class CollectionValueTests(DiscogsApiClientFixture fixture)
     private readonly IDiscogsApiClient _apiClient = fixture.GetAuthenticatedClient();
 
     [Test]
-    public async Task GetCollectionValue_Success(CancellationToken cancellationToken)
+    public async Task GetCollectionValue_ShouldReturnCollectionValue_WhenUsernameIsValid(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
 
@@ -22,7 +22,7 @@ public sealed class CollectionValueTests(DiscogsApiClientFixture fixture)
     [Arguments(null!, typeof(ArgumentNullException))]
     [Arguments("", typeof(ArgumentException))]
     [Arguments("   ", typeof(ArgumentException))]
-    public async Task GetCollectionValue_Username_Guard(string? username, Type exceptionType, CancellationToken cancellationToken)
+    public async Task GetCollectionValue_ShouldThrowException_WhenUsernameIsInvalid(string? username, Type exceptionType, CancellationToken cancellationToken)
     {
         var exception = await Assert.That(async () => await _apiClient.GetCollectionValue(username!, cancellationToken))
             .Throws<Exception>()
@@ -32,7 +32,7 @@ public sealed class CollectionValueTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetCollectionValue_InvalidUsername(CancellationToken cancellationToken)
+    public async Task GetCollectionValue_ShouldThrowResourceNotFoundException_WhenUsernameDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "awrbaerhnqw54";
 

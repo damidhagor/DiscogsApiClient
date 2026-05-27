@@ -7,7 +7,7 @@ public sealed class RateLimitingTests(DiscogsApiClientFixture fixture)
 
     [Test]
     [Explicit]
-    public async Task ClientIsRateLimited_Success(CancellationToken cancellationToken)
+    public async Task GetIdentity_ShouldRateLimitClient_WhenConcurrencyIsHigh(CancellationToken cancellationToken)
     {
         var succeeded = 0;
         var failed = 0;

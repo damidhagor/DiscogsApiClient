@@ -12,7 +12,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
     [Arguments(null, typeof(ArgumentNullException))]
     [Arguments("", typeof(ArgumentException))]
     [Arguments("  ", typeof(ArgumentException))]
-    public async Task GetCollectionFolderReleases_Username_Guard(string? username, Type expectedException, CancellationToken cancellationToken)
+    public async Task GetCollectionFolderReleases_ShouldThrowException_WhenUsernameIsInvalid(string? username, Type expectedException, CancellationToken cancellationToken)
     {
         var folderId = 999;
 
@@ -24,7 +24,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
     }
 
     [Test]
-    public async Task GetCollectionFolderReleases_InvalidUsername(CancellationToken cancellationToken)
+    public async Task GetCollectionFolderReleases_ShouldThrowResourceNotFoundException_WhenUsernameDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "awrbaerhnqw54";
         var folderId = 999;
@@ -34,7 +34,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
     }
 
     [Test]
-    public async Task GetCollectionFolderReleases_FolderId_Guard(CancellationToken cancellationToken)
+    public async Task GetCollectionFolderReleases_ShouldThrowArgumentOutOfRangeException_WhenFolderIdIsInvalid(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
 
@@ -43,7 +43,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
     }
 
     [Test]
-    public async Task GetCollectionFolderReleases_NotExistingFolderId(CancellationToken cancellationToken)
+    public async Task GetCollectionFolderReleases_ShouldThrowResourceNotFoundException_WhenFolderDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderId = 999;
@@ -53,7 +53,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
     }
 
     [Test]
-    public async Task GetCollectionFolderReleases_Unauthenticated(CancellationToken cancellationToken)
+    public async Task GetCollectionFolderReleases_ShouldThrowUnauthenticatedDiscogsException_WhenUnauthenticated(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderId = 1;
@@ -63,7 +63,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
     }
 
     [Test]
-    public async Task GetCollectionFolderReleases_Sorted(CancellationToken cancellationToken)
+    public async Task GetCollectionFolderReleases_ShouldReturnSortedReleases_WhenSortParametersAreValid(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderId = 0;
@@ -147,7 +147,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
     [Arguments(null, typeof(ArgumentNullException))]
     [Arguments("", typeof(ArgumentException))]
     [Arguments("  ", typeof(ArgumentException))]
-    public async Task AddReleaseToCollectionFolder_Username_Guard(string? username, Type expectedException, CancellationToken cancellationToken)
+    public async Task AddReleaseToCollectionFolder_ShouldThrowException_WhenUsernameIsInvalid(string? username, Type expectedException, CancellationToken cancellationToken)
     {
         var folderId = 999;
         var releaseId = 5134861;
@@ -160,7 +160,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
     }
 
     [Test]
-    public async Task AddReleaseToCollectionFolder_InvalidUsername(CancellationToken cancellationToken)
+    public async Task AddReleaseToCollectionFolder_ShouldThrowResourceNotFoundException_WhenUsernameDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "awrbaerhnqw54";
         var folderId = 999;
@@ -173,7 +173,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
     [Test]
     [Arguments(-1)]
     [Arguments(0)]
-    public async Task AddReleaseToCollectionFolder_FolderId_Guard(int folderId, CancellationToken cancellationToken)
+    public async Task AddReleaseToCollectionFolder_ShouldThrowArgumentOutOfRangeException_WhenFolderIdIsInvalid(int folderId, CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var releaseId = 5134861;
@@ -183,7 +183,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
     }
 
     [Test]
-    public async Task AddReleaseToCollectionFolder_NotExistingFolderId(CancellationToken cancellationToken)
+    public async Task AddReleaseToCollectionFolder_ShouldThrowResourceNotFoundException_WhenFolderDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderId = 999;
@@ -196,7 +196,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
     [Test]
     [Arguments(-1)]
     [Arguments(0)]
-    public async Task AddReleaseToCollectionFolder_ReleaseId_Guard(int releaseId, CancellationToken cancellationToken)
+    public async Task AddReleaseToCollectionFolder_ShouldThrowArgumentOutOfRangeException_WhenReleaseIdIsInvalid(int releaseId, CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderId = 999;
@@ -206,7 +206,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
     }
 
     [Test]
-    public async Task AddReleaseToCollectionFolder_NotExistingReleaseId(CancellationToken cancellationToken)
+    public async Task AddReleaseToCollectionFolder_ShouldThrowResourceNotFoundException_WhenReleaseIdDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderId = 999;
@@ -217,7 +217,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
     }
 
     [Test]
-    public async Task AddReleaseToCollectionFolder_Unauthenticated(CancellationToken cancellationToken)
+    public async Task AddReleaseToCollectionFolder_ShouldThrowUnauthenticatedDiscogsException_WhenUnauthenticated(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderId = 999;
@@ -232,7 +232,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
     [Arguments(null, typeof(ArgumentNullException))]
     [Arguments("", typeof(ArgumentException))]
     [Arguments("  ", typeof(ArgumentException))]
-    public async Task DeleteReleaseFromCollectionFolder_Username_Guard(string? username, Type expectedException, CancellationToken cancellationToken)
+    public async Task DeleteReleaseFromCollectionFolder_ShouldThrowException_WhenUsernameIsInvalid(string? username, Type expectedException, CancellationToken cancellationToken)
     {
         var folderId = 999;
         var releaseId = 5134861;
@@ -246,7 +246,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
     }
 
     [Test]
-    public async Task DeleteReleaseFromCollectionFolder_InvalidUsername(CancellationToken cancellationToken)
+    public async Task DeleteReleaseFromCollectionFolder_ShouldThrowResourceNotFoundException_WhenUsernameDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "awrbaerhnqw54";
         var folderId = 999;
@@ -260,7 +260,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
     [Test]
     [Arguments(-1)]
     [Arguments(0)]
-    public async Task DeleteReleaseFromCollectionFolder_FolderId_Guard(int folderId, CancellationToken cancellationToken)
+    public async Task DeleteReleaseFromCollectionFolder_ShouldThrowArgumentOutOfRangeException_WhenFolderIdIsInvalid(int folderId, CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var releaseId = 5134861;
@@ -271,7 +271,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
     }
 
     [Test]
-    public async Task DeleteReleaseFromCollectionFolder_NotExistingFolderId(CancellationToken cancellationToken)
+    public async Task DeleteReleaseFromCollectionFolder_ShouldThrowResourceNotFoundException_WhenFolderDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderId = 999;
@@ -285,7 +285,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
     [Test]
     [Arguments(-1)]
     [Arguments(0)]
-    public async Task DeleteReleaseFromCollectionFolder_ReleaseId_Guard(int releaseId, CancellationToken cancellationToken)
+    public async Task DeleteReleaseFromCollectionFolder_ShouldThrowArgumentOutOfRangeException_WhenReleaseIdIsInvalid(int releaseId, CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderId = 999;
@@ -296,7 +296,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
     }
 
     [Test]
-    public async Task DeleteReleaseFromCollectionFolder_NotExistingReleaseId(CancellationToken cancellationToken)
+    public async Task DeleteReleaseFromCollectionFolder_ShouldThrowResourceNotFoundException_WhenReleaseIdDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderId = 999;
@@ -310,7 +310,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
     [Test]
     [Arguments(-1)]
     [Arguments(0)]
-    public async Task DeleteReleaseFromCollectionFolder_InstanceId_Guard(int instanceId, CancellationToken cancellationToken)
+    public async Task DeleteReleaseFromCollectionFolder_ShouldThrowArgumentOutOfRangeException_WhenInstanceIdIsInvalid(int instanceId, CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderId = 999;
@@ -321,7 +321,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
     }
 
     [Test]
-    public async Task DeleteReleaseFromCollectionFolder_NotExistingInstanceId(CancellationToken cancellationToken)
+    public async Task DeleteReleaseFromCollectionFolder_ShouldThrowResourceNotFoundException_WhenInstanceIdDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderId = 999;
@@ -333,7 +333,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
     }
 
     [Test]
-    public async Task DeleteReleaseFromCollectionFolder_Unauthenticated(CancellationToken cancellationToken)
+    public async Task DeleteReleaseFromCollectionFolder_ShouldThrowUnauthenticatedDiscogsException_WhenUnauthenticated(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderId = 999;
@@ -346,7 +346,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
 
 
     [Test]
-    public async Task CreateDeleteReleaseFromCollectionFolder_Success(CancellationToken cancellationToken)
+    public async Task AddAndRemoveReleaseFromCollectionFolder_ShouldSucceed_WhenParametersAreValid(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderName = "CreateDeleteReleaseFromCollectionFolder_Success";
