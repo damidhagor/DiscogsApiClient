@@ -449,12 +449,99 @@ Phase 6: Final Validation
 - [ ] Consider `ArrayPool` for temporary buffers if applicable
 
 ### 4.7 Service Registration Modernization
-- [ ] Refactor service registration extensions to follow modern .NET library best practices
+
+**Goal:** Refactor `ServiceCollectionExtensions` and `DiscogsApiClientOptions` to follow the patterns used by the .NET ecosystem's own libraries (e.g., `AddHttpClient`, `AddAuthentication`, `AddHealthChecks`).
+
+**Current problems with `ServiceCollectionExtensions.cs` and `DiscogsApiClientOptions.cs`:**
+- `DiscogsApiClientOptions` is instantiated eagerly inside the extension method and registered as a raw singleton — bypassing `IOptions<T>` entirely
+- Validation (null/empty checks) throws `InvalidOperationException` at registration time instead of at startup via `IValidateOptions<T>` / `ValidateOnStart()`
+- No `IConfiguration` overload — callers cannot bind options from `appsettings.json`
+- `AddDiscogsApiClient` returns `IServiceCollection`; there is no builder for fluent post-registration customization
+- OAuth credentials (`ConsumerKey`, `ConsumerSecret`, `VerifierCallbackUrl`) are mixed into the top-level options class alongside unrelated rate-limiting knobs
+- Rate-limiter services are only conditionally registered based on the eagerly-read `UseRateLimiting` flag, which makes the registration order sensitive and hard to test
+- `DiscogsApiClientOptions` properties are mutable (`set`); they should use `init` to prevent post-construction mutation
+
+**Reference patterns to follow:**
+- `Microsoft.Extensions.Http` (`AddHttpClient`) — returns `IHttpClientBuilder` for chaining
+- `Microsoft.AspNetCore.Authentication` (`AddAuthentication`) — returns a builder for scheme registration
+- `Microsoft.Extensions.Diagnostics.HealthChecks` (`AddHealthChecks`) — returns `IHealthChecksBuilder`
+- Options validation via `OptionsBuilder<T>.Validate()` / `ValidateDataAnnotations()` / `ValidateOnStart()`
+
+**Tasks:**
+
+#### 4.7.1 Refactor `DiscogsApiClientOptions`
+- [ ] Convert all property setters to `init`-only to prevent post-construction mutation
+- [ ] Add `[Required]` and `[Url]` data annotations to `BaseUrl` and `UserAgent` for `ValidateDataAnnotations()` support
+- [ ] Extract OAuth-specific settings into a dedicated `DiscogsOAuthOptions` class (`ConsumerKey`, `ConsumerSecret`, `VerifierCallbackUrl`)
+- [ ] Extract rate-limiting settings into a dedicated `DiscogsRateLimitingOptions` class (`UseRateLimiting`, `RateLimitingWindow`, `RateLimitingWindowSegments`, `RateLimitingPermits`, `RateLimitingQueueSize`)
+- [ ] Update XML documentation on all options classes
+
+#### 4.7.2 Introduce `IDiscogsApiClientBuilder`
+- [ ] Define `IDiscogsApiClientBuilder` interface with a single `IServiceCollection Services { get; }` property (following the pattern of `IHttpClientBuilder`, `IHealthChecksBuilder`)
+- [ ] Implement `DiscogsApiClientBuilder` as the concrete internal class
+- [ ] Change `AddDiscogsApiClient` to return `IDiscogsApiClientBuilder` instead of `IServiceCollection`
+- [ ] Ensure the builder is used for all chaining in extension methods (see 4.7.3)
+
+#### 4.7.3 Adopt `IOptions<T>` and Proper Options Registration
+- [ ] Replace raw singleton registration of `DiscogsApiClientOptions` with `services.AddOptions<DiscogsApiClientOptions>()` / `services.Configure<DiscogsApiClientOptions>(configure)`
+- [ ] Inject `IOptions<DiscogsApiClientOptions>` (or `IOptionsMonitor<T>`) into `HttpClient` configuration delegates instead of resolving the raw options object
+- [ ] Register `DiscogsOAuthOptions` and `DiscogsRateLimitingOptions` via the options system as well
+- [ ] Remove all eager validation from the extension method body
+
+#### 4.7.4 Add Options Validation
+- [ ] Chain `.ValidateDataAnnotations()` on the `OptionsBuilder<DiscogsApiClientOptions>` to validate `[Required]` / `[Url]` annotations
+- [ ] Add a custom `Validate()` delegate for rules that cannot be expressed with annotations (e.g., rate-limiting window > 0)
+- [ ] Chain `.ValidateOnStart()` so validation failures surface immediately at app startup rather than on first use
+- [ ] Add tests that verify options validation throws at startup for invalid configurations
+
+#### 4.7.5 Add `IConfiguration` Overload
+- [ ] Add a second `AddDiscogsApiClient(this IServiceCollection services, IConfiguration configuration)` overload that calls `services.Configure<DiscogsApiClientOptions>(configuration)`
+- [ ] Document expected configuration section keys to match the options property names (convention: `"Discogs"` section in `appsettings.json`)
+- [ ] Add tests for the `IConfiguration`-based overload
+
+#### 4.7.6 Refactor Rate-Limiter Registration into Builder Extension
+- [ ] Move rate-limiter service registration out of `AddDiscogsApiClient` into a separate `AddRateLimiting(this IDiscogsApiClientBuilder builder)` builder extension method in its own file
+- [ ] This extension reads `IOptions<DiscogsRateLimitingOptions>` at resolve time instead of at registration time, removing the order sensitivity
+- [ ] Keep `UseRateLimiting` flag on `DiscogsRateLimitingOptions` — the `RateLimitedDelegatingHandler` should check the flag at runtime and be a no-op when disabled, OR the builder extension explicitly opts in (preferred: explicit opt-in via builder, remove `UseRateLimiting` flag)
+- [ ] **Decision point:** implicit opt-in via `UseRateLimiting` flag vs. explicit opt-in via `.AddRateLimiting()` builder extension — document decision and rationale
+
+#### 4.7.7 Update Tests for New Registration API
+- [ ] Add unit tests for `AddDiscogsApiClient` verifying that required services are registered
+- [ ] Add tests verifying that `IDiscogsApiClient` and `IDiscogsAuthenticationService` can be resolved from the container
+- [ ] Add tests verifying options validation fires at startup for invalid configs
+- [ ] Update any existing tests that depend on the current extension method signature
+
+**Example of target API shape (illustrative — exact names subject to decision in 4.7.2/4.7.6):**
+```csharp
+// Minimal registration
+services.AddDiscogsApiClient(options =>
+{
+    options.UserAgent = "MyApp/1.0";
+});
+
+// With IConfiguration binding
+services.AddDiscogsApiClient(configuration.GetSection("Discogs"));
+
+// With builder-based opt-ins
+services.AddDiscogsApiClient(options =>
+{
+    options.UserAgent = "MyApp/1.0";
+})
+.AddRateLimiting(options =>
+{
+    options.Window = TimeSpan.FromSeconds(60);
+    options.PermitLimit = 40;
+});
+```
 
 ### Acceptance Criteria - Phase 4
 - [ ] All C# 12 features adopted where appropriate
 - [ ] IDiscogsApiClient interface refactored and simplified (if decided)
-- [ ] Service registration refactored to follow modern .NET library best practices
+- [ ] Service registration follows modern `IOptions<T>` and builder patterns
+- [ ] `AddDiscogsApiClient` returns `IDiscogsApiClientBuilder` for fluent chaining
+- [ ] `IConfiguration` overload available for binding from `appsettings.json`
+- [ ] Options validation uses `ValidateDataAnnotations()` and `ValidateOnStart()`
+- [ ] Rate-limiter registration is decoupled from the main extension method
 - [ ] All tests pass (validates refactoring didn't break functionality)
 - [ ] No compiler warnings
 - [ ] XML documentation complete and accurate
@@ -514,11 +601,11 @@ Phase 6: Final Validation
 - [ ] Document any changes from previous version
 
 ### Acceptance Criteria - Phase 5
-- [x] All demo projects target .NET 10 (or .NET 10 Windows)
-- [x] Demo code uses modern C# 14 features appropriately
-- [x] Demos compile and run successfully
-- [x] Documentation is clear and helpful
-- [x] Old package references cleaned up
+- [ ] All demo projects target .NET 10 (or .NET 10 Windows)
+- [ ] Demo code uses modern C# 14 features appropriately
+- [ ] Demos compile and run successfully
+- [ ] Documentation is clear and helpful
+- [ ] Old package references cleaned up
 
 ---
 
@@ -574,13 +661,13 @@ Phase 6: Final Validation
   - Create GitHub release with notes
 
 ### Acceptance Criteria - Phase 6
-- [x] All tests pass on all frameworks
-- [x] Documentation strategy decided and documented
-- [x] Migration guide created
-- [x] No warnings or errors
-- [x] NuGet package can be built successfully
-- [x] Successfully merged to main
-- [x] Release process documented (even if not executed yet)
+- [ ] All tests pass on all frameworks
+- [ ] Documentation strategy decided and documented
+- [ ] Migration guide created
+- [ ] No warnings or errors
+- [ ] NuGet package can be built successfully
+- [ ] Successfully merged to main
+- [ ] Release process documented (even if not executed yet)
 
 ---
 
@@ -614,13 +701,14 @@ Phase 6: Final Validation
 | TBD | Keep .NET Standard 2.0 for generators | Required for Roslyn analyzer compatibility | No impact on consumers |
 | TBD | Don't set LangVersion explicitly for .NET projects | SDK automatically provides appropriate C# version | Cleaner project files, less maintenance |
 | TBD | Set `<LangVersion>latest</LangVersion>` only for .NET Standard 2.0 | Enables modern compiler-lowered features | Better development experience for generators |
-| TBD | Migrate from NUnit to xUnit | xUnit is more modern and widely adopted | Test code changes only |
-| TBD | Do not use assertion libraries | Stick to xUnit built-in assertions | Simpler dependencies |
+| TBD | Migrate from NUnit to TUnit | TUnit is AOT-compatible and uses source generators | Test code changes only |
 | TBD | Source generator changes in Phase 4 only | Wait until tests are fully modernized | Risk mitigation |
 | TBD | Optional E2E test suite | TBD - evaluate necessity and feasibility | May improve real-world validation |
 | TBD | Breaking changes permitted if necessary | Will result in new major version (v5.0.0+) | Consumer migration required |
 | TBD | Version/README update timing | May defer to actual release, not modernization merge | Avoids confusion for 4.x users |
 | TBD | Merge to main ≠ release | Package publication is separate process | Cleaner release workflow |
+| TBD | Service registration modernization (Phase 3.6) | Align with `IOptions<T>`, builder pattern, `ValidateOnStart()` used by all modern .NET libraries | **Breaking** — callers must update `AddDiscogsApiClient` call site |
+| TBD | Rate-limiter opt-in: implicit flag vs. explicit builder extension | TBD in Phase 3.6.6 — prefer explicit `.AddRateLimiting()` builder extension | **Breaking** — removes `UseRateLimiting` flag if explicit opt-in chosen |
 
 ### Risks & Mitigations
 - **Risk:** Breaking changes impact existing consumers
@@ -635,11 +723,15 @@ Phase 6: Final Validation
 - **Risk:** Test migration introduces test failures
   - **Mitigation:** Migrate tests incrementally, validate each step, use mocking to ensure consistent test behavior
 
+- **Risk:** Service registration refactoring (Phase 3.6) breaks consumer call sites
+  - **Mitigation:** Clearly document all breaking changes in `docs/MIGRATION_GUIDE.md`; provide before/after examples.
+
 ### Open Questions
 *(Track questions that need resolution)*
 - [ ] Should we implement the optional E2E test suite in Phase 2.6?
 - [ ] What breaking changes (if any) should we make to IDiscogsApiClient interface?
 - [ ] Should README and version be updated in modernization→main merge or deferred to release?
+- [ ] Phase 3.6.6: implicit `UseRateLimiting` flag OR explicit `.AddRateLimiting()` builder extension?
 - [ ] *Add questions as they arise*
 
 ---
@@ -656,11 +748,13 @@ Phase 6: Final Validation
 - [Source Generators Overview](https://learn.microsoft.com/dotnet/csharp/roslyn-sdk/source-generators-overview)
 - [Incremental Generators](https://github.com/dotnet/roslyn/blob/main/docs/features/incremental-generators.md)
 - [.NET API Analyzer](https://learn.microsoft.com/dotnet/fundamentals/code-analysis/overview)
-- [xUnit Documentation](https://xunit.net/)
+- [Options pattern in .NET](https://learn.microsoft.com/dotnet/core/extensions/options)
+- [Options validation in .NET](https://learn.microsoft.com/dotnet/core/extensions/options#options-validation)
+- [TUnit Documentation](https://tunit.dev/)
 
 ### Tools
 - [BenchmarkDotNet](https://benchmarkdotnet.org/) - For performance testing
-- [Coverlet](https://github.com/coverlet-coverage/coverlet) - For code coverage
+- [dotnet-coverage](https://learn.microsoft.com/dotnet/core/additional-tools/dotnet-coverage) - For code coverage
 - [Source Generator Playground](https://github.com/davidwengier/SourceGeneratorPlayground)
 
 ---
