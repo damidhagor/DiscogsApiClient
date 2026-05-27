@@ -1,0 +1,58 @@
+[
+  {
+    "requestMethod": "GET",
+    "requestUrl": "https://api.discogs.com/users/DamIDhagor/collection/value",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 200,
+    "responseHeaders": {
+      "Date": [
+        "Tue, 26 May 2026 13:28:38 GMT"
+      ],
+      "Transfer-Encoding": [
+        "chunked"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "Vary": [
+        "Accept-Encoding"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "53"
+      ],
+      "x-discogs-ratelimit-used": [
+        "7"
+      ],
+      "Set-Cookie": [
+        "__cf_bm=5lIrh5kk6848bD.TZbbTLia7KbwC.SV7Sn9WZinH3WA-1779802118.0503707-1.0.1.1-OpH6MPyOSx5s7.t5mYkRWydgBOwJsHocbuh._odgXPBEyksKHIMnklD5BUeliSJVE4M7N9BFvTQMVzAfNfErcRhhTQ2eisjQMD6Kq75HUcqoOogHSI7OoUwJiRbQatTq; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Tue, 26 May 2026 13:58:38 GMT"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a01d1fc5cbe4caf9-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022maximum\u0022:\u0022\u20AC73.98\u0022,\u0022median\u0022:\u0022\u20AC51.79\u0022,\u0022minimum\u0022:\u0022\u20AC36.99\u0022}"
+  }
+]

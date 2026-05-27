@@ -1,0 +1,58 @@
+[
+  {
+    "requestMethod": "DELETE",
+    "requestUrl": "https://api.discogs.com/users/DamIDhagor/collection/folders/999/releases/2147483647/instances/999",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 404,
+    "responseHeaders": {
+      "Date": [
+        "Tue, 26 May 2026 13:27:25 GMT"
+      ],
+      "Transfer-Encoding": [
+        "chunked"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "Vary": [
+        "Accept-Encoding"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "47"
+      ],
+      "x-discogs-ratelimit-used": [
+        "13"
+      ],
+      "Set-Cookie": [
+        "__cf_bm=Emvu79gLAi7q1PFczQHg.5hxz9J0pTwo484JWQcJvOE-1779802045.4731135-1.0.1.1-VVYRVA3rWFavVQGSMcz.NF7skPfIXv7rPDNZcZ9tU.v.9.Wbi26q3ILNvB6t5Ibs.h.0fGYt.E3vKPBwe70iNiI5y9zX2LcZk1kSXUFOFqVqDOnCi8_ohMioP.DcsDii; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Tue, 26 May 2026 13:57:25 GMT"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a01d1e003e96c7f0-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022message\u0022:\u0022The requested collection item does not exist in this user\u0027s collection.\u0022}"
+  }
+]

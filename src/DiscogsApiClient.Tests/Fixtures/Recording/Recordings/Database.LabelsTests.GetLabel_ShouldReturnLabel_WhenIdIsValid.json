@@ -1,0 +1,85 @@
+[
+  {
+    "requestMethod": "GET",
+    "requestUrl": "https://api.discogs.com/labels/11499",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 200,
+    "responseHeaders": {
+      "Date": [
+        "Tue, 26 May 2026 13:22:36 GMT"
+      ],
+      "Transfer-Encoding": [
+        "chunked"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Access-Control-Allow-Headers": [
+        "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID"
+      ],
+      "Access-Control-Allow-Methods": [
+        "HEAD,OPTIONS,GET,OPTIONS"
+      ],
+      "Access-Control-Allow-Origin": [
+        "*"
+      ],
+      "Access-Control-Expose-Headers": [
+        "Location"
+      ],
+      "Cache-Control": [
+        "public, must-revalidate"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "Vary": [
+        "Accept-Encoding"
+      ],
+      "X-Content-Type-Options": [
+        "nosniff"
+      ],
+      "x-discogs-media-type": [
+        "discogs.v2"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "47"
+      ],
+      "x-discogs-ratelimit-used": [
+        "13"
+      ],
+      "X-Frame-Options": [
+        "SAMEORIGIN"
+      ],
+      "X-XSS-Protection": [
+        "1; mode=block"
+      ],
+      "Set-Cookie": [
+        "__cf_bm=LgCpuYR94gAv_6w8DI4E9Oshme_s_jUuKV6ztS9QWRc-1779801756.7421157-1.0.1.1-cDqtMTwByfjzLBpPqc.fMvOJq9xA4Yy.WDw4jij1UWK0eZL1HHB8Sj_nuHAx43H2K1oM0HD2X4Kzitr.dUWc5JSSW4eUdIjgnUyWweBt0Erb_eOZfIc5dDDD_9tp5TC7; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Tue, 26 May 2026 13:52:36 GMT"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a01d16f3a84cf811-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022id\u0022:11499,\u0022name\u0022:\u0022Nuclear Blast\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/11499\u0022,\u0022uri\u0022:\u0022https://www.discogs.com/label/11499-Nuclear-Blast\u0022,\u0022releases_url\u0022:\u0022https://api.discogs.com/labels/11499/releases\u0022,\u0022images\u0022:[{\u0022type\u0022:\u0022primary\u0022,\u0022uri\u0022:\u0022https://i.discogs.com/p9ww0ujb2aVqI_KHy2OpNHxmPGo6LUkXNOoOmeyxc4Q/rs:fit/g:sm/q:90/h:223/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTExNDk5/LTE2NzEwMjU4Mzgt/Mjk0MS5wbmc.jpeg\u0022,\u0022resource_url\u0022:\u0022https://i.discogs.com/p9ww0ujb2aVqI_KHy2OpNHxmPGo6LUkXNOoOmeyxc4Q/rs:fit/g:sm/q:90/h:223/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTExNDk5/LTE2NzEwMjU4Mzgt/Mjk0MS5wbmc.jpeg\u0022,\u0022uri150\u0022:\u0022https://i.discogs.com/eBtgQ3MQnGel4DQ1pjb6c3qfT-jTs2_-NmHxwkADc60/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTExNDk5/LTE2NzEwMjU4Mzgt/Mjk0MS5wbmc.jpeg\u0022,\u0022width\u0022:600,\u0022height\u0022:223}],\u0022contact_info\u0022:\u0022[b]Germany[/b]:\\r\\nNuclear Blast GmbH\\r\\nUlmer Stra\u00DFe 123\\r\\nHaus A\\r\\n73037 G\u00F6ppingen\\r\\n\\r\\ne-mail: info@nuclearblast.de\\r\\n\\r\\n1990:\\r\\nDr Freystrasse 54\\r\\n7322 Donzdorf\\r\\nW Germany\\r\\n(31) 15 158935\\r\\n\\r\\n[b]United States[/b]:\\r\\nNuclear Blast America Inc.\\r\\n6121 Sunset Blvd.\\r\\nLos Angeles, CA 90028\\r\\n\\r\\ne-mail:  mail@nuclearblast-usa.com\\r\\n\\r\\n[b]South America[/b]:\\r\\nLabelmanager: Gerard Werron\\r\\nRua Paolistania 407\\r\\nBR 05440-000 Sao Paulo - SP -Metro Vila Magdalena\\r\\n\\r\\ne-mail: gerard@nuclearblast.de\\r\\nphone: \u002B55-11-30978117\\r\\nfax: \u002B55-11-38161195\u0022,\u0022profile\u0022:\u0022German independent label, specialised in metal and related music styles; founded in 1987 by [a252876].\\r\\nLabel Code: LC 7027 / LC 07027\\r\\nGVL-registered label name is [i][l33186][/i].\\r\\nFor all unofficial releases (bootlegs, counterfeits) that pretend to be releases of this label, use [l=Nuclear Blast (2)].\\r\\n\\r\\n[b]About NB and their different regional companies:[/b]\\r\\n\\r\\n[b]Nuclear Blast Europe[/b] \u2013 Label, Mailorder, Wholesale, Fulfilment Service and Distribution for several labels spread over the whole European continent; located in Donzdorf, Germany. \\r\\n\\r\\n[b]Nuclear Blast America[/b] \u2013 US Company with identical business tasks in cooperation with [l=Century Media].\\r\\n\\r\\n[b]Nuclear Blast South America[/b] \u2013 In cooperation with [l=Century Media].\\r\\n\\r\\nA typical Nuclear Blast catalogue number has the following format: \\\u0022NB XXXX-F\\\u0022.\\r\\n\\r\\nNote: Earlier releases might only have 3 digits.\\r\\n\\r\\nF determines the format. This is not always consistent, but here is a general idea of what you might find:\\r\\n[b]-0[/b] limited first edition (Digipak, O-Card, etc.) for both CD and DVD\\r\\n[b]-1[/b] LP or other vinyl format\\r\\n[b]-2[/b] jewelcase CD or promo CD, DVD, sometimes also used for the limited first edition\\r\\n[b]-3[/b] video tape (VHS), tape (MC)\\r\\n[b]-4[/b] tape (MC)\\r\\n[b]-5[/b] box sets, limited mailorder editions, bonus CDs and DVDs (in general: limited bonus editions)\\r\\n[b]-7[/b] some vinyl 7\u201Ds carry this as format\\r\\n[b]-8[/b] shape CDs (not all, however)\\r\\n[b]-9[/b] picture vinyl (not all, however, esp. when the release was only available as a picture vinyl or comes with a cover, you may find a [b]\u20131[/b] here)\u0022,\u0022parent_label\u0022:{\u0022id\u0022:222987,\u0022name\u0022:\u0022Nuclear Blast GmbH\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/222987\u0022},\u0022data_quality\u0022:\u0022Needs Vote\u0022,\u0022urls\u0022:[\u0022https://www.nuclearblast.com/\u0022,\u0022https://nuclearblast.bandcamp.com/\u0022,\u0022https://www.facebook.com/nuclearblastrecords/\u0022,\u0022https://www.instagram.com/nuclearblastrecords/\u0022,\u0022https://x.com/nuclearblast\u0022,\u0022https://www.youtube.com/nuclearblastrecords\u0022,\u0022https://www.linkedin.com/company/nuclear-blast-records/\u0022],\u0022sublabels\u0022:[{\u0022id\u0022:281114,\u0022name\u0022:\u0022Anstalt Records\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/281114\u0022},{\u0022id\u0022:1380275,\u0022name\u0022:\u0022Beautiful Voices\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/1380275\u0022},{\u0022id\u0022:14356,\u0022name\u0022:\u0022Blank Your Mind\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/14356\u0022},{\u0022id\u0022:1008884,\u0022name\u0022:\u0022Blast! Presents\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/1008884\u0022},{\u0022id\u0022:1812120,\u0022name\u0022:\u0022Blood Blast Distribution\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/1812120\u0022},{\u0022id\u0022:103225,\u0022name\u0022:\u0022Caipiranha Records\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/103225\u0022},{\u0022id\u0022:4077543,\u0022name\u0022:\u0022Cannibalised Serial Killer Records\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/4077543\u0022},{\u0022id\u0022:35045,\u0022name\u0022:\u0022Deathwish Office\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/35045\u0022},{\u0022id\u0022:33616,\u0022name\u0022:\u0022Gore Records\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/33616\u0022},{\u0022id\u0022:35782,\u0022name\u0022:\u0022Grind Syndicate Media\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/35782\u0022},{\u0022id\u0022:1980672,\u0022name\u0022:\u0022Metal Blast Records (3)\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/1980672\u0022},{\u0022id\u0022:935705,\u0022name\u0022:\u0022Metal Dreams\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/935705\u0022},{\u0022id\u0022:35926,\u0022name\u0022:\u0022Mind Control Records (2)\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/35926\u0022},{\u0022id\u0022:461868,\u0022name\u0022:\u0022Monsters Of Metal\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/461868\u0022},{\u0022id\u0022:1257831,\u0022name\u0022:\u0022NB Classics Digipak Series\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/1257831\u0022},{\u0022id\u0022:1898362,\u0022name\u0022:\u0022NoiseBangers Extreme Recordings\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/1898362\u0022},{\u0022id\u0022:35507,\u0022name\u0022:\u0022Nuclear Blast America\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/35507\u0022},{\u0022id\u0022:883743,\u0022name\u0022:\u0022Nuclear Blast Archive Series\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/883743\u0022},{\u0022id\u0022:877124,\u0022name\u0022:\u0022Nuclear Blast Australia\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/877124\u0022},{\u0022id\u0022:981704,\u0022name\u0022:\u0022Nuclear Blast Brasil\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/981704\u0022},{\u0022id\u0022:1048611,\u0022name\u0022:\u0022Nuclear Blast Classic Series\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/1048611\u0022},{\u0022id\u0022:1271927,\u0022name\u0022:\u0022Nuclear Blast Classic Series (2 For 1)\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/1271927\u0022},{\u0022id\u0022:603304,\u0022name\u0022:\u0022Nuclear Blast Europe\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/603304\u0022},{\u0022id\u0022:311768,\u0022name\u0022:\u0022Nuclear Blast USA\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/311768\u0022},{\u0022id\u0022:37120,\u0022name\u0022:\u0022Radiation Records\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/37120\u0022},{\u0022id\u0022:72957,\u0022name\u0022:\u0022Rebelution Entertainment\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/72957\u0022},{\u0022id\u0022:69695,\u0022name\u0022:\u0022Revolution Entertainment\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/69695\u0022}]}"
+  }
+]

@@ -1,0 +1,85 @@
+[
+  {
+    "requestMethod": "GET",
+    "requestUrl": "https://api.discogs.com/labels/11499/releases?page=1\u0026per_page=1",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 200,
+    "responseHeaders": {
+      "Date": [
+        "Tue, 26 May 2026 13:22:36 GMT"
+      ],
+      "Transfer-Encoding": [
+        "chunked"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Access-Control-Allow-Headers": [
+        "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID"
+      ],
+      "Access-Control-Allow-Methods": [
+        "HEAD,OPTIONS,GET,OPTIONS"
+      ],
+      "Access-Control-Allow-Origin": [
+        "*"
+      ],
+      "Access-Control-Expose-Headers": [
+        "Location"
+      ],
+      "Cache-Control": [
+        "public, must-revalidate"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "Vary": [
+        "Accept-Encoding"
+      ],
+      "X-Content-Type-Options": [
+        "nosniff"
+      ],
+      "x-discogs-media-type": [
+        "discogs.v2"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "56"
+      ],
+      "x-discogs-ratelimit-used": [
+        "4"
+      ],
+      "X-Frame-Options": [
+        "SAMEORIGIN"
+      ],
+      "X-XSS-Protection": [
+        "1; mode=block"
+      ],
+      "Set-Cookie": [
+        "__cf_bm=OnLnD61suFyVZ1QffuVuBtfdpi6Hlp4Xr8RBCQ3Vj34-1779801756.7337406-1.0.1.1-C6M7UBmUzG9T3LA9M6c.YVMDWeo0s5FJv3Fj0O1wptjyDNHDcjoqTy9aMQxXC.W0eq_brGLenb5mEHp6msEpnVdz_ZcXkWz7FeV5yMbIrd8EXUXTpUvcL.a2VvfMRk9h; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Tue, 26 May 2026 13:52:36 GMT"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a01d16f39d0338b5-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022pagination\u0022:{\u0022page\u0022:1,\u0022pages\u0022:29814,\u0022per_page\u0022:1,\u0022items\u0022:29814,\u0022urls\u0022:{\u0022last\u0022:\u0022https://api.discogs.com/labels/11499/releases?page=29814\u0026per_page=1\u0022,\u0022next\u0022:\u0022https://api.discogs.com/labels/11499/releases?page=2\u0026per_page=1\u0022}},\u0022releases\u0022:[{\u0022status\u0022:\u0022Accepted\u0022,\u0022format\u0022:\u0022CD, Album\u0022,\u0022catno\u0022:\u0022ICARUS 896\u0022,\u0022thumb\u0022:\u0022https://i.discogs.com/tapID1gb1xrEj1jXfr9T5vbihqlE_OV6nYsQdjP_vBQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM5MDEy/OTQtMTUyMjIwMTMz/Ni04OTk3LmpwZWc.jpeg\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/releases/3901294\u0022,\u0022title\u0022:\u0022Helvetios\u0022,\u0022id\u0022:3901294,\u0022year\u0022:2012,\u0022artist\u0022:\u0022Eluveitie\u0022,\u0022stats\u0022:{\u0022community\u0022:{\u0022in_wantlist\u0022:28,\u0022in_collection\u0022:47},\u0022user\u0022:{\u0022in_wantlist\u0022:0,\u0022in_collection\u0022:0}}}]}"
+  }
+]
