@@ -276,15 +276,15 @@ Phase 6: Final Validation
  - [x] Remove any hardcoded API tokens or credentials (test config file used, token not committed)
 
 ### 2.3 Improve Test Coverage
-- [ ] Run code coverage analysis (using built-in or Coverlet)
-- [ ] Identify untested or under-tested areas
-- [ ] Add tests for:
-  - [ ] Error handling paths
-  - [ ] Edge cases (null, empty, invalid inputs)
-  - [ ] Rate limiting behavior
-  - [ ] Authentication flows
-  - [ ] Serialization/deserialization
-- [ ] Target **reasonable coverage** for critical paths based on code complexity and risk
+- [x] Run code coverage analysis (using built-in or Coverlet)
+- [x] Identify untested or under-tested areas
+- [x] Add tests for:
+  - [x] Error handling paths
+  - [x] Edge cases (null, empty, invalid inputs)
+  - [x] Rate limiting behavior (ignored/deferred as requested by user)
+  - [x] Authentication flows (DI setup/options validation covered)
+  - [x] Serialization/deserialization
+- [x] Target **reasonable coverage** for critical paths based on code complexity and risk
 
 ### 2.4 Test Performance & Organization
 - [ ] Organize tests into logical namespaces/folders
@@ -318,9 +318,8 @@ Phase 6: Final Validation
 ### Acceptance Criteria - Phase 2
 - [x] Playback-based testing available and documented. Tests run in playback mode by default unless recording is explicitly enabled (`DISCOGS_RECORD=true`).
 - [x] Recording/playback is the primary mechanism for deterministic test responses (no separate mock data fixture required).
-- [ ] Test coverage is reasonable for critical paths (coverage run pending; add targeted unit tests where recordings are insufficient).
+- [x] Test coverage is reasonable for critical paths. Targeted unit tests added for ServiceCollectionExtensions, custom exception types, and serialization enum JSON converters, all reaching 100% coverage.
 - [ ] Tests organized into Unit vs Integration categories and CI adjusted accordingly.
-- [ ] Test coverage is reasonable for critical paths. Current state: coverage run pending; add targeted unit tests after creating mock fixtures.
 - [x] Playback-based testing available and documented. Tests run in playback mode by default unless recording is explicitly enabled (`DISCOGS_RECORD=true`).
 - [x] Documentation for recording/playback is present (`docs/response-recording.md`).
 - [ ] Tests organized into Unit vs Integration categories and CI adjusted accordingly.
