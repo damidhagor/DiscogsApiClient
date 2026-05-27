@@ -55,3 +55,14 @@ From the repository root, you can build and run the test suite using:
 ```powershell
 dotnet run --project src\DiscogsApiClient.Tests\DiscogsApiClient.Tests.csproj --framework net10.0
 ```
+
+---
+
+## End-to-End (E2E) Testing Decision
+
+We explicitly choose **not** to maintain an active E2E test suite running against the live Discogs production API.
+
+### Rationale:
+1. **API Rate Limiting:** The Discogs API has strict rate limits. Running E2E tests against it on every CI build would trigger frequent HTTP 429 (Too Many Requests) errors and block test execution.
+2. **Deterministic Validation:** Integration/E2E behavior is already covered deterministically by our **playback recording mechanism** (`DISCOGS_RECORD=true`), which uses real responses captured from the live API. 
+3. **Avoid Fragility:** Live API tests are subject to transient network failures, service outages, and data modifications on the Discogs server, leading to flaky test runs.
