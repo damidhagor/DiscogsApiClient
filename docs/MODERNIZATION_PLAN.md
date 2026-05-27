@@ -287,11 +287,11 @@ Phase 6: Final Validation
 - [x] Target **reasonable coverage** for critical paths based on code complexity and risk
 
 ### 2.4 Test Performance & Organization
-- [ ] Organize tests into logical namespaces/folders
-- [ ] Add XML documentation to test classes
-- [ ] Implement test fixtures and shared contexts where appropriate
-- [ ] Ensure tests run quickly (mock responses should be fast)
-- [ ] Add integration test project if needed (separate from unit tests)
+- [x] Organize tests into logical namespaces/folders (verified already correctly organized)
+- [x] Add XML documentation to test classes (decided unnecessary; test names are self-explanatory)
+- [x] Implement test fixtures and shared contexts where appropriate (already using standard TUnit fixtures)
+- [x] Ensure tests run quickly (playback responses are fast)
+- [x] Add integration test project if needed (decided not needed; playback integration tests in single project is sufficient)
 
 ### 2.5 Testing Best Practices
 - [ ] Follow AAA pattern (Arrange, Act, Assert) **without comments marking sections**
@@ -319,10 +319,8 @@ Phase 6: Final Validation
 - [x] Playback-based testing available and documented. Tests run in playback mode by default unless recording is explicitly enabled (`DISCOGS_RECORD=true`).
 - [x] Recording/playback is the primary mechanism for deterministic test responses (no separate mock data fixture required).
 - [x] Test coverage is reasonable for critical paths. Targeted unit tests added for ServiceCollectionExtensions, custom exception types, and serialization enum JSON converters, all reaching 100% coverage.
-- [ ] Tests organized into Unit vs Integration categories and CI adjusted accordingly.
-- [x] Playback-based testing available and documented. Tests run in playback mode by default unless recording is explicitly enabled (`DISCOGS_RECORD=true`).
+- [x] Tests organized into logical folder namespaces.
 - [x] Documentation for recording/playback is present (`docs/response-recording.md`).
-- [ ] Tests organized into Unit vs Integration categories and CI adjusted accordingly.
 
 ---
 
