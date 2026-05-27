@@ -15,8 +15,8 @@
 4. [Modernization Phases](#modernization-phases)
 5. [Phase 1: Foundation - Framework & Package Updates](#phase-1-foundation---framework--package-updates)
 6. [Phase 2: Testing Infrastructure Modernization](#phase-2-testing-infrastructure-modernization)
-7. [Phase 3: Library Code Modernization](#phase-3-library-code-modernization)
-8. [Phase 4: Source Generator Modernization](#phase-4-source-generator-modernization)
+7. [Phase 3: Source Generator Modernization](#phase-3-source-generator-modernization)
+8. [Phase 4: Library Code Modernization](#phase-4-library-code-modernization)
 9. [Phase 5: Demo Projects Modernization](#phase-5-demo-projects-modernization)
 10. [Phase 6: Final Validation & Documentation](#phase-6-final-validation--documentation)
 
@@ -37,16 +37,16 @@ This document outlines the technical modernization of the DiscogsApiClient libra
 - ✅ Adopt C# 12 features compatible with target frameworks (Complete)
 - ✅ Migrate tests from NUnit to TUnit (Complete - All tests passing)
 - ✅ Modernize testing infrastructure with mocking and improved coverage (Complete)
-- 🔄 Update source generators to follow latest Roslyn best practices (Phase 4)
+- 🔄 Update source generators to follow latest Roslyn best practices (Phase 3)
 - 🔄 Ensure all code follows modern C# best practices (Phases 3-4)
 - **Breaking changes are acceptable** - will result in new major version (v5.0.0+)
 
 ### Strategy
 The modernization follows a **risk-minimization approach**:
 1. Update frameworks and packages first (minimal code changes)
-2. Migrate to xUnit and modernize testing infrastructure (enable reliable validation)
-3. Modernize library code (protected by improved tests)
-4. Modernize source generators (validated by comprehensive tests, happens AFTER testing modernization)
+2. Migrate to TUnit and modernize testing infrastructure (enable reliable validation)
+3. Modernize source generators (validated by comprehensive tests, happens AFTER testing modernization)
+4. Modernize library code (protected by improved tests and modern generators)
 5. Update demo projects (showcase modern patterns)
 
 ### Version Strategy
@@ -143,13 +143,13 @@ Phase 2: Testing Infrastructure
    ├─ Medium Risk, High Value
    └─ Enables safe refactoring, mock infrastructure
          ↓
-Phase 3: Library Code Modernization
-   ├─ Medium Risk
-   └─ Protected by improved tests, C# 12 features
-         ↓
-Phase 4: Source Generator Modernization
+Phase 3: Source Generator Modernization
    ├─ High Complexity
-   └─ Only after tests fully modernized, validated comprehensively
+   └─ Enabled by fully modernized test suite
+         ↓
+Phase 4: Library Code Modernization
+   ├─ Medium Risk
+   └─ Protected by improved tests and modern generators
          ↓
 Phase 5: Demo Projects
    ├─ Low Risk
@@ -314,13 +314,76 @@ Phase 6: Final Validation
 
 ---
 
-## Phase 3: Library Code Modernization
+## Phase 3: Source Generator Modernization
+
+**Goal:** Update source generators to use latest Roslyn APIs and best practices.
+
+**Branch:** `modernization/phase3-generators`
+
+### 3.1 Source Generator Project Modernization
+- [ ] Review [Microsoft's source generator documentation](https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/source-generators-overview)
+- [ ] Update to latest Roslyn packages:
+  - [ ] `Microsoft.CodeAnalysis.CSharp` (from 4.8.0 to latest)
+  - [ ] `Microsoft.CodeAnalysis.Analyzers` (from 3.3.4 to latest)
+- [ ] Update `<LangVersion>latest</LangVersion>` (use all modern C# features compatible with .NET Standard 2.0)
+- [ ] Implement incremental generators (`IIncrementalGenerator`) and align with caching best practices
+- [ ] Use `IncrementalGeneratorInitializationContext` properly
+- [ ] Optimize for performance (caching, minimal re-generation)
+- [ ] **Implement comprehensive diagnostics:**
+  - [ ] Define diagnostic IDs (e.g., DISCOGS001, DISCOGS002)
+  - [ ] Create diagnostic descriptors with severity levels
+  - [ ] Add helpful error messages
+  - [ ] Report diagnostics for invalid input/configuration
+  - [ ] Provide code fix providers where appropriate
+  - [ ] Document all diagnostic IDs
+- [ ] Use `SourceProductionContext` for diagnostics
+
+### 3.2 Generated Code Modernization
+- [ ] Update generated code to use modern C# features (compatible with .NET 8+):
+  - [ ] File-scoped namespaces
+  - [ ] Target-typed new expressions
+  - [ ] Pattern matching where appropriate
+  - [ ] Collection expressions (if applicable)
+- [ ] Ensure generated code is AOT-compatible
+- [ ] Add `[GeneratedCode]` attribute to generated classes
+- [ ] Add `#nullable enable` to generated files
+- [ ] Optimize generated code (reduce allocations, better patterns)
+
+### 3.3 Source Generator Testing
+- [ ] Create test project for source generators (`DiscogsApiClient.SourceGenerator.Tests`)
+- [ ] Use `Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing` (or similar)
+- [ ] Add tests for:
+  - [ ] Successful generation scenarios
+  - [ ] Error handling (invalid input)
+  - [ ] Incremental generation behavior
+  - [ ] Diagnostic reporting
+- [ ] Add snapshot testing for generated output (verify stability)
+- [ ] Document testing approach
+
+### 3.4 Generator Best Practices
+- [ ] Ensure deterministic output (same input → same output)
+- [ ] Handle edge cases gracefully
+- [ ] Provide helpful diagnostics
+- [ ] Minimize dependencies in generator project
+- [ ] Add XML documentation to generator code
+
+### Acceptance Criteria - Phase 3
+- [ ] Source generators use incremental generator API and follow caching best practices
+- [ ] Generated code uses modern C# features
+- [ ] Comprehensive generator tests implemented
+- [ ] All tests pass
+- [ ] Performance is acceptable (fast builds)
+- [ ] Generated code is well-documented
+
+---
+
+## Phase 4: Library Code Modernization
 
 **Goal:** Modernize the main library code using latest C# features and best practices.
 
-**Branch:** `modernization/phase3-library`
+**Branch:** `modernization/phase4-library`
 
-### 3.1 C# Language Feature Adoption
+### 4.1 C# Language Feature Adoption
 - [ ] **File-scoped namespaces** - Convert to `namespace DiscogsApiClient;`
 - [ ] **Global usings** - Create `GlobalUsings.cs` for common imports
 - [ ] **Record types** - Use `record` for DTOs/contracts where appropriate
@@ -332,7 +395,7 @@ Phase 6: Final Validation
 - [ ] **Primary constructors** - Consider for simple classes (C# 12)
 - [ ] **String interpolation** - Use `$"..."` over `string.Format`
 
-### 3.2 IDiscogsApiClient Interface Refactoring
+### 4.2 IDiscogsApiClient Interface Refactoring
 - [ ] **Analyze current structure** - Document internal/public method pattern
 - [ ] **Run static analysis** - Review with analyzer tools for design issues
 - [ ] **Evaluate necessity** - Determine if refactoring provides meaningful value
@@ -345,13 +408,13 @@ Phase 6: Final Validation
   - [ ] Mark obsolete methods if using transition period
 - [ ] **Note:** Breaking changes are acceptable as this will result in a new major version
 
-### 3.3 Async/Await Modernization
+### 4.3 Async/Await Modernization
 - [ ] Ensure `ConfigureAwait(false)` used appropriately (library code)
 - [ ] Use `ValueTask` where appropriate for hot paths
 - [ ] Consider `IAsyncEnumerable` for paginated results (if applicable)
 - [ ] Ensure cancellation tokens passed through properly
 
-### 3.4 Rate Limiting
+### 4.4 Rate Limiting
 - Background: The repository contains an existing client-side rate limiting layer but it has been observed to behave unreliably in production-like scenarios.
 - Goal: Either rework the rate limiting implementation to be reliable across target frameworks, or remove the built-in limiter and provide first-class access to Discogs rate-limit metadata so library users can implement their own strategies.
 - Tasks:
@@ -371,7 +434,7 @@ Phase 6: Final Validation
   - [ ] If reworked: limiter passes stress tests and is documented
   - [ ] If removed: consumers have documented access to rate-limit metadata and examples for implementing retry/backoff
 
-### 3.4 Code Quality Improvements
+### 4.5 Code Quality Improvements
 - [ ] Enable nullable reference types verification
 - [ ] Address all analyzer warnings
 - [ ] Simplify complex methods (reduce cyclomatic complexity)
@@ -379,16 +442,16 @@ Phase 6: Final Validation
 - [ ] Review and optimize LINQ usage
 - [ ] Ensure proper disposal patterns (`IDisposable`, `IAsyncDisposable`)
 
-### 3.5 Performance Considerations
+### 4.6 Performance Considerations
 - [ ] Review allocations (use `Span<T>`, `Memory<T>` where beneficial)
 - [ ] Optimize string operations
 - [ ] Review collection usage (use appropriate collection types)
 - [ ] Consider `ArrayPool` for temporary buffers if applicable
 
-### 3.6 Service Registration Modernization
+### 4.7 Service Registration Modernization
 - [ ] Refactor service registration extensions to follow modern .NET library best practices
 
-### Acceptance Criteria - Phase 3
+### Acceptance Criteria - Phase 4
 - [ ] All C# 12 features adopted where appropriate
 - [ ] IDiscogsApiClient interface refactored and simplified (if decided)
 - [ ] Service registration refactored to follow modern .NET library best practices
@@ -396,69 +459,6 @@ Phase 6: Final Validation
 - [ ] No compiler warnings
 - [ ] XML documentation complete and accurate
 - [ ] Breaking changes documented (if any)
-
----
-
-## Phase 4: Source Generator Modernization
-
-**Goal:** Update source generators to use latest Roslyn APIs and best practices.
-
-**Branch:** `modernization/phase4-generators`
-
-### 4.1 Source Generator Project Modernization
-- [ ] Review [Microsoft's source generator documentation](https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/source-generators-overview)
-- [ ] Update to latest Roslyn packages:
-  - [ ] `Microsoft.CodeAnalysis.CSharp` (from 4.8.0 to latest)
-  - [ ] `Microsoft.CodeAnalysis.Analyzers` (from 3.3.4 to latest)
-- [ ] Update `<LangVersion>latest</LangVersion>` (use all modern C# features compatible with .NET Standard 2.0)
-- [ ] Implement incremental generators (`IIncrementalGenerator`)
-- [ ] Use `IncrementalGeneratorInitializationContext` properly
-- [ ] Optimize for performance (caching, minimal re-generation)
-- [ ] **Implement comprehensive diagnostics:**
-  - [ ] Define diagnostic IDs (e.g., DISCOGS001, DISCOGS002)
-  - [ ] Create diagnostic descriptors with severity levels
-  - [ ] Add helpful error messages
-  - [ ] Report diagnostics for invalid input/configuration
-  - [ ] Provide code fix providers where appropriate
-  - [ ] Document all diagnostic IDs
-- [ ] Use `SourceProductionContext` for diagnostics
-
-### 4.2 Generated Code Modernization
-- [ ] Update generated code to use modern C# features (compatible with .NET 8+):
-  - [ ] File-scoped namespaces
-  - [ ] Target-typed new expressions
-  - [ ] Pattern matching where appropriate
-  - [ ] Collection expressions (if applicable)
-- [ ] Ensure generated code is AOT-compatible
-- [ ] Add `[GeneratedCode]` attribute to generated classes
-- [ ] Add `#nullable enable` to generated files
-- [ ] Optimize generated code (reduce allocations, better patterns)
-
-### 4.3 Source Generator Testing
-- [ ] Create test project for source generators (`DiscogsApiClient.SourceGenerator.Tests`)
-- [ ] Use `Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing` (or similar)
-- [ ] Add tests for:
-  - [ ] Successful generation scenarios
-  - [ ] Error handling (invalid input)
-  - [ ] Incremental generation behavior
-  - [ ] Diagnostic reporting
-- [ ] Add snapshot testing for generated output (verify stability)
-- [ ] Document testing approach
-
-### 4.4 Generator Best Practices
-- [ ] Ensure deterministic output (same input → same output)
-- [ ] Handle edge cases gracefully
-- [ ] Provide helpful diagnostics
-- [ ] Minimize dependencies in generator project
-- [ ] Add XML documentation to generator code
-
-### Acceptance Criteria - Phase 4
-- [x] Source generators use incremental generator API
-- [x] Generated code uses modern C# features
-- [x] Comprehensive generator tests implemented
-- [x] All tests pass
-- [x] Performance is acceptable (fast builds)
-- [x] Generated code is well-documented
 
 ---
 
@@ -627,7 +627,7 @@ Phase 6: Final Validation
   - **Mitigation:** This is acceptable as modernization will result in a new major version (v5.0.0+). Provide clear migration guide and changelog.
 
 - **Risk:** Source generator changes introduce bugs
-  - **Mitigation:** Phase 4 happens AFTER tests are fully modernized in Phase 2-3. Comprehensive generator tests validate behavior.
+  - **Mitigation:** Phase 3 happens AFTER tests are fully modernized in Phase 2. Comprehensive generator tests validate behavior.
 
 - **Risk:** Performance regression
   - **Mitigation:** Benchmark critical paths, optimize as needed
