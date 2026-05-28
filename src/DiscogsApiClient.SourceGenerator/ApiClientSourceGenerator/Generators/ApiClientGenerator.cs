@@ -1,4 +1,4 @@
-﻿using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models;
+using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models;
 using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models.MethodParameters;
 
 namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Generators;
@@ -150,13 +150,16 @@ internal static class ApiClientGenerator
         """);
     }
 
-    private static void GenerateRouteBuilderMethods(this StringBuilder builder, List<ApiMethod> apiMethods, CancellationToken cancellationToken)
+    private static void GenerateRouteBuilderMethods(this StringBuilder builder, EquatableArray<ApiMethod> apiMethods, CancellationToken cancellationToken)
     {
         foreach (var apiMethod in apiMethods)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var queryParameters = apiMethod.Parameters.OfType<QueryApiMethodParameter>().ToArray();
+            var queryParameters = apiMethod.Parameters
+                .Where(p => p.ParameterType == ApiMethodParameterType.Query)
+                .ToArray();
+
             if (queryParameters.Length > 0)
             {
                 builder.AppendLine();
@@ -182,7 +185,6 @@ internal static class ApiClientGenerator
                 builder.AppendLine("\t\tvar capacity = route.Length;");
                 builder.AppendLine("\t\tvar parameterCount = 0;");
                 builder.AppendLine();
-
 
                 for (var i = 0; i < queryParameters.Length; i++)
                 {

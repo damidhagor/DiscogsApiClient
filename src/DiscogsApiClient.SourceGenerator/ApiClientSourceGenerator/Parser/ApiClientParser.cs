@@ -1,47 +1,81 @@
-﻿using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Attributes;
+using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Attributes;
 using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models;
+using DiscogsApiClient.SourceGenerator.Diagnostics;
 using DiscogsApiClient.SourceGenerator.Shared.Helpers;
 
 namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Parser;
 
 internal static class ApiClientParser
 {
-    public static ApiClient? ParseApiClient(this InterfaceDeclarationSyntax interfaceSyntax, Compilation compilation, CancellationToken cancellationToken)
+    public static GeneratorResult<ApiClient>? ParseApiClient(GeneratorAttributeSyntaxContext context, CancellationToken cancellationToken)
     {
-        var interfaceModel = compilation.GetSemanticModel(interfaceSyntax.SyntaxTree);
-        if (interfaceModel.GetDeclaredSymbol(interfaceSyntax) is not INamedTypeSymbol interfaceSymbol)
+        if (context.TargetSymbol is not INamedTypeSymbol interfaceSymbol)
         {
             return null;
         }
 
-        interfaceSymbol.TryGetAttributeNamedArgument<string>(
-            Constants.ApiClientNamespace,
-            ApiCLientAttribute.Name,
-            ApiCLientAttribute.NamePropertyName,
-            out var clientName);
-        interfaceSymbol.TryGetAttributeNamedArgument<string>(
-            Constants.ApiClientNamespace,
-            ApiCLientAttribute.Name,
-            ApiCLientAttribute.NamespacePropertyName,
-            out var clientNamespace);
-        interfaceSymbol.TryGetAttributeConstructorArgument<INamedTypeSymbol>(
-            Constants.ApiClientNamespace,
-            ApiCLientAttribute.Name,
-            out var jsonSerializerContextTypeSymbol);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var location = DiagnosticLocation.From(context.TargetNode.GetLocation());
+
+        INamedTypeSymbol? jsonSerializerContextTypeSymbol = null;
+        string? clientName = null;
+        string? clientNamespace = null;
+
+        foreach (var attributeData in context.Attributes)
+        {
+            if (attributeData.ConstructorArguments.Length > 0
+                && attributeData.ConstructorArguments[0].Value is INamedTypeSymbol contextType)
+            {
+                jsonSerializerContextTypeSymbol = contextType;
+            }
+            else if (attributeData.ConstructorArguments.Length > 0
+                && attributeData.ConstructorArguments[0] is { Kind: TypedConstantKind.Type, Value: ITypeSymbol typeSymbol }
+                && typeSymbol is INamedTypeSymbol namedType)
+            {
+                // Fallback for compilation scenarios where the Value is an ITypeSymbol
+                // but was not directly resolved as INamedTypeSymbol in the first branch.
+                jsonSerializerContextTypeSymbol = namedType;
+            }
+
+            foreach (var namedArg in attributeData.NamedArguments)
+            {
+                if (namedArg.Key == ApiClientAttribute.NamePropertyName
+                    && namedArg.Value.Value is string name)
+                {
+                    clientName = name;
+                }
+                else if (namedArg.Key == ApiClientAttribute.NamespacePropertyName
+                    && namedArg.Value.Value is string ns)
+                {
+                    clientNamespace = ns;
+                }
+            }
+        }
 
         if (jsonSerializerContextTypeSymbol is null)
         {
-            return null;
+            return GeneratorResult<ApiClient>.Failure(
+                [new(DiagnosticDescriptors.MissingJsonSerializerContext, location, [interfaceSymbol.Name])]);
         }
 
         var typeInfo = interfaceSymbol.GetSymbolTypeInfo();
-        var jsonSerializerContextTypeTypeInfo = jsonSerializerContextTypeSymbol.GetSymbolTypeInfo();
+        var jsonSerializerContextTypeInfo = jsonSerializerContextTypeSymbol.GetSymbolTypeInfo();
 
-        clientName ??= typeInfo.Name.AsSpan().Slice(1, typeInfo.Name.Length - 1).ToString();
+        clientName ??= typeInfo.Name.Substring(1);
         clientNamespace ??= typeInfo.Namespace;
 
-        var apiMethodsToGenerate = interfaceSymbol.ParseApiMethods(cancellationToken);
+        var diagnostics = ImmutableArray.CreateBuilder<DiagnosticInfo>();
 
-        return new(typeInfo, jsonSerializerContextTypeTypeInfo, clientName, clientNamespace, apiMethodsToGenerate);
+        var apiClient = new ApiClient(
+            typeInfo,
+            jsonSerializerContextTypeInfo,
+            clientName,
+            clientNamespace,
+            interfaceSymbol.ParseApiMethods(location, diagnostics, cancellationToken));
+
+        return diagnostics.Count > 0
+            ? GeneratorResult<ApiClient>.Success(apiClient, diagnostics.ToImmutable())
+            : GeneratorResult<ApiClient>.Success(apiClient);
     }
 }

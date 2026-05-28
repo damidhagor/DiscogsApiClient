@@ -1,9 +1,7 @@
-﻿using System.Collections.Immutable;
 using DiscogsApiClient.SourceGenerator.JsonSerialization.Attributes;
 using DiscogsApiClient.SourceGenerator.JsonSerialization.Generators;
 using DiscogsApiClient.SourceGenerator.JsonSerialization.Models;
 using DiscogsApiClient.SourceGenerator.JsonSerialization.Parser;
-using DiscogsApiClient.SourceGenerator.Shared.Helpers;
 
 namespace DiscogsApiClient.SourceGenerator.JsonSerialization;
 
@@ -14,59 +12,48 @@ public class JsonConverterSourceGenerator : IIncrementalGenerator
     {
         context.RegisterPostInitializationOutput(DoPostInitialization);
 
-        var declarations = context.SyntaxProvider.CreateSyntaxProvider(
-            static (syntaxNode, cancellationToken) => IsSyntaxNodeGenerationTarget(syntaxNode),
-            static (syntaxContext, cancellationToken) => GetSemanticTargetForGeneration(syntaxContext))
-            .Where(static syntax => syntax is not null);
+        var enumerations = context.SyntaxProvider
+            .ForAttributeWithMetadataName(
+                $"{Constants.JsonSerializationNamespace}.{GenerateJsonConverterAttribute.Name}",
+                predicate: static (node, _) => node is EnumDeclarationSyntax,
+                transform: static (ctx, ct) => EnumParser.ParseEnum(ctx, ct))
+            .Where(static result => result is not null)
+            .WithTrackingName("EnumTransform");
 
-        var compilationAndDeclarations = context.CompilationProvider.Combine(declarations.Collect());
+        var collected = enumerations.Collect().WithTrackingName("EnumCollect");
 
-        context.RegisterSourceOutput(
-            compilationAndDeclarations,
-            static (sourceProductionContext, source) => Execute(source.Left, source.Right!, sourceProductionContext));
+        context.RegisterSourceOutput(collected, static (spc, results) =>
+        {
+            var validEnums = new List<Enumeration>();
+
+            foreach (var result in results)
+            {
+                if (result is null)
+                {
+                    continue;
+                }
+
+                foreach (var diagnostic in result.Diagnostics)
+                {
+                    spc.ReportDiagnostic(diagnostic.ToDiagnostic());
+                }
+
+                if (result.TryGetModel(out var model))
+                {
+                    validEnums.Add(model);
+                }
+            }
+
+            if (validEnums.Count > 0)
+            {
+                var (hint, source) = validEnums.GenerateEnumJsonConverters(spc.CancellationToken);
+                spc.AddSource(hint, source);
+            }
+        });
     }
 
     private static void DoPostInitialization(IncrementalGeneratorPostInitializationContext context)
     {
         context.AddGenerateJsonConverterAttribute();
-    }
-
-    private static bool IsSyntaxNodeGenerationTarget(SyntaxNode syntaxNode)
-    {
-        return syntaxNode is MemberDeclarationSyntax { AttributeLists.Count: > 0 };
-    }
-
-    private static MemberDeclarationSyntax? GetSemanticTargetForGeneration(GeneratorSyntaxContext context)
-    {
-        var memberSyntax = (MemberDeclarationSyntax)context.Node;
-
-        return memberSyntax.HasMarkerAttribute(context, Constants.JsonSerializationNamespace, GenerateJsonConverterAttribute.Name)
-            ? memberSyntax
-            : null;
-    }
-
-    private static void Execute(Compilation compilation, ImmutableArray<MemberDeclarationSyntax> memberDeclarations, SourceProductionContext context)
-    {
-        var distinctMemberDeclarations = memberDeclarations.Distinct();
-
-        HandleEnums(compilation, distinctMemberDeclarations, context);
-    }
-
-    private static void HandleEnums(Compilation compilation, IEnumerable<MemberDeclarationSyntax> memberDeclarations, SourceProductionContext context)
-    {
-        var enums = new List<Enumeration>();
-        foreach (var enumDeclaration in memberDeclarations.OfType<EnumDeclarationSyntax>())
-        {
-            context.CancellationToken.ThrowIfCancellationRequested();
-
-            var enumeration = enumDeclaration.ParseEnum(compilation, context.CancellationToken);
-            if (enumeration is not null)
-            {
-                enums.Add(enumeration);
-            }
-        }
-
-        var (hint, source) = enums.GenerateEnumJsonConverters(context.CancellationToken);
-        context.AddSource(hint, source);
     }
 }

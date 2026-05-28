@@ -1,14 +1,9 @@
-﻿namespace DiscogsApiClient.SourceGenerator.Shared.Helpers;
+namespace DiscogsApiClient.SourceGenerator.Shared.Helpers;
 
 internal static class SymbolAttributeExtensions
 {
-    public static bool HasAttribute(
-        this ISymbol? symbol,
-        string attributeNamespace,
-        string attributeName)
-    {
-        return symbol.TryGetAttribute(attributeNamespace, attributeName, out _);
-    }
+    public static bool HasAttribute(this ISymbol? symbol, string attributeNamespace, string attributeName)
+        => symbol.TryGetAttribute(attributeNamespace, attributeName, out _);
 
     public static bool TryGetAttribute(
         this ISymbol? symbol,
