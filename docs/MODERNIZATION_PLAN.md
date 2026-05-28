@@ -437,6 +437,7 @@ Phase 6: Final Validation
 ### 4.5 Code Quality Improvements
 - [ ] Enable nullable reference types verification
 - [ ] Address all analyzer warnings
+- [ ] **Migrate `Guard.*` calls to framework-native guard clauses** — replace CommunityToolkit `Guard.IsNotNull()`, `Guard.IsNotNullOrWhiteSpace()`, `Guard.IsGreaterThan()` with `ArgumentNullException.ThrowIfNull()`, `ArgumentException.ThrowIfNullOrWhiteSpace()`, `ArgumentOutOfRangeException.ThrowIfLessThanOrEqual()`, etc. to remove the CommunityToolkit dependency
 - [ ] Simplify complex methods (reduce cyclomatic complexity)
 - [ ] Extract magic strings/numbers to constants
 - [ ] Review and optimize LINQ usage
