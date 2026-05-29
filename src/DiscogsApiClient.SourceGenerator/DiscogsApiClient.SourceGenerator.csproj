@@ -24,4 +24,8 @@
 		<AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="DiscogsApiClient.SourceGenerator.Tests" />
+	</ItemGroup>
+
 </Project>
