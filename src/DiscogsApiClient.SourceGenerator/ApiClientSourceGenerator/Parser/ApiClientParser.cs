@@ -55,8 +55,7 @@ internal static class ApiClientParser
 
         if (jsonSerializerContextTypeSymbol is null)
         {
-            return GeneratorResult<ApiClient>.Failure(
-                [new(DiagnosticDescriptors.MissingJsonSerializerContext, location, [interfaceSymbol.Name])]);
+            return null;
         }
 
         var typeInfo = interfaceSymbol.GetSymbolTypeInfo();

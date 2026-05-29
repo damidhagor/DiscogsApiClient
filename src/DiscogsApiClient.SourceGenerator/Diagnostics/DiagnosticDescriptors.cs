@@ -4,14 +4,6 @@ internal static class DiagnosticDescriptors
 {
     private const string Category = "DiscogsApiClient.SourceGenerator";
 
-    public static readonly DiagnosticDescriptor MissingJsonSerializerContext = new(
-        "DISCOGS001",
-        "Missing JsonSerializerContext type argument",
-        "The [ApiClient] attribute on '{0}' requires a JsonSerializerContext type argument",
-        Category,
-        DiagnosticSeverity.Error,
-        true);
-
     public static readonly DiagnosticDescriptor InvalidMethodReturnType = new(
         "DISCOGS002",
         "API method must return Task or Task<T>",
@@ -53,7 +45,7 @@ internal static class DiagnosticDescriptors
         true);
 
     public static readonly DiagnosticDescriptor MissingCancellationToken = new(
-        "DISCOGS008",
+        "DISCOGS003",
         "API method has no CancellationToken parameter",
         "Method '{0}' has no CancellationToken parameter — consider adding one for proper cancellation support",
         Category,
@@ -61,7 +53,7 @@ internal static class DiagnosticDescriptors
         true);
 
     public static readonly DiagnosticDescriptor UnsupportedQueryParameterType = new(
-        "DISCOGS009",
+        "DISCOGS001",
         "Unsupported query parameter property type",
         "Property '{0}' on query parameter type '{1}' has unsupported type '{2}' and will be skipped — only string, int, and enum properties are supported",
         Category,
