@@ -1,8 +1,8 @@
-namespace DiscogsApiClient.SourceGenerator.Tests.SourceTexts;
+namespace DiscogsApiClient.SourceGenerator.Tests.ApiClient.Sources;
 
-public static class ApiClientSources
+public static class ApiClientSourceGeneratorTestsSources
 {
-    public const string ApiClientSourceGeneratorTests_WhenValidInterface =
+    public const string WhenValidInterface =
         """
         using System.Threading;
         using System.Threading.Tasks;
@@ -28,7 +28,7 @@ public static class ApiClientSources
         }
         """;
 
-    public const string ApiClientSourceGeneratorTests_WhenInterfaceIsEmpty =
+    public const string WhenInterfaceIsEmpty =
         """
         using System.Threading;
         using System.Threading.Tasks;
@@ -49,7 +49,7 @@ public static class ApiClientSources
         }
         """;
 
-    public const string ApiClientSourceGeneratorTests_WhenAttributeHasCustomName =
+    public const string WhenAttributeHasCustomName =
         """
         using System.Threading;
         using System.Threading.Tasks;
@@ -70,7 +70,7 @@ public static class ApiClientSources
         }
         """;
 
-    public const string ApiClientSourceGeneratorTests_WhenAttributeHasCustomNamespace =
+    public const string WhenAttributeHasCustomNamespace =
         """
         using System.Threading;
         using System.Threading.Tasks;
@@ -91,7 +91,7 @@ public static class ApiClientSources
         }
         """;
 
-    public const string ApiClientSourceGeneratorTests_WhenAttributeHasCustomNameAndNamespace =
+    public const string WhenAttributeHasCustomNameAndNamespace =
         """
         using System.Threading;
         using System.Threading.Tasks;
@@ -112,7 +112,7 @@ public static class ApiClientSources
         }
         """;
 
-    public const string ApiClientSourceGeneratorTests_WhenInterfaceHasQueryParameters =
+    public const string WhenInterfaceHasQueryParameters =
         """
         using System.Threading;
         using System.Threading.Tasks;

@@ -1,3 +1,5 @@
+using DiscogsApiClient.SourceGenerator.Tests.ApiClient.Sources;
+
 namespace DiscogsApiClient.SourceGenerator.Tests.ApiClient;
 
 public sealed class ApiClientSourceGeneratorTests
@@ -6,7 +8,7 @@ public sealed class ApiClientSourceGeneratorTests
     public async Task ShouldGenerateClient_WhenValidInterface()
     {
         var result = GeneratorTestHelper.RunGenerator<ApiClientSourceGenerator.ApiClientSourceGenerator>(
-            ApiClientSources.ApiClientSourceGeneratorTests_WhenValidInterface);
+            ApiClientSourceGeneratorTestsSources.WhenValidInterface);
 
         await Assert.That(result.Diagnostics).IsEmpty();
 
@@ -153,7 +155,7 @@ public sealed class ApiClientSourceGeneratorTests
     public async Task ShouldGenerateClient_WhenInterfaceIsEmpty()
     {
         var result = GeneratorTestHelper.RunGenerator<ApiClientSourceGenerator.ApiClientSourceGenerator>(
-            ApiClientSources.ApiClientSourceGeneratorTests_WhenInterfaceIsEmpty);
+            ApiClientSourceGeneratorTestsSources.WhenInterfaceIsEmpty);
 
         await Assert.That(result.Diagnostics).IsEmpty();
 
@@ -283,7 +285,7 @@ public sealed class ApiClientSourceGeneratorTests
     public async Task ShouldGenerateClientWithCustomName_WhenAttributeHasCustomName()
     {
         var result = GeneratorTestHelper.RunGenerator<ApiClientSourceGenerator.ApiClientSourceGenerator>(
-            ApiClientSources.ApiClientSourceGeneratorTests_WhenAttributeHasCustomName);
+            ApiClientSourceGeneratorTestsSources.WhenAttributeHasCustomName);
 
         await Assert.That(result.Diagnostics).IsEmpty();
 
@@ -413,7 +415,7 @@ public sealed class ApiClientSourceGeneratorTests
     public async Task ShouldGenerateClientWithCustomNamespace_WhenAttributeHasCustomNamespace()
     {
         var result = GeneratorTestHelper.RunGenerator<ApiClientSourceGenerator.ApiClientSourceGenerator>(
-            ApiClientSources.ApiClientSourceGeneratorTests_WhenAttributeHasCustomNamespace);
+            ApiClientSourceGeneratorTestsSources.WhenAttributeHasCustomNamespace);
 
         await Assert.That(result.Diagnostics).IsEmpty();
 
@@ -543,7 +545,7 @@ public sealed class ApiClientSourceGeneratorTests
     public async Task ShouldGenerateClientWithCustomNameAndNamespace_WhenAttributeHasCustomNameAndNamespace()
     {
         var result = GeneratorTestHelper.RunGenerator<ApiClientSourceGenerator.ApiClientSourceGenerator>(
-            ApiClientSources.ApiClientSourceGeneratorTests_WhenAttributeHasCustomNameAndNamespace);
+            ApiClientSourceGeneratorTestsSources.WhenAttributeHasCustomNameAndNamespace);
 
         await Assert.That(result.Diagnostics).IsEmpty();
 
@@ -673,7 +675,7 @@ public sealed class ApiClientSourceGeneratorTests
     public async Task ShouldGenerateClientWithQueryParameters_WhenInterfaceHasQueryParameters()
     {
         var result = GeneratorTestHelper.RunGenerator<ApiClientSourceGenerator.ApiClientSourceGenerator>(
-            ApiClientSources.ApiClientSourceGeneratorTests_WhenInterfaceHasQueryParameters);
+            ApiClientSourceGeneratorTestsSources.WhenInterfaceHasQueryParameters);
 
         await Assert.That(result.Diagnostics).IsEmpty();
 
