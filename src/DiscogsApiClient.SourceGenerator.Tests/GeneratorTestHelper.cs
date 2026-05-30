@@ -42,29 +42,6 @@ internal static class GeneratorTestHelper
         return driver.GetRunResult();
     }
 
-    public static (GeneratorDriverRunResult FirstRunResult, GeneratorDriverRunResult SecondRunResult) RunGeneratorTwice<TGenerator>(
-        string[] initialSources,
-        string[] modifiedSources)
-        where TGenerator : IIncrementalGenerator, new()
-    {
-        var compilation1 = CreateCompilation(initialSources);
-        var generator = new TGenerator();
-
-        var driver = CSharpGeneratorDriver.Create(
-            generators: [generator.AsSourceGenerator()],
-            driverOptions: new(trackIncrementalGeneratorSteps: true));
-
-        var updatedDriver = driver.RunGeneratorsAndUpdateCompilation(compilation1, out _, out _);
-        var firstRunResult = updatedDriver.GetRunResult();
-
-        var compilation2 = CreateCompilation(modifiedSources);
-        updatedDriver = updatedDriver.RunGeneratorsAndUpdateCompilation(compilation2, out _, out _);
-
-        var secondRunResult = updatedDriver.GetRunResult();
-
-        return (firstRunResult, secondRunResult);
-    }
-
     public static string NormalizeSource(string source)
     {
         var lines = source
