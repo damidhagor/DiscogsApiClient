@@ -1,15 +1,14 @@
-using DiscogsApiClient.SourceGenerator.JsonSerialization;
-using DiscogsApiClient.SourceGenerator.Tests.JsonSerialization.Sources;
+using DiscogsApiClient.SourceGenerator.Tests.ApiClient.Sources;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace DiscogsApiClient.SourceGenerator.Tests.JsonSerialization;
+namespace DiscogsApiClient.SourceGenerator.Tests.ApiClient;
 
 public sealed class IncrementalCachingTests
 {
     [Test]
     public async Task ShouldCacheTransformStep_WhenSourceUnchanged()
     {
-        var generator = new JsonConverterSourceGenerator();
+        var generator = new ApiClientSourceGenerator.ApiClientSourceGenerator();
         var compilation1 = GeneratorTestHelper.CreateCompilation([IncrementalCachingTestsSources.WhenSourceUnchanged_First]);
         var compilation2 = GeneratorTestHelper.CreateCompilation([IncrementalCachingTestsSources.WhenSourceUnchanged_Second]);
 
@@ -23,9 +22,9 @@ public sealed class IncrementalCachingTests
 
         var trackedSteps = runResult.Results.Single().TrackedSteps;
 
-        await Assert.That(trackedSteps).ContainsKey("EnumTransform");
+        await Assert.That(trackedSteps).ContainsKey("ApiClientTransform");
 
-        await Assert.That(trackedSteps["EnumTransform"])
+        await Assert.That(trackedSteps["ApiClientTransform"])
                     .All(s => s.Outputs.All(o => o.Reason is IncrementalStepRunReason.Cached
                                                           or IncrementalStepRunReason.Unchanged));
     }
@@ -33,7 +32,7 @@ public sealed class IncrementalCachingTests
     [Test]
     public async Task ShouldNotCacheTransformStep_WhenSourceChanged()
     {
-        var generator = new JsonConverterSourceGenerator();
+        var generator = new ApiClientSourceGenerator.ApiClientSourceGenerator();
         var compilation1 = GeneratorTestHelper.CreateCompilation([IncrementalCachingTestsSources.WhenSourceChanged_First]);
         var compilation2 = GeneratorTestHelper.CreateCompilation([IncrementalCachingTestsSources.WhenSourceChanged_Second]);
 
@@ -47,9 +46,9 @@ public sealed class IncrementalCachingTests
 
         var trackedSteps = runResult.Results.Single().TrackedSteps;
 
-        await Assert.That(trackedSteps).ContainsKey("EnumTransform");
+        await Assert.That(trackedSteps).ContainsKey("ApiClientTransform");
 
-        await Assert.That(trackedSteps["EnumTransform"])
+        await Assert.That(trackedSteps["ApiClientTransform"])
                     .All(s => s.Outputs.All(o => o.Reason is not IncrementalStepRunReason.Cached));
     }
 }
