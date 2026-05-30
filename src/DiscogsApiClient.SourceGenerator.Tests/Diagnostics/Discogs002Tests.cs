@@ -1,3 +1,5 @@
+using DiscogsApiClient.SourceGenerator.Tests.Diagnostics.Sources;
+
 namespace DiscogsApiClient.SourceGenerator.Tests.Diagnostics;
 
 public sealed class Discogs002Tests
@@ -6,7 +8,7 @@ public sealed class Discogs002Tests
     public async Task ShouldReportDiagnostic_WhenMethodReturnsVoid()
     {
         var result = GeneratorTestHelper.RunGenerator<ApiClientSourceGenerator.ApiClientSourceGenerator>(
-            DiagnosticsSources.Discogs002Tests_WhenMethodReturnsVoid);
+            Discogs002TestsSources.WhenMethodReturnsVoid);
 
         var diagnostics = result.Results.Single().Diagnostics;
         var discogs002 = diagnostics.Where(d => d.Id == "DISCOGS002").ToArray();
@@ -21,7 +23,7 @@ public sealed class Discogs002Tests
     public async Task ShouldReportDiagnostic_WhenMethodReturnsNonTaskType()
     {
         var result = GeneratorTestHelper.RunGenerator<ApiClientSourceGenerator.ApiClientSourceGenerator>(
-            DiagnosticsSources.Discogs002Tests_WhenMethodReturnsNonTaskType);
+            Discogs002TestsSources.WhenMethodReturnsNonTaskType);
 
         var diagnostics = result.Results.Single().Diagnostics;
         var discogs002 = diagnostics.Where(d => d.Id == "DISCOGS002").ToArray();
@@ -36,7 +38,7 @@ public sealed class Discogs002Tests
     public async Task ShouldNotReportDiagnostic_WhenMethodReturnsTask()
     {
         var result = GeneratorTestHelper.RunGenerator<ApiClientSourceGenerator.ApiClientSourceGenerator>(
-            DiagnosticsSources.Discogs002Tests_WhenMethodReturnsTask);
+            Discogs002TestsSources.WhenMethodReturnsTask);
 
         var diagnostics = result.Results.Single().Diagnostics;
 

@@ -1,3 +1,5 @@
+using DiscogsApiClient.SourceGenerator.Tests.Diagnostics.Sources;
+
 namespace DiscogsApiClient.SourceGenerator.Tests.Diagnostics;
 
 public sealed class Discogs004Tests
@@ -6,7 +8,7 @@ public sealed class Discogs004Tests
     public async Task ShouldReportDiagnostic_WhenRouteParamHasNoMatchingMethodParam()
     {
         var result = GeneratorTestHelper.RunGenerator<ApiClientSourceGenerator.ApiClientSourceGenerator>(
-            DiagnosticsSources.Discogs004Tests_WhenRouteParamHasNoMatchingMethodParam);
+            Discogs004TestsSources.WhenRouteParamHasNoMatchingMethodParam);
 
         var diagnostics = result.Results.Single().Diagnostics;
         var discogs004 = diagnostics.Where(d => d.Id == "DISCOGS004").ToArray();
@@ -21,7 +23,7 @@ public sealed class Discogs004Tests
     public async Task ShouldReportDiagnostic_ForEachMissingRouteParam()
     {
         var result = GeneratorTestHelper.RunGenerator<ApiClientSourceGenerator.ApiClientSourceGenerator>(
-            DiagnosticsSources.Discogs004Tests_WhenMultipleRouteParamsOneMissing);
+            Discogs004TestsSources.WhenMultipleRouteParamsOneMissing);
 
         var diagnostics = result.Results.Single().Diagnostics;
         var discogs004 = diagnostics.Where(d => d.Id == "DISCOGS004").ToArray();
@@ -36,7 +38,7 @@ public sealed class Discogs004Tests
     public async Task ShouldNotReportDiagnostic_WhenAllRouteParamsHaveMatchingMethodParams()
     {
         var result = GeneratorTestHelper.RunGenerator<ApiClientSourceGenerator.ApiClientSourceGenerator>(
-            DiagnosticsSources.Discogs004Tests_WhenAllRouteParamsHaveMatchingMethodParams);
+            Discogs004TestsSources.WhenAllRouteParamsHaveMatchingMethodParams);
 
         var diagnostics = result.Results.Single().Diagnostics;
 
@@ -47,7 +49,7 @@ public sealed class Discogs004Tests
     public async Task ShouldNotReportDiagnostic_WhenRouteHasNoParams()
     {
         var result = GeneratorTestHelper.RunGenerator<ApiClientSourceGenerator.ApiClientSourceGenerator>(
-            DiagnosticsSources.Discogs004Tests_WhenRouteHasNoParams);
+            Discogs004TestsSources.WhenRouteHasNoParams);
 
         var diagnostics = result.Results.Single().Diagnostics;
 

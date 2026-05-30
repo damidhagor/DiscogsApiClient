@@ -1,3 +1,5 @@
+using DiscogsApiClient.SourceGenerator.Tests.Diagnostics.Sources;
+
 namespace DiscogsApiClient.SourceGenerator.Tests.Diagnostics;
 
 public sealed class Discogs001Tests
@@ -6,7 +8,7 @@ public sealed class Discogs001Tests
     public async Task ShouldReportDiagnostic_WhenQueryParamHasUnsupportedPropertyType()
     {
         var result = GeneratorTestHelper.RunGenerator<ApiClientSourceGenerator.ApiClientSourceGenerator>(
-            DiagnosticsSources.Discogs001Tests_WhenQueryParamHasUnsupportedPropertyType);
+            Discogs001TestsSources.WhenQueryParamHasUnsupportedPropertyType);
 
         var diagnostics = result.Results.Single().Diagnostics;
         var discogs001 = diagnostics.Where(d => d.Id == "DISCOGS001").ToArray();
@@ -21,7 +23,7 @@ public sealed class Discogs001Tests
     public async Task ShouldNotReportDiagnostic_WhenAllQueryParamPropertiesAreSupported()
     {
         var result = GeneratorTestHelper.RunGenerator<ApiClientSourceGenerator.ApiClientSourceGenerator>(
-            DiagnosticsSources.Discogs001Tests_WhenAllQueryParamPropertiesAreSupported);
+            Discogs001TestsSources.WhenAllQueryParamPropertiesAreSupported);
 
         var diagnostics = result.Results.Single().Diagnostics;
 

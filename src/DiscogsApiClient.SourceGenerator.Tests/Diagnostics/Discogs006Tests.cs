@@ -1,3 +1,5 @@
+using DiscogsApiClient.SourceGenerator.Tests.Diagnostics.Sources;
+
 namespace DiscogsApiClient.SourceGenerator.Tests.Diagnostics;
 
 public sealed class Discogs006Tests
@@ -6,7 +8,7 @@ public sealed class Discogs006Tests
     public async Task ShouldReportDiagnostic_WhenHttpMethodTypeIsUnrecognized()
     {
         var result = GeneratorTestHelper.RunGenerator<ApiClientSourceGenerator.ApiClientSourceGenerator>(
-            DiagnosticsSources.Discogs006Tests_WhenHttpMethodTypeIsUnrecognized);
+            Discogs006TestsSources.WhenHttpMethodTypeIsUnrecognized);
 
         var diagnostics = result.Results.Single().Diagnostics;
         var discogs006 = diagnostics.Where(d => d.Id == "DISCOGS006").ToArray();
@@ -21,7 +23,7 @@ public sealed class Discogs006Tests
     public async Task ShouldNotReportDiagnostic_WhenHttpMethodsAreStandard()
     {
         var result = GeneratorTestHelper.RunGenerator<ApiClientSourceGenerator.ApiClientSourceGenerator>(
-            DiagnosticsSources.Discogs006Tests_WhenHttpMethodsAreStandard);
+            Discogs006TestsSources.WhenHttpMethodsAreStandard);
 
         var diagnostics = result.Results.Single().Diagnostics;
 

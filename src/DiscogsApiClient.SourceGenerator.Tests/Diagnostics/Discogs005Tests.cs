@@ -1,4 +1,5 @@
 using DiscogsApiClient.SourceGenerator.JsonSerialization;
+using DiscogsApiClient.SourceGenerator.Tests.Diagnostics.Sources;
 
 namespace DiscogsApiClient.SourceGenerator.Tests.Diagnostics;
 
@@ -8,7 +9,7 @@ public sealed class Discogs005Tests
     public async Task ShouldReportDiagnostic_WhenEnumHasNoMembers()
     {
         var result = GeneratorTestHelper.RunGenerator<JsonConverterSourceGenerator>(
-            DiagnosticsSources.Discogs005Tests_WhenEnumIsEmpty);
+            Discogs005TestsSources.WhenEnumIsEmpty);
 
         var diagnostics = result.Results.Single().Diagnostics;
         var discogs005 = diagnostics.Where(d => d.Id == "DISCOGS005").ToArray();
@@ -23,7 +24,7 @@ public sealed class Discogs005Tests
     public async Task ShouldNotGenerateConverterOutput_WhenEnumIsEmpty()
     {
         var result = GeneratorTestHelper.RunGenerator<JsonConverterSourceGenerator>(
-            DiagnosticsSources.Discogs005Tests_WhenEnumIsEmpty);
+            Discogs005TestsSources.WhenEnumIsEmpty);
 
         var converterOutputs = result.Results.Single().GeneratedSources
             .Where(s => s.HintName == "EnumJsonConverters.g.cs")
@@ -36,7 +37,7 @@ public sealed class Discogs005Tests
     public async Task ShouldNotReportDiagnostic_WhenEnumHasMembers()
     {
         var result = GeneratorTestHelper.RunGenerator<JsonConverterSourceGenerator>(
-            DiagnosticsSources.Discogs005Tests_WhenEnumHasMembers);
+            Discogs005TestsSources.WhenEnumHasMembers);
 
         var diagnostics = result.Results.Single().Diagnostics;
 

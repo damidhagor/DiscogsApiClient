@@ -1,3 +1,5 @@
+using DiscogsApiClient.SourceGenerator.Tests.Diagnostics.Sources;
+
 namespace DiscogsApiClient.SourceGenerator.Tests.Diagnostics;
 
 public sealed class Discogs003Tests
@@ -6,7 +8,7 @@ public sealed class Discogs003Tests
     public async Task ShouldReportDiagnostic_WhenMethodHasNoCancellationToken()
     {
         var result = GeneratorTestHelper.RunGenerator<ApiClientSourceGenerator.ApiClientSourceGenerator>(
-            DiagnosticsSources.Discogs003Tests_WhenMethodHasNoCancellationToken);
+            Discogs003TestsSources.WhenMethodHasNoCancellationToken);
 
         var diagnostics = result.Results.Single().Diagnostics;
         var discogs003 = diagnostics.Where(d => d.Id == "DISCOGS003").ToArray();
@@ -21,7 +23,7 @@ public sealed class Discogs003Tests
     public async Task ShouldNotReportDiagnostic_WhenMethodHasCancellationToken()
     {
         var result = GeneratorTestHelper.RunGenerator<ApiClientSourceGenerator.ApiClientSourceGenerator>(
-            DiagnosticsSources.Discogs003Tests_WhenMethodHasCancellationToken);
+            Discogs003TestsSources.WhenMethodHasCancellationToken);
 
         var diagnostics = result.Results.Single().Diagnostics;
 

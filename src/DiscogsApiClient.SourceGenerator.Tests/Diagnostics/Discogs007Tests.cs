@@ -1,3 +1,5 @@
+using DiscogsApiClient.SourceGenerator.Tests.Diagnostics.Sources;
+
 namespace DiscogsApiClient.SourceGenerator.Tests.Diagnostics;
 
 public sealed class Discogs007Tests
@@ -6,7 +8,7 @@ public sealed class Discogs007Tests
     public async Task ShouldReportDiagnostic_WhenMethodHasMultipleBodyParams()
     {
         var result = GeneratorTestHelper.RunGenerator<ApiClientSourceGenerator.ApiClientSourceGenerator>(
-            DiagnosticsSources.Discogs007Tests_WhenMethodHasMultipleBodyParams);
+            Discogs007TestsSources.WhenMethodHasMultipleBodyParams);
 
         var diagnostics = result.Results.Single().Diagnostics;
         var discogs007 = diagnostics.Where(d => d.Id == "DISCOGS007").ToArray();
@@ -21,7 +23,7 @@ public sealed class Discogs007Tests
     public async Task ShouldNotReportDiagnostic_WhenMethodHasSingleBodyParam()
     {
         var result = GeneratorTestHelper.RunGenerator<ApiClientSourceGenerator.ApiClientSourceGenerator>(
-            DiagnosticsSources.Discogs007Tests_WhenMethodHasSingleBodyParam);
+            Discogs007TestsSources.WhenMethodHasSingleBodyParam);
 
         var diagnostics = result.Results.Single().Diagnostics;
 
@@ -32,7 +34,7 @@ public sealed class Discogs007Tests
     public async Task ShouldNotReportDiagnostic_WhenMethodHasNoBodyParam()
     {
         var result = GeneratorTestHelper.RunGenerator<ApiClientSourceGenerator.ApiClientSourceGenerator>(
-            DiagnosticsSources.Discogs007Tests_WhenMethodHasNoBodyParam);
+            Discogs007TestsSources.WhenMethodHasNoBodyParam);
 
         var diagnostics = result.Results.Single().Diagnostics;
 
