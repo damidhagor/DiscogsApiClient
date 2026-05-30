@@ -1,6 +1,6 @@
-﻿namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Attributes;
+namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Attributes;
 
-internal static class ApiCLientAttribute
+internal static class ApiClientAttribute
 {
     public const string Name = "ApiClientAttribute";
 
@@ -25,9 +25,9 @@ internal static class ApiCLientAttribute
 
             public string? {{NamespacePropertyName}} { get; set; }
 
-            public Type {{JsonSerializerContextTypePropertyName}} { get; set; }
+            public global::System.Type {{JsonSerializerContextTypePropertyName}} { get; set; }
 
-            public {{Name}}(Type jsonSerializerContextType)
+            public {{Name}}(global::System.Type jsonSerializerContextType)
             {
                 {{JsonSerializerContextTypePropertyName}} = jsonSerializerContextType;
             }

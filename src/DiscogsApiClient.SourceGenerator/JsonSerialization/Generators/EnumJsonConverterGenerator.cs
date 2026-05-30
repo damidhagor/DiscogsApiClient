@@ -1,4 +1,4 @@
-﻿using DiscogsApiClient.SourceGenerator.JsonSerialization.Models;
+using DiscogsApiClient.SourceGenerator.JsonSerialization.Models;
 
 namespace DiscogsApiClient.SourceGenerator.JsonSerialization.Generators;
 
@@ -82,7 +82,7 @@ internal static class EnumJsonConverterGenerator
 
             """);
 
-        for (var i = 0; i < enumeration.TypeInfo.EnumMembers.Count; i++)
+        for (var i = 0; i < enumeration.TypeInfo.EnumMembers.Length; i++)
         {
             var enumMember = enumeration.TypeInfo.EnumMembers[i];
 

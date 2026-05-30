@@ -1,4 +1,4 @@
-﻿using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models;
+using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models;
 using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models.MethodParameters;
 
 namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Generators;
@@ -12,15 +12,18 @@ internal static class ApiMethodBodyGenerator
         builder.GenerateHttpCall(apiMethod);
     }
 
-    private static void GenerateRoute(this StringBuilder builder, ApiMethod apiMethod, List<ApiMethodParameter> parameters)
+    private static void GenerateRoute(this StringBuilder builder, ApiMethod apiMethod, EquatableArray<ApiMethodParameter> parameters)
     {
         var constructedRoute = $"{apiMethod.Route}";
-        foreach (var parameter in parameters.OfType<RouteApiMethodParameter>())
+        foreach (var parameter in parameters.Where(p => p.ParameterType == ApiMethodParameterType.Route))
         {
-            constructedRoute = constructedRoute.Replace(parameter.RoutePart, $"{{{parameter.TypeInfo.ParameterName}}}");
+            constructedRoute = constructedRoute.Replace(parameter.RoutePart!, $"{{{parameter.TypeInfo.ParameterName}}}");
         }
 
-        var queryParameters = parameters.OfType<QueryApiMethodParameter>().ToArray();
+        var queryParameters = parameters
+            .Where(p => p.ParameterType == ApiMethodParameterType.Query)
+            .ToArray();
+
         if (queryParameters.Length > 0)
         {
             builder.Append($"\t\tvar route = BuildRouteFor{apiMethod.Name}($\"{constructedRoute}\", ");
@@ -57,10 +60,10 @@ internal static class ApiMethodBodyGenerator
         };
 
         var bodyParameter = apiMethod.Parameters
-            .FirstOrDefault(p => p.Type == ApiMethodParameterType.Body);
+            .FirstOrDefault(p => p.ParameterType == ApiMethodParameterType.Body);
 
         var cancellationTokenParameter = apiMethod.Parameters
-            .FirstOrDefault(p => p.Type == ApiMethodParameterType.CancellationToken);
+            .FirstOrDefault(p => p.ParameterType == ApiMethodParameterType.CancellationToken);
 
         if (bodyParameter is not null)
         {

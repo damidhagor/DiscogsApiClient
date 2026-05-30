@@ -1,22 +1,21 @@
-﻿using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models;
+using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models;
 using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models.MethodParameters;
 
 namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Generators;
 
 internal static class QueryParameterGenerator
 {
-    public static void GenerateQueryParameterClasses(this StringBuilder builder, List<ApiMethod> apiMethods, CancellationToken cancellationToken)
+    public static void GenerateQueryParameterClasses(this StringBuilder builder, EquatableArray<ApiMethod> apiMethods, CancellationToken cancellationToken)
     {
         builder.GenerateQueryParameterExtensions(apiMethods, cancellationToken);
         builder.GenerateQueryParameterPropertyExtensions(apiMethods, cancellationToken);
     }
 
-    private static void GenerateQueryParameterExtensions(this StringBuilder builder, List<ApiMethod> apiMethods, CancellationToken cancellationToken)
+    private static void GenerateQueryParameterExtensions(this StringBuilder builder, EquatableArray<ApiMethod> apiMethods, CancellationToken cancellationToken)
     {
         var implementedExtensions = new HashSet<string>();
         var queryParameters = apiMethods
-            .SelectMany(m => m.Parameters)
-            .OfType<QueryApiMethodParameter>();
+            .SelectMany(m => m.Parameters.Where(p => p.ParameterType == ApiMethodParameterType.Query));
 
         foreach (var parameter in queryParameters)
         {
@@ -138,19 +137,17 @@ internal static class QueryParameterGenerator
                     }
                 """);
 
-
             builder.AppendLine("}");
 
             implementedExtensions.Add(parameter.TypeInfo.FullTypeName);
         }
     }
 
-    private static void GenerateQueryParameterPropertyExtensions(this StringBuilder builder, List<ApiMethod> apiMethods, CancellationToken cancellationToken)
+    private static void GenerateQueryParameterPropertyExtensions(this StringBuilder builder, EquatableArray<ApiMethod> apiMethods, CancellationToken cancellationToken)
     {
         var implementedExtensions = new HashSet<string>();
         var queryParameters = apiMethods
-            .SelectMany(m => m.Parameters)
-            .OfType<QueryApiMethodParameter>()
+            .SelectMany(m => m.Parameters.Where(p => p.ParameterType == ApiMethodParameterType.Query))
             .SelectMany(p => p.QueryParameters);
 
         builder.AppendLine(
@@ -206,7 +203,7 @@ internal static class QueryParameterGenerator
                                 {
                     """);
 
-                if (parameter.TypeInfo.EnumMembers is not null)
+                if (parameter.TypeInfo.EnumMembers.Length > 0)
                 {
                     foreach (var enumMember in parameter.TypeInfo.EnumMembers)
                     {
