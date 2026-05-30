@@ -1,5 +1,6 @@
 using DiscogsApiClient.SourceGenerator.Shared;
 using DiscogsApiClient.SourceGenerator.Shared.Attributes;
+using DiscogsApiClient.SourceGenerator.Tests.Shared.Sources;
 
 namespace DiscogsApiClient.SourceGenerator.Tests.Shared;
 
@@ -9,7 +10,7 @@ public sealed class SharedSourceGeneratorTests
     public async Task ShouldGenerateAliasAsAttribute_WhenPostInit()
     {
         var result = GeneratorTestHelper.RunGenerator<SharedSourceGenerator>(
-            SharedSources.SharedSourceGeneratorTests_EmptySource);
+            SharedSourceGeneratorTestsSources.EmptySource);
 
         await Assert.That(result.Diagnostics).IsEmpty();
 
@@ -20,6 +21,6 @@ public sealed class SharedSourceGeneratorTests
         var expected = AliasAsAttribute.Source;
 
         await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-            .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
     }
 }
