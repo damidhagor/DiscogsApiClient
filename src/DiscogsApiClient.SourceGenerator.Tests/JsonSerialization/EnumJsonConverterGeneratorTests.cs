@@ -1,5 +1,6 @@
 using DiscogsApiClient.SourceGenerator.JsonSerialization;
 using DiscogsApiClient.SourceGenerator.Shared.Attributes;
+using DiscogsApiClient.SourceGenerator.Tests.JsonSerialization.Sources;
 
 namespace DiscogsApiClient.SourceGenerator.Tests.JsonSerialization;
 
@@ -9,7 +10,7 @@ public sealed class EnumJsonConverterGeneratorTests
     public async Task ShouldGenerateExpectedConverterOutput_WhenMinimalEnum()
     {
         var result = GeneratorTestHelper.RunGenerator<JsonConverterSourceGenerator>(
-            EnumJsonConverterGeneratorSources.EnumJsonConverterGeneratorTests_WhenMinimalEnum);
+            EnumJsonConverterGeneratorTestsSources.WhenMinimalEnum);
 
         await Assert.That(result.Diagnostics).IsEmpty();
 
@@ -81,7 +82,7 @@ public sealed class EnumJsonConverterGeneratorTests
     public async Task ShouldGenerateConverterWithMemberNames_WhenEnumHasAliasesButAliasesAreNotResolved()
     {
         var result = GeneratorTestHelper.RunGenerator<JsonConverterSourceGenerator>(
-            EnumJsonConverterGeneratorSources.EnumJsonConverterGeneratorTests_WhenEnumHasAliases);
+            EnumJsonConverterGeneratorTestsSources.WhenEnumHasAliases);
 
         await Assert.That(result.Diagnostics).IsEmpty();
 
@@ -150,7 +151,7 @@ public sealed class EnumJsonConverterGeneratorTests
     {
         var result = GeneratorTestHelper.RunGenerator<JsonConverterSourceGenerator>(
             AliasAsAttribute.Source,
-            EnumJsonConverterGeneratorSources.EnumJsonConverterGeneratorTests_WhenEnumHasAliases);
+            EnumJsonConverterGeneratorTestsSources.WhenEnumHasAliases);
 
         await Assert.That(result.Diagnostics).IsEmpty();
 
@@ -218,7 +219,7 @@ public sealed class EnumJsonConverterGeneratorTests
     public async Task ShouldGeneratePostInitAttributes_WhenMinimalEnum()
     {
         var result = GeneratorTestHelper.RunGenerator<JsonConverterSourceGenerator>(
-            EnumJsonConverterGeneratorSources.EnumJsonConverterGeneratorTests_WhenMinimalEnum);
+            EnumJsonConverterGeneratorTestsSources.WhenMinimalEnum);
 
         var hintNames = result.Results.Single().GeneratedSources
             .Select(s => s.HintName)
