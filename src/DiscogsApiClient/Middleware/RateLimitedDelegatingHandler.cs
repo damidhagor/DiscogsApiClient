@@ -12,16 +12,11 @@ namespace DiscogsApiClient.Middleware;
 /// <para/>
 /// For use in the test project the handler can optionally be configured to not dispose its <see cref="RateLimiter"/> so all unit tests are rate limited and run successfully.
 /// </summary>
-public sealed class RateLimitedDelegatingHandler : DelegatingHandler, IAsyncDisposable
+public sealed class RateLimitedDelegatingHandler(RateLimiter limiter, bool disposeRateLimiter = true) : DelegatingHandler, IAsyncDisposable
 {
-    private readonly RateLimiter _rateLimiter;
-    private readonly bool _disposeRateLimiter;
+    private readonly RateLimiter _rateLimiter = limiter;
+    private readonly bool _disposeRateLimiter = disposeRateLimiter;
 
-    public RateLimitedDelegatingHandler(RateLimiter limiter, bool disposeRateLimiter = true)
-    {
-        _rateLimiter = limiter;
-        _disposeRateLimiter = disposeRateLimiter;
-    }
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {

@@ -11,22 +11,18 @@ namespace DiscogsApiClient.Authentication;
 /// and
 /// <see href="https://www.discogs.com/developers#page:authentication,header:authentication-oauth-flow">OAuth 1.0a</see>.
 /// </summary>
-public sealed class DiscogsAuthenticationService : IDiscogsAuthenticationService
+public sealed class DiscogsAuthenticationService(
+    IPersonalAccessTokenAuthenticationProvider personalAccessTokenAuthenticationProvider,
+    IOAuthAuthenticationProvider oAuthAuthenticationProvider)
+    : IDiscogsAuthenticationService
 {
-    private readonly IPersonalAccessTokenAuthenticationProvider _personalAccessTokenAuthenticationProvider;
-    private readonly IOAuthAuthenticationProvider _oAuthAuthenticationProvider;
+    private readonly IPersonalAccessTokenAuthenticationProvider _personalAccessTokenAuthenticationProvider = personalAccessTokenAuthenticationProvider;
+    private readonly IOAuthAuthenticationProvider _oAuthAuthenticationProvider = oAuthAuthenticationProvider;
     private bool _lastAuthenticatedWithPersonalAccessToken = false;
     private bool _lastAuthenticatedWithOAuth = false;
 
     public bool IsAuthenticated => _personalAccessTokenAuthenticationProvider.IsAuthenticated || _oAuthAuthenticationProvider.IsAuthenticated;
 
-    public DiscogsAuthenticationService(
-        IPersonalAccessTokenAuthenticationProvider personalAccessTokenAuthenticationProvider,
-        IOAuthAuthenticationProvider oAuthAuthenticationProvider)
-    {
-        _personalAccessTokenAuthenticationProvider = personalAccessTokenAuthenticationProvider;
-        _oAuthAuthenticationProvider = oAuthAuthenticationProvider;
-    }
 
     public void AuthenticateWithPersonalAccessToken(string token)
     {

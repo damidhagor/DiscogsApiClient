@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Http.Headers;
 using System.Web;
 
 namespace DiscogsApiClient.Authentication.OAuth;
@@ -9,20 +8,15 @@ namespace DiscogsApiClient.Authentication.OAuth;
 /// using the OAuth 1.0a flow described <a href="https://www.discogs.com/developers#page:authentication,header:authentication-discogs-auth-flow">here</a>
 /// and should be provided to the <see cref="DiscogsApiClient"/>'s constructor.
 /// </summary>
-public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
+public sealed class OAuthAuthenticationProvider(HttpClient httpClient, DiscogsApiClientOptions discogsOptions) : IOAuthAuthenticationProvider
 {
-    private readonly HttpClient _httpClient;
-    private readonly DiscogsApiClientOptions _discogsOptions;
+    private readonly HttpClient _httpClient = httpClient;
+    private readonly DiscogsApiClientOptions _discogsOptions = discogsOptions;
     private string _accessToken = "";
     private string _accessTokenSecret = "";
 
     public bool IsAuthenticated => !string.IsNullOrWhiteSpace(_accessToken) && !string.IsNullOrWhiteSpace(_accessTokenSecret);
 
-    public OAuthAuthenticationProvider(HttpClient httpClient, DiscogsApiClientOptions discogsOptions)
-    {
-        _httpClient = httpClient;
-        _discogsOptions = discogsOptions;
-    }
 
     /// <inheritdoc/>
     /// <exception cref="AuthenticationFailedDiscogsException"></exception>
@@ -49,6 +43,7 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
         string verifierToken,
         CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(session);
         ArgumentException.ThrowIfNullOrWhiteSpace(session.RequestToken);
         ArgumentException.ThrowIfNullOrWhiteSpace(session.RequestTokenSecret);
         ArgumentException.ThrowIfNullOrWhiteSpace(verifierToken);
@@ -64,9 +59,7 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
     }
 
     /// <inheritdoc/>
-    public void Authenticate(
-        string accessToken,
-        string accessTokenSecret)
+    public void Authenticate(string accessToken, string accessTokenSecret)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(accessToken);
         ArgumentException.ThrowIfNullOrWhiteSpace(accessTokenSecret);
@@ -124,7 +117,7 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
             authHeader += $"oauth_callback=\"{WebUtility.UrlEncode(callback)}\"";
 
             using var request = new HttpRequestMessage(HttpMethod.Get, "/oauth/request_token");
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
+            request.Headers.Accept.Add(new("application/x-www-form-urlencoded"));
             request.Headers.Add("Authorization", authHeader);
 
             using var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
@@ -174,7 +167,7 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
             authHeader += $"oauth_verifier=\"{WebUtility.UrlEncode(verifier)}\"";
 
             using var request = new HttpRequestMessage(HttpMethod.Post, "/oauth/access_token");
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
+            request.Headers.Accept.Add(new("application/x-www-form-urlencoded"));
             request.Headers.Add("Authorization", authHeader);
 
             using var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
@@ -197,9 +190,9 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
     /// <summary>
     /// Created the timestamp and nonce used by the <see cref="PlainOAuthAuthenticationProvider.CreateAuthenticationHeader"/> method.
     /// </summary>
-    private (string timestamp, string nonce) CreateTimestampAndNonce()
+    private static (string timestamp, string nonce) CreateTimestampAndNonce()
     {
-        var elapsedTimeSince1970 = DateTime.UtcNow - new DateTime(1970, 1, 1);
+        var elapsedTimeSince1970 = DateTime.UtcNow - DateTime.UnixEpoch;
 
         var timestamp = (long)elapsedTimeSince1970.TotalSeconds;
         var nonce = (long)elapsedTimeSince1970.TotalMilliseconds;

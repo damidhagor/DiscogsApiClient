@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using System.Threading.RateLimiting;
 using DiscogsApiClient.Authentication.OAuth;
 using DiscogsApiClient.Authentication.PersonalAccessToken;
@@ -19,6 +19,9 @@ public static partial class ServiceCollectionExtensions
     /// <param name="configure">Method with an options object to configure the Discogs Api client.</param>
     public static IServiceCollection AddDiscogsApiClient(this IServiceCollection services, Action<DiscogsApiClientOptions> configure)
     {
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(configure);
+
         var discogsOptions = new DiscogsApiClientOptions();
 
         configure(discogsOptions);
@@ -43,23 +46,21 @@ public static partial class ServiceCollectionExtensions
             .ConfigureHttpClient((serviceProvider, httpClient) =>
              {
                  var options = serviceProvider.GetRequiredService<DiscogsApiClientOptions>();
-                 httpClient.BaseAddress = new Uri(options.BaseUrl);
+                 httpClient.BaseAddress = new(options.BaseUrl);
                  httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent);
              })
             .AddHttpMessageHandler<ErrorHandlingDelegatingHandler>();
 
 
         var apiClientSettings = new ApiClientSettings<IDiscogsApiClient, DiscogsJsonSerializerContext>(
-            new DiscogsJsonSerializerContext(
-                new JsonSerializerOptions()
-                    .AddGeneratedEnumJsonConverters()));
+            new(new JsonSerializerOptions().AddGeneratedEnumJsonConverters()));
         services.AddSingleton(apiClientSettings);
 
         services.AddHttpClient<IDiscogsApiClient, Generated.DiscogsApiClient>()
             .ConfigureHttpClient((serviceProvider, httpClient) =>
             {
                 var options = serviceProvider.GetRequiredService<DiscogsApiClientOptions>();
-                httpClient.BaseAddress = new Uri(options.BaseUrl);
+                httpClient.BaseAddress = new(options.BaseUrl);
                 httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent);
             })
             .AddHttpMessageHandler<ErrorHandlingDelegatingHandler>()

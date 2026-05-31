@@ -371,16 +371,17 @@ Phase 6: Final Validation
 **Branch:** `modernization/phase4-library`
 
 ### 4.1 C# Language Feature Adoption
-- [ ] **File-scoped namespaces** - Convert to `namespace DiscogsApiClient;`
-- [ ] **Global usings** - Create `GlobalUsings.cs` for common imports
+- [x] **File-scoped namespaces** - Convert to `namespace DiscogsApiClient;` (Audited: already implemented across all library files)
+- [x] **Global usings** - Create `GlobalUsings.cs` for common imports (Audited: Usings.cs already contains global usings)
 - [ ] **Record types** - Use `record` for DTOs/contracts where appropriate
 - [ ] **Init-only properties** - Convert to `init` where mutability not needed
 - [ ] **Pattern matching** - Modernize switch statements and conditionals
 - [ ] **Null-coalescing assignments** - Use `??=` where appropriate
-- [ ] **Target-typed new** - Use `new()` where type is obvious
+- [x] **Target-typed new** - Use `new()` where type is obvious (Implemented in OAuth provider & ServiceCollectionExtensions)
 - [ ] **Collection expressions** - Use `[...]` for arrays/collections (C# 12)
-- [ ] **Primary constructors** - Consider for simple classes (C# 12)
+- [x] **Primary constructors** - Consider for simple classes (C# 12) (Implemented in Auth service, OAuth provider, and delegating handlers)
 - [ ] **String interpolation** - Use `$"..."` over `string.Format`
+
 
 ### 4.2 IDiscogsApiClient Interface Refactoring
 - [ ] **Analyze current structure** - Document internal/public method pattern
@@ -397,9 +398,10 @@ Phase 6: Final Validation
 
 ### 4.3 Async/Await Modernization
 - [x] Ensure `ConfigureAwait(false)` used appropriately (library code)
-- [ ] Use `ValueTask` where appropriate for hot paths
-- [ ] Consider `IAsyncEnumerable` for paginated results (if applicable)
-- [ ] Ensure cancellation tokens passed through properly
+- [x] Use `ValueTask` where appropriate for hot paths (Audited: not recommended for these purely I/O bound methods as it introduces micro-pessimization and breaking changes for no gain)
+- [x] Consider `IAsyncEnumerable` for paginated results (if applicable) (Audited: not applicable for library endpoints without pagination streaming changes)
+- [x] Ensure cancellation tokens passed through properly (Audited: all async paths propagate CancellationToken correctly)
+
 
 ### 4.4 Rate Limiting
 - Background: The repository contains an existing client-side rate limiting layer but it has been observed to behave unreliably in production-like scenarios.
@@ -422,9 +424,10 @@ Phase 6: Final Validation
   - [ ] If removed: consumers have documented access to rate-limit metadata and examples for implementing retry/backoff
 
 ### 4.5 Code Quality Improvements
-- [ ] Enable nullable reference types verification
-- [ ] Address all analyzer warnings
+- [x] Enable nullable reference types verification (Audited: already enabled globally in csproj)
+- [ ] Address all analyzer warnings (Partially: resolved all CA1032 custom exception warnings)
 - [x] **Migrate `Guard.*` calls to framework-native guard clauses** — replace CommunityToolkit `Guard.IsNotNull()`, `Guard.IsNotNullOrWhiteSpace()`, `Guard.IsGreaterThan()` with `ArgumentNullException.ThrowIfNull()`, `ArgumentException.ThrowIfNullOrWhiteSpace()`, `ArgumentOutOfRangeException.ThrowIfLessThanOrEqual()`, etc. to remove the CommunityToolkit dependency
+
 - [ ] Simplify complex methods (reduce cyclomatic complexity)
 - [ ] Extract magic strings/numbers to constants
 - [ ] Review and optimize LINQ usage
