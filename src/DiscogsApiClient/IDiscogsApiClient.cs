@@ -21,7 +21,7 @@ public interface IDiscogsApiClient
     public async Task<User> GetUser(string username, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
-        return await GetUserInternal(username, cancellationToken);
+        return await GetUserInternal(username, cancellationToken).ConfigureAwait(false);
     }
 
 
@@ -36,7 +36,7 @@ public interface IDiscogsApiClient
     public async Task<CollectionFoldersResponse> GetCollectionFolders(string username, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
-        return await GetCollectionFoldersInternal(username, cancellationToken);
+        return await GetCollectionFoldersInternal(username, cancellationToken).ConfigureAwait(false);
     }
 
     [HttpGet("/users/{username}/collection/folders/{folderId}")]
@@ -53,7 +53,7 @@ public interface IDiscogsApiClient
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
         ArgumentOutOfRangeException.ThrowIfLessThan(folderId, 0);
-        return await GetCollectionFolderInternal(username, folderId, cancellationToken);
+        return await GetCollectionFolderInternal(username, folderId, cancellationToken).ConfigureAwait(false);
     }
 
     [HttpPost("/users/{username}/collection/folders")]
@@ -69,7 +69,7 @@ public interface IDiscogsApiClient
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
         ArgumentException.ThrowIfNullOrWhiteSpace(folderName);
-        return await CreateCollectionFolderInternal(username, new(folderName), cancellationToken);
+        return await CreateCollectionFolderInternal(username, new(folderName), cancellationToken).ConfigureAwait(false);
     }
 
     [HttpPost("/users/{username}/collection/folders/{folderId}")]
@@ -88,7 +88,7 @@ public interface IDiscogsApiClient
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
         ArgumentException.ThrowIfNullOrWhiteSpace(folderName);
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(folderId, 1);
-        return await UpdateCollectionFolderInternal(username, folderId, new(folderName), cancellationToken);
+        return await UpdateCollectionFolderInternal(username, folderId, new(folderName), cancellationToken).ConfigureAwait(false);
     }
 
     [HttpDelete("/users/{username}/collection/folders/{folderId}")]
@@ -105,7 +105,7 @@ public interface IDiscogsApiClient
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(folderId, 1);
-        await DeleteCollectionFolderInternal(username, folderId, cancellationToken);
+        await DeleteCollectionFolderInternal(username, folderId, cancellationToken).ConfigureAwait(false);
     }
 
     [HttpGet("/users/{username}/collection/folders/{folderId}/releases")]
@@ -123,7 +123,7 @@ public interface IDiscogsApiClient
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
         ArgumentOutOfRangeException.ThrowIfLessThan(folderId, 0);
-        return await GetCollectionFolderReleasesInternal(username, folderId, paginationQueryParameters, collectionFolderReleaseSortQueryParameters, cancellationToken);
+        return await GetCollectionFolderReleasesInternal(username, folderId, paginationQueryParameters, collectionFolderReleaseSortQueryParameters, cancellationToken).ConfigureAwait(false);
     }
 
     [HttpPost("/users/{username}/collection/folders/{folderId}/releases/{releaseId}")]
@@ -142,7 +142,7 @@ public interface IDiscogsApiClient
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
         ArgumentOutOfRangeException.ThrowIfLessThan(folderId, 1);
         ArgumentOutOfRangeException.ThrowIfLessThan(releaseId, 1);
-        return await AddReleaseToCollectionFolderInternal(username, folderId, releaseId, cancellationToken);
+        return await AddReleaseToCollectionFolderInternal(username, folderId, releaseId, cancellationToken).ConfigureAwait(false);
     }
 
     [HttpDelete("/users/{username}/collection/folders/{folderId}/releases/{releaseId}/instances/{instanceId}")]
@@ -163,7 +163,7 @@ public interface IDiscogsApiClient
         ArgumentOutOfRangeException.ThrowIfLessThan(folderId, 1);
         ArgumentOutOfRangeException.ThrowIfLessThan(releaseId, 1);
         ArgumentOutOfRangeException.ThrowIfLessThan(instanceId, 1);
-        await DeleteReleaseFromCollectionFolderInternal(username, folderId, releaseId, instanceId, cancellationToken);
+        await DeleteReleaseFromCollectionFolderInternal(username, folderId, releaseId, instanceId, cancellationToken).ConfigureAwait(false);
     }
 
     [HttpGet("/users/{username}/collection/value")]
@@ -177,7 +177,7 @@ public interface IDiscogsApiClient
     public async Task<CollectionValue> GetCollectionValue(string username, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
-        return await GetCollectionValueInternal(username, cancellationToken);
+        return await GetCollectionValueInternal(username, cancellationToken).ConfigureAwait(false);
     }
 
 
@@ -193,7 +193,7 @@ public interface IDiscogsApiClient
     public async Task<WantlistReleasesResponse> GetWantlistReleases(string username, PaginationQueryParameters? paginationQueryParameters = null, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
-        return await GetWantlistReleasesInternal(username, paginationQueryParameters, cancellationToken);
+        return await GetWantlistReleasesInternal(username, paginationQueryParameters, cancellationToken).ConfigureAwait(false);
     }
 
     [HttpPut("/users/{username}/wants/{releaseId}")]
@@ -210,7 +210,7 @@ public interface IDiscogsApiClient
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(releaseId, 0);
-        return await AddReleaseToWantlistInternal(username, releaseId, cancellationToken);
+        return await AddReleaseToWantlistInternal(username, releaseId, cancellationToken).ConfigureAwait(false);
     }
 
     [HttpDelete("/users/{username}/wants/{releaseId}")]
@@ -227,7 +227,7 @@ public interface IDiscogsApiClient
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(releaseId, 0);
-        await DeleteReleaseFromWantlistInternal(username, releaseId, cancellationToken);
+        await DeleteReleaseFromWantlistInternal(username, releaseId, cancellationToken).ConfigureAwait(false);
     }
 
 
@@ -242,7 +242,7 @@ public interface IDiscogsApiClient
     public async Task<Artist> GetArtist(int artistId, CancellationToken cancellationToken = default)
     {
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(artistId, 0);
-        return await GetArtistInternal(artistId, cancellationToken);
+        return await GetArtistInternal(artistId, cancellationToken).ConfigureAwait(false);
     }
 
     [HttpGet("/artists/{artistId}/releases")]
@@ -257,7 +257,7 @@ public interface IDiscogsApiClient
     public async Task<ArtistReleasesResponse> GetArtistReleases(int artistId, PaginationQueryParameters? paginationQueryParameters = null, ArtistReleaseSortQueryParameters? artistReleaseSortQueryParameters = null, CancellationToken cancellationToken = default)
     {
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(artistId, 0);
-        return await GetArtistReleasesInternal(artistId, paginationQueryParameters, artistReleaseSortQueryParameters, cancellationToken);
+        return await GetArtistReleasesInternal(artistId, paginationQueryParameters, artistReleaseSortQueryParameters, cancellationToken).ConfigureAwait(false);
     }
 
 
@@ -272,7 +272,7 @@ public interface IDiscogsApiClient
     public async Task<Label> GetLabel(int labelId, CancellationToken cancellationToken = default)
     {
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(labelId, 0);
-        return await GetLabelInternal(labelId, cancellationToken);
+        return await GetLabelInternal(labelId, cancellationToken).ConfigureAwait(false);
     }
 
     [HttpGet("/labels/{labelId}/releases")]
@@ -287,7 +287,7 @@ public interface IDiscogsApiClient
     public async Task<LabelReleasesResponse> GetLabelReleases(int labelId, PaginationQueryParameters? paginationQueryParameters = null, CancellationToken cancellationToken = default)
     {
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(labelId, 0);
-        return await GetLabelReleasesInternal(labelId, paginationQueryParameters, cancellationToken);
+        return await GetLabelReleasesInternal(labelId, paginationQueryParameters, cancellationToken).ConfigureAwait(false);
     }
 
 
@@ -302,7 +302,7 @@ public interface IDiscogsApiClient
     public async Task<MasterRelease> GetMasterRelease(int masterReleaseId, CancellationToken cancellationToken = default)
     {
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(masterReleaseId, 0);
-        return await GetMasterReleaseInternal(masterReleaseId, cancellationToken);
+        return await GetMasterReleaseInternal(masterReleaseId, cancellationToken).ConfigureAwait(false);
     }
 
     [HttpGet("/masters/{masterReleaseId}/versions")]
@@ -317,7 +317,7 @@ public interface IDiscogsApiClient
     public async Task<MasterReleaseVersionsResponse> GetMasterReleaseVersions(int masterReleaseId, PaginationQueryParameters? paginationQueryParameters = null, MasterReleaseVersionFilterQueryParameters? masterReleaseVersionQueryParameters = null, CancellationToken cancellationToken = default)
     {
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(masterReleaseId, 0);
-        return await GetMasterReleaseVersionsInternal(masterReleaseId, paginationQueryParameters, masterReleaseVersionQueryParameters, cancellationToken);
+        return await GetMasterReleaseVersionsInternal(masterReleaseId, paginationQueryParameters, masterReleaseVersionQueryParameters, cancellationToken).ConfigureAwait(false);
     }
 
 
@@ -332,7 +332,7 @@ public interface IDiscogsApiClient
     public async Task<Release> GetRelease(int releaseId, CancellationToken cancellationToken = default)
     {
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(releaseId, 0);
-        return await GetReleaseInternal(releaseId, cancellationToken);
+        return await GetReleaseInternal(releaseId, cancellationToken).ConfigureAwait(false);
     }
 
     [HttpGet("/releases/{releaseId}/rating")]
@@ -346,7 +346,7 @@ public interface IDiscogsApiClient
     public async Task<ReleaseCommunityRatingResponse> GetReleaseCommunityRating(int releaseId, CancellationToken cancellationToken = default)
     {
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(releaseId, 0);
-        return await GetReleaseCommunityRatingInternal(releaseId, cancellationToken);
+        return await GetReleaseCommunityRatingInternal(releaseId, cancellationToken).ConfigureAwait(false);
     }
 
     [HttpGet("/releases/{releaseId}/stats")]
@@ -360,7 +360,7 @@ public interface IDiscogsApiClient
     public async Task<ReleaseStatsResponse> GetReleaseStats(int releaseId, CancellationToken cancellationToken = default)
     {
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(releaseId, 0);
-        return await GetReleaseStatsInternal(releaseId, cancellationToken);
+        return await GetReleaseStatsInternal(releaseId, cancellationToken).ConfigureAwait(false);
     }
 
 

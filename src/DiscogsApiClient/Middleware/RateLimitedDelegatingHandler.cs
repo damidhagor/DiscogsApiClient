@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Net;
 using System.Threading.RateLimiting;
 
@@ -25,11 +25,11 @@ public sealed class RateLimitedDelegatingHandler : DelegatingHandler, IAsyncDisp
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        using var lease = await _rateLimiter.AcquireAsync(1, cancellationToken);
+        using var lease = await _rateLimiter.AcquireAsync(1, cancellationToken).ConfigureAwait(false);
 
         if (lease.IsAcquired)
         {
-            return await base.SendAsync(request, cancellationToken);
+            return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
         }
 
         var response = new HttpResponseMessage(HttpStatusCode.TooManyRequests);

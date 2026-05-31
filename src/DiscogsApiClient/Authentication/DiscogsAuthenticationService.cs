@@ -1,4 +1,4 @@
-﻿using DiscogsApiClient.Authentication.OAuth;
+using DiscogsApiClient.Authentication.OAuth;
 using DiscogsApiClient.Authentication.PersonalAccessToken;
 
 namespace DiscogsApiClient.Authentication;
@@ -50,7 +50,7 @@ public sealed class DiscogsAuthenticationService : IDiscogsAuthenticationService
         string verifierToken,
         CancellationToken cancellationToken)
     {
-        var tokens = await _oAuthAuthenticationProvider.CompleteAuthentication(session, verifierToken, cancellationToken);
+        var tokens = await _oAuthAuthenticationProvider.CompleteAuthentication(session, verifierToken, cancellationToken).ConfigureAwait(false);
 
         _lastAuthenticatedWithOAuth = true;
         _lastAuthenticatedWithPersonalAccessToken = false;
