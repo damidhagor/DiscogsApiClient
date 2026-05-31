@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Authentication.PersonalAccessToken;
+namespace DiscogsApiClient.Authentication.PersonalAccessToken;
 
 /// <summary>
 /// An authentication provider which uses a personal access token to authenticate a user against the Discogs Api.
@@ -14,9 +14,7 @@ public sealed class PersonalAccessTokenAuthenticationProvider : IPersonalAccessT
     public void Authenticate(string token)
     {
         _userToken = "";
-
-        Guard.IsNotNullOrWhiteSpace(token);
-
+        ArgumentException.ThrowIfNullOrWhiteSpace(token);
         _userToken = token;
     }
 

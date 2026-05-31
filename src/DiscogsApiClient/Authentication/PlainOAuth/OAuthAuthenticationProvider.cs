@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Web;
 
@@ -49,9 +49,10 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
         string verifierToken,
         CancellationToken cancellationToken)
     {
-        Guard.IsNotNullOrWhiteSpace(session.RequestToken, nameof(OAuthAuthenticationSession.RequestToken));
-        Guard.IsNotNullOrWhiteSpace(session.RequestTokenSecret, nameof(OAuthAuthenticationSession.RequestTokenSecret));
-        Guard.IsNotNullOrWhiteSpace(verifierToken);
+        ArgumentNullException.ThrowIfNull(session);
+        ArgumentException.ThrowIfNullOrWhiteSpace(session.RequestToken);
+        ArgumentException.ThrowIfNullOrWhiteSpace(session.RequestTokenSecret);
+        ArgumentException.ThrowIfNullOrWhiteSpace(verifierToken);
 
         var (accessToken, accessTokenSecret) = await GetAccessToken(_httpClient, session.RequestToken, session.RequestTokenSecret, verifierToken, cancellationToken);
         if (string.IsNullOrWhiteSpace(accessToken) || string.IsNullOrWhiteSpace(accessTokenSecret))
@@ -68,8 +69,8 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
         string accessToken,
         string accessTokenSecret)
     {
-        Guard.IsNotNullOrWhiteSpace(accessToken);
-        Guard.IsNotNullOrWhiteSpace(accessTokenSecret);
+        ArgumentException.ThrowIfNullOrWhiteSpace(accessToken);
+        ArgumentException.ThrowIfNullOrWhiteSpace(accessTokenSecret);
 
         _accessToken = accessToken;
         _accessTokenSecret = accessTokenSecret;
@@ -77,8 +78,8 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
 
     public string CreateAuthenticationHeader()
     {
-        Guard.IsNotNullOrWhiteSpace(_discogsOptions.ConsumerKey);
-        Guard.IsNotNullOrWhiteSpace(_discogsOptions.ConsumerSecret);
+        ArgumentException.ThrowIfNullOrWhiteSpace(_discogsOptions.ConsumerKey);
+        ArgumentException.ThrowIfNullOrWhiteSpace(_discogsOptions.ConsumerSecret);
 
         if (!IsAuthenticated)
             throw new UnauthenticatedDiscogsException($"The {nameof(OAuthAuthenticationProvider)} must be authenticated before creating an authentication header.");
@@ -105,8 +106,8 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
     /// <returns>Returns the obtained request token and secret.</returns>
     private async Task<(string requestToken, string requestTokenSecret)> GetRequestToken(HttpClient httpClient, string callback, CancellationToken cancellationToken)
     {
-        Guard.IsNotNullOrWhiteSpace(_discogsOptions.ConsumerKey, nameof(DiscogsApiClientOptions.ConsumerKey));
-        Guard.IsNotNullOrWhiteSpace(_discogsOptions.ConsumerSecret, nameof(DiscogsApiClientOptions.ConsumerSecret));
+        ArgumentException.ThrowIfNullOrWhiteSpace(_discogsOptions.ConsumerKey);
+        ArgumentException.ThrowIfNullOrWhiteSpace(_discogsOptions.ConsumerSecret);
 
         var requestToken = "";
         var requestTokenSecret = "";
@@ -154,8 +155,8 @@ public sealed class OAuthAuthenticationProvider : IOAuthAuthenticationProvider
     /// <returns>The access token and secret which authenticate the logged in user.</returns>
     private async Task<(string accessToken, string accessTokenSecret)> GetAccessToken(HttpClient httpClient, string requestToken, string requestTokenSecret, string verifier, CancellationToken cancellationToken)
     {
-        Guard.IsNotNullOrWhiteSpace(_discogsOptions.ConsumerKey, nameof(DiscogsApiClientOptions.ConsumerKey));
-        Guard.IsNotNullOrWhiteSpace(_discogsOptions.ConsumerSecret, nameof(DiscogsApiClientOptions.ConsumerSecret));
+        ArgumentException.ThrowIfNullOrWhiteSpace(_discogsOptions.ConsumerKey);
+        ArgumentException.ThrowIfNullOrWhiteSpace(_discogsOptions.ConsumerSecret);
 
         var accessToken = "";
         var accessTokenSecret = "";

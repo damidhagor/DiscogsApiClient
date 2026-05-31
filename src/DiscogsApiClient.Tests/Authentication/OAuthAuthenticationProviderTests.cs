@@ -50,12 +50,12 @@ public sealed class OAuthAuthenticationProviderTests
     [Arguments("", "", null, typeof(ArgumentException), "VerifierCallbackUrl")]
     [Arguments("", "", "", typeof(ArgumentException), "VerifierCallbackUrl")]
     [Arguments("", "", "  ", typeof(ArgumentException), "VerifierCallbackUrl")]
-    [Arguments(null, "", "x", typeof(ArgumentNullException), "ConsumerKey")]
-    [Arguments("", "", "x", typeof(ArgumentException), "ConsumerKey")]
-    [Arguments("  ", "", "x", typeof(ArgumentException), "ConsumerKey")]
-    [Arguments("x", null, "x", typeof(ArgumentNullException), "ConsumerSecret")]
-    [Arguments("x", "", "x", typeof(ArgumentException), "ConsumerSecret")]
-    [Arguments("x", "  ", "x", typeof(ArgumentException), "ConsumerSecret")]
+    [Arguments(null, "", "x", typeof(ArgumentNullException), "_discogsOptions.ConsumerKey")]
+    [Arguments("", "", "x", typeof(ArgumentException), "_discogsOptions.ConsumerKey")]
+    [Arguments("  ", "", "x", typeof(ArgumentException), "_discogsOptions.ConsumerKey")]
+    [Arguments("x", null, "x", typeof(ArgumentNullException), "_discogsOptions.ConsumerSecret")]
+    [Arguments("x", "", "x", typeof(ArgumentException), "_discogsOptions.ConsumerSecret")]
+    [Arguments("x", "  ", "x", typeof(ArgumentException), "_discogsOptions.ConsumerSecret")]
     public async Task StartAuthentication_ShouldThrowException_WhenParametersAreInvalid(
         string? consumerKey,
         string? consumerSecret,
@@ -98,21 +98,21 @@ public sealed class OAuthAuthenticationProviderTests
     }
 
     [Test]
-    [Arguments("", "", null, "", "", typeof(ArgumentNullException), "RequestToken")]
-    [Arguments("", "", "", "", "", typeof(ArgumentException), "RequestToken")]
-    [Arguments("", "", "  ", "", "", typeof(ArgumentException), "RequestToken")]
-    [Arguments("", "", "x", null, "", typeof(ArgumentNullException), "RequestTokenSecret")]
-    [Arguments("", "", "x", "", "", typeof(ArgumentException), "RequestTokenSecret")]
-    [Arguments("", "", "x", "  ", "", typeof(ArgumentException), "RequestTokenSecret")]
+    [Arguments("", "", null, "", "", typeof(ArgumentNullException), "session.RequestToken")]
+    [Arguments("", "", "", "", "", typeof(ArgumentException), "session.RequestToken")]
+    [Arguments("", "", "  ", "", "", typeof(ArgumentException), "session.RequestToken")]
+    [Arguments("", "", "x", null, "", typeof(ArgumentNullException), "session.RequestTokenSecret")]
+    [Arguments("", "", "x", "", "", typeof(ArgumentException), "session.RequestTokenSecret")]
+    [Arguments("", "", "x", "  ", "", typeof(ArgumentException), "session.RequestTokenSecret")]
     [Arguments("", "", "x", "x", null, typeof(ArgumentNullException), "verifierToken")]
     [Arguments("", "", "x", "x", "", typeof(ArgumentException), "verifierToken")]
     [Arguments("", "", "x", "x", "  ", typeof(ArgumentException), "verifierToken")]
-    [Arguments(null, "", "x", "x", "x", typeof(ArgumentNullException), "ConsumerKey")]
-    [Arguments("", "", "x", "x", "x", typeof(ArgumentException), "ConsumerKey")]
-    [Arguments("  ", "", "x", "x", "x", typeof(ArgumentException), "ConsumerKey")]
-    [Arguments("x", null, "x", "x", "x", typeof(ArgumentNullException), "ConsumerSecret")]
-    [Arguments("x", "", "x", "x", "x", typeof(ArgumentException), "ConsumerSecret")]
-    [Arguments("x", "  ", "x", "x", "x", typeof(ArgumentException), "ConsumerSecret")]
+    [Arguments(null, "", "x", "x", "x", typeof(ArgumentNullException), "_discogsOptions.ConsumerKey")]
+    [Arguments("", "", "x", "x", "x", typeof(ArgumentException), "_discogsOptions.ConsumerKey")]
+    [Arguments("  ", "", "x", "x", "x", typeof(ArgumentException), "_discogsOptions.ConsumerKey")]
+    [Arguments("x", null, "x", "x", "x", typeof(ArgumentNullException), "_discogsOptions.ConsumerSecret")]
+    [Arguments("x", "", "x", "x", "x", typeof(ArgumentException), "_discogsOptions.ConsumerSecret")]
+    [Arguments("x", "  ", "x", "x", "x", typeof(ArgumentException), "_discogsOptions.ConsumerSecret")]
     public async Task CompleteAuthentication_ShouldThrowException_WhenParametersAreInvalid(
         string? consumerKey,
         string? consumerSecret,
