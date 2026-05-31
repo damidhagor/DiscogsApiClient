@@ -75,6 +75,7 @@ with newer C# language features, ensure the style guidelines are updated to pref
 
 ## Collections and Expressions
 
+- **Target-typed new (`new()`)**: Use only when the target type is explicitly declared on the left (e.g., fields, properties, or explicitly typed variables) or in constructor/method arguments where the parameter type is clear. Otherwise, prefer using `var` with the explicit constructor on the right (e.g., `var options = new DiscogsApiClientOptions();`).
 - Use **collection expressions** (`[]`) for empty collections and short initializers wherever the target type supports it.
 - `EquatableArray<T>` supports collection expressions via `[CollectionBuilder]` — prefer `["a", "b"]` over `ImmutableArray.Create(...)`.
 - Use `default` only when the target type doesn't support collection expressions.
@@ -140,6 +141,13 @@ DiscogsApiClient/
   - `ArgumentException.ThrowIfNullOrWhiteSpace()` instead of `Guard.IsNotNullOrWhiteSpace()`
   - `ArgumentOutOfRangeException.ThrowIfLessThanOrEqual()` instead of `Guard.IsGreaterThan()`
   - `ArgumentOutOfRangeException.ThrowIfNegativeOrZero()` instead of `Guard.IsGreaterThan(value, 0)`
+- Do **not** pass the parameter name explicitly to native guards (e.g. use `ArgumentNullException.ThrowIfNull(session)` rather than `ArgumentNullException.ThrowIfNull(session, nameof(session))`). The compiler automatically infers parameter names in C# 11+ via `[CallerArgumentExpression]`.
+- Always validate reference parameters in public/externally visible methods (e.g. `ArgumentNullException.ThrowIfNull`) to prevent **CA1062** analyzer warnings.
+
+### Async/Await and ConfigureAwait
+
+- Always append `.ConfigureAwait(false)` to all awaited operations in library code to prevent synchronization context capture/deadlocks and resolve **CA2007** warnings.
+
 
 ### Contract Models
 
