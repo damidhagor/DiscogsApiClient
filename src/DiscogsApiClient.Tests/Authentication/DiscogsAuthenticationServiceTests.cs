@@ -36,13 +36,13 @@ public sealed class DiscogsAuthenticationServiceTests
     [Arguments(null!)]
     [Arguments("")]
     [Arguments("   ")]
-    public async Task AuthenticateWithPersonalAccessToken_ShouldThrowException_WhenTokenIsInvalid(string? tokene)
+    public async Task AuthenticateWithPersonalAccessToken_ShouldThrowException_WhenTokenIsInvalid(string? token)
     {
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
             new OAuthAuthenticationProvider(null!, null!));
 
-        await Assert.That(() => authService.AuthenticateWithPersonalAccessToken(""))
+        await Assert.That(() => authService.AuthenticateWithPersonalAccessToken(token!))
             .Throws<ArgumentException>();
 
         await Assert.That(authService.IsAuthenticated).IsFalse();

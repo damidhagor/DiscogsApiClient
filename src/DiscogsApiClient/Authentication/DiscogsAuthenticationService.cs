@@ -41,7 +41,7 @@ public sealed class DiscogsAuthenticationService : IDiscogsAuthenticationService
     /// <inheritdoc />
     /// <exception cref="AuthenticationFailedDiscogsException" />
     public async Task<OAuthAuthenticationSession> StartOAuthAuthentication(CancellationToken cancellationToken)
-        => await _oAuthAuthenticationProvider.StartAuthentication(cancellationToken);
+        => await _oAuthAuthenticationProvider.StartAuthentication(cancellationToken).ConfigureAwait(false);
 
     /// <inheritdoc />
     /// <exception cref="AuthenticationFailedDiscogsException" />

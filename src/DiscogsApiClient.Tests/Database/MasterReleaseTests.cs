@@ -189,6 +189,7 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
         var exception = await Assert.That(async () => await _apiClient.GetMasterReleaseVersions(masterReleaseId, paginationParams, null, cancellationToken))
             .Throws<DiscogsException>();
 
+        await Assert.That(exception).IsNotNull();
         await Assert.That(exception.Message).Contains("internal server error");
     }
 
