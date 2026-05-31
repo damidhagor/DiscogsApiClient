@@ -13,7 +13,9 @@ public sealed class ErrorHandlingDelegatingHandler : DelegatingHandler
         var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
         if (response.IsSuccessStatusCode)
+        {
             return response;
+        }
 
         string? message = null;
         try

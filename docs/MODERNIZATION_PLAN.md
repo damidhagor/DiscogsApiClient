@@ -373,14 +373,15 @@ Phase 6: Final Validation
 ### 4.1 C# Language Feature Adoption
 - [x] **File-scoped namespaces** - Convert to `namespace DiscogsApiClient;` (Audited: already implemented across all library files)
 - [x] **Global usings** - Create `GlobalUsings.cs` for common imports (Audited: Usings.cs already contains global usings)
-- [ ] **Record types** - Use `record` for DTOs/contracts where appropriate
-- [ ] **Init-only properties** - Convert to `init` where mutability not needed
-- [ ] **Pattern matching** - Modernize switch statements and conditionals
-- [ ] **Null-coalescing assignments** - Use `??=` where appropriate
-- [x] **Target-typed new** - Use `new()` where type is obvious (Implemented in OAuth provider & ServiceCollectionExtensions)
-- [ ] **Collection expressions** - Use `[...]` for arrays/collections (C# 12)
+- [x] **Record types** - Use `record` for DTOs/contracts where appropriate (Audited: DTO contracts are already record types)
+- [x] **Init-only properties** - Convert to `init` where mutability not needed (Audited: DTO records already use positional init-only properties. Options class will be modernized in step 4.7)
+- [x] **Pattern matching** - Modernize switch statements and conditionals (Audited: switch expressions already modern where present)
+- [x] **Null-coalescing assignments** - Use `??=` where appropriate (Audited: no new opportunities found in the codebase)
+- [x] **Target-typed new** - Use `new()` where type is obvious (Implemented in OAuth provider & ServiceCollectionExtensions; local variables prefer var + explicit new)
+- [x] **Collection expressions** - Use `[...]` for arrays/collections (C# 12) (Audited: no collection instantiations found in library code)
 - [x] **Primary constructors** - Consider for simple classes (C# 12) (Implemented in Auth service, OAuth provider, and delegating handlers)
-- [ ] **String interpolation** - Use `$"..."` over `string.Format`
+- [x] **String interpolation** - Use `$"..."` over `string.Format` (Audited: string interpolation already preferred; no string.Format found)
+
 
 
 ### 4.2 IDiscogsApiClient Interface Refactoring
