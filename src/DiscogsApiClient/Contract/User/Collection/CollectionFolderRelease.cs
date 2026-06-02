@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.User.Collection;
+namespace DiscogsApiClient.Contract.User.Collection;
 
 /// <summary>
 /// Represents a release in the user's collection folder
@@ -14,7 +14,7 @@ public sealed record CollectionFolderRelease(
     [property:JsonPropertyName("id")]
     int Id,
     [property:JsonPropertyName("instance_id")]
-    int InstanceId,
+    long InstanceId,
     [property:JsonPropertyName("date_added")]
     DateTime AddedAt,
     [property:JsonPropertyName("rating")]

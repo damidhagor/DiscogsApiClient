@@ -1,4 +1,4 @@
-﻿using DiscogsApiClient.SourceGenerator.ApiClient;
+using DiscogsApiClient.SourceGenerator.ApiClient;
 
 namespace DiscogsApiClient;
 
@@ -146,7 +146,7 @@ public interface IDiscogsApiClient
     }
 
     [HttpDelete("/users/{username}/collection/folders/{folderId}/releases/{releaseId}/instances/{instanceId}")]
-    internal Task DeleteReleaseFromCollectionFolderInternal(string username, int folderId, int releaseId, int instanceId, CancellationToken cancellationToken = default);
+    internal Task DeleteReleaseFromCollectionFolderInternal(string username, int folderId, int releaseId, long instanceId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Removes a release from a collection folder of the user.
@@ -157,7 +157,7 @@ public interface IDiscogsApiClient
     /// <param name="instanceId">The release's instance id in the folder.</param>
     /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the folder, release or instance id is invalid.</exception>
-    public async Task DeleteReleaseFromCollectionFolder(string username, int folderId, int releaseId, int instanceId, CancellationToken cancellationToken = default)
+    public async Task DeleteReleaseFromCollectionFolder(string username, int folderId, int releaseId, long instanceId, CancellationToken cancellationToken = default)
     {
         Guard.IsNotNullOrWhiteSpace(username);
         Guard.IsGreaterThanOrEqualTo(folderId, 1);

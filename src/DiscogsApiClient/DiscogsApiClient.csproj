@@ -19,10 +19,10 @@
 		<PackageTags>discogs</PackageTags>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<AssemblyVersion>4.1.0</AssemblyVersion>
-		<FileVersion>4.1.0</FileVersion>
-		<PackageVersion>4.1.0</PackageVersion>
-		<PackageReleaseNotes>Added ThumbnailUrl property to ReleaseArtist model. Fixed year/released property mappings in Release and MasterReleaseVersion models.</PackageReleaseNotes>
+		<AssemblyVersion>4.1.1</AssemblyVersion>
+		<FileVersion>4.1.1</FileVersion>
+		<PackageVersion>4.1.1</PackageVersion>
+		<PackageReleaseNotes>Fixed improper parsing of the ``instance_id`` property of collection folder releases.</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<ItemGroup>
