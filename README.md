@@ -178,6 +178,8 @@ public async Task Authenticate(
   - **Breaking**:
     - Renamed ``Release.YearFormatted`` → ``ReleasedFormatted``
     - Renamed ``MasterReleaseVersion.Year`` → ``Released``
+- ### **4.1.1**
+  - Fixed improper parsing of the ``instance_id`` property of collection folder releases.
 
 
 ## **Implemented Api Functions**

@@ -310,7 +310,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
     [Test]
     [Arguments(-1)]
     [Arguments(0)]
-    public async Task DeleteReleaseFromCollectionFolder_ShouldThrowArgumentOutOfRangeException_WhenInstanceIdIsInvalid(int instanceId, CancellationToken cancellationToken)
+    public async Task DeleteReleaseFromCollectionFolder_ShouldThrowArgumentOutOfRangeException_WhenInstanceIdIsInvalid(long instanceId, CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderId = 999;
@@ -326,7 +326,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
         var username = "DamIDhagor";
         var folderId = 999;
         var releaseId = 5134861;
-        var instanceId = int.MaxValue;
+        var instanceId = long.MaxValue;
 
         await Assert.That(async () => await _apiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, cancellationToken))
             .Throws<ResourceNotFoundDiscogsException>();
