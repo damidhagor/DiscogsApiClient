@@ -107,6 +107,15 @@ with newer C# language features, ensure the style guidelines are updated to pref
 - Use TUnit as the test framework.
 - Keep test infrastructure similar to the existing patterns in the project.
 
+## Git Workflow
+
+- **NEVER commit changes without explicit user approval first.**
+- Always present changes to the user for review before running `git commit`.
+- When presenting changes for review, **propose a suitable commit message** following conventional commit format.
+- The user must approve both the changes **and** the commit message before proceeding.
+- This applies to all commits including code changes, test recordings, documentation updates, etc.
+- After making changes, inform the user what was changed and wait for their approval to commit.
+
 ## Project Structure
 
 ```
