@@ -31,21 +31,12 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task GetCollectionFolders_ShouldReturnPublicFolders_WhenUnauthenticated(CancellationToken cancellationToken)
+    public async Task GetCollectionFolders_ShouldThrowUnauthenticatedDiscogsException_WhenUnauthenticated(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
 
-        var foldersResponse = await _unauthenticatedApiClient.GetCollectionFolders(username, cancellationToken);
-
-        await Assert.That(foldersResponse?.Folders).IsNotNull();
-        await Assert.That(foldersResponse!.Folders.Count).IsEqualTo(1);
-
-        var allFolder = foldersResponse.Folders.FirstOrDefault(f => f.Id == 0);
-
-        await Assert.That(allFolder).IsNotNull();
-        await Assert.That(allFolder!.Id).IsEqualTo(0);
-        await Assert.That(allFolder!.Name).IsEqualTo("All");
-        await Assert.That(allFolder!.ResourceUrl).IsNotNullOrWhiteSpace();
+        await Assert.That(async () => await _unauthenticatedApiClient.GetCollectionFolders(username, cancellationToken))
+            .Throws<UnauthenticatedDiscogsException>();
     }
 
     [Test]
