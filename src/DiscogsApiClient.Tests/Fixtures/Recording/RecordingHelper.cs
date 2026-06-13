@@ -16,7 +16,7 @@ public static class RecordingHelper
             WriteIndented = true
         };
 
-    private static HashSet<string> IgnoredHeaders { get; } = ["traceparent"];
+    private static HashSet<string> IgnoredHeaders { get; } = ["traceparent", "baggage"];
     private static HashSet<string> SensitiveHeaders { get; } = ["Authorization"];
 
     public static string GetRecordingKey()

@@ -1,7 +1,7 @@
 [
   {
     "requestMethod": "DELETE",
-    "requestUrl": "https://api.discogs.com/users/DamIDhagor/collection/folders/999/releases/5134861/instances/2147483647",
+    "requestUrl": "https://api.discogs.com/users/DamIDhagor/collection/folders/999/releases/5134861/instances/9223372036854775807",
     "requestHeaders": {
       "User-Agent": [
         "DiscogsApiClientTests/1.0"
@@ -14,7 +14,7 @@
     "responseStatusCode": 404,
     "responseHeaders": {
       "Date": [
-        "Tue, 26 May 2026 13:27:25 GMT"
+        "Sat, 13 Jun 2026 22:52:46 GMT"
       ],
       "Transfer-Encoding": [
         "chunked"
@@ -32,13 +32,13 @@
         "60"
       ],
       "x-discogs-ratelimit-remaining": [
-        "45"
+        "51"
       ],
       "x-discogs-ratelimit-used": [
-        "15"
+        "9"
       ],
       "Set-Cookie": [
-        "__cf_bm=6IvQEgr0qtesZpz_7gNb13b5rgeMlyrDkTBaSNb01BE-1779802045.4694045-1.0.1.1-ykh3n82IBguNui0Az47xuEv3SkDtS6obkfc4HIEyfvRWq72Wsi.zsyfs7qSb1_wuCKHbAVhshks0bDsk1IHdfyQk73U2yH_aVxNevyOviSR2j7dDXAwXl_oCoeY1VS.4; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Tue, 26 May 2026 13:57:25 GMT"
+        "__cf_bm=EpGJZXRjCDcYeH4zZXOY_OImSHVB5aW23Wa1SFyk1b0-1781391165.9377844-1.0.1.1-VHnbvx_4b3bpf9k1JPor_kqGJW62cyLmCfwZxRM41q4eZlDgL.wrE7SAwlMKqJhWsQNLaR_pMefq2wB9aZQd0.sNNDTC_QITWMkyNfPfE6v.Ua5UOxPM3mG7HElLjV8Q; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Sat, 13 Jun 2026 23:22:46 GMT"
       ],
       "cf-cache-status": [
         "DYNAMIC"
@@ -47,7 +47,7 @@
         "cloudflare"
       ],
       "CF-RAY": [
-        "a01d1e002fcff958-DUS"
+        "a0b4aae31a6a4e91-DUS"
       ],
       "Alt-Svc": [
         "h3=\u0022:443\u0022"

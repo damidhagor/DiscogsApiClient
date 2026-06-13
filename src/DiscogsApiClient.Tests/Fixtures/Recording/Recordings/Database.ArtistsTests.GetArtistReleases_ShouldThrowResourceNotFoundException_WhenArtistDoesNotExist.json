@@ -14,7 +14,7 @@
     "responseStatusCode": 404,
     "responseHeaders": {
       "Date": [
-        "Tue, 26 May 2026 13:22:36 GMT"
+        "Sat, 13 Jun 2026 22:49:04 GMT"
       ],
       "Transfer-Encoding": [
         "chunked"
@@ -50,10 +50,10 @@
         "60"
       ],
       "x-discogs-ratelimit-remaining": [
-        "36"
+        "30"
       ],
       "x-discogs-ratelimit-used": [
-        "24"
+        "30"
       ],
       "X-Frame-Options": [
         "SAMEORIGIN"
@@ -62,7 +62,7 @@
         "1; mode=block"
       ],
       "Set-Cookie": [
-        "__cf_bm=UMOq2IZxmbMpoDRJdydi2ibjDYuCIoyqQeXzXIMtoUI-1779801756.7820902-1.0.1.1-4DqS_2xy2YRoYWzIyOkUu1zgEDO2jOHHe5VL77UrT7iGipKEeV9XlJ9tPxZ7rAFTf59RYQakmaiPSEk9y1KPLRhAOaXhWTV9SFKa_9cZ2C6HoQlTw3Ce72XgEbpuh3nY; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Tue, 26 May 2026 13:52:36 GMT"
+        "__cf_bm=ugDTPu1xyceuTOfF2rxvdqhPhlDejAOz8cbdrd.n8XU-1781390944.7289202-1.0.1.1-t8T2jzapTJbwramCrRctNTONEydoVjvFQYYJGydvUVMqb7nvSq4cIFkaCpLmQuwUTYm5KjngbFSZZJjx9sRQUWBn3mSnh8WF5eQSL3RKTplqjMSo9blUkBPkcJUSSG.X; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Sat, 13 Jun 2026 23:19:04 GMT"
       ],
       "cf-cache-status": [
         "DYNAMIC"
@@ -71,7 +71,7 @@
         "cloudflare"
       ],
       "CF-RAY": [
-        "a01d16f3ececf95e-DUS"
+        "a0b4a57c8a53f966-DUS"
       ],
       "Alt-Svc": [
         "h3=\u0022:443\u0022"

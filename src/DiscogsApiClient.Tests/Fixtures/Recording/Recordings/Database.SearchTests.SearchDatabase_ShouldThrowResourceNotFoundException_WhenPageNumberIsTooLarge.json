@@ -14,7 +14,7 @@
     "responseStatusCode": 404,
     "responseHeaders": {
       "Date": [
-        "Tue, 26 May 2026 13:23:46 GMT"
+        "Sat, 13 Jun 2026 22:50:21 GMT"
       ],
       "Transfer-Encoding": [
         "chunked"
@@ -34,9 +34,6 @@
       "Access-Control-Expose-Headers": [
         "Location"
       ],
-      "cf-cache-status": [
-        "DYNAMIC"
-      ],
       "Strict-Transport-Security": [
         "max-age=15552000"
       ],
@@ -53,10 +50,10 @@
         "60"
       ],
       "x-discogs-ratelimit-remaining": [
-        "41"
+        "31"
       ],
       "x-discogs-ratelimit-used": [
-        "19"
+        "29"
       ],
       "X-Frame-Options": [
         "SAMEORIGIN"
@@ -64,11 +61,17 @@
       "X-XSS-Protection": [
         "1; mode=block"
       ],
+      "Set-Cookie": [
+        "__cf_bm=JzC3_vw2ay5ePZXF2lGhBhz2ALoufSWUrsNNXOrciq0-1781391020.80191-1.0.1.1-o5HYkWQHlV.uvDL7p_Ks71V9MSDSMVXKIuhi48s401t.KxgAlyY.NRa40zKMpYerFTqPBjQ89vFI1T9dFLEHU1BnrfdMhcwOvscnjRJgWL9XNiUbymJ00j7LGeVcOazd; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Sat, 13 Jun 2026 23:20:21 GMT"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
       "Server": [
         "cloudflare"
       ],
       "CF-RAY": [
-        "a01d18a869d0c808-DUS"
+        "a0b4a7580e1b6791-DUS"
       ],
       "Alt-Svc": [
         "h3=\u0022:443\u0022"

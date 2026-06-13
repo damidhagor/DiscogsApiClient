@@ -14,57 +14,82 @@ $ErrorActionPreference = 'Stop'
 
 $repoRoot = $PSScriptRoot | Split-Path
 $srcDir = Join-Path $repoRoot 'src'
-$recordingsDir = Join-Path (Join-Path (Join-Path $srcDir 'DiscogsApiClient.Tests') 'Fixtures') (Join-Path 'Recording' 'Recordings')
-$testProject = Join-Path $srcDir 'DiscogsApiClient.Tests'
-
-# Test batches: namespace filters executed in order with rate-limit sleeps between them
-$batches = @(
-    '/DiscogsApiClient.Tests/DiscogsApiClient.Tests.User/**'
-    '/DiscogsApiClient.Tests/DiscogsApiClient.Tests.Database/**'
-    '/DiscogsApiClient.Tests/DiscogsApiClient.Tests.Collection/CollectionFoldersTests/**'
-    '/DiscogsApiClient.Tests/DiscogsApiClient.Tests.Collection/CollectionFolderReleasesTests/**'
-    '/DiscogsApiClient.Tests/DiscogsApiClient.Tests.Collection/CollectionValueTests/**'
-    '/DiscogsApiClient.Tests/DiscogsApiClient.Tests.Collection/WantlistTests/**'
-)
+$recordingsDir = [System.IO.Path]::Combine($srcDir, 'DiscogsApiClient.Tests', 'Fixtures', 'Recording', 'Recordings')
 
 $cooldownSeconds = 65
 
+function Invoke-TestBatch {
+    param(
+        [Parameter(Mandatory)]
+        [string]$Filter
+    )
+
+    Write-Host "Running: $Filter"
+
+    Push-Location $srcDir
+    try {
+        dotnet run --project DiscogsApiClient.Tests -f net10.0 -- --treenode-filter "$Filter"
+        if ($LASTEXITCODE -ne 0) {
+            Write-Warning "Filter had test failures (exit code $LASTEXITCODE) - continuing. Failing tests will still produce recordings."
+        }
+    }
+    finally {
+        Pop-Location
+    }
+}
+
+function Wait-RateLimit {
+    Write-Host "--- Cooling down for $cooldownSeconds seconds (rate limit) ---"
+    Start-Sleep -Seconds $cooldownSeconds
+}
+
 try {
-    # Enable recording mode
     $env:DISCOGS_RECORD = 'true'
 
-    # Clean existing recordings
     Write-Host '--- Cleaning recording directory ---'
     if (Test-Path $recordingsDir) {
         Remove-Item -Recurse -Force "$recordingsDir\*" -ErrorAction SilentlyContinue
     }
 
-    # Run each test batch with a cooldown between them
-    for ($i = 0; $i -lt $batches.Count; $i++) {
-        $filter = $batches[$i]
-        Write-Host "`n--- Running batch $($i + 1)/$($batches.Count): $filter ---"
+    Write-Host "`n=== BATCH 1/7: User Tests ==="
+    Invoke-TestBatch -Filter '/DiscogsApiClient.Tests/DiscogsApiClient.Tests.User/**'
+    Write-Host "=== BATCH 1/7 COMPLETE ==="
+    Wait-RateLimit
 
-        Push-Location $srcDir
-        try {
-            dotnet run --project DiscogsApiClient.Tests -f net10.0 -- --treenode-filter "$filter"
-            if ($LASTEXITCODE -ne 0) {
-                Write-Warning "Batch $($i + 1) had test failures (exit code $LASTEXITCODE) - continuing. Failing tests will still produce recordings."
-            }
-        }
-        finally {
-            Pop-Location
-        }
+    Write-Host "`n=== BATCH 2/7: Database Tests (Part 1) ==="
+    Invoke-TestBatch -Filter '/DiscogsApiClient.Tests/DiscogsApiClient.Tests.Database/MasterReleaseTests/**'
+    Invoke-TestBatch -Filter '/DiscogsApiClient.Tests/DiscogsApiClient.Tests.Database/ArtistsTests/**'
+    Write-Host "=== BATCH 2/7 COMPLETE ==="
+    Wait-RateLimit
 
-        # Cooldown between batches (skip after the last one)
-        if ($i -lt $batches.Count - 1) {
-            Write-Host "--- Cooling down for $cooldownSeconds seconds (rate limit) ---"
-            Start-Sleep -Seconds $cooldownSeconds
-        }
-    }
+    Write-Host "`n=== BATCH 3/7: Database Tests (Part 2) ==="
+    Invoke-TestBatch -Filter '/DiscogsApiClient.Tests/DiscogsApiClient.Tests.Database/LabelsTests/**'
+    Invoke-TestBatch -Filter '/DiscogsApiClient.Tests/DiscogsApiClient.Tests.Database/SearchTests/**'
+    Invoke-TestBatch -Filter '/DiscogsApiClient.Tests/DiscogsApiClient.Tests.Database/ReleasesTests/**'
+    Write-Host "=== BATCH 3/7 COMPLETE ==="
+    Wait-RateLimit
+
+    Write-Host "`n=== BATCH 4/7: Collection Folders Tests ==="
+    Invoke-TestBatch -Filter '/DiscogsApiClient.Tests/DiscogsApiClient.Tests.Collection/CollectionFoldersTests/**'
+    Write-Host "=== BATCH 4/7 COMPLETE ==="
+    Wait-RateLimit
+
+    Write-Host "`n=== BATCH 5/7: Collection Folder Releases Tests ==="
+    Invoke-TestBatch -Filter '/DiscogsApiClient.Tests/DiscogsApiClient.Tests.Collection/CollectionFolderReleasesTests/**'
+    Write-Host "=== BATCH 5/7 COMPLETE ==="
+    Wait-RateLimit
+
+    Write-Host "`n=== BATCH 6/7: Collection Value Tests ==="
+    Invoke-TestBatch -Filter '/DiscogsApiClient.Tests/DiscogsApiClient.Tests.Collection/CollectionValueTests/**'
+    Write-Host "=== BATCH 6/7 COMPLETE ==="
+    Wait-RateLimit
+
+    Write-Host "`n=== BATCH 7/7: Wantlist Tests ==="
+    Invoke-TestBatch -Filter '/DiscogsApiClient.Tests/DiscogsApiClient.Tests.Collection/WantlistTests/**'
+    Write-Host "=== BATCH 7/7 COMPLETE ==="
 
     Write-Host "`n=== RECORDING COMPLETE ==="
 }
 finally {
-    # Always unset recording mode
     Remove-Item Env:\DISCOGS_RECORD -ErrorAction SilentlyContinue
 }
