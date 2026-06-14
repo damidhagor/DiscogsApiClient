@@ -1,8 +1,8 @@
 using System.Text.Json;
-using System.Threading.RateLimiting;
 using DiscogsApiClient.Authentication.OAuth;
 using DiscogsApiClient.Authentication.PersonalAccessToken;
 using DiscogsApiClient.Middleware;
+using DiscogsApiClient.RateLimiting;
 using DiscogsApiClient.SourceGenerator.ApiClient;
 using DiscogsApiClient.SourceGenerator.JsonSerialization;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,6 +42,11 @@ public static partial class ServiceCollectionExtensions
         services.AddSingleton<IDiscogsAuthenticationService, DiscogsAuthenticationService>();
         services.AddSingleton<IPersonalAccessTokenAuthenticationProvider, PersonalAccessTokenAuthenticationProvider>();
 
+        var rateLimitStateService = new DiscogsRateLimitStateService();
+        services.AddSingleton<IDiscogsRateLimitStateService>(rateLimitStateService);
+        services.AddSingleton<IDiscogsRateLimitStateUpdateService>(rateLimitStateService);
+        services.AddTransient<RateLimitStateDelegatingHandler>();
+
         services.AddHttpClient<IOAuthAuthenticationProvider, OAuthAuthenticationProvider>()
             .ConfigureHttpClient((serviceProvider, httpClient) =>
              {
@@ -63,32 +68,10 @@ public static partial class ServiceCollectionExtensions
                 httpClient.BaseAddress = new(options.BaseUrl);
                 httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent);
             })
+            .AddHttpMessageHandler<RateLimitStateDelegatingHandler>()
             .AddHttpMessageHandler<ErrorHandlingDelegatingHandler>()
-            .AddHttpMessageHandler<AuthenticationDelegatingHandler>()
-            .AddRateLimiting(services, discogsOptions);
+            .AddHttpMessageHandler<AuthenticationDelegatingHandler>();
 
         return services;
-    }
-
-    private static void AddRateLimiting(this IHttpClientBuilder builder, IServiceCollection services, DiscogsApiClientOptions options)
-    {
-        if (options.UseRateLimiting)
-        {
-            var rateLimitingOptions = new SlidingWindowRateLimiterOptions()
-            {
-                Window = options.RateLimitingWindow,
-                SegmentsPerWindow = options.RateLimitingWindowSegments,
-                PermitLimit = options.RateLimitingPermits,
-                QueueLimit = options.RateLimitingQueueSize,
-                AutoReplenishment = true,
-                QueueProcessingOrder = QueueProcessingOrder.OldestFirst
-            };
-
-            services.AddSingleton(rateLimitingOptions);
-            services.AddSingleton<RateLimiter, SlidingWindowRateLimiter>();
-            services.AddTransient<RateLimitedDelegatingHandler>();
-
-            builder.AddHttpMessageHandler<RateLimitedDelegatingHandler>();
-        }
     }
 }

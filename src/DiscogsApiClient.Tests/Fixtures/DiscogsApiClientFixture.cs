@@ -48,7 +48,6 @@ public sealed class DiscogsApiClientFixture : IAsyncInitializer, IAsyncDisposabl
             {
                 o.BaseUrl = "https://api.discogs.com";
                 o.UserAgent = "DiscogsApiClientTests/1.0";
-                o.UseRateLimiting = isRecording;
             });
 
         if (isRecording)

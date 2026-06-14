@@ -408,21 +408,51 @@ Phase 6: Final Validation
 - Background: The repository contains an existing client-side rate limiting layer but it has been observed to behave unreliably in production-like scenarios.
 - Goal: Either rework the rate limiting implementation to be reliable across target frameworks, or remove the built-in limiter and provide first-class access to Discogs rate-limit metadata so library users can implement their own strategies.
 - Tasks:
-  - [ ] Audit current rate limiting implementation and reproduce failure modes in tests or a harness
-  - [ ] Decision: Rework or Remove (document choice and rationale)
-  - If Rework:
-    - [ ] Implement a robust, cross-target rate limiter (prefer `System.Threading.RateLimiting` primitives or a tested token-bucket implementation) integrated via an `HttpMessageHandler` or `DelegatingHandler`
-    - [ ] Add resiliency for clock skew and transient errors, and ensure behavior is deterministic under CI and AOT scenarios
-    - [ ] Add unit and integration tests that simulate high-concurrency scenarios and validate correctness
+  - [x] Audit current rate limiting implementation and reproduce failure modes in tests or a harness
+  - [x] **Decision: Remove** (document choice and rationale)
+  - ~~If Rework:~~
+    - ~~Implement a robust, cross-target rate limiter (prefer `System.Threading.RateLimiting` primitives or a tested token-bucket implementation) integrated via an `HttpMessageHandler` or `DelegatingHandler`~~
+    - ~~Add resiliency for clock skew and transient errors, and ensure behavior is deterministic under CI and AOT scenarios~~
+    - ~~Add unit and integration tests that simulate high-concurrency scenarios and validate correctness~~
   - If Remove:
-    - [ ] Remove the built-in rate limiter implementation
-    - [ ] Add a public model to expose parsed Discogs rate-limit headers (for example `RateLimit`, `RateLimitRemaining`, `RateLimitReset`)
-    - [ ] Surface the parsed rate-limit metadata on responses or via a light-weight client API so consumers can implement custom policies
-    - [ ] Document migration steps for consumers and update README/docs
+    - [x] Remove the built-in rate limiter implementation
+    - [x] Add a public model to expose parsed Discogs rate-limit headers (for example `RateLimit`, `RateLimitRemaining`, `RateLimitReset`)
+    - [x] Surface the parsed rate-limit metadata on responses or via a light-weight client API so consumers can implement custom policies
 - Acceptance criteria:
-  - [ ] A decision is recorded (Rework or Remove) and implemented
-  - [ ] If reworked: limiter passes stress tests and is documented
-  - [ ] If removed: consumers have documented access to rate-limit metadata and examples for implementing retry/backoff
+  - [x] A decision is recorded (Rework or Remove) and implemented
+  - ~~If reworked: limiter passes stress tests and is documented~~
+  - [x] If removed: consumers have access to rate-limit metadata via `IDiscogsRateLimitStateService` (documentation deferred to Phase 6)
+
+**Decision Rationale (Remove):**
+- The existing sliding-window rate limiter was unreliable and did not align with Discogs' actual rate limiting methodology
+- Feature was not widely used by library consumers and added maintenance burden
+- Exposing raw rate-limit metadata provides maximum flexibility for consumers to implement their own strategies
+- Reduces library complexity and eliminates the `System.Threading.RateLimiting` dependency
+
+**Implementation Summary:**
+- **Removed Components:**
+  - `RateLimitedDelegatingHandler` (old sliding window implementation)
+  - Rate limiting properties from `DiscogsApiClientOptions` (`UseRateLimiting`, `RateLimitingWindow`, `RateLimitingWindowSegments`, `RateLimitingPermits`, `RateLimitingQueueSize`)
+  - `System.Threading.RateLimiting` NuGet package dependency
+
+- **Added Components:**
+  - `IDiscogsRateLimitStateService` - Public interface providing read-only access to current rate limit state
+  - `IDiscogsRateLimitStateUpdateService` - Internal interface for updating state (not exposed to consumers)
+  - `DiscogsRateLimitState` - Immutable record containing `Limit`, `Remaining`, and `Used` values
+  - `DiscogsRateLimitStateService` - Thread-safe singleton service implementation using `Interlocked.Exchange`
+  - `RateLimitStateDelegatingHandler` - Handler that extracts Discogs rate-limit headers (`x-discogs-ratelimit`, `x-discogs-ratelimit-remaining`, `x-discogs-ratelimit-used`) and updates the state service
+
+- **Updated Components:**
+  - `ServiceCollectionExtensions` - Registers rate limit state service as singleton (always enabled, not conditional)
+  - Tests updated to verify `IDiscogsRateLimitStateService` registration
+  - Demo projects updated to remove obsolete `UseRateLimiting` configuration
+
+- **Design Decisions:**
+  - Service is always registered and handler always runs (no opt-in/opt-out flag)
+  - Both public and internal interfaces resolve to the same singleton instance
+  - State is only updated when all three headers are present and parseable (all-or-nothing)
+  - No circular dependencies: separate service prevents DI issues if consumers want to use it in custom handlers
+  - Thread-safe using lock-free atomic reference exchange
 
 ### 4.5 Code Quality Improvements
 - [x] Enable nullable reference types verification (Audited: already enabled globally in csproj)
@@ -636,6 +666,8 @@ services.AddDiscogsApiClient(options =>
   - Document decision and timeline
 - [ ] Update `docs/ARCHITECTURE.md` with any architectural changes (if applicable)
 - [ ] Create migration guide for v4.x → v5.x (breaking changes) in `docs/MIGRATION_GUIDE.md`
+  - [ ] Document rate limiting removal and new `IDiscogsRateLimitStateService` usage with examples
+  - [ ] Include code samples showing how consumers can implement custom rate limiting if needed
 - [ ] Update this modernization plan status to completed
 
 ### 6.3 Code Quality Gates
@@ -682,7 +714,7 @@ services.AddDiscogsApiClient(options =>
 - **Phase 1:** ✅ Completed
 - **Phase 2:** ✅ Completed
 - **Phase 3:** ✅ Completed
-- **Phase 4:** ⬜ Not Started
+- **Phase 4:** 🟡 In Progress (Rate Limiting: ✅ Completed)
 - **Phase 5:** ⬜ Not Started
 - **Phase 6:** ⬜ Not Started
 
@@ -713,7 +745,7 @@ services.AddDiscogsApiClient(options =>
 | TBD | Version/README update timing | May defer to actual release, not modernization merge | Avoids confusion for 4.x users |
 | TBD | Merge to main ≠ release | Package publication is separate process | Cleaner release workflow |
 | TBD | Service registration modernization (Phase 3.6) | Align with `IOptions<T>`, builder pattern, `ValidateOnStart()` used by all modern .NET libraries | **Breaking** — callers must update `AddDiscogsApiClient` call site |
-| TBD | Rate-limiter opt-in: implicit flag vs. explicit builder extension | TBD in Phase 3.6.6 — prefer explicit `.AddRateLimiting()` builder extension | **Breaking** — removes `UseRateLimiting` flag if explicit opt-in chosen |
+| 2025-01-XX | **Rate limiting: Remove built-in limiter** | Sliding window implementation was unreliable and didn't align with Discogs methodology; feature not widely used; exposing raw metadata provides maximum flexibility | **Breaking** — consumers must remove `UseRateLimiting` and related config; can now access rate limit state via `IDiscogsRateLimitStateService` |
 
 ### Risks & Mitigations
 - **Risk:** Breaking changes impact existing consumers
@@ -736,7 +768,7 @@ services.AddDiscogsApiClient(options =>
 - [ ] Should we implement the optional E2E test suite in Phase 2.6?
 - [ ] What breaking changes (if any) should we make to IDiscogsApiClient interface?
 - [ ] Should README and version be updated in modernization→main merge or deferred to release?
-- [ ] Phase 3.6.6: implicit `UseRateLimiting` flag OR explicit `.AddRateLimiting()` builder extension?
+- [x] ~~Phase 3.6.6: implicit `UseRateLimiting` flag OR explicit `.AddRateLimiting()` builder extension?~~ **Resolved:** Removed rate limiting entirely; replaced with `IDiscogsRateLimitStateService` that exposes raw Discogs rate limit metadata
 - [ ] *Add questions as they arise*
 
 ---

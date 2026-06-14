@@ -1,4 +1,5 @@
 using DiscogsApiClient.Authentication.OAuth;
+using DiscogsApiClient.RateLimiting;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DiscogsApiClient.Tests.Client;
@@ -13,7 +14,6 @@ public sealed class ServiceCollectionTests
         {
             options.BaseUrl = "https://api.discogs.com";
             options.UserAgent = "TestUserAgent";
-            options.UseRateLimiting = false;
         });
 
         using var serviceProvider = services.BuildServiceProvider();
@@ -24,20 +24,23 @@ public sealed class ServiceCollectionTests
     }
 
     [Test]
-    public async Task AddDiscogsApiClient_ShouldRegisterRateLimiting_WhenUseRateLimitingIsTrue()
+    public async Task AddDiscogsApiClient_ShouldRegisterRateLimitStateService()
     {
         var services = new ServiceCollection();
         services.AddDiscogsApiClient(options =>
         {
             options.BaseUrl = "https://api.discogs.com";
             options.UserAgent = "TestUserAgent";
-            options.UseRateLimiting = true;
         });
 
         using var serviceProvider = services.BuildServiceProvider();
 
-        await Assert.That(serviceProvider.GetService<IDiscogsApiClient>()).IsNotNull();
-        await Assert.That(serviceProvider.GetService<System.Threading.RateLimiting.RateLimiter>()).IsNotNull();
+        var publicService = serviceProvider.GetService<IDiscogsRateLimitStateService>();
+        var updateService = serviceProvider.GetService<IDiscogsRateLimitStateUpdateService>();
+
+        await Assert.That(publicService).IsNotNull();
+        await Assert.That(updateService).IsNotNull();
+        await Assert.That(publicService).IsSameReferenceAs(updateService);
     }
 
     [Test]

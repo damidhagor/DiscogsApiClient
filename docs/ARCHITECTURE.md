@@ -9,7 +9,8 @@ DiscogsApiClient is a strongly-typed .NET library for accessing the Discogs API 
 **Key Features:**
 - Source Generator-based client implementation
 - Multiple authentication methods (Personal Access Token, OAuth 1.0a)
-- Built-in rate limiting and error handling
+- Error handling with custom exceptions
+- Extensibility via middleware and DI
 - Native AOT compatibility
 - System.Text.Json with source-generated serialization
 - Multi-targeting (.NET 6, 7, 8)
@@ -32,9 +33,8 @@ graph TB
         OAuth[OAuth<br/>Provider]
 
         subgraph "Middleware Pipeline"
-            RL[Rate Limiter<br/>Handler]
-            AH[Authentication<br/>Handler]
-            EH[Error<br/>Handler]
+            AH[Authentication<br/>Handler] --> EH[Error<br/>Handler]
+            EH --> RLS[Rate Limit State<br/>Handler]
         end
 
         subgraph "Models & Serialization"
@@ -54,10 +54,8 @@ graph TB
 
     App -->|Uses| Interface
     Interface -.->|Implemented by| Generated
-    Generated -->|Uses| RL
-    RL --> AH
-    AH --> EH
-    EH -->|HTTPS| API
+    Generated -->|HTTP Request| AH
+    RLS -->|HTTPS| API
 
     Generated -.->|Serializes with| Json
     Generated -.->|Uses| Contract
@@ -264,14 +262,16 @@ Custom `DelegatingHandler` implementations for cross-cutting concerns:
 - Maps 404 → `ResourceNotFoundDiscogsException`
 - Maps 429 → `RateLimitExceededDiscogsException`
 
-#### `RateLimitedDelegatingHandler`
-- Enforces rate limiting using `System.Threading.RateLimiting`
-- Configurable sliding window rate limiter
-- Prevents API throttling
+#### `RateLimitStateDelegatingHandler`
+- Extracts Discogs API rate limit headers from responses
+- Updates `IDiscogsRateLimitStateService` with current rate limit values
+- Provides observable rate limit state for consumers to implement custom strategies
+- **Positioned last in pipeline** to ensure headers are captured even from error responses
 
 **Pipeline Order:**
 ```
-Request → RateLimiting → Authentication → ErrorHandling → HttpClient → API
+Request → Authentication → ErrorHandling → RateLimitState → HttpClient → API
+Response ← RateLimitState ← ErrorHandling ← Authentication ← HttpClient ← API
 ```
 
 ### 5. Contract Models
@@ -325,18 +325,15 @@ services.AddDiscogsApiClient(options =>
     options.UserAgent = "MyApp/1.0";
     options.ConsumerKey = "...";      // For OAuth
     options.ConsumerSecret = "...";   // For OAuth
-    options.UseRateLimiting = true;
-    options.RateLimitingPermits = 60;
-    options.RateLimitingWindow = TimeSpan.FromMinutes(1);
 });
 ```
 
 **Registered Services:**
 - `IDiscogsApiClient` (Scoped, via HttpClient)
 - `IDiscogsAuthenticationService` (Singleton)
+- `IDiscogsRateLimitStateService` (Singleton)
 - Authentication providers (Singleton/Scoped)
 - Middleware handlers (Transient)
-- Rate limiter (Singleton, if enabled)
 
 ---
 
@@ -388,26 +385,29 @@ sequenceDiagram
     participant User as User Code
     participant API as IDiscogsApiClient
     participant Gen as Generated Implementation
-    participant RL as RateLimitHandler
     participant Auth as AuthHandler
     participant Error as ErrorHandler
+    participant RLS as RateLimitStateHandler
     participant HTTP as HttpClient
     participant Discogs as Discogs API
 
     User->>API: GetUser(username)
     API->>API: Validate parameters (Guard)
     API->>Gen: Call internal method
-    Gen->>RL: HTTP Request
-    RL->>RL: Check rate limit
-    RL->>Auth: Forward request
+    Gen->>Auth: HTTP Request
     Auth->>Auth: Add auth headers
     Auth->>Error: Forward request
-    Error->>HTTP: Forward request
+    Error->>RLS: Forward request
+    RLS->>HTTP: Forward request
     HTTP->>Discogs: HTTPS Request
     Discogs-->>HTTP: Response (200 OK)
-    HTTP-->>Error: Response
+    HTTP-->>RLS: Response
+    RLS->>RLS: Extract rate limit headers
+    RLS->>RLS: Update IDiscogsRateLimitStateService
+    RLS-->>Error: Forward response
     Error->>Error: Check for errors
-    Error-->>Gen: Forward response
+    Error-->>Auth: Forward response
+    Auth-->>Gen: Forward response
     Gen->>Gen: Deserialize JSON
     Gen-->>API: Return User
     API-->>User: Return User
@@ -444,14 +444,12 @@ sequenceDiagram
 
 | Technology | Purpose | Version |
 |------------|---------|---------|
-| C# | Primary language | 11+ |
-| .NET | Target frameworks | 6, 7, 8 |
+| C# | Primary language | 12+ |
+| .NET | Target frameworks | 8, 9, 10 |
 | System.Text.Json | Serialization | Built-in |
 | Source Generators | Code generation | Roslyn |
 | HttpClient | HTTP communication | Built-in |
-| System.Threading.RateLimiting | Rate limiting | 8.0+ |
-| CommunityToolkit.Diagnostics | Guard clauses | 8.2.2 |
-| Microsoft.Extensions.Http | HttpClient factory | 8.0.0 |
+| Microsoft.Extensions.Http | HttpClient factory | 10.0.8 |
 
 ---
 
@@ -491,10 +489,6 @@ Add custom `DelegatingHandler` to the pipeline in `ServiceCollectionExtensions`:
 builder.AddHttpMessageHandler<CustomDelegatingHandler>();
 ```
 
-### Custom Rate Limiting
-
-Replace `SlidingWindowRateLimiter` with custom `RateLimiter` implementation.
-
 ---
 
 ## Testing Strategy
@@ -522,11 +516,10 @@ The library is designed for Native AOT compatibility:
 
 ## Performance Considerations
 
-1. **Rate Limiting:** Optional sliding window limiter prevents API throttling
-2. **Connection Pooling:** HttpClient factory provides connection reuse
-3. **Async/Await:** All I/O operations are async throughout
-4. **Source Generation:** No runtime reflection overhead
-5. **Minimal Allocations:** Uses `Span<T>` and value types where appropriate
+1. **Connection Pooling:** HttpClient factory provides connection reuse
+2. **Async/Await:** All I/O operations are async throughout
+3. **Source Generation:** No runtime reflection overhead
+4. **Minimal Allocations:** Uses `Span<T>` and value types where appropriate
 
 ---
 

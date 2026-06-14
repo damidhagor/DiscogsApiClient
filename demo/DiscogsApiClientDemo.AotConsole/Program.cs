@@ -1,4 +1,4 @@
-﻿using DiscogsApiClient;
+using DiscogsApiClient;
 using DiscogsApiClient.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,7 +8,6 @@ var services = new ServiceCollection()
     .AddDiscogsApiClient(options =>
     {
         options.UserAgent = "AwesomeAppDemo/1.0.0";
-        options.UseRateLimiting = true;
     })
     .BuildServiceProvider();
 
