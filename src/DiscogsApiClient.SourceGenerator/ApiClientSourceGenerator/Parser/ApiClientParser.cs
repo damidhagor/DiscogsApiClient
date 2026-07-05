@@ -1,4 +1,3 @@
-using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Attributes;
 using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models;
 using DiscogsApiClient.SourceGenerator.Diagnostics;
 using DiscogsApiClient.SourceGenerator.Shared.Helpers;
@@ -9,7 +8,7 @@ internal static class ApiClientParser
 {
     public static GeneratorResult<ApiClient>? ParseApiClient(GeneratorAttributeSyntaxContext context, CancellationToken cancellationToken)
     {
-        if (context.TargetSymbol is not INamedTypeSymbol interfaceSymbol)
+        if (context.TargetSymbol is not INamedTypeSymbol classSymbol)
         {
             return null;
         }
@@ -19,8 +18,6 @@ internal static class ApiClientParser
         var location = DiagnosticLocation.From(context.TargetNode.GetLocation());
 
         INamedTypeSymbol? jsonSerializerContextTypeSymbol = null;
-        string? clientName = null;
-        string? clientNamespace = null;
 
         foreach (var attributeData in context.Attributes)
         {
@@ -37,20 +34,6 @@ internal static class ApiClientParser
                 // but was not directly resolved as INamedTypeSymbol in the first branch.
                 jsonSerializerContextTypeSymbol = namedType;
             }
-
-            foreach (var namedArg in attributeData.NamedArguments)
-            {
-                if (namedArg.Key == ApiClientAttribute.NamePropertyName
-                    && namedArg.Value.Value is string name)
-                {
-                    clientName = name;
-                }
-                else if (namedArg.Key == ApiClientAttribute.NamespacePropertyName
-                    && namedArg.Value.Value is string ns)
-                {
-                    clientNamespace = ns;
-                }
-            }
         }
 
         if (jsonSerializerContextTypeSymbol is null)
@@ -58,23 +41,84 @@ internal static class ApiClientParser
             return null;
         }
 
-        var typeInfo = interfaceSymbol.GetSymbolTypeInfo();
-        var jsonSerializerContextTypeInfo = jsonSerializerContextTypeSymbol.GetSymbolTypeInfo();
-
-        clientName ??= typeInfo.Name.Substring(1);
-        clientNamespace ??= typeInfo.Namespace;
-
         var diagnostics = ImmutableArray.CreateBuilder<DiagnosticInfo>();
 
+        var isPartial = context.TargetNode is ClassDeclarationSyntax classDeclaration
+            && classDeclaration.Modifiers.Any(static m => m.Text == "partial");
+
+        if (!isPartial)
+        {
+            diagnostics.Add(new(DiagnosticDescriptors.ApiClientMustBePartial, location, [classSymbol.Name]));
+        }
+
+        var httpClientMemberName = classSymbol.FindMemberName(static type => type.IsHttpClient());
+        if (httpClientMemberName is null)
+        {
+            diagnostics.Add(new(DiagnosticDescriptors.MissingHttpClientMember, location, [classSymbol.Name]));
+        }
+
+        var contextMemberName = classSymbol.FindMemberName(type => type.IsOrDerivesFrom(jsonSerializerContextTypeSymbol));
+        if (contextMemberName is null)
+        {
+            diagnostics.Add(new(
+                DiagnosticDescriptors.MissingJsonSerializerContextMember,
+                location,
+                [classSymbol.Name, jsonSerializerContextTypeSymbol.GetSymbolTypeInfo().FullTypeName]));
+        }
+
+        if (!isPartial || httpClientMemberName is null || contextMemberName is null)
+        {
+            return GeneratorResult<ApiClient>.Failure(diagnostics.ToImmutable());
+        }
+
         var apiClient = new ApiClient(
-            typeInfo,
-            jsonSerializerContextTypeInfo,
-            clientName,
-            clientNamespace,
-            interfaceSymbol.ParseApiMethods(location, diagnostics, cancellationToken));
+            classSymbol.GetSymbolTypeInfo(),
+            jsonSerializerContextTypeSymbol.GetSymbolTypeInfo(),
+            httpClientMemberName,
+            contextMemberName,
+            classSymbol.ParseApiMethods(location, diagnostics, cancellationToken));
 
         return diagnostics.Count > 0
             ? GeneratorResult<ApiClient>.Success(apiClient, diagnostics.ToImmutable())
             : GeneratorResult<ApiClient>.Success(apiClient);
+    }
+
+    private static string? FindMemberName(this INamedTypeSymbol classSymbol, Func<ITypeSymbol, bool> typePredicate)
+    {
+        foreach (var member in classSymbol.GetMembers())
+        {
+            var memberType = member switch
+            {
+                IFieldSymbol { AssociatedSymbol: null } field => field.Type,
+                IPropertySymbol property => property.Type,
+                _ => null
+            };
+
+            if (memberType is not null && typePredicate(memberType))
+            {
+                return member.Name;
+            }
+        }
+
+        return null;
+    }
+
+    private static bool IsHttpClient(this ITypeSymbol type)
+        => type.Name == "HttpClient" && type.GetNamespace() == "System.Net.Http";
+
+    private static bool IsOrDerivesFrom(this ITypeSymbol type, INamedTypeSymbol baseType)
+    {
+        var current = type;
+        while (current is not null)
+        {
+            if (SymbolEqualityComparer.Default.Equals(current, baseType))
+            {
+                return true;
+            }
+
+            current = current.BaseType;
+        }
+
+        return false;
     }
 }

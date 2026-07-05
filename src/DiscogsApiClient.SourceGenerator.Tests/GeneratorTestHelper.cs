@@ -42,13 +42,6 @@ internal static class GeneratorTestHelper
         return driver.GetRunResult();
     }
 
-    public static string NormalizeSource(string source)
-    {
-        var lines = source
-            .ReplaceLineEndings("\n")
-            .Split("\n")
-            .Select(l => l.Trim());
-
-        return string.Join("\n", lines).Trim();
-    }
+    public static string NormalizeLineEndings(string source)
+        => source.ReplaceLineEndings("\n");
 }

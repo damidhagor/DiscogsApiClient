@@ -13,6 +13,6 @@ internal static class BodyAttribute
         namespace {{Constants.ApiClientNamespace}};
 
         [global::System.AttributeUsage(global::System.AttributeTargets.Parameter)]
-        internal sealed class {{Name}} : global::System.Attribute { }
+        internal sealed class {{Name}} : global::System.Attribute;
         """;
 }

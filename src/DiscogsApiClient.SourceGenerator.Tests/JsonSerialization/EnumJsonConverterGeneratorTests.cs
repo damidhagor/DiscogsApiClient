@@ -28,10 +28,9 @@ public sealed class EnumJsonConverterGeneratorTests
             {
                 public static global::System.Text.Json.JsonSerializerOptions AddGeneratedEnumJsonConverters(this global::System.Text.Json.JsonSerializerOptions options)
                 {
-            		options.Converters.Add(new TestNamespaceTestStatusJsonConverter());
+                    options.Converters.Add(new TestNamespaceTestStatusJsonConverter());
                     return options;
                 }
-
 
                 private sealed class TestNamespaceTestStatusJsonConverter
                     : global::System.Text.Json.Serialization.JsonConverter<global::TestNamespace.TestStatus>
@@ -72,10 +71,11 @@ public sealed class EnumJsonConverterGeneratorTests
                     }
                 }
             }
+
             """;
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(source))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(expected));
     }
 
     [Test]
@@ -100,10 +100,9 @@ public sealed class EnumJsonConverterGeneratorTests
             {
                 public static global::System.Text.Json.JsonSerializerOptions AddGeneratedEnumJsonConverters(this global::System.Text.Json.JsonSerializerOptions options)
                 {
-            		options.Converters.Add(new TestNamespaceSortOrderJsonConverter());
+                    options.Converters.Add(new TestNamespaceSortOrderJsonConverter());
                     return options;
                 }
-
 
                 private sealed class TestNamespaceSortOrderJsonConverter
                     : global::System.Text.Json.Serialization.JsonConverter<global::TestNamespace.SortOrder>
@@ -140,10 +139,11 @@ public sealed class EnumJsonConverterGeneratorTests
                     }
                 }
             }
+
             """;
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(source))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(expected));
     }
 
     [Test]
@@ -169,10 +169,9 @@ public sealed class EnumJsonConverterGeneratorTests
             {
                 public static global::System.Text.Json.JsonSerializerOptions AddGeneratedEnumJsonConverters(this global::System.Text.Json.JsonSerializerOptions options)
                 {
-            		options.Converters.Add(new TestNamespaceSortOrderJsonConverter());
+                    options.Converters.Add(new TestNamespaceSortOrderJsonConverter());
                     return options;
                 }
-
 
                 private sealed class TestNamespaceSortOrderJsonConverter
                     : global::System.Text.Json.Serialization.JsonConverter<global::TestNamespace.SortOrder>
@@ -209,10 +208,11 @@ public sealed class EnumJsonConverterGeneratorTests
                     }
                 }
             }
+
             """;
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(source))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(expected));
     }
 
     [Test]

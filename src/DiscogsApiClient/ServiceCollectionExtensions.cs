@@ -3,7 +3,6 @@ using DiscogsApiClient.Authentication.OAuth;
 using DiscogsApiClient.Authentication.PersonalAccessToken;
 using DiscogsApiClient.Middleware;
 using DiscogsApiClient.RateLimiting;
-using DiscogsApiClient.SourceGenerator.ApiClient;
 using DiscogsApiClient.SourceGenerator.JsonSerialization;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -57,11 +56,11 @@ public static partial class ServiceCollectionExtensions
             .AddHttpMessageHandler<ErrorHandlingDelegatingHandler>();
 
 
-        var apiClientSettings = new ApiClientSettings<IDiscogsApiClient, DiscogsJsonSerializerContext>(
-            new(new JsonSerializerOptions().AddGeneratedEnumJsonConverters()));
-        services.AddSingleton(apiClientSettings);
+        var jsonSerializerContext = new DiscogsJsonSerializerContext(
+            new JsonSerializerOptions().AddGeneratedEnumJsonConverters());
+        services.AddSingleton(jsonSerializerContext);
 
-        services.AddHttpClient<IDiscogsApiClient, Generated.DiscogsApiClient>()
+        services.AddHttpClient<IDiscogsApiClient, DiscogsApiClient>()
             .ConfigureHttpClient((serviceProvider, httpClient) =>
             {
                 var options = serviceProvider.GetRequiredService<DiscogsApiClientOptions>();

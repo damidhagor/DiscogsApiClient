@@ -99,7 +99,10 @@ with newer C# language features, ensure the style guidelines are updated to pref
 - Never leak Roslyn symbols (`ITypeSymbol`, `Compilation`, etc.) past the transform step.
 - Report diagnostics via `DiagnosticInfo` records that decouple from Roslyn's `Location` type.
 - Diagnostics are collected via `ImmutableArray<DiagnosticInfo>.Builder` passed through parser methods and surfaced via `GeneratorResult<T>`.
-- StringBuilder-based code generation is the standard pattern. Do not use Scriban, T4, or other template engines.
+- StringBuilder-based code generation is the standard pattern. Do not use Scriban, T4, or other template engines. Within a template, prefer a single raw string literal (`"""`/`$$"""`) over many successive `builder.Append`/`AppendLine` calls — it is more readable and emits in one call. Reserve individual `Append` calls for genuinely dynamic, per-iteration fragments.
+- Emitted code must itself be modern, idiomatic C# for the consuming target (.NET 8+), consistently across **every** generator (API client, JSON converters, and the post-initialization attribute templates): primary constructors instead of an explicit constructor that only assigns parameters (e.g. `internal sealed class HttpGetAttribute(string route) : HttpMethodBaseAttribute(route)`), get-only auto-properties for values only set once (`public string Route { get; } = route;`), index-from-end (`buffer[^1]`) instead of `buffer[buffer.Length - 1]`, no placeholder-free interpolated strings (emit `"/oauth/identity"`, not `$"/oauth/identity"` — gate the `$` prefix on the route actually containing a `{` placeholder), and `return await Xxx(...)` directly rather than `var result = await Xxx(...); return result;`.
+- Generated source must be emitted already correctly formatted: 4-space indentation, no tabs, no trailing whitespace, exactly one blank line between members, and no stray blank line directly after an opening `{`. Do not emit empty or unreferenced helper types at all — skip them entirely (e.g. `QueryParameterHelper` is omitted when a client has no query parameters, since nothing references it). If a body-less type genuinely must be emitted, use the single-line form ending in `;` rather than an empty `{ }`. Do not post-process the output through Roslyn (`NormalizeWhitespace`) — parsing every generated tree is wasteful for a source generator; get the raw templates right instead.
+- Generator tests assert the **exact** emitted source via `GeneratorTestHelper.NormalizeLineEndings`, which normalizes line endings only (no trimming of any kind). There is a single normalization method — `NormalizeSource`/per-line trimming was removed because it hid real formatting defects. Because assertions are byte-exact, fragment-level tests that exercise a composition helper (e.g. `GenerateApiMethod`) must include that helper's composition seams (a leading blank line and/or a trailing newline) verbatim in the expected raw string, represented as a blank line immediately after the opening `"""` and/or before the closing `"""`. The full-document output has no such seams (starts with `#nullable enable`, ends with `}` and no trailing newline).
 - Diagnostics are registered in `AnalyzerReleases.Unshipped.md` until a NuGet release, then moved to `AnalyzerReleases.Shipped.md`.
 
 ## Testing
@@ -139,8 +142,11 @@ DiscogsApiClient/
 
 ### API Endpoint Pattern
 
-- Internal method with `[HttpGet/Post/Put/Delete]` attribute (source-generated).
-- Public wrapper with `Guard` validation and XML docs.
+- `[ApiClient(typeof(DiscogsJsonSerializerContext))]` is applied to the `internal sealed partial class DiscogsApiClient`, which implements the pure `IDiscogsApiClient` contract interface.
+- Endpoints are `partial` method definitions carrying a `[HttpGet/Post/Put/Delete]` attribute; the generator emits their implementing bodies in the other partial half.
+- Validated endpoints: a `private partial XxxInternal` method (generated body) + a hand-written `public` wrapper with native guard validation and XML docs.
+- Endpoints without validation: a `public partial` method that directly implements the interface member (generated body).
+- The generator discovers dependencies by **type** — an `HttpClient` field/property and a field/property whose type is or derives from the context type — so the constructor and fields are owned by the class, not the generator. Prefer a primary constructor that assigns its parameters to fields (no null-guards needed thanks to nullable reference types); the generator only inspects fields and properties, never constructor parameters.
 - See `docs/ARCHITECTURE.md` for detailed examples.
 
 ### Parameter Validation
@@ -156,6 +162,7 @@ DiscogsApiClient/
 ### Async/Await and ConfigureAwait
 
 - Always append `.ConfigureAwait(false)` to all awaited operations in library code to prevent synchronization context capture/deadlocks and resolve **CA2007** warnings.
+- `CancellationToken` parameters on public API methods are **mandatory** — never give them a `= default` value. Cancellation support should be an explicit, deliberate choice by the caller. As a consequence, any preceding optional parameters (e.g. nullable query-parameter objects) must also be required (no `= null`) so the trailing token stays required.
 
 
 ### Contract Models
@@ -169,8 +176,9 @@ DiscogsApiClient/
 1. Check `docs/API_COVERAGE.md` for status.
 2. Create contract models.
 3. Add to JSON serialization context.
-4. Define in `IDiscogsApiClient` (internal + public method pair).
-5. Update `docs/API_COVERAGE.md`.
+4. Add the method signature to the `IDiscogsApiClient` contract interface.
+5. Add the `partial` method (+ public wrapper if validated) to the `DiscogsApiClient` partial class.
+6. Update `docs/API_COVERAGE.md`.
 
 ## Project Characteristics
 

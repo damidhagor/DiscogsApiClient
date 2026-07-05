@@ -47,9 +47,9 @@ internal static class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor MissingCancellationToken = new(
         "DISCOGS003",
         "API method has no CancellationToken parameter",
-        "Method '{0}' has no CancellationToken parameter — consider adding one for proper cancellation support",
+        "Method '{0}' must have a CancellationToken parameter — every async API method requires one for cancellation support",
         Category,
-        DiagnosticSeverity.Warning,
+        DiagnosticSeverity.Error,
         true);
 
     public static readonly DiagnosticDescriptor UnsupportedQueryParameterType = new(
@@ -58,5 +58,37 @@ internal static class DiagnosticDescriptors
         "Property '{0}' on query parameter type '{1}' has unsupported type '{2}' and will be skipped — only string, int, and enum properties are supported",
         Category,
         DiagnosticSeverity.Warning,
+        true);
+
+    public static readonly DiagnosticDescriptor ApiClientMustBePartial = new(
+        "DISCOGS008",
+        "API client class must be partial",
+        "Class '{0}' is marked with [ApiClient] but is not declared 'partial' — the generated methods cannot be emitted",
+        Category,
+        DiagnosticSeverity.Error,
+        true);
+
+    public static readonly DiagnosticDescriptor MissingHttpClientMember = new(
+        "DISCOGS009",
+        "API client class has no HttpClient member",
+        "Class '{0}' must declare a field or property of type 'System.Net.Http.HttpClient' for the generated code to send requests",
+        Category,
+        DiagnosticSeverity.Error,
+        true);
+
+    public static readonly DiagnosticDescriptor MissingJsonSerializerContextMember = new(
+        "DISCOGS010",
+        "API client class has no JsonSerializerContext member",
+        "Class '{0}' must declare a field or property of type '{1}' (or a type deriving from it) for the generated code to resolve JSON type metadata",
+        Category,
+        DiagnosticSeverity.Error,
+        true);
+
+    public static readonly DiagnosticDescriptor ApiMethodMustBePartial = new(
+        "DISCOGS011",
+        "API method must be partial",
+        "Method '{0}' is marked with an HTTP attribute but is not a 'partial' method definition — the generated implementation cannot be emitted",
+        Category,
+        DiagnosticSeverity.Error,
         true);
 }

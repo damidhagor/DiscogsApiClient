@@ -3,8 +3,8 @@ using DiscogsApiClient.SourceGenerator.Shared.Models;
 namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models;
 
 internal sealed record ApiClient(
-    ParsedTypeInfo InterfaceTypeInfo,
-    ParsedTypeInfo JsonSerializerContextTypeSymbol,
-    string ClientName,
-    string ClientNamespace,
+    ParsedTypeInfo ClassTypeInfo,
+    ParsedTypeInfo JsonSerializerContextTypeInfo,
+    string HttpClientMemberName,
+    string ContextMemberName,
     EquatableArray<ApiMethod> Methods);

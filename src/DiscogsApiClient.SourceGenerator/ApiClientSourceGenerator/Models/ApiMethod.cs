@@ -6,5 +6,6 @@ internal sealed record ApiMethod(
     string Name,
     string Route,
     ApiMethodType Method,
+    string AccessModifier,
     EquatableArray<ApiMethodParameter> Parameters,
     ApiMethodReturnType ReturnType);

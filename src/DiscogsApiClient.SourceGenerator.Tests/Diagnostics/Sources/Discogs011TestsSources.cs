@@ -1,8 +1,8 @@
 namespace DiscogsApiClient.SourceGenerator.Tests.Diagnostics.Sources;
 
-public static class Discogs007TestsSources
+public static class Discogs011TestsSources
 {
-    public const string WhenMethodHasMultipleBodyParams =
+    public const string WhenHttpMethodIsNotPartialDefinition =
         """
         using System.Threading;
         using System.Threading.Tasks;
@@ -17,49 +17,21 @@ public static class Discogs007TestsSources
             protected TestJsonContext(System.Text.Json.JsonSerializerOptions? options) : base(options) { }
         }
 
-        public class RequestA { }
-        public class RequestB { }
-
         [ApiClient(typeof(TestJsonContext))]
         internal sealed partial class TestApiClient(System.Net.Http.HttpClient httpClient, TestJsonContext context)
         {
             private readonly System.Net.Http.HttpClient _httpClient = httpClient;
             private readonly TestJsonContext _context = context;
 
-            [HttpPost("/test")]
-            public partial Task CreateAsync([Body] RequestA a, [Body] RequestB b, CancellationToken cancellationToken);
+            [HttpGet("/test")]
+            public Task<string> GetTestAsync(CancellationToken cancellationToken) => Task.FromResult("test");
+
+            [HttpGet("/valid")]
+            public partial Task<string> GetValidAsync(CancellationToken cancellationToken);
         }
         """;
 
-    public const string WhenMethodHasSingleBodyParam =
-        """
-        using System.Threading;
-        using System.Threading.Tasks;
-        using System.Text.Json.Serialization;
-        using DiscogsApiClient.SourceGenerator.ApiClient;
-
-        namespace TestNamespace;
-
-        [JsonSerializable(typeof(string))]
-        internal partial class TestJsonContext : JsonSerializerContext
-        {
-            protected TestJsonContext(System.Text.Json.JsonSerializerOptions? options) : base(options) { }
-        }
-
-        public class TestRequest { }
-
-        [ApiClient(typeof(TestJsonContext))]
-        internal sealed partial class TestApiClient(System.Net.Http.HttpClient httpClient, TestJsonContext context)
-        {
-            private readonly System.Net.Http.HttpClient _httpClient = httpClient;
-            private readonly TestJsonContext _context = context;
-
-            [HttpPost("/test")]
-            public partial Task CreateAsync([Body] TestRequest request, CancellationToken cancellationToken);
-        }
-        """;
-
-    public const string WhenMethodHasNoBodyParam =
+    public const string WhenHttpMethodIsPartialDefinition =
         """
         using System.Threading;
         using System.Threading.Tasks;
@@ -80,8 +52,8 @@ public static class Discogs007TestsSources
             private readonly System.Net.Http.HttpClient _httpClient = httpClient;
             private readonly TestJsonContext _context = context;
 
-            [HttpGet("/items")]
-            public partial Task<string> GetItemsAsync(CancellationToken cancellationToken);
+            [HttpGet("/test")]
+            public partial Task<string> GetTestAsync(CancellationToken cancellationToken);
         }
         """;
 }

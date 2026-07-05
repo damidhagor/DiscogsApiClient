@@ -10,14 +10,6 @@ public static class Discogs006TestsSources
         using System.Text.Json.Serialization;
         using DiscogsApiClient.SourceGenerator.ApiClient;
 
-        namespace TestNamespace;
-
-        [JsonSerializable(typeof(string))]
-        internal partial class TestJsonContext : JsonSerializerContext
-        {
-            protected TestJsonContext(System.Text.Json.JsonSerializerOptions? options) : base(options) { }
-        }
-
         namespace DiscogsApiClient.SourceGenerator.ApiClient
         {
             [AttributeUsage(AttributeTargets.Method)]
@@ -31,11 +23,20 @@ public static class Discogs006TestsSources
 
         namespace TestNamespace
         {
-            [ApiClient(typeof(TestJsonContext))]
-            public interface ITestApiClient
+            [JsonSerializable(typeof(string))]
+            internal partial class TestJsonContext : JsonSerializerContext
             {
+                protected TestJsonContext(System.Text.Json.JsonSerializerOptions? options) : base(options) { }
+            }
+
+            [ApiClient(typeof(TestJsonContext))]
+            internal sealed partial class TestApiClient(System.Net.Http.HttpClient httpClient, TestJsonContext context)
+            {
+                private readonly System.Net.Http.HttpClient _httpClient = httpClient;
+                private readonly TestJsonContext _context = context;
+
                 [DiscogsApiClient.SourceGenerator.ApiClient.HttpPatch("/test")]
-                Task<string> PatchTestAsync(CancellationToken cancellationToken);
+                public partial Task<string> PatchTestAsync(CancellationToken cancellationToken);
             }
         }
         """;
@@ -56,13 +57,16 @@ public static class Discogs006TestsSources
         }
 
         [ApiClient(typeof(TestJsonContext))]
-        public interface ITestApiClient
+        internal sealed partial class TestApiClient(System.Net.Http.HttpClient httpClient, TestJsonContext context)
         {
+            private readonly System.Net.Http.HttpClient _httpClient = httpClient;
+            private readonly TestJsonContext _context = context;
+
             [HttpGet("/items")]
-            Task<string> GetItemsAsync(CancellationToken cancellationToken);
+            public partial Task<string> GetItemsAsync(CancellationToken cancellationToken);
 
             [HttpPost("/items")]
-            Task CreateItemAsync(CancellationToken cancellationToken);
+            public partial Task CreateItemAsync(CancellationToken cancellationToken);
         }
         """;
 }

@@ -4,7 +4,7 @@ This document describes the architecture and design of the DiscogsApiClient libr
 
 ## Overview
 
-DiscogsApiClient is a strongly-typed .NET library for accessing the Discogs API v2. It uses **C# Source Generators** to automatically generate HTTP client code from interface definitions, providing a type-safe and AOT-compatible API surface.
+DiscogsApiClient is a strongly-typed .NET library for accessing the Discogs API v2. It uses **C# Source Generators** to automatically generate HTTP client code from a partial class annotated with `[ApiClient]`, providing a type-safe and AOT-compatible API surface.
 
 **Key Features:**
 - Source Generator-based client implementation
@@ -26,8 +26,9 @@ graph TB
     end
 
     subgraph "DiscogsApiClient Library"
-        Interface[IDiscogsApiClient<br/>Interface]
-        Generated[Generated Client<br/>Implementation]
+        Interface[IDiscogsApiClient<br/>Contract Interface]
+        Client[DiscogsApiClient<br/>partial class]
+        Generated[Generated partial<br/>class half]
         Auth[Authentication<br/>Service]
         PAT[Personal Access<br/>Token Provider]
         OAuth[OAuth<br/>Provider]
@@ -53,13 +54,14 @@ graph TB
     end
 
     App -->|Uses| Interface
-    Interface -.->|Implemented by| Generated
-    Generated -->|HTTP Request| AH
+    Interface -.->|Implemented by| Client
+    Generated -.->|Completes| Client
+    Client -->|HTTP Request| AH
     RLS -->|HTTPS| API
 
-    Generated -.->|Serializes with| Json
-    Generated -.->|Uses| Contract
-    Generated -.->|Uses| Query
+    Client -.->|Serializes with| Json
+    Client -.->|Uses| Contract
+    Client -.->|Uses| Query
 
     Auth -->|Manages| PAT
     Auth -->|Manages| OAuth
@@ -97,52 +99,62 @@ DiscogsApiClient/
 
 ## Core Components
 
-### 1. API Client Interface (`IDiscogsApiClient`)
+### 1. API Client Contract & Class (`IDiscogsApiClient` / `DiscogsApiClient`)
 
-**Location:** `DiscogsApiClient/IDiscogsApiClient.cs`
+**Location:** `DiscogsApiClient/IDiscogsApiClient.cs`, `DiscogsApiClient/DiscogsApiClient.cs`
 
-The primary interface defining all API operations. Decorated with `[ApiClient]` attribute to trigger source generation.
+`IDiscogsApiClient` is a plain public contract interface defining all API operations (no attributes, no default implementations). `DiscogsApiClient` is an `internal sealed partial class` that implements it and is decorated with `[ApiClient(typeof(DiscogsJsonSerializerContext))]` to trigger source generation.
 
 **Key Patterns:**
-- Internal methods with HTTP attributes (`[HttpGet]`, `[HttpPost]`, `[HttpPut]`, `[HttpDelete]`)
-- Public wrapper methods with parameter validation
-- Async/await throughout with `CancellationToken` support
-- Guard clauses using `CommunityToolkit.Diagnostics`
+- The code owner writes the hand-authored partial half: the primary constructor declaring the dependencies (`HttpClient` + `DiscogsJsonSerializerContext`) and assigning them to fields, the `partial` method definitions carrying HTTP attributes (`[HttpGet]`, `[HttpPost]`, `[HttpPut]`, `[HttpDelete]`), and public validation wrappers.
+- The generator emits the other partial half: the implementing `partial` method bodies plus the `Send`/`SendAsync`/`SerializeContent` helpers and route builders.
+- Dependencies are discovered by **type** — any field/property of type `HttpClient`, and any field/property whose type is or derives from the context type in `[ApiClient(...)]`. Names are up to the code owner. A primary constructor may declare the dependencies as long as it assigns them to a field or property (the generator only inspects fields and properties, never constructor parameters).
+- Async/await throughout with `CancellationToken` support.
+- Guard clauses using native `ArgumentNullException`/`ArgumentException` throw helpers.
 
 **Example:**
 ```csharp
-[HttpGet("/users/{username}")]
-internal Task<User> GetUserInternal(string username, CancellationToken cancellationToken = default);
-
-public async Task<User> GetUser(string username, CancellationToken cancellationToken = default)
+[ApiClient(typeof(DiscogsJsonSerializerContext))]
+internal sealed partial class DiscogsApiClient(HttpClient httpClient, DiscogsJsonSerializerContext jsonSerializerContext) : IDiscogsApiClient
 {
-    Guard.IsNotNullOrWhiteSpace(username);
-    return await GetUserInternal(username, cancellationToken);
+    private readonly HttpClient _httpClient = httpClient;
+    private readonly DiscogsJsonSerializerContext _jsonSerializerContext = jsonSerializerContext;
+
+    [HttpGet("/users/{username}")]
+    private partial Task<User> GetUserInternal(string username, CancellationToken cancellationToken);
+
+    public async Task<User> GetUser(string username, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+        return await GetUserInternal(username, cancellationToken).ConfigureAwait(false);
+    }
 }
 ```
+
+Endpoints that need no validation can instead be declared as a `public partial` method that directly implements the interface member; the generator supplies the body.
 
 ### 2. Source Generator (`DiscogsApiClient.SourceGenerator`)
 
 **Location:** `DiscogsApiClient.SourceGenerator/`
 
-An incremental source generator that analyzes interface definitions and generates the actual HTTP client implementation.
+An incremental source generator that analyzes the `[ApiClient]` partial class and generates the implementing partial-class half.
 
 **Components:**
-- **Parser** - Parses `IDiscogsApiClient` interface and methods
-- **Generators** - Generates client implementation, query parameter serialization, and method bodies
+- **Parser** - Parses the annotated class, discovers the `HttpClient` and context members, and parses the `partial` API methods
+- **Generators** - Generates the partial-class half, query parameter serialization, and method bodies
 - **Attributes** - Custom attributes for API definition (`[ApiClient]`, `[HttpGet]`, `[Body]`, etc.)
 
 **Generated Code:**
-- Concrete implementation of `IDiscogsApiClient`
+- The other half of the `partial` API client class (implementing partial methods)
 - HTTP request construction
 - URL building with route/query parameters
 - Response deserialization
 
 **Key Classes:**
 - `ApiClientSourceGenerator` - Main generator entry point
-- `ApiClientParser` - Parses interface declarations
-- `ApiMethodParser` - Parses method declarations
-- `ApiClientGenerator` - Generates client class
+- `ApiClientParser` - Parses the annotated class and discovers dependency members
+- `ApiMethodParser` - Parses `partial` method declarations
+- `ApiClientGenerator` - Generates the partial-class half
 - `ApiMethodGenerator` - Generates HTTP method implementations
 - `QueryParameterGenerator` - Generates query string serialization
 
@@ -340,7 +352,7 @@ services.AddDiscogsApiClient(options =>
 ## Design Patterns
 
 ### 1. Source Generator Pattern
-- **What:** Compile-time code generation from interface definitions
+- **What:** Compile-time code generation from a `[ApiClient]` partial class
 - **Why:** Type safety, AOT compatibility, reduced reflection overhead
 - **Trade-off:** Longer compile times, generated code debugging
 
@@ -457,17 +469,19 @@ sequenceDiagram
 
 ### Adding New Endpoints
 
-1. **Define in interface** with attributes:
+1. **Define a `partial` method** on the `DiscogsApiClient` class with an HTTP attribute, plus a public wrapper (or a `public partial` method when no validation is needed):
    ```csharp
    [HttpGet("/new/endpoint/{id}")]
-   internal Task<ResponseType> GetNewEndpointInternal(int id, CancellationToken ct);
+   private partial Task<ResponseType> GetNewEndpointInternal(int id, CancellationToken ct);
 
    public async Task<ResponseType> GetNewEndpoint(int id, CancellationToken ct)
    {
-       Guard.IsGreaterThan(id, 0);
-       return await GetNewEndpointInternal(id, ct);
+       ArgumentOutOfRangeException.ThrowIfNegativeOrZero(id);
+       return await GetNewEndpointInternal(id, ct).ConfigureAwait(false);
    }
    ```
+
+   Add the matching method signature to the `IDiscogsApiClient` contract interface.
 
 2. **Create contract models** in `Contract/` folder
 

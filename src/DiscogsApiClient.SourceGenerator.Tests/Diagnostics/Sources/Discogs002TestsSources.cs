@@ -18,10 +18,13 @@ public static class Discogs002TestsSources
         }
 
         [ApiClient(typeof(TestJsonContext))]
-        public interface ITestApiClient
+        internal sealed partial class TestApiClient(System.Net.Http.HttpClient httpClient, TestJsonContext context)
         {
+            private readonly System.Net.Http.HttpClient _httpClient = httpClient;
+            private readonly TestJsonContext _context = context;
+
             [HttpGet("/test")]
-            void GetSync();
+            public partial void GetSync();
         }
         """;
 
@@ -41,10 +44,13 @@ public static class Discogs002TestsSources
         }
 
         [ApiClient(typeof(TestJsonContext))]
-        public interface ITestApiClient
+        internal sealed partial class TestApiClient(System.Net.Http.HttpClient httpClient, TestJsonContext context)
         {
+            private readonly System.Net.Http.HttpClient _httpClient = httpClient;
+            private readonly TestJsonContext _context = context;
+
             [HttpGet("/test")]
-            string GetSync(CancellationToken cancellationToken);
+            public partial string GetSync(CancellationToken cancellationToken);
         }
         """;
 
@@ -64,10 +70,13 @@ public static class Discogs002TestsSources
         }
 
         [ApiClient(typeof(TestJsonContext))]
-        public interface ITestApiClient
+        internal sealed partial class TestApiClient(System.Net.Http.HttpClient httpClient, TestJsonContext context)
         {
+            private readonly System.Net.Http.HttpClient _httpClient = httpClient;
+            private readonly TestJsonContext _context = context;
+
             [HttpGet("/test")]
-            Task<string> GetTestAsync(CancellationToken cancellationToken);
+            public partial Task<string> GetTestAsync(CancellationToken cancellationToken);
         }
         """;
 }

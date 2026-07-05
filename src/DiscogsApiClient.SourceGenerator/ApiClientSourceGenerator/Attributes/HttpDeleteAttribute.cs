@@ -13,13 +13,9 @@ internal static class HttpDeleteAttribute
         namespace {{Constants.ApiClientNamespace}};
 
         [global::System.AttributeUsage(global::System.AttributeTargets.Method)]
-        internal sealed class {{Name}} : global::{{Constants.ApiClientNamespace}}.{{HttpMethodBaseAttribute.Name}}
+        internal sealed class {{Name}}(string route) : global::{{Constants.ApiClientNamespace}}.{{HttpMethodBaseAttribute.Name}}(route)
         {
             public const string Method = "Delete";
-        
-            public {{Name}}(string route)
-                : base(route)
-            { }
         }
         """;
 }

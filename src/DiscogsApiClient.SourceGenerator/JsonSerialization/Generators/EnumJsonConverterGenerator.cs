@@ -52,7 +52,7 @@ internal static class EnumJsonConverterGenerator
         for (var i = 0; i < enums.Count; i++)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            builder.AppendLine($"\t\toptions.Converters.Add(new {enums[i].GetJsonConverterClassName()}());");
+            builder.AppendLine($"        options.Converters.Add(new {enums[i].GetJsonConverterClassName()}());");
         }
 
         builder.AppendLine(
@@ -68,7 +68,6 @@ internal static class EnumJsonConverterGenerator
 
         builder.AppendLine(
             $$"""
-
 
                 private sealed class {{className}}
                     : global::System.Text.Json.Serialization.JsonConverter<{{enumeration.TypeInfo.FullTypeName}}>
