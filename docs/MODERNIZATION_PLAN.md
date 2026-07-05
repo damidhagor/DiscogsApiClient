@@ -384,18 +384,40 @@ Phase 6: Final Validation
 
 
 
-### 4.2 IDiscogsApiClient Interface Refactoring
-- [ ] **Analyze current structure** - Document internal/public method pattern
-- [ ] **Run static analysis** - Review with analyzer tools for design issues
-- [ ] **Evaluate necessity** - Determine if refactoring provides meaningful value
-- [ ] **Decision point:** Proceed with refactoring OR document why current design is optimal
-- [ ] If proceeding with refactoring:
-  - [ ] Design new interface structure
-  - [ ] Document any breaking changes
-  - [ ] Implement new design
-  - [ ] Update XML documentation
-  - [ ] Mark obsolete methods if using transition period
-- [ ] **Note:** Breaking changes are acceptable as this will result in a new major version
+### 4.2 IDiscogsApiClient Interface Refactoring — ✅ Completed
+
+**Outcome:** Refactored. The endpoint definitions and guard-validating wrappers were moved off
+the interface into a hand-written partial class, leaving `IDiscogsApiClient` as a pure public
+contract. Done as a clean break (no obsolete/transition shims), which is acceptable because the
+modernization ships as a new major version.
+
+**Adopted design:**
+- `IDiscogsApiClient` is a **clean public contract** — public method signatures with XML docs
+  only. No HTTP attributes, no `internal` members, no default-interface-method bodies.
+- `DiscogsApiClient` is an `internal sealed partial class` with a primary constructor
+  (`HttpClient`, `DiscogsJsonSerializerContext`). It hosts:
+  - public `partial` HTTP methods (e.g. `GetIdentity`) that need no argument validation,
+  - `private partial *Internal` methods carrying the `[HttpGet/Post/Put/Delete]` attributes,
+  - hand-written **public wrapper methods** with native guard clauses + `ConfigureAwait(false)`
+    that delegate to the `*Internal` partials.
+- The `[ApiClient]` attribute now targets a **class** (`AttributeTargets.Class`), and the
+  source generator emits the second partial half (`Send`/`SendAsync`/route builders).
+- DI registration resolves the interface: `AddHttpClient<IDiscogsApiClient, DiscogsApiClient>()`.
+- See `docs/ARCHITECTURE.md` (Contract Interface + partial class + generated partial half).
+
+**Breaking changes introduced by this refactor:**
+- `CancellationToken` parameters are now **required** on `IDiscogsApiClient` methods — the
+  previous `CancellationToken cancellationToken = default` default was removed.
+- `[ApiClient]` moved from interfaces to classes; the previously `internal` endpoint methods
+  are no longer part of the public interface surface.
+
+**Checklist (all satisfied):**
+- [x] Analyze current structure / document the internal-vs-public method pattern
+- [x] Evaluate necessity and decide (decision: **refactor** — interface becomes a pure contract)
+- [x] Design and implement the new structure (partial-class client + contract interface)
+- [x] Update XML documentation (now lives on the interface)
+- [x] Document breaking changes (see above)
+- [x] **Note:** Breaking changes are acceptable as this ships as a new major version
 
 ### 4.3 Async/Await Modernization
 - [x] Ensure `ConfigureAwait(false)` used appropriately (library code)
@@ -479,9 +501,13 @@ Phase 6: Final Validation
 - Validation (null/empty checks) throws `InvalidOperationException` at registration time instead of at startup via `IValidateOptions<T>` / `ValidateOnStart()`
 - No `IConfiguration` overload — callers cannot bind options from `appsettings.json`
 - `AddDiscogsApiClient` returns `IServiceCollection`; there is no builder for fluent post-registration customization
-- OAuth credentials (`ConsumerKey`, `ConsumerSecret`, `VerifierCallbackUrl`) are mixed into the top-level options class alongside unrelated rate-limiting knobs
-- Rate-limiter services are only conditionally registered based on the eagerly-read `UseRateLimiting` flag, which makes the registration order sensitive and hard to test
+- OAuth credentials (`ConsumerKey`, `ConsumerSecret`, `VerifierCallbackUrl`) are mixed into the top-level options class alongside unrelated settings
 - `DiscogsApiClientOptions` properties are mutable (`set`); they should use `init` to prevent post-construction mutation
+
+> **Note:** The client-side rate limiter was removed in §4.4 and replaced by the read-only
+> `IDiscogsRateLimitStateService` (registered as a singleton, always enabled). That service is
+> already wired up in `AddDiscogsApiClient` and is **out of scope** for this options refactor —
+> there are no rate-limiting options to register or validate.
 
 **Reference patterns to follow:**
 - `Microsoft.Extensions.Http` (`AddHttpClient`) — returns `IHttpClientBuilder` for chaining
@@ -495,7 +521,6 @@ Phase 6: Final Validation
 - [ ] Convert all property setters to `init`-only to prevent post-construction mutation
 - [ ] Add `[Required]` and `[Url]` data annotations to `BaseUrl` and `UserAgent` for `ValidateDataAnnotations()` support
 - [ ] Extract OAuth-specific settings into a dedicated `DiscogsOAuthOptions` class (`ConsumerKey`, `ConsumerSecret`, `VerifierCallbackUrl`)
-- [ ] Extract rate-limiting settings into a dedicated `DiscogsRateLimitingOptions` class (`UseRateLimiting`, `RateLimitingWindow`, `RateLimitingWindowSegments`, `RateLimitingPermits`, `RateLimitingQueueSize`)
 - [ ] Update XML documentation on all options classes
 
 #### 4.7.2 Introduce `IDiscogsApiClientBuilder`
@@ -507,12 +532,12 @@ Phase 6: Final Validation
 #### 4.7.3 Adopt `IOptions<T>` and Proper Options Registration
 - [ ] Replace raw singleton registration of `DiscogsApiClientOptions` with `services.AddOptions<DiscogsApiClientOptions>()` / `services.Configure<DiscogsApiClientOptions>(configure)`
 - [ ] Inject `IOptions<DiscogsApiClientOptions>` (or `IOptionsMonitor<T>`) into `HttpClient` configuration delegates instead of resolving the raw options object
-- [ ] Register `DiscogsOAuthOptions` and `DiscogsRateLimitingOptions` via the options system as well
+- [ ] Register `DiscogsOAuthOptions` via the options system as well
 - [ ] Remove all eager validation from the extension method body
 
 #### 4.7.4 Add Options Validation
 - [ ] Chain `.ValidateDataAnnotations()` on the `OptionsBuilder<DiscogsApiClientOptions>` to validate `[Required]` / `[Url]` annotations
-- [ ] Add a custom `Validate()` delegate for rules that cannot be expressed with annotations (e.g., rate-limiting window > 0)
+- [ ] Add a custom `Validate()` delegate for rules that cannot be expressed with annotations (if any arise)
 - [ ] Chain `.ValidateOnStart()` so validation failures surface immediately at app startup rather than on first use
 - [ ] Add tests that verify options validation throws at startup for invalid configurations
 
@@ -521,19 +546,13 @@ Phase 6: Final Validation
 - [ ] Document expected configuration section keys to match the options property names (convention: `"Discogs"` section in `appsettings.json`)
 - [ ] Add tests for the `IConfiguration`-based overload
 
-#### 4.7.6 Refactor Rate-Limiter Registration into Builder Extension
-- [ ] Move rate-limiter service registration out of `AddDiscogsApiClient` into a separate `AddRateLimiting(this IDiscogsApiClientBuilder builder)` builder extension method in its own file
-- [ ] This extension reads `IOptions<DiscogsRateLimitingOptions>` at resolve time instead of at registration time, removing the order sensitivity
-- [ ] Keep `UseRateLimiting` flag on `DiscogsRateLimitingOptions` — the `RateLimitedDelegatingHandler` should check the flag at runtime and be a no-op when disabled, OR the builder extension explicitly opts in (preferred: explicit opt-in via builder, remove `UseRateLimiting` flag)
-- [ ] **Decision point:** implicit opt-in via `UseRateLimiting` flag vs. explicit opt-in via `.AddRateLimiting()` builder extension — document decision and rationale
-
-#### 4.7.7 Update Tests for New Registration API
+#### 4.7.6 Update Tests for New Registration API
 - [ ] Add unit tests for `AddDiscogsApiClient` verifying that required services are registered
 - [ ] Add tests verifying that `IDiscogsApiClient` and `IDiscogsAuthenticationService` can be resolved from the container
 - [ ] Add tests verifying options validation fires at startup for invalid configs
 - [ ] Update any existing tests that depend on the current extension method signature
 
-**Example of target API shape (illustrative — exact names subject to decision in 4.7.2/4.7.6):**
+**Example of target API shape (illustrative — exact names subject to decision in 4.7.2):**
 ```csharp
 // Minimal registration
 services.AddDiscogsApiClient(options =>
@@ -543,39 +562,32 @@ services.AddDiscogsApiClient(options =>
 
 // With IConfiguration binding
 services.AddDiscogsApiClient(configuration.GetSection("Discogs"));
-
-// With builder-based opt-ins
-services.AddDiscogsApiClient(options =>
-{
-    options.UserAgent = "MyApp/1.0";
-})
-.AddRateLimiting(options =>
-{
-    options.Window = TimeSpan.FromSeconds(60);
-    options.PermitLimit = 40;
-});
 ```
 
-### 4.8 Generated Code Modernization
-- [ ] Update generated code to use modern C# features (compatible with .NET 8+):
-  - [ ] File-scoped namespaces
-  - [ ] Target-typed new expressions
-  - [ ] Pattern matching where appropriate
-  - [ ] Collection expressions (if applicable)
-- [ ] Ensure generated code is AOT-compatible
-- [ ] Add `[GeneratedCode]` attribute to generated classes
-- [ ] Add `#nullable enable` to generated files
-- [ ] Optimize generated code (reduce allocations, better patterns)
+### 4.8 Generated Code Modernization — 🟡 Mostly complete
+
+Largely delivered by the generator modernization commit ("refactor(generator): modernize
+emitted code across all generators"). Remaining gap: the `[GeneratedCode]` attribute is still
+not emitted on generated types.
+
+- [x] Generated code uses modern C# features (compatible with .NET 8+):
+  - [x] File-scoped namespaces (generator emits `namespace X;`)
+  - [-] Target-typed new expressions (N/A — generated locals use `var x = new global::Type(...)`; target-typed `new` cannot apply with `var`)
+  - [x] Pattern matching where appropriate (`switch` expressions in the generator; `is not null` in emitted bodies)
+  - [-] Collection expressions (N/A — no arrays/collections are emitted)
+- [x] Ensure generated code is AOT-compatible (STJ source-generated `JsonTypeInfo`, `HttpClient.Send/SendAsync`, no reflection)
+- [ ] Add `[GeneratedCode]` attribute to generated classes/members (**still open** — not emitted; consider `[ExcludeFromCodeCoverage]` / `[EditorBrowsable(Never)]` too)
+- [x] Add `#nullable enable` to generated files (emitted at the top of every generated file)
+- [x] Optimize generated code (capacity-precomputed `StringBuilder` route building; reduced allocations)
 
 ### Acceptance Criteria - Phase 4
 - [ ] All C# 12 features adopted where appropriate
-- [ ] IDiscogsApiClient interface refactored and simplified (if decided)
+- [x] IDiscogsApiClient interface refactored and simplified — now a pure contract; endpoints + guards moved to the `DiscogsApiClient` partial class
 - [ ] Service registration follows modern `IOptions<T>` and builder patterns
 - [ ] `AddDiscogsApiClient` returns `IDiscogsApiClientBuilder` for fluent chaining
 - [ ] `IConfiguration` overload available for binding from `appsettings.json`
 - [ ] Options validation uses `ValidateDataAnnotations()` and `ValidateOnStart()`
-- [ ] Rate-limiter registration is decoupled from the main extension method
-- [ ] Generated code uses modern C# features
+- [~] Generated code uses modern C# features (done: file-scoped ns, `#nullable enable`, pattern matching, AOT-safe; **pending:** `[GeneratedCode]` attribute)
 - [ ] Generated code is well-documented
 - [ ] All tests pass (validates refactoring didn't break functionality)
 - [ ] No compiler warnings
