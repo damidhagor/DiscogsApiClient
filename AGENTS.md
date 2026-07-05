@@ -133,7 +133,7 @@ DiscogsApiClient/
 │   ├── DiscogsApiClient.SourceGenerator/ ← Source generator (netstandard2.0)
 │   ├── DiscogsApiClient.Tests/         ← Library tests
 │   ├── DiscogsApiClient.SourceGenerator.Tests/ ← Generator tests
-│   └── DiscogsApiClient.sln
+│   └── DiscogsApiClient.slnx
 ├── AGENTS.md                           ← This file
 └── README.md
 ```

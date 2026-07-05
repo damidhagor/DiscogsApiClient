@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="../src/DiscogsApiClient/DiscogsApiClient.csproj" />
+  <Project Path="DiscogsApiClientDemo.AotConsole/DiscogsApiClientDemo.AotConsole.csproj" />
+  <Project Path="DiscogsApiClientDemo.OAuth/DiscogsApiClientDemo.OAuth.csproj" />
+  <Project Path="DiscogsApiClientDemo.PersonalAccessToken/DiscogsApiClientDemo.PersonalAccessToken.csproj" />
+</Solution>
