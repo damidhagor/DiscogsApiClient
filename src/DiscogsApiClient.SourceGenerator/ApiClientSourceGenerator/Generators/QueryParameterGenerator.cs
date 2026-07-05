@@ -30,6 +30,7 @@ internal static class QueryParameterGenerator
 
             builder.AppendLine(
                 $$"""
+                {{Constants.GeneratedCodeAttribute}}
                 file static class {{parameter.TypeInfo.Namespace.Replace(".", "")}}{{parameter.TypeInfo.Name}}Extensions
                 {
                     public static void CalculateQuerySize(this {{parameter.TypeInfo.FullTypeName}} {{parameter.TypeInfo.ParameterName}}, ref int capacity, ref int parameterCount)
@@ -169,7 +170,8 @@ internal static class QueryParameterGenerator
         builder.AppendTopLevelSeparator();
 
         builder.AppendLine(
-            """
+            $$"""
+            {{Constants.GeneratedCodeAttribute}}
             file static class QueryParameterHelper
             {
             """);

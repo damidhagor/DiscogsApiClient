@@ -26,6 +26,9 @@ internal static class ApiMethodGenerator
         builder.AppendLine();
 
         builder.Append(_indent);
+        builder.AppendLine(Constants.GeneratedCodeAttribute);
+
+        builder.Append(_indent);
         builder.Append(apiMethod.AccessModifier);
         builder.Append(_space);
 

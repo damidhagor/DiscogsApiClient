@@ -45,6 +45,7 @@ public sealed class ApiMethodGeneratorTests
         var expected =
             """
 
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
                 public async partial global::System.Threading.Tasks.Task GetItemAsync(global::System.Threading.CancellationToken cancellationToken)
                 {
                     var route = $"/items/{id}";
@@ -88,6 +89,7 @@ public sealed class ApiMethodGeneratorTests
         var expected =
             """
 
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
                 public async partial global::System.Threading.Tasks.Task CreateItemAsync(global::System.Threading.CancellationToken cancellationToken)
                 {
                     var route = $"/items/{id}";
@@ -131,6 +133,7 @@ public sealed class ApiMethodGeneratorTests
         var expected =
             """
 
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
                 public async partial global::System.Threading.Tasks.Task UpdateItemAsync(global::System.Threading.CancellationToken cancellationToken)
                 {
                     var route = $"/items/{id}";
@@ -174,6 +177,7 @@ public sealed class ApiMethodGeneratorTests
         var expected =
             """
 
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
                 public async partial global::System.Threading.Tasks.Task DeleteItemAsync(global::System.Threading.CancellationToken cancellationToken)
                 {
                     var route = $"/items/{id}";
@@ -235,6 +239,7 @@ public sealed class ApiMethodGeneratorTests
         var expected =
             """
 
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
                 public async partial global::System.Threading.Tasks.Task<global::System.String> GetItemAsync(global::System.Int32 id, global::System.Threading.CancellationToken cancellationToken)
                 {
                     var route = $"/items/{id}";
@@ -306,6 +311,7 @@ public sealed class ApiMethodGeneratorTests
         var expected =
             """
 
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
                 public async partial global::System.Threading.Tasks.Task<global::System.String> GetUserItemAsync(global::System.String userId, global::System.Int32 itemId, global::System.Threading.CancellationToken cancellationToken)
                 {
                     var route = $"/users/{userId}/items/{itemId}";
@@ -366,6 +372,7 @@ public sealed class ApiMethodGeneratorTests
         var expected =
             """
 
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
                 public async partial global::System.Threading.Tasks.Task<global::System.String> GetItemsAsync(global::TestNamespace.QueryParams queryParams, global::System.Threading.CancellationToken cancellationToken)
                 {
                     var route = BuildRouteForGetItemsAsync("/items", queryParams);
@@ -427,6 +434,7 @@ public sealed class ApiMethodGeneratorTests
         var expected =
             """
 
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
                 public async partial global::System.Threading.Tasks.Task GetItemsAsync(global::TestNamespace.QueryParams1 queryParams1, global::TestNamespace.QueryParams2 queryParams2, global::System.Threading.CancellationToken cancellationToken)
                 {
                     var route = BuildRouteForGetItemsAsync("/items", queryParams1, queryParams2);
@@ -489,6 +497,7 @@ public sealed class ApiMethodGeneratorTests
         var expected =
             """
 
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
                 public async partial global::System.Threading.Tasks.Task GetItemWithQueryAsync(global::System.Int32 id, global::TestNamespace.QueryParams queryParams, global::System.Threading.CancellationToken cancellationToken)
                 {
                     var route = BuildRouteForGetItemWithQueryAsync($"/items/{id}", queryParams);
@@ -541,6 +550,7 @@ public sealed class ApiMethodGeneratorTests
         var expected =
             """
 
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
                 public async partial global::System.Threading.Tasks.Task CreateItemAsync(global::TestNamespace.TestRequest request, global::System.Threading.CancellationToken cancellationToken)
                 {
                     var route = "/items";
@@ -585,6 +595,7 @@ public sealed class ApiMethodGeneratorTests
         var expected =
             """
 
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
                 public async partial global::System.Threading.Tasks.Task GetItemAsync(global::System.Threading.CancellationToken cancellationToken)
                 {
                     var route = "/items";
@@ -619,6 +630,7 @@ public sealed class ApiMethodGeneratorTests
         var expected =
             """
 
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
                 public async partial global::System.Threading.Tasks.Task GetItemAsync()
                 {
                     var route = "/items";
@@ -663,6 +675,7 @@ public sealed class ApiMethodGeneratorTests
         var expected =
             """
 
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
                 public async partial global::System.Threading.Tasks.Task GetItemAsync(global::System.Threading.CancellationToken cancellationToken)
                 {
                     var route = "/items";
@@ -714,6 +727,7 @@ public sealed class ApiMethodGeneratorTests
         var expected =
             """
 
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
                 public async partial global::System.Threading.Tasks.Task<global::System.String> GetItemAsync(global::System.Threading.CancellationToken cancellationToken)
                 {
                     var route = "/items";
@@ -757,6 +771,7 @@ public sealed class ApiMethodGeneratorTests
         var expected =
             """
 
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
                 public partial void GetItemSync(global::System.Threading.CancellationToken cancellationToken)
                 {
                     var route = "/items";
@@ -800,6 +815,7 @@ public sealed class ApiMethodGeneratorTests
         var expected =
             """
 
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
                 public partial global::System.String GetItemSync(global::System.Threading.CancellationToken cancellationToken)
                 {
                     var route = "/items";

@@ -38,6 +38,7 @@ internal static class ApiClientGenerator
     {
         builder.Append(
             $$"""
+            {{Constants.GeneratedFileHeader}}
             #nullable enable
 
             namespace {{apiClient.ClassTypeInfo.Namespace}};
@@ -52,11 +53,13 @@ internal static class ApiClientGenerator
         builder.Append(
             $$"""
 
+            {{Constants.GeneratedCodeAttribute}}
             private string SerializeContent<T>(T payload, global::System.Text.Json.Serialization.Metadata.JsonTypeInfo<T> jsonTypeInfo)
             {
                 return global::System.Text.Json.JsonSerializer.Serialize(payload, jsonTypeInfo);
             }
 
+            {{Constants.GeneratedCodeAttribute}}
             private void Send(
                 global::System.Net.Http.HttpMethod httpMethod,
                 string route,
@@ -74,6 +77,7 @@ internal static class ApiClientGenerator
                 response.EnsureSuccessStatusCode();
             }
 
+            {{Constants.GeneratedCodeAttribute}}
             private T Send<T>(
                 global::System.Net.Http.HttpMethod httpMethod,
                 string route,
@@ -97,6 +101,7 @@ internal static class ApiClientGenerator
                     ?? throw new global::System.InvalidOperationException($"The response for the request '{route}' could not be deserialized.");
             }
 
+            {{Constants.GeneratedCodeAttribute}}
             private async Task SendAsync(
                 global::System.Net.Http.HttpMethod httpMethod,
                 string route,
@@ -114,6 +119,7 @@ internal static class ApiClientGenerator
                 response.EnsureSuccessStatusCode();
             }
         
+            {{Constants.GeneratedCodeAttribute}}
             private async Task<T> SendAsync<T>(
                 global::System.Net.Http.HttpMethod httpMethod,
                 string route,
@@ -152,8 +158,12 @@ internal static class ApiClientGenerator
 
             if (queryParameters.Length > 0)
             {
-                builder.AppendLine();
-                builder.Append($"    private string BuildRouteFor{apiMethod.Name}(string route, ");
+                builder.Append(
+                    $$"""
+
+                        {{Constants.GeneratedCodeAttribute}}
+                        private string BuildRouteFor{{apiMethod.Name}}(string route, 
+                    """);
 
                 for (var i = 0; i < queryParameters.Length; i++)
                 {

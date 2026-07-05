@@ -39,10 +39,12 @@ internal static class EnumJsonConverterGenerator
     {
         builder.AppendLine(
             $$"""
+            {{Constants.GeneratedFileHeader}}
             #nullable enable
 
             namespace {{Namespace}};
         
+            {{Constants.GeneratedCodeAttribute}}
             internal static class {{ClassName}}
             {
                 public static global::System.Text.Json.JsonSerializerOptions AddGeneratedEnumJsonConverters(this global::System.Text.Json.JsonSerializerOptions options)
@@ -69,6 +71,7 @@ internal static class EnumJsonConverterGenerator
         builder.AppendLine(
             $$"""
 
+                {{Constants.GeneratedCodeAttribute}}
                 private sealed class {{className}}
                     : global::System.Text.Json.Serialization.JsonConverter<{{enumeration.TypeInfo.FullTypeName}}>
                 {

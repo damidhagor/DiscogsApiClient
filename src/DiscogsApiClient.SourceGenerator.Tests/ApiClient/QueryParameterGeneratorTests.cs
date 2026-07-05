@@ -41,6 +41,7 @@ public sealed class QueryParameterGeneratorTests
 
         var expected =
             """
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
             file static class TestNamespaceQueryParamsExtensions
             {
                 public static void CalculateQuerySize(this global::TestNamespace.QueryParams? queryParams, ref int capacity, ref int parameterCount)
@@ -74,6 +75,7 @@ public sealed class QueryParameterGeneratorTests
                 }
             }
 
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
             file static class QueryParameterHelper
             {
                 public static int CalculateQuerySize(string? text)
@@ -119,6 +121,7 @@ public sealed class QueryParameterGeneratorTests
 
         var expected =
             """
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
             file static class TestNamespaceQueryParamsExtensions
             {
                 public static void CalculateQuerySize(this global::TestNamespace.QueryParams? queryParams, ref int capacity, ref int parameterCount)
@@ -152,6 +155,7 @@ public sealed class QueryParameterGeneratorTests
                 }
             }
 
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
             file static class QueryParameterHelper
             {
                 public static int CalculateQuerySize(int? number)
@@ -201,6 +205,7 @@ public sealed class QueryParameterGeneratorTests
 
         var expected =
             """
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
             file static class TestNamespaceQueryParamsExtensions
             {
                 public static void CalculateQuerySize(this global::TestNamespace.QueryParams? queryParams, ref int capacity, ref int parameterCount)
@@ -239,6 +244,7 @@ public sealed class QueryParameterGeneratorTests
                 }
             }
 
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
             file static class QueryParameterHelper
             {
                 public static int CalculateQuerySize(global::TestNamespace.SortOrder? enumValue)
@@ -329,6 +335,7 @@ public sealed class QueryParameterGeneratorTests
 
         var expected =
             """
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
             file static class TestNamespaceQueryParamsExtensions
             {
                 public static void CalculateQuerySize(this global::TestNamespace.QueryParams? queryParams, ref int capacity, ref int parameterCount)
@@ -403,6 +410,7 @@ public sealed class QueryParameterGeneratorTests
                 }
             }
 
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
             file static class QueryParameterHelper
             {
                 public static int CalculateQuerySize(string? text)
