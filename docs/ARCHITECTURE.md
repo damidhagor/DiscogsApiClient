@@ -329,22 +329,51 @@ Serialized to query strings by source generator.
 
 **Location:** `DiscogsApiClient/ServiceCollectionExtensions.cs`
 
-Extension methods for `IServiceCollection`:
+The `AddDiscogsApiClient` extension methods live in the `Microsoft.Extensions.DependencyInjection`
+namespace so they surface in IntelliSense without an extra `using`. Three overloads are provided:
 
 ```csharp
+// A) Code-based configuration.
 services.AddDiscogsApiClient(options =>
 {
     options.UserAgent = "MyApp/1.0";
     options.ConsumerKey = "...";      // For OAuth
     options.ConsumerSecret = "...";   // For OAuth
 });
+
+// B) Bind from IConfiguration (e.g. appsettings.json "Discogs" section).
+services.AddDiscogsApiClient(configuration.GetSection(DiscogsApiClientOptions.SectionName));
+
+// C) DI-aware configuration (delegate receives the IServiceProvider).
+services.AddDiscogsApiClient((serviceProvider, options) =>
+{
+    options.UserAgent = serviceProvider.GetRequiredService<IAppInfo>().UserAgent;
+});
 ```
 
+**Configuration & options pattern:**
+- Options flow through `IOptions<DiscogsApiClientOptions>` (no raw singleton).
+- The delegate overloads (A & C) first bind the `DiscogsApiClientOptions.SectionName` (`"Discogs"`)
+  section **if** an `IConfiguration` is registered, then apply the delegate on top (code overrides config).
+- Validation is reflection-free and AOT-safe via a hand-written `IValidateOptions<DiscogsApiClientOptions>`
+  (`DiscogsApiClientOptionsValidator`) and runs at startup through `.ValidateOnStart()`. It enforces
+  required `BaseUrl`/`UserAgent`, that URL values are constructable absolute URIs, and the all-or-nothing
+  OAuth credential triple (`ConsumerKey`, `ConsumerSecret`, `VerifierCallbackUrl`).
+- An optional `Action<IHttpClientBuilder>? configureClient` hook on every overload lets callers add
+  their own handlers; they sit **outermost** in the pipeline.
+
+**Idempotency:** infrastructure services are registered with `TryAdd*`, so calling `AddDiscogsApiClient`
+twice is safe and callers can pre-register overrides.
+
+**Handler pipeline (outer → inner):** `[user handlers] → Error → Auth → RateLimit`. `RateLimitStateDelegatingHandler`
+is innermost so it captures rate-limit headers from every response before `ErrorHandlingDelegatingHandler`
+can translate a non-success status into a `DiscogsException`.
+
 **Registered Services:**
-- `IDiscogsApiClient` (Scoped, via HttpClient)
+- `IDiscogsApiClient` (typed `HttpClient`)
 - `IDiscogsAuthenticationService` (Singleton)
-- `IDiscogsRateLimitStateService` (Singleton)
-- Authentication providers (Singleton/Scoped)
+- `IDiscogsRateLimitStateService` / `IDiscogsRateLimitStateUpdateService` (single shared Singleton)
+- Authentication providers (Singleton; OAuth provider via typed `HttpClient`)
 - Middleware handlers (Transient)
 
 ---

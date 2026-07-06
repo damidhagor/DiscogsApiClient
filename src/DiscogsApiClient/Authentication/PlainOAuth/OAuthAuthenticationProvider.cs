@@ -1,5 +1,6 @@
 using System.Net;
 using System.Web;
+using Microsoft.Extensions.Options;
 
 namespace DiscogsApiClient.Authentication.OAuth;
 
@@ -8,10 +9,10 @@ namespace DiscogsApiClient.Authentication.OAuth;
 /// using the OAuth 1.0a flow described <a href="https://www.discogs.com/developers#page:authentication,header:authentication-discogs-auth-flow">here</a>
 /// and should be provided to the <see cref="DiscogsApiClient"/>'s constructor.
 /// </summary>
-public sealed class OAuthAuthenticationProvider(HttpClient httpClient, DiscogsApiClientOptions discogsOptions) : IOAuthAuthenticationProvider
+public sealed class OAuthAuthenticationProvider(HttpClient httpClient, IOptions<DiscogsApiClientOptions> options) : IOAuthAuthenticationProvider
 {
     private readonly HttpClient _httpClient = httpClient;
-    private readonly DiscogsApiClientOptions _discogsOptions = discogsOptions;
+    private readonly DiscogsApiClientOptions _discogsOptions = options.Value;
     private string _accessToken = "";
     private string _accessTokenSecret = "";
 

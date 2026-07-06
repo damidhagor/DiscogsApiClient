@@ -1,5 +1,6 @@
 using DiscogsApiClient.Authentication.OAuth;
 using DiscogsApiClient.Authentication.PersonalAccessToken;
+using Microsoft.Extensions.Options;
 
 namespace DiscogsApiClient.Tests.Authentication;
 
@@ -10,7 +11,7 @@ public sealed class DiscogsAuthenticationServiceTests
     {
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider(null!, null!));
+            new OAuthAuthenticationProvider(null!, Options.Create<DiscogsApiClientOptions>(null!)));
 
         await Assert.That(authService.IsAuthenticated).IsFalse();
         await Assert.That(() => authService.CreateAuthenticationHeader()).Throws<UnauthenticatedDiscogsException>();
@@ -22,7 +23,7 @@ public sealed class DiscogsAuthenticationServiceTests
         var token = "myusertoken";
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider(null!, null!));
+            new OAuthAuthenticationProvider(null!, Options.Create<DiscogsApiClientOptions>(null!)));
 
         await Assert.That(authService.IsAuthenticated).IsFalse();
 
@@ -40,7 +41,7 @@ public sealed class DiscogsAuthenticationServiceTests
     {
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider(null!, null!));
+            new OAuthAuthenticationProvider(null!, Options.Create<DiscogsApiClientOptions>(null!)));
 
         await Assert.That(() => authService.AuthenticateWithPersonalAccessToken(token!))
             .Throws<ArgumentException>();
@@ -56,7 +57,7 @@ public sealed class DiscogsAuthenticationServiceTests
         var token = "myusertoken";
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider(null!, null!));
+            new OAuthAuthenticationProvider(null!, Options.Create<DiscogsApiClientOptions>(null!)));
 
         await Assert.That(authService.IsAuthenticated).IsFalse();
 
@@ -79,7 +80,7 @@ public sealed class DiscogsAuthenticationServiceTests
 
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider(httpClient, options));
+            new OAuthAuthenticationProvider(httpClient, Options.Create(options)));
 
         await Assert.That(authService.IsAuthenticated).IsFalse();
 
@@ -126,7 +127,7 @@ public sealed class DiscogsAuthenticationServiceTests
 
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider(httpClient, options));
+            new OAuthAuthenticationProvider(httpClient, Options.Create(options)));
 
         var exception = await Assert.That(async () => await authService.StartOAuthAuthentication(cancellationToken))
             .Throws<ArgumentException>();
@@ -151,7 +152,7 @@ public sealed class DiscogsAuthenticationServiceTests
 
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider(httpClient, options));
+            new OAuthAuthenticationProvider(httpClient, Options.Create(options)));
 
         await Assert.That(async () => await authService.StartOAuthAuthentication(cancellationToken))
             .Throws<AuthenticationFailedDiscogsException>();
@@ -190,7 +191,7 @@ public sealed class DiscogsAuthenticationServiceTests
 
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider(httpClient, options));
+            new OAuthAuthenticationProvider(httpClient, Options.Create(options)));
 
         var exception = await Assert.That(async () => await authService.CompleteOAuthAuthentication(session, verifierToken!, cancellationToken))
             .Throws<ArgumentException>();
@@ -216,7 +217,7 @@ public sealed class DiscogsAuthenticationServiceTests
 
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider(httpClient, options));
+            new OAuthAuthenticationProvider(httpClient, Options.Create(options)));
 
         await Assert.That(async () => await authService.CompleteOAuthAuthentication(session, "verifier", cancellationToken))
             .Throws<AuthenticationFailedDiscogsException>();
@@ -229,7 +230,7 @@ public sealed class DiscogsAuthenticationServiceTests
 
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider(null!, options));
+            new OAuthAuthenticationProvider(null!, Options.Create(options)));
 
         await Assert.That(authService.IsAuthenticated).IsFalse();
 
@@ -257,7 +258,7 @@ public sealed class DiscogsAuthenticationServiceTests
     {
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider(null!, null!));
+            new OAuthAuthenticationProvider(null!, Options.Create<DiscogsApiClientOptions>(null!)));
 
         var exception = await Assert.That(() => authService.AuthenticateWithOAuth(accessToken!, accessTokenSecret!))
             .Throws<ArgumentException>();
@@ -277,7 +278,7 @@ public sealed class DiscogsAuthenticationServiceTests
 
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider(httpClient, options));
+            new OAuthAuthenticationProvider(httpClient, Options.Create(options)));
 
         await Assert.That(authService.IsAuthenticated).IsFalse();
 
@@ -312,7 +313,7 @@ public sealed class DiscogsAuthenticationServiceTests
 
         var authService = new DiscogsAuthenticationService(
             new PersonalAccessTokenAuthenticationProvider(),
-            new OAuthAuthenticationProvider(httpClient, options));
+            new OAuthAuthenticationProvider(httpClient, Options.Create(options)));
 
         await Assert.That(authService.IsAuthenticated).IsFalse();
 

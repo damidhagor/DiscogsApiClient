@@ -1,4 +1,5 @@
 using DiscogsApiClient.Authentication.OAuth;
+using Microsoft.Extensions.Options;
 
 namespace DiscogsApiClient.Tests.Authentication;
 
@@ -11,7 +12,7 @@ public sealed class OAuthAuthenticationProviderTests
         var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
         var options = new DiscogsApiClientOptions { ConsumerKey = "key", ConsumerSecret = "secret", VerifierCallbackUrl = "http://localhost/access_token" };
 
-        var authProvider = new OAuthAuthenticationProvider(httpClient, options);
+        var authProvider = new OAuthAuthenticationProvider(httpClient, Options.Create(options));
 
         await Assert.That(authProvider.IsAuthenticated).IsFalse();
 
@@ -40,7 +41,7 @@ public sealed class OAuthAuthenticationProviderTests
         var httpClient = new HttpClient(new OAuthMockDelegatingHandler());
         var options = new DiscogsApiClientOptions { ConsumerKey = "key", ConsumerSecret = "secret" };
 
-        var authProvider = new OAuthAuthenticationProvider(httpClient, options);
+        var authProvider = new OAuthAuthenticationProvider(httpClient, Options.Create(options));
 
         await Assert.That(authProvider.IsAuthenticated).IsFalse();
         await Assert.That(() => authProvider.CreateAuthenticationHeader()).Throws<UnauthenticatedDiscogsException>();
@@ -68,7 +69,7 @@ public sealed class OAuthAuthenticationProviderTests
         var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
         var options = new DiscogsApiClientOptions { ConsumerKey = consumerKey!, ConsumerSecret = consumerSecret!, VerifierCallbackUrl = verifierCallbackUrl };
 
-        var authProvider = new OAuthAuthenticationProvider(httpClient, options);
+        var authProvider = new OAuthAuthenticationProvider(httpClient, Options.Create(options));
 
         var exception = await Assert.That(async () => await authProvider.StartAuthentication(cancellationToken))
             .Throws<ArgumentException>();
@@ -91,7 +92,7 @@ public sealed class OAuthAuthenticationProviderTests
         var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
         var options = new DiscogsApiClientOptions { ConsumerKey = "key", ConsumerSecret = "secret", VerifierCallbackUrl = "callback" };
 
-        var authProvider = new OAuthAuthenticationProvider(httpClient, options);
+        var authProvider = new OAuthAuthenticationProvider(httpClient, Options.Create(options));
 
         await Assert.That(async () => await authProvider.StartAuthentication(cancellationToken))
             .Throws<AuthenticationFailedDiscogsException>();
@@ -128,7 +129,7 @@ public sealed class OAuthAuthenticationProviderTests
         var options = new DiscogsApiClientOptions { ConsumerKey = consumerKey!, ConsumerSecret = consumerSecret! };
         var session = new OAuthAuthenticationSession("", "", requestToken!, requestTokenSecret!);
 
-        var authProvider = new OAuthAuthenticationProvider(httpClient, options);
+        var authProvider = new OAuthAuthenticationProvider(httpClient, Options.Create(options));
 
         var exception = await Assert.That(async () => await authProvider.CompleteAuthentication(session, verifierToken!, cancellationToken))
             .Throws<ArgumentException>();
@@ -152,7 +153,7 @@ public sealed class OAuthAuthenticationProviderTests
         var options = new DiscogsApiClientOptions { ConsumerKey = "key", ConsumerSecret = "secret" };
         var session = new OAuthAuthenticationSession("", "", "requesttoken", "requesttokensecret");
 
-        var authProvider = new OAuthAuthenticationProvider(httpClient, options);
+        var authProvider = new OAuthAuthenticationProvider(httpClient, Options.Create(options));
 
         await Assert.That(async () => await authProvider.CompleteAuthentication(session, "verifier", cancellationToken))
             .Throws<AuthenticationFailedDiscogsException>();
@@ -166,7 +167,7 @@ public sealed class OAuthAuthenticationProviderTests
         var options = new DiscogsApiClientOptions { ConsumerKey = "key", ConsumerSecret = "secret" };
         var session = new OAuthAuthenticationSession("", "", "requesttoken", "requesttokensecret");
 
-        var authProvider = new OAuthAuthenticationProvider(httpClient, options);
+        var authProvider = new OAuthAuthenticationProvider(httpClient, Options.Create(options));
 
         await Assert.That(authProvider.IsAuthenticated).IsFalse();
 
@@ -193,7 +194,7 @@ public sealed class OAuthAuthenticationProviderTests
     {
         var options = new DiscogsApiClientOptions { ConsumerKey = "key", ConsumerSecret = "secret" };
 
-        var authProvider = new OAuthAuthenticationProvider(null!, options);
+        var authProvider = new OAuthAuthenticationProvider(null!, Options.Create(options));
 
         await Assert.That(authProvider.IsAuthenticated).IsFalse();
 
@@ -219,7 +220,7 @@ public sealed class OAuthAuthenticationProviderTests
         Type exceptionType,
         string paramName)
     {
-        var authProvider = new OAuthAuthenticationProvider(null!, null!);
+        var authProvider = new OAuthAuthenticationProvider(null!, Options.Create<DiscogsApiClientOptions>(null!));
 
         var exception = await Assert.That(() => authProvider.Authenticate(accessToken!, accessTokenSecret!))
             .Throws<ArgumentException>();
