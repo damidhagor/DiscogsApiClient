@@ -8,7 +8,7 @@ namespace DiscogsApiClient.RateLimiting;
 /// </summary>
 internal sealed class DiscogsRateLimitStateService : IDiscogsRateLimitStateService, IDiscogsRateLimitStateUpdateService
 {
-    private DiscogsRateLimitState? _currentState;
+    private volatile DiscogsRateLimitState? _currentState;
 
     /// <inheritdoc/>
     public DiscogsRateLimitState? GetCurrentState() => _currentState;
@@ -22,8 +22,5 @@ internal sealed class DiscogsRateLimitStateService : IDiscogsRateLimitStateServi
 
     /// <inheritdoc/>
     public void UpdateState(int limit, int remaining, int used)
-    {
-        var newState = new DiscogsRateLimitState(limit, remaining, used);
-        Interlocked.Exchange(ref _currentState, newState);
-    }
+        => _currentState = new(limit, remaining, used);
 }

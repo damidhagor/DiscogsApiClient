@@ -18,7 +18,8 @@ public partial class App : Application
                 services.AddDiscogsApiClient(options =>
                 {
                     options.UserAgent = "AwesomeAppDemo/1.0.0";
-                });
+                })
+                .WithPatAuthentication();
                 services.AddSingleton<MainWindow>();
             })
             .Build();

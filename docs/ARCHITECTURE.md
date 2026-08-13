@@ -29,7 +29,7 @@ graph TB
         Interface[IDiscogsApiClient<br/>Contract Interface]
         Client[DiscogsApiClient<br/>partial class]
         Generated[Generated partial<br/>class half]
-        Auth[Authentication<br/>Service]
+        Auth[Authentication<br/>Header Provider]
         PAT[Personal Access<br/>Token Provider]
         OAuth[OAuth<br/>Provider]
 
@@ -162,99 +162,131 @@ An incremental source generator that analyzes the `[ApiClient]` partial class an
 
 **Location:** `DiscogsApiClient/Authentication/`
 
-Provides multiple authentication strategies:
+Authentication is an **explicit, single choice made at DI registration time**, mirroring
+`AddAuthentication().AddJwtBearer(...)`-style ecosystem patterns. `AddDiscogsApiClient(...)` alone
+registers no authentication mechanism (unauthenticated by default); consumers opt into exactly one
+mechanism via `.WithPatAuthentication(...)` or `.WithOAuthAuthentication(...)`.
 
 #### Personal Access Token
-**Classes:** 
-- `IPersonalAccessTokenAuthenticationProvider`
-- `PersonalAccessTokenAuthenticationProvider`
 
-Simple token-based authentication using `Authorization: Discogs token={token}` header.
+**Location:** `DiscogsApiClient/Authentication/Pat/`
+
+**Classes:**
+- `IDiscogsPatAuthenticationProvider` (public)
+- `DiscogsPatAuthenticationProvider` (internal implementation, registered via DI)
+- `DiscogsPatOptions` (bindable from `"Discogs:Pat"`)
+
+Simple token-based authentication using `Authorization: Discogs token={token}` header. The token can
+be supplied at DI-registration time via options/`IConfiguration` (the provider is then already
+authenticated once the container is built) or later via a runtime `Authenticate(token)` call.
+Consumers resolve `IDiscogsPatAuthenticationProvider` from the container — the concrete
+`DiscogsPatAuthenticationProvider` type is an internal implementation detail and never referenced directly.
 
 #### OAuth 1.0a (Plain)
+
+**Location:** `DiscogsApiClient/Authentication/OAuth/`
+
 **Classes:**
-- `IOAuthAuthenticationProvider`
-- `OAuthAuthenticationProvider`
-- `OAuthAuthenticationSession`
+- `IDiscogsOAuthAuthenticationProvider` (public)
+- `DiscogsOAuthAuthenticationProvider` (internal implementation, registered via DI)
+- `OAuthAuthenticationSession` (public)
+- `DiscogsOAuthOptions` (bindable from `"Discogs:OAuth"`; app-identity secrets only — `ConsumerKey`,
+  `ConsumerSecret`, `VerifierCallbackUrl`)
 
 Full OAuth 1.0a flow implementation:
 1. Request token acquisition
 2. User authorization (external browser)
 3. Access token exchange using verifier
 
+The obtained user access token/secret are **never** stored in options/configuration — they're
+dynamic, per-user values returned directly to the caller from `CompleteAuthentication(...)`, and
+caching them between runs (e.g. to disk or a secret store) is the consuming application's
+responsibility. An app with a previously-cached token/secret pair can skip the interactive flow by
+calling `Authenticate(accessToken, accessTokenSecret)` directly after resolving the provider.
+
 **Note:** Uses plain (unencrypted) OAuth as recommended by Discogs since all requests are over HTTPS.
+Consumers resolve `IDiscogsOAuthAuthenticationProvider` from the container — the concrete
+`DiscogsOAuthAuthenticationProvider` type is an internal implementation detail and never referenced directly.
 
-#### Authentication Service
-**Class:** `DiscogsAuthenticationService`
+#### Internal composition
 
-Facade that manages authentication state and provides unified access to authentication providers.
+**Class:** `DiscogsAuthenticationHeaderProvider` (internal, implements internal `IDiscogsAuthenticationHeaderProvider`)
+
+Composes at most one authenticated provider via two **optional, nullable** constructor
+dependencies (`IDiscogsPatAuthenticationProvider?`, `IDiscogsOAuthAuthenticationProvider?`). The
+built-in DI container supplies `null` for a dependency that was never registered, so the
+"unauthenticated" default state falls out naturally — no sentinel/no-op registration needed. Since
+`WithPatAuthentication`/`WithOAuthAuthentication` are mutually exclusive, at most one of the two is
+ever non-null, so the constructor resolves and caches the single active one (typed as the internal
+`IDiscogsAuthenticationProvider` shared shape) once, instead of re-checking both nullable
+dependencies on every `IsAuthenticated`/`GetHeader()` call. This is the only type
+`AuthenticationDelegatingHandler` depends on; it is not part of the public API.
 
 #### Authentication Class Diagram
 
 ```mermaid
 classDiagram
-    class IDiscogsAuthenticationService {
-        <<interface>>
+    class IDiscogsAuthenticationHeaderProvider {
+        <<interface, internal>>
         +bool IsAuthenticated
-        +AuthenticateWithPersonalAccessToken(token)
-        +StartOAuthAuthentication()
-        +CompleteOAuthAuthentication(session, verifier)
+        +CreateAuthenticationHeader()
     }
 
-    class DiscogsAuthenticationService {
-        -IPersonalAccessTokenAuthenticationProvider _patProvider
-        -IOAuthAuthenticationProvider _oauthProvider
-        -bool _lastAuthenticatedWithPersonalAccessToken
-        -bool _lastAuthenticatedWithOAuth
+    class DiscogsAuthenticationHeaderProvider {
+        <<internal>>
+        -IDiscogsPatAuthenticationProvider? patProvider
+        -IDiscogsOAuthAuthenticationProvider? oAuthProvider
         +bool IsAuthenticated
-        +AuthenticateWithPersonalAccessToken(token)
-        +StartOAuthAuthentication()
-        +CompleteOAuthAuthentication(session, verifier)
+        +CreateAuthenticationHeader()
     }
 
-    class IPersonalAccessTokenAuthenticationProvider {
+    class IDiscogsPatAuthenticationProvider {
         <<interface>>
         +bool IsAuthenticated
         +Authenticate(token)
-        +GetAuthenticationHeader()
+        +CreateAuthenticationHeader()
     }
 
-    class PersonalAccessTokenAuthenticationProvider {
+    class DiscogsPatAuthenticationProvider {
+        <<internal>>
         -string? _token
         +bool IsAuthenticated
         +Authenticate(token)
-        +GetAuthenticationHeader()
+        +CreateAuthenticationHeader()
     }
 
-    class IOAuthAuthenticationProvider {
+    class IDiscogsOAuthAuthenticationProvider {
         <<interface>>
         +bool IsAuthenticated
         +StartAuthentication()
         +CompleteAuthentication(session, verifier)
-        +GetAuthenticationHeader()
+        +Authenticate(accessToken, accessTokenSecret)
+        +CreateAuthenticationHeader()
     }
 
-    class OAuthAuthenticationProvider {
-        -string? _token
-        -string? _tokenSecret
+    class DiscogsOAuthAuthenticationProvider {
+        <<internal>>
+        -TokenState? _tokenState
         +bool IsAuthenticated
         +StartAuthentication()
         +CompleteAuthentication(session, verifier)
-        +GetAuthenticationHeader()
+        +Authenticate(accessToken, accessTokenSecret)
+        +CreateAuthenticationHeader()
     }
 
     class OAuthAuthenticationSession {
-        +string Token
-        +string TokenSecret
+        +string RequestToken
+        +string RequestTokenSecret
         +string AuthorizeUrl
+        +string? VerifierCallbackUrl
     }
 
-    IDiscogsAuthenticationService <|.. DiscogsAuthenticationService
-    DiscogsAuthenticationService --> IPersonalAccessTokenAuthenticationProvider
-    DiscogsAuthenticationService --> IOAuthAuthenticationProvider
-    IPersonalAccessTokenAuthenticationProvider <|.. PersonalAccessTokenAuthenticationProvider
-    IOAuthAuthenticationProvider <|.. OAuthAuthenticationProvider
-    OAuthAuthenticationProvider ..> OAuthAuthenticationSession : returns
+    IDiscogsAuthenticationHeaderProvider <|.. DiscogsAuthenticationHeaderProvider
+    DiscogsAuthenticationHeaderProvider --> IDiscogsPatAuthenticationProvider : optional
+    DiscogsAuthenticationHeaderProvider --> IDiscogsOAuthAuthenticationProvider : optional
+    IDiscogsPatAuthenticationProvider <|.. DiscogsPatAuthenticationProvider
+    IDiscogsOAuthAuthenticationProvider <|.. DiscogsOAuthAuthenticationProvider
+    DiscogsOAuthAuthenticationProvider ..> OAuthAuthenticationSession : returns
 ```
 
 ### 4. HTTP Middleware Pipeline
@@ -330,25 +362,33 @@ Serialized to query strings by source generator.
 **Location:** `DiscogsApiClient/ServiceCollectionExtensions.cs`
 
 The `AddDiscogsApiClient` extension methods live in the `Microsoft.Extensions.DependencyInjection`
-namespace so they surface in IntelliSense without an extra `using`. Three overloads are provided:
+namespace so they surface in IntelliSense without an extra `using`. Three overloads are provided,
+and `WithPatAuthentication`/`WithOAuthAuthentication` mirror the same three call patterns so
+authentication options can be configured exactly the same way as the client itself:
 
 ```csharp
 // A) Code-based configuration.
 services.AddDiscogsApiClient(options =>
 {
+    options.BaseUrl = "https://api.discogs.com";
     options.UserAgent = "MyApp/1.0";
-    options.ConsumerKey = "...";      // For OAuth
-    options.ConsumerSecret = "...";   // For OAuth
-});
+})
+.WithPatAuthentication(options => options.Token = "...");
+// or: .WithOAuthAuthentication(options => { options.ConsumerKey = "..."; options.ConsumerSecret = "..."; });
 
 // B) Bind from IConfiguration (e.g. appsettings.json "Discogs" section).
-services.AddDiscogsApiClient(configuration.GetSection(DiscogsApiClientOptions.SectionName));
+services.AddDiscogsApiClient(configuration.GetSection(DiscogsApiClientOptions.SectionName))
+    .WithPatAuthentication(configuration.GetSection(DiscogsPatOptions.SectionName));
+// or (auto-bind from a registered IConfiguration, no explicit section):
+services.AddDiscogsApiClient(configuration.GetSection(DiscogsApiClientOptions.SectionName))
+    .WithPatAuthentication(); // Token bound from "Discogs:Pat" if IConfiguration is registered.
 
 // C) DI-aware configuration (delegate receives the IServiceProvider).
 services.AddDiscogsApiClient((serviceProvider, options) =>
 {
     options.UserAgent = serviceProvider.GetRequiredService<IAppInfo>().UserAgent;
-});
+})
+.WithPatAuthentication((serviceProvider, options) => options.Token = serviceProvider.GetRequiredService<ITokenStore>().Token);
 ```
 
 **Configuration & options pattern:**
@@ -357,10 +397,27 @@ services.AddDiscogsApiClient((serviceProvider, options) =>
   section **if** an `IConfiguration` is registered, then apply the delegate on top (code overrides config).
 - Validation is reflection-free and AOT-safe via a hand-written `IValidateOptions<DiscogsApiClientOptions>`
   (`DiscogsApiClientOptionsValidator`) and runs at startup through `.ValidateOnStart()`. It enforces
-  required `BaseUrl`/`UserAgent`, that URL values are constructable absolute URIs, and the all-or-nothing
-  OAuth credential triple (`ConsumerKey`, `ConsumerSecret`, `VerifierCallbackUrl`).
-- An optional `Action<IHttpClientBuilder>? configureClient` hook on every overload lets callers add
-  their own handlers; they sit **outermost** in the pipeline.
+  required `BaseUrl`/`UserAgent` and that URL values are constructable absolute URIs.
+- `.WithPatAuthentication(...)`/`.WithOAuthAuthentication(...)` each bind their own dedicated options
+  type (`DiscogsPatOptions` from `"Discogs:Pat"`, `DiscogsOAuthOptions` from `"Discogs:OAuth"`) the
+  same way, through the same three overload patterns (A/B/C above), each with their own
+  `IValidateOptions<T>` + `.ValidateOnStart()`. Calling both on the same `IServiceCollection` throws
+  `InvalidOperationException` — only one mechanism may be active.
+- An optional `Action<IHttpClientBuilder>? configureClient` hook on every `AddDiscogsApiClient` overload
+  lets callers add their own handlers; they sit **outermost** in the pipeline.
+
+**OAuth provider's HTTP client:** `DiscogsOAuthAuthenticationProvider` holds mutable token state and must
+be a DI **singleton** so the instance a consumer authenticates via `StartAuthentication`/`CompleteAuthentication`/
+`Authenticate` is the same instance `DiscogsAuthenticationHeaderProvider` reads from. `AddHttpClient<TClient,
+TImplementation>()` always registers the typed client as **transient**, which would defeat that. Instead, the
+provider takes a plain `IHttpClientFactory` in its constructor and creates its own named client from it
+(`httpClientFactory.CreateClient(HttpClientName)`), where `HttpClientName` is a `public const string` on
+`DiscogsOAuthAuthenticationProvider` itself (`nameof(DiscogsOAuthAuthenticationProvider)`) — not a
+loosely-related string owned by `ServiceCollectionExtensions`. `WithOAuthAuthentication` only needs to
+`AddHttpClient(DiscogsOAuthAuthenticationProvider.HttpClientName)` (to configure the named client) and
+`TryAddSingleton<IDiscogsOAuthAuthenticationProvider, DiscogsOAuthAuthenticationProvider>()` — the container
+resolves the constructor's `IHttpClientFactory`/`IOptions<DiscogsOAuthOptions>` automatically, no manual
+factory delegate needed.
 
 **Idempotency:** infrastructure services are registered with `TryAdd*`, so calling `AddDiscogsApiClient`
 twice is safe and callers can pre-register overrides.
@@ -371,9 +428,11 @@ can translate a non-success status into a `DiscogsException`.
 
 **Registered Services:**
 - `IDiscogsApiClient` (typed `HttpClient`)
-- `IDiscogsAuthenticationService` (Singleton)
+- `IDiscogsAuthenticationHeaderProvider` (internal, Singleton) — always registered
+- `IDiscogsPatAuthenticationProvider` / `IDiscogsOAuthAuthenticationProvider` (Singleton) — only
+  registered when `.WithPatAuthentication(...)` / `.WithOAuthAuthentication(...)` is called; neither
+  is registered by default (unauthenticated client)
 - `IDiscogsRateLimitStateService` / `IDiscogsRateLimitStateUpdateService` (single shared Singleton)
-- Authentication providers (Singleton; OAuth provider via typed `HttpClient`)
 - Middleware handlers (Transient)
 
 ---
@@ -390,10 +449,13 @@ can translate a non-success status into a `DiscogsException`.
 - **Why:** Separation of concerns, composable pipeline
 - **Implementation:** ASP.NET Core `DelegatingHandler`
 
-### 3. Facade Pattern
-- **What:** `DiscogsAuthenticationService` provides unified interface
-- **Why:** Simplifies switching between authentication methods
-- **Alternative:** Could expose providers directly
+### 3. Optional-Dependency Composition Pattern
+- **What:** `DiscogsAuthenticationHeaderProvider` composes at most one authenticated provider via
+  two optional, nullable constructor dependencies
+- **Why:** The "unauthenticated by default" state falls out naturally from unregistered DI
+  dependencies resolving to `null` — no sentinel/no-op provider type is needed
+- **Alternative:** A swappable facade with runtime-mutable "last authenticated wins" state (the
+  previous design) — rejected because it allowed conflicting/half-configured auth state
 
 ### 4. Guard Clause Pattern
 - **What:** Early parameter validation in public methods

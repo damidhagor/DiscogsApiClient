@@ -1,14 +1,15 @@
-using DiscogsApiClient.Authentication.PersonalAccessToken;
+using DiscogsApiClient.Authentication.Pat;
+using Microsoft.Extensions.Options;
 
 namespace DiscogsApiClient.Tests.Authentication;
 
-public sealed class PersonalAccessTokenAuthenticationProviderTests
+public sealed class DiscogsPatAuthenticationProviderTests
 {
     [Test]
     public async Task Authenticate_ShouldAuthenticate_WhenTokenIsValid()
     {
         var token = "myusertoken";
-        var authProvider = new PersonalAccessTokenAuthenticationProvider();
+        var authProvider = new DiscogsPatAuthenticationProvider(Options.Create(new DiscogsPatOptions()));
 
         await Assert.That(authProvider.IsAuthenticated).IsFalse();
 
@@ -21,7 +22,7 @@ public sealed class PersonalAccessTokenAuthenticationProviderTests
     [Test]
     public async Task CreateAuthenticationHeader_ShouldThrowUnauthenticatedDiscogsException_WhenNotAuthenticated()
     {
-        var authProvider = new PersonalAccessTokenAuthenticationProvider();
+        var authProvider = new DiscogsPatAuthenticationProvider(Options.Create(new DiscogsPatOptions()));
 
         await Assert.That(authProvider.IsAuthenticated).IsFalse();
         await Assert.That(() => authProvider.CreateAuthenticationHeader()).Throws<UnauthenticatedDiscogsException>();
@@ -33,7 +34,7 @@ public sealed class PersonalAccessTokenAuthenticationProviderTests
     [Arguments("   ", typeof(ArgumentException))]
     public async Task Authenticate_ShouldThrowException_WhenTokenIsInvalid(string? token, Type expectedException)
     {
-        var authProvider = new PersonalAccessTokenAuthenticationProvider();
+        var authProvider = new DiscogsPatAuthenticationProvider(Options.Create(new DiscogsPatOptions()));
 
         var exception = await Assert.That(() => authProvider.Authenticate(token!)).Throws<Exception>();
 
@@ -48,7 +49,7 @@ public sealed class PersonalAccessTokenAuthenticationProviderTests
     public async Task Authenticate_ShouldResetAuthenticationState_WhenAuthenticationFails()
     {
         var token = "myusertoken";
-        var authProvider = new PersonalAccessTokenAuthenticationProvider();
+        var authProvider = new DiscogsPatAuthenticationProvider(Options.Create(new DiscogsPatOptions()));
 
         await Assert.That(authProvider.IsAuthenticated).IsFalse();
 
@@ -60,5 +61,15 @@ public sealed class PersonalAccessTokenAuthenticationProviderTests
         await Assert.That(() => authProvider.Authenticate("")).Throws<ArgumentException>();
         await Assert.That(authProvider.IsAuthenticated).IsFalse();
         await Assert.That(() => authProvider.CreateAuthenticationHeader()).Throws<UnauthenticatedDiscogsException>();
+    }
+
+    [Test]
+    public async Task Authenticate_ShouldAuthenticate_WhenTokenIsProvidedViaOptions()
+    {
+        var token = "myusertoken";
+        var authProvider = new DiscogsPatAuthenticationProvider(Options.Create(new DiscogsPatOptions { Token = token }));
+
+        await Assert.That(authProvider.IsAuthenticated).IsTrue();
+        await Assert.That(authProvider.CreateAuthenticationHeader()).IsEqualTo($"Discogs token={token}");
     }
 }

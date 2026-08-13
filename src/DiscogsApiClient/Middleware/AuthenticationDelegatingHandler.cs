@@ -1,20 +1,17 @@
 namespace DiscogsApiClient.Middleware;
 
-/// <summary>
-/// Inserts an authentication header for the Discogs Api into the HttpResponseMessage.
-/// </summary>
-public sealed class AuthenticationDelegatingHandler(IDiscogsAuthenticationService authenticationService) : DelegatingHandler
+internal sealed class AuthenticationDelegatingHandler(IDiscogsAuthenticationHeaderProvider authenticationHeaderProvider) : DelegatingHandler
 {
-    private readonly IDiscogsAuthenticationService _authenticationService = authenticationService;
+    private readonly IDiscogsAuthenticationHeaderProvider _authenticationHeaderProvider = authenticationHeaderProvider;
 
 
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        if (_authenticationService.IsAuthenticated)
+        if (_authenticationHeaderProvider.IsAuthenticated)
         {
-            var authHeader = _authenticationService.CreateAuthenticationHeader();
+            var authHeader = _authenticationHeaderProvider.GetHeader();
             request.Headers.Add("Authorization", authHeader);
         }
 

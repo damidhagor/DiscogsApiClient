@@ -3,16 +3,16 @@ using Microsoft.Extensions.Options;
 
 namespace DiscogsApiClient.Tests.Authentication;
 
-public sealed class OAuthAuthenticationProviderTests
+public sealed class DiscogsOAuthAuthenticationProviderTests
 {
     [Test]
     public async Task Authenticate_ShouldAuthenticate_WhenOAuthFlowCompletes(CancellationToken cancellationToken)
     {
         var oauthMockHandler = new OAuthMockDelegatingHandler();
         var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
-        var options = new DiscogsApiClientOptions { ConsumerKey = "key", ConsumerSecret = "secret", VerifierCallbackUrl = "http://localhost/access_token" };
+        var options = new DiscogsOAuthOptions { ConsumerKey = "key", ConsumerSecret = "secret", VerifierCallbackUrl = "http://localhost/access_token" };
 
-        var authProvider = new OAuthAuthenticationProvider(httpClient, Options.Create(options));
+        var authProvider = new DiscogsOAuthAuthenticationProvider(new FakeHttpClientFactory(httpClient), Options.Create(options));
 
         await Assert.That(authProvider.IsAuthenticated).IsFalse();
 
@@ -39,24 +39,37 @@ public sealed class OAuthAuthenticationProviderTests
     public async Task CreateAuthenticationHeader_ShouldThrowUnauthenticatedDiscogsException_WhenNotAuthenticated()
     {
         var httpClient = new HttpClient(new OAuthMockDelegatingHandler());
-        var options = new DiscogsApiClientOptions { ConsumerKey = "key", ConsumerSecret = "secret" };
+        var options = new DiscogsOAuthOptions { ConsumerKey = "key", ConsumerSecret = "secret" };
 
-        var authProvider = new OAuthAuthenticationProvider(httpClient, Options.Create(options));
+        var authProvider = new DiscogsOAuthAuthenticationProvider(new FakeHttpClientFactory(httpClient), Options.Create(options));
 
         await Assert.That(authProvider.IsAuthenticated).IsFalse();
         await Assert.That(() => authProvider.CreateAuthenticationHeader()).Throws<UnauthenticatedDiscogsException>();
     }
 
     [Test]
-    [Arguments("", "", null, typeof(ArgumentException), "VerifierCallbackUrl")]
-    [Arguments("", "", "", typeof(ArgumentException), "VerifierCallbackUrl")]
-    [Arguments("", "", "  ", typeof(ArgumentException), "VerifierCallbackUrl")]
-    [Arguments(null, "", "x", typeof(ArgumentNullException), "_discogsOptions.ConsumerKey")]
-    [Arguments("", "", "x", typeof(ArgumentException), "_discogsOptions.ConsumerKey")]
-    [Arguments("  ", "", "x", typeof(ArgumentException), "_discogsOptions.ConsumerKey")]
-    [Arguments("x", null, "x", typeof(ArgumentNullException), "_discogsOptions.ConsumerSecret")]
-    [Arguments("x", "", "x", typeof(ArgumentException), "_discogsOptions.ConsumerSecret")]
-    [Arguments("x", "  ", "x", typeof(ArgumentException), "_discogsOptions.ConsumerSecret")]
+    [Arguments(null)]
+    [Arguments("")]
+    [Arguments("  ")]
+    public async Task StartAuthentication_ShouldThrowInvalidOperationException_WhenVerifierCallbackUrlIsInvalid(string? verifierCallbackUrl, CancellationToken cancellationToken)
+    {
+        var oauthMockHandler = new OAuthMockDelegatingHandler();
+        var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
+        var options = new DiscogsOAuthOptions { ConsumerKey = "key", ConsumerSecret = "secret", VerifierCallbackUrl = verifierCallbackUrl };
+
+        var authProvider = new DiscogsOAuthAuthenticationProvider(new FakeHttpClientFactory(httpClient), Options.Create(options));
+
+        await Assert.That(async () => await authProvider.StartAuthentication(cancellationToken))
+            .Throws<InvalidOperationException>();
+    }
+
+    [Test]
+    [Arguments(null, "", "x", typeof(ArgumentNullException), "_oAuthOptions.ConsumerKey")]
+    [Arguments("", "", "x", typeof(ArgumentException), "_oAuthOptions.ConsumerKey")]
+    [Arguments("  ", "", "x", typeof(ArgumentException), "_oAuthOptions.ConsumerKey")]
+    [Arguments("x", null, "x", typeof(ArgumentNullException), "_oAuthOptions.ConsumerSecret")]
+    [Arguments("x", "", "x", typeof(ArgumentException), "_oAuthOptions.ConsumerSecret")]
+    [Arguments("x", "  ", "x", typeof(ArgumentException), "_oAuthOptions.ConsumerSecret")]
     public async Task StartAuthentication_ShouldThrowException_WhenParametersAreInvalid(
         string? consumerKey,
         string? consumerSecret,
@@ -67,9 +80,9 @@ public sealed class OAuthAuthenticationProviderTests
     {
         var oauthMockHandler = new OAuthMockDelegatingHandler();
         var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
-        var options = new DiscogsApiClientOptions { ConsumerKey = consumerKey!, ConsumerSecret = consumerSecret!, VerifierCallbackUrl = verifierCallbackUrl };
+        var options = new DiscogsOAuthOptions { ConsumerKey = consumerKey!, ConsumerSecret = consumerSecret!, VerifierCallbackUrl = verifierCallbackUrl };
 
-        var authProvider = new OAuthAuthenticationProvider(httpClient, Options.Create(options));
+        var authProvider = new DiscogsOAuthAuthenticationProvider(new FakeHttpClientFactory(httpClient), Options.Create(options));
 
         var exception = await Assert.That(async () => await authProvider.StartAuthentication(cancellationToken))
             .Throws<ArgumentException>();
@@ -90,9 +103,9 @@ public sealed class OAuthAuthenticationProviderTests
     {
         var oauthMockHandler = new OAuthMockDelegatingHandler { RequestToken = requestToken!, RequestTokenSecret = requestTokenSecret! };
         var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
-        var options = new DiscogsApiClientOptions { ConsumerKey = "key", ConsumerSecret = "secret", VerifierCallbackUrl = "callback" };
+        var options = new DiscogsOAuthOptions { ConsumerKey = "key", ConsumerSecret = "secret", VerifierCallbackUrl = "callback" };
 
-        var authProvider = new OAuthAuthenticationProvider(httpClient, Options.Create(options));
+        var authProvider = new DiscogsOAuthAuthenticationProvider(new FakeHttpClientFactory(httpClient), Options.Create(options));
 
         await Assert.That(async () => await authProvider.StartAuthentication(cancellationToken))
             .Throws<AuthenticationFailedDiscogsException>();
@@ -108,12 +121,12 @@ public sealed class OAuthAuthenticationProviderTests
     [Arguments("", "", "x", "x", null, typeof(ArgumentNullException), "verifierToken")]
     [Arguments("", "", "x", "x", "", typeof(ArgumentException), "verifierToken")]
     [Arguments("", "", "x", "x", "  ", typeof(ArgumentException), "verifierToken")]
-    [Arguments(null, "", "x", "x", "x", typeof(ArgumentNullException), "_discogsOptions.ConsumerKey")]
-    [Arguments("", "", "x", "x", "x", typeof(ArgumentException), "_discogsOptions.ConsumerKey")]
-    [Arguments("  ", "", "x", "x", "x", typeof(ArgumentException), "_discogsOptions.ConsumerKey")]
-    [Arguments("x", null, "x", "x", "x", typeof(ArgumentNullException), "_discogsOptions.ConsumerSecret")]
-    [Arguments("x", "", "x", "x", "x", typeof(ArgumentException), "_discogsOptions.ConsumerSecret")]
-    [Arguments("x", "  ", "x", "x", "x", typeof(ArgumentException), "_discogsOptions.ConsumerSecret")]
+    [Arguments(null, "", "x", "x", "x", typeof(ArgumentNullException), "_oAuthOptions.ConsumerKey")]
+    [Arguments("", "", "x", "x", "x", typeof(ArgumentException), "_oAuthOptions.ConsumerKey")]
+    [Arguments("  ", "", "x", "x", "x", typeof(ArgumentException), "_oAuthOptions.ConsumerKey")]
+    [Arguments("x", null, "x", "x", "x", typeof(ArgumentNullException), "_oAuthOptions.ConsumerSecret")]
+    [Arguments("x", "", "x", "x", "x", typeof(ArgumentException), "_oAuthOptions.ConsumerSecret")]
+    [Arguments("x", "  ", "x", "x", "x", typeof(ArgumentException), "_oAuthOptions.ConsumerSecret")]
     public async Task CompleteAuthentication_ShouldThrowException_WhenParametersAreInvalid(
         string? consumerKey,
         string? consumerSecret,
@@ -126,10 +139,10 @@ public sealed class OAuthAuthenticationProviderTests
     {
         var oauthMockHandler = new OAuthMockDelegatingHandler();
         var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
-        var options = new DiscogsApiClientOptions { ConsumerKey = consumerKey!, ConsumerSecret = consumerSecret! };
+        var options = new DiscogsOAuthOptions { ConsumerKey = consumerKey!, ConsumerSecret = consumerSecret! };
         var session = new OAuthAuthenticationSession("", "", requestToken!, requestTokenSecret!);
 
-        var authProvider = new OAuthAuthenticationProvider(httpClient, Options.Create(options));
+        var authProvider = new DiscogsOAuthAuthenticationProvider(new FakeHttpClientFactory(httpClient), Options.Create(options));
 
         var exception = await Assert.That(async () => await authProvider.CompleteAuthentication(session, verifierToken!, cancellationToken))
             .Throws<ArgumentException>();
@@ -150,10 +163,10 @@ public sealed class OAuthAuthenticationProviderTests
     {
         var oauthMockHandler = new OAuthMockDelegatingHandler { AccessToken = accessToken!, AccessTokenSecret = accessTokenSecret! };
         var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
-        var options = new DiscogsApiClientOptions { ConsumerKey = "key", ConsumerSecret = "secret" };
+        var options = new DiscogsOAuthOptions { ConsumerKey = "key", ConsumerSecret = "secret" };
         var session = new OAuthAuthenticationSession("", "", "requesttoken", "requesttokensecret");
 
-        var authProvider = new OAuthAuthenticationProvider(httpClient, Options.Create(options));
+        var authProvider = new DiscogsOAuthAuthenticationProvider(new FakeHttpClientFactory(httpClient), Options.Create(options));
 
         await Assert.That(async () => await authProvider.CompleteAuthentication(session, "verifier", cancellationToken))
             .Throws<AuthenticationFailedDiscogsException>();
@@ -164,10 +177,10 @@ public sealed class OAuthAuthenticationProviderTests
     {
         var oauthMockHandler = new OAuthMockDelegatingHandler();
         var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
-        var options = new DiscogsApiClientOptions { ConsumerKey = "key", ConsumerSecret = "secret" };
+        var options = new DiscogsOAuthOptions { ConsumerKey = "key", ConsumerSecret = "secret" };
         var session = new OAuthAuthenticationSession("", "", "requesttoken", "requesttokensecret");
 
-        var authProvider = new OAuthAuthenticationProvider(httpClient, Options.Create(options));
+        var authProvider = new DiscogsOAuthAuthenticationProvider(new FakeHttpClientFactory(httpClient), Options.Create(options));
 
         await Assert.That(authProvider.IsAuthenticated).IsFalse();
 
@@ -192,9 +205,9 @@ public sealed class OAuthAuthenticationProviderTests
     [Test]
     public async Task Authenticate_ShouldAuthenticate_WhenUsingShortCircuitOAuth()
     {
-        var options = new DiscogsApiClientOptions { ConsumerKey = "key", ConsumerSecret = "secret" };
+        var options = new DiscogsOAuthOptions { ConsumerKey = "key", ConsumerSecret = "secret" };
 
-        var authProvider = new OAuthAuthenticationProvider(null!, Options.Create(options));
+        var authProvider = new DiscogsOAuthAuthenticationProvider(new FakeHttpClientFactory(null!), Options.Create(options));
 
         await Assert.That(authProvider.IsAuthenticated).IsFalse();
 
@@ -220,7 +233,7 @@ public sealed class OAuthAuthenticationProviderTests
         Type exceptionType,
         string paramName)
     {
-        var authProvider = new OAuthAuthenticationProvider(null!, Options.Create<DiscogsApiClientOptions>(null!));
+        var authProvider = new DiscogsOAuthAuthenticationProvider(new FakeHttpClientFactory(null!), Options.Create<DiscogsOAuthOptions>(null!));
 
         var exception = await Assert.That(() => authProvider.Authenticate(accessToken!, accessTokenSecret!))
             .Throws<ArgumentException>();

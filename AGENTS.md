@@ -11,14 +11,44 @@ with newer C# language features, ensure the style guidelines are updated to pref
 
 - Use the latest stable C# language features (primary constructors, collection expressions, file-scoped namespaces, etc.).
 - Prefer modern idioms over legacy patterns. Always use the newest C# features available for the target language version.
+- Actively look for and remove redundancy that a newer language feature eliminates — e.g. a redundant constructor
+  type name in a `new TypeName(...)` expression where the target type is already clear from context should use
+  target-typed `new()` instead (see the Target-typed new rule below). Don't just apply new features to new code;
+  when touching existing code, simplify it to the modern idiom if it's trivial to do so.
 - Code should be self-explanatory. Avoid verbose XML documentation on internal types — keep doc comments brief or omit them when the implementation is clear from reading.
+- **XML documentation is for the public API surface only.** Only document `public`/`protected` members that
+  are part of the library's external contract. Do not add XML doc comments to `internal`/`private` members —
+  add a brief inline comment only if the implementation genuinely isn't self-explanatory from reading it.
+- **Member accessibility modifiers should reflect the member's intended accessibility on its own terms, not be
+  downgraded just because the containing type happens to be `internal`.** A `public` member on an `internal` class
+  is not a mistake — its effective visibility is still capped to the assembly by the containing type, but declaring
+  it `public` means promoting the containing type to `public` later requires no member-by-member audit. Apply the
+  "public API surface only" XML-doc rule based on the member's own declared accessibility (`public`/`protected`),
+  regardless of whether the containing type is `public` or `internal`.
 - Attribution comments (crediting authors of referenced implementations) must always be preserved.
 
+## Diagnostics and Warnings
+
+- All diagnostic messages must be checked for a correct implementation — this includes compiler warnings,
+  analyzer warnings, and IDE-level diagnostics (e.g. suggestions, refactoring proposals, code-style hints).
+- This does **not** mean every diagnostic must be auto-fixed. Where it isn't clear whether a diagnostic is
+  critical, or whether fixing it would introduce other problems or contradict existing code/design
+  decisions, at minimum triage it and surface it to the user for their evaluation rather than silently
+  fixing or silently ignoring it.
+
 ## Formatting
+
+### Line Endings
+
+- This repository uses **CRLF** line endings (`core.autocrlf=true`, consistent with all existing tracked files).
+- When creating or editing files, always preserve the existing line-ending style of that file — never mix CRLF and LF
+  within the same document, and never introduce an all-LF file into a CRLF repository. Verify line endings after edits
+  if there's any doubt (e.g. after tool-based file creation/edits that may default to LF).
 
 ### Braces
 
 - **Always** use curly braces `{}` around `if`, `else`, `foreach`, `for`, `while`, and `using` blocks — even for single-line bodies.
+- This means single-line/brace-less forms like `if (x) return;` or `if (x) throw new ...;` are **never** allowed, no matter how short the body is — always write the braced multi-line form.
 - This rule does **not** apply to expression-bodied members (`=>`), which are a different construct.
 - Early return conditions must not be squashed into one-liners.
 
@@ -113,11 +143,12 @@ with newer C# language features, ensure the style guidelines are updated to pref
 ## Git Workflow
 
 - **NEVER commit changes without explicit user approval first.**
-- Always present changes to the user for review before running `git commit`.
+- **NEVER push changes (e.g. `git push`) without explicit user approval first**, even if a commit was already approved earlier — pushing is a separate approval step.
+- Always present changes to the user for review before running `git commit` or `git push`.
 - When presenting changes for review, **propose a suitable commit message** following conventional commit format.
 - The user must approve both the changes **and** the commit message before proceeding.
-- This applies to all commits including code changes, test recordings, documentation updates, etc.
-- After making changes, inform the user what was changed and wait for their approval to commit.
+- This applies to all commits and pushes, including code changes, test recordings, documentation updates, etc.
+- After making changes, inform the user what was changed and wait for their approval to commit and/or push.
 
 ## Project Structure
 

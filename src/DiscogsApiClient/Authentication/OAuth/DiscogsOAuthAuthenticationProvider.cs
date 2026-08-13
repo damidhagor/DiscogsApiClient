@@ -1,44 +1,42 @@
+using System.Globalization;
 using System.Net;
 using System.Web;
 using Microsoft.Extensions.Options;
 
 namespace DiscogsApiClient.Authentication.OAuth;
 
-/// <summary>
-/// This <see cref="IAuthenticationProvider"/> implementation authenticates against the Discogs Api
-/// using the OAuth 1.0a flow described <a href="https://www.discogs.com/developers#page:authentication,header:authentication-discogs-auth-flow">here</a>
-/// and should be provided to the <see cref="DiscogsApiClient"/>'s constructor.
-/// </summary>
-public sealed class OAuthAuthenticationProvider(HttpClient httpClient, IOptions<DiscogsApiClientOptions> options) : IOAuthAuthenticationProvider
+internal sealed class DiscogsOAuthAuthenticationProvider(IHttpClientFactory httpClientFactory, IOptions<DiscogsOAuthOptions> options)
+    : IDiscogsOAuthAuthenticationProvider,
+      IDiscogsAuthenticationProvider
 {
-    private readonly HttpClient _httpClient = httpClient;
-    private readonly DiscogsApiClientOptions _discogsOptions = options.Value;
-    private string _accessToken = "";
-    private string _accessTokenSecret = "";
+    public const string HttpClientName = nameof(DiscogsOAuthAuthenticationProvider);
 
-    public bool IsAuthenticated => !string.IsNullOrWhiteSpace(_accessToken) && !string.IsNullOrWhiteSpace(_accessTokenSecret);
+    private sealed record TokenState(string AccessToken, string AccessTokenSecret);
 
+    private readonly HttpClient _httpClient = httpClientFactory.CreateClient(HttpClientName);
+    private readonly DiscogsOAuthOptions _oAuthOptions = options.Value;
+    private volatile TokenState? _tokenState;
 
-    /// <inheritdoc/>
-    /// <exception cref="AuthenticationFailedDiscogsException"></exception>
+    public bool IsAuthenticated => _tokenState is not null;
+
     public async Task<OAuthAuthenticationSession> StartAuthentication(CancellationToken cancellationToken)
     {
-        var verifierCallbackUrl = _discogsOptions.VerifierCallbackUrl;
+        var verifierCallbackUrl = _oAuthOptions.VerifierCallbackUrl;
         if (string.IsNullOrWhiteSpace(verifierCallbackUrl))
         {
-            throw new ArgumentException($"A valid {nameof(DiscogsApiClientOptions.VerifierCallbackUrl)} must be specified in the {nameof(DiscogsApiClientOptions)}.", nameof(DiscogsApiClientOptions.VerifierCallbackUrl));
+            throw new InvalidOperationException($"A valid {nameof(DiscogsOAuthOptions.VerifierCallbackUrl)} must be specified in the {nameof(DiscogsOAuthOptions)}.");
         }
 
         var (requestToken, requestTokenSecret) = await GetRequestToken(_httpClient, verifierCallbackUrl, cancellationToken).ConfigureAwait(false);
         if (string.IsNullOrWhiteSpace(requestToken) || string.IsNullOrWhiteSpace(requestTokenSecret))
+        {
             throw new AuthenticationFailedDiscogsException("Getting request token failed.");
+        }
 
         var authorizeUrl = $"https://discogs.com/oauth/authorize?oauth_token={requestToken}";
         return new(authorizeUrl, verifierCallbackUrl, requestToken, requestTokenSecret);
     }
 
-    /// <inheritdoc/>
-    /// <exception cref="AuthenticationFailedDiscogsException"></exception>
     public async Task<(string AccessToken, string AccessTokenSecret)> CompleteAuthentication(
         OAuthAuthenticationSession session,
         string verifierToken,
@@ -51,56 +49,48 @@ public sealed class OAuthAuthenticationProvider(HttpClient httpClient, IOptions<
 
         var (accessToken, accessTokenSecret) = await GetAccessToken(_httpClient, session.RequestToken, session.RequestTokenSecret, verifierToken, cancellationToken).ConfigureAwait(false);
         if (string.IsNullOrWhiteSpace(accessToken) || string.IsNullOrWhiteSpace(accessTokenSecret))
+        {
             throw new AuthenticationFailedDiscogsException("Failed getting access token.");
+        }
 
-        _accessToken = accessToken;
-        _accessTokenSecret = accessTokenSecret;
+        _tokenState = new(accessToken, accessTokenSecret);
 
-        return (_accessToken, _accessTokenSecret);
+        return (accessToken, accessTokenSecret);
     }
 
-    /// <inheritdoc/>
     public void Authenticate(string accessToken, string accessTokenSecret)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(accessToken);
         ArgumentException.ThrowIfNullOrWhiteSpace(accessTokenSecret);
 
-        _accessToken = accessToken;
-        _accessTokenSecret = accessTokenSecret;
+        _tokenState = new(accessToken, accessTokenSecret);
     }
 
     public string CreateAuthenticationHeader()
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(_discogsOptions.ConsumerKey);
-        ArgumentException.ThrowIfNullOrWhiteSpace(_discogsOptions.ConsumerSecret);
+        ArgumentException.ThrowIfNullOrWhiteSpace(_oAuthOptions.ConsumerKey);
+        ArgumentException.ThrowIfNullOrWhiteSpace(_oAuthOptions.ConsumerSecret);
 
-        if (!IsAuthenticated)
-            throw new UnauthenticatedDiscogsException($"The {nameof(OAuthAuthenticationProvider)} must be authenticated before creating an authentication header.");
+        var tokenState = _tokenState
+            ?? throw new UnauthenticatedDiscogsException($"The {nameof(DiscogsOAuthAuthenticationProvider)} must be authenticated before creating an authentication header.");
 
         (var timestamp, var nonce) = CreateTimestampAndNonce();
 
         var header = "OAuth ";
-        header += $"oauth_consumer_key=\"{WebUtility.UrlEncode(_discogsOptions.ConsumerKey)}\",";
+        header += $"oauth_consumer_key=\"{WebUtility.UrlEncode(_oAuthOptions.ConsumerKey)}\",";
         header += $"oauth_nonce=\"{WebUtility.UrlEncode(nonce)}\",";
-        header += $"oauth_token=\"{WebUtility.UrlEncode(_accessToken)}\",";
-        header += $"oauth_signature=\"{WebUtility.UrlEncode($"{_discogsOptions.ConsumerSecret}&{_accessTokenSecret}")}\",";
+        header += $"oauth_token=\"{WebUtility.UrlEncode(tokenState.AccessToken)}\",";
+        header += $"oauth_signature=\"{WebUtility.UrlEncode($"{_oAuthOptions.ConsumerSecret}&{tokenState.AccessTokenSecret}")}\",";
         header += $"oauth_signature_method=\"PLAINTEXT\",";
         header += $"oauth_timestamp=\"{WebUtility.UrlEncode(timestamp)}\"";
 
         return header;
     }
 
-
-    /// <summary>
-    /// Gets the request token from the Discogs api.
-    /// </summary>
-    /// <param name="httpClient">The <see cref="HttpClient"/> used by the authentication flow.</param>
-    /// <param name="callback">The callback url the Discogs login page redirects the browser to to return the request token to the app.</param>
-    /// <returns>Returns the obtained request token and secret.</returns>
     private async Task<(string requestToken, string requestTokenSecret)> GetRequestToken(HttpClient httpClient, string callback, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(_discogsOptions.ConsumerKey);
-        ArgumentException.ThrowIfNullOrWhiteSpace(_discogsOptions.ConsumerSecret);
+        ArgumentException.ThrowIfNullOrWhiteSpace(_oAuthOptions.ConsumerKey);
+        ArgumentException.ThrowIfNullOrWhiteSpace(_oAuthOptions.ConsumerSecret);
 
         var requestToken = "";
         var requestTokenSecret = "";
@@ -110,9 +100,9 @@ public sealed class OAuthAuthenticationProvider(HttpClient httpClient, IOptions<
             (var timestamp, var nonce) = CreateTimestampAndNonce();
 
             var authHeader = "OAuth ";
-            authHeader += $"oauth_consumer_key=\"{WebUtility.UrlEncode(_discogsOptions.ConsumerKey)}\",";
+            authHeader += $"oauth_consumer_key=\"{WebUtility.UrlEncode(_oAuthOptions.ConsumerKey)}\",";
             authHeader += $"oauth_nonce=\"{WebUtility.UrlEncode(nonce)}\",";
-            authHeader += $"oauth_signature=\"{WebUtility.UrlEncode($"{_discogsOptions.ConsumerSecret}&")}\",";
+            authHeader += $"oauth_signature=\"{WebUtility.UrlEncode($"{_oAuthOptions.ConsumerSecret}&")}\",";
             authHeader += $"oauth_signature_method=\"PLAINTEXT\",";
             authHeader += $"oauth_timestamp=\"{WebUtility.UrlEncode(timestamp)}\",";
             authHeader += $"oauth_callback=\"{WebUtility.UrlEncode(callback)}\"";
@@ -138,18 +128,10 @@ public sealed class OAuthAuthenticationProvider(HttpClient httpClient, IOptions<
         return (requestToken, requestTokenSecret);
     }
 
-    /// <summary>
-    /// Gets the access token and secret from the Discogs api with the request token nd secret obtained earlier in the flow.
-    /// </summary>
-    /// <param name="httpClient">The <see cref="HttpClient"/> used by the authentication flow.</param>
-    /// <param name="requestToken">The request token obtained earlier in the flow.</param>
-    /// <param name="requestTokenSecret">The request secret obtained earlier in the flow.</param>
-    /// <param name="verifier">The verifier token obtained earlier in the flow.</param>
-    /// <returns>The access token and secret which authenticate the logged in user.</returns>
     private async Task<(string accessToken, string accessTokenSecret)> GetAccessToken(HttpClient httpClient, string requestToken, string requestTokenSecret, string verifier, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(_discogsOptions.ConsumerKey);
-        ArgumentException.ThrowIfNullOrWhiteSpace(_discogsOptions.ConsumerSecret);
+        ArgumentException.ThrowIfNullOrWhiteSpace(_oAuthOptions.ConsumerKey);
+        ArgumentException.ThrowIfNullOrWhiteSpace(_oAuthOptions.ConsumerSecret);
 
         var accessToken = "";
         var accessTokenSecret = "";
@@ -159,10 +141,10 @@ public sealed class OAuthAuthenticationProvider(HttpClient httpClient, IOptions<
             (var timestamp, var nonce) = CreateTimestampAndNonce();
 
             var authHeader = "OAuth ";
-            authHeader += $"oauth_consumer_key=\"{WebUtility.UrlEncode(_discogsOptions.ConsumerKey)}\",";
+            authHeader += $"oauth_consumer_key=\"{WebUtility.UrlEncode(_oAuthOptions.ConsumerKey)}\",";
             authHeader += $"oauth_nonce=\"{WebUtility.UrlEncode(nonce)}\",";
             authHeader += $"oauth_token=\"{WebUtility.UrlEncode(requestToken)}\",";
-            authHeader += $"oauth_signature=\"{WebUtility.UrlEncode($"{_discogsOptions.ConsumerSecret}&{requestTokenSecret}")}\",";
+            authHeader += $"oauth_signature=\"{WebUtility.UrlEncode($"{_oAuthOptions.ConsumerSecret}&{requestTokenSecret}")}\",";
             authHeader += $"oauth_signature_method=\"PLAINTEXT\",";
             authHeader += $"oauth_timestamp=\"{WebUtility.UrlEncode(timestamp)}\",";
             authHeader += $"oauth_verifier=\"{WebUtility.UrlEncode(verifier)}\"";
@@ -188,9 +170,6 @@ public sealed class OAuthAuthenticationProvider(HttpClient httpClient, IOptions<
         return (accessToken, accessTokenSecret);
     }
 
-    /// <summary>
-    /// Created the timestamp and nonce used by the <see cref="PlainOAuthAuthenticationProvider.CreateAuthenticationHeader"/> method.
-    /// </summary>
     private static (string timestamp, string nonce) CreateTimestampAndNonce()
     {
         var elapsedTimeSince1970 = DateTime.UtcNow - DateTime.UnixEpoch;
@@ -198,6 +177,6 @@ public sealed class OAuthAuthenticationProvider(HttpClient httpClient, IOptions<
         var timestamp = (long)elapsedTimeSince1970.TotalSeconds;
         var nonce = (long)elapsedTimeSince1970.TotalMilliseconds;
 
-        return (timestamp.ToString(), nonce.ToString());
+        return (timestamp.ToString(CultureInfo.InvariantCulture), nonce.ToString(CultureInfo.InvariantCulture));
     }
 }

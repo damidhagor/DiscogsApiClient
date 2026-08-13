@@ -18,6 +18,9 @@ public partial class App : Application
                 services.AddDiscogsApiClient(options =>
                 {
                     options.UserAgent = "AwesomeAppDemo/1.0.0";
+                })
+                .WithOAuthAuthentication(options =>
+                {
                     options.ConsumerKey = "";
                     options.ConsumerSecret = "";
                     options.VerifierCallbackUrl = "http://localhost/verifier_token";

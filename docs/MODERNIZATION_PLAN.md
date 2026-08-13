@@ -626,77 +626,86 @@ emitted code across all generators") and the generated-code marking work that ad
 - [x] Add `#nullable enable` to generated files (emitted at the top of every generated file)
 - [x] Optimize generated code (capacity-precomputed `StringBuilder` route building; reduced allocations)
 
-### 4.9 Authentication Setup Modernization — ⬜ Not Started (planned)
+### 4.9 Authentication Setup Modernization — ✅ Done
 
-Reassess how the two authentication flows (Personal Access Token and OAuth 1.0a) are modeled,
-registered, resolved and activated. The trigger is that a consumer currently **cannot
-pre-authenticate at service registration** — tokens are runtime-only state that must be pushed
-in imperatively after the container is built.
+Reassessed how the two authentication flows (Personal Access Token and OAuth 1.0a) are modeled,
+registered, resolved and activated. The trigger was that a consumer previously **could not
+pre-authenticate at service registration** — tokens were runtime-only state that had to be pushed
+in imperatively after the container was built.
 
-**Current-state analysis (as-is):**
-- `IDiscogsAuthenticationService` is a mutable, stateful **singleton** whose credentials are set
-  imperatively *after* the container is built: `AuthenticateWithPersonalAccessToken(token)`,
-  `AuthenticateWithOAuth(accessToken, accessTokenSecret)`, or the interactive
-  `StartOAuthAuthentication`/`CompleteOAuthAuthentication` pair.
-- The actual secrets live in provider fields (`PersonalAccessTokenAuthenticationProvider._userToken`,
+**Previous-state analysis (as-was):**
+- `IDiscogsAuthenticationService` was a mutable, stateful **singleton facade** over both mechanisms,
+  whose credentials were set imperatively *after* the container was built:
+  `AuthenticateWithPersonalAccessToken(token)`, `AuthenticateWithOAuth(accessToken, accessTokenSecret)`,
+  or the interactive `StartOAuthAuthentication`/`CompleteOAuthAuthentication` pair.
+- The actual secrets lived in provider fields (`PersonalAccessTokenAuthenticationProvider._userToken`,
   `OAuthAuthenticationProvider._accessToken`/`_accessTokenSecret`) — **not** in
-  `DiscogsApiClientOptions`. `DiscogsApiClientOptions` only carries the OAuth *consumer* key/secret
+  `DiscogsApiClientOptions`. `DiscogsApiClientOptions` only carried the OAuth *consumer* key/secret
   and callback URL (the app identity), never the *user* access tokens.
-- Consequence: there is **no way to supply a PAT or an existing OAuth access token/secret through
-  options or `IConfiguration`**, so the client cannot be usable immediately after
-  `AddDiscogsApiClient(...)`. Every consumer must resolve the service and call an `Authenticate*`
-  method first (see `AuthenticationDelegatingHandler`, which no-ops while `IsAuthenticated` is false).
-- Thread-safety / correctness smells on the singleton: mutable `_lastAuthenticatedWithPersonalAccessToken`
-  / `_lastAuthenticatedWithOAuth` flags select which header to emit, mutated without synchronization
-  and shared across all requests using the client.
-- The mutating `Authenticate*` methods are part of the **public** service contract, exposing token
-  mutation to consumers even when they only want config-driven, immutable credentials.
+- Consequence: there was **no way to supply a PAT through options or `IConfiguration`**, so the
+  client couldn't be usable immediately after `AddDiscogsApiClient(...)`; both providers were also
+  always registered regardless of which (if either) mechanism a consumer actually wanted, allowing
+  "half-configured"/conflicting auth state.
+- Thread-safety / correctness smells on the singleton: mutable "last authenticated wins" flags
+  selected which header to emit, mutated without synchronization and shared across all requests.
+- The mutating `Authenticate*` methods were part of the **public** facade contract, exposing token
+  mutation to consumers even when they only wanted config-driven, immutable credentials.
 
-**Goals:**
-- Allow a PAT or an existing OAuth access token + secret to be supplied at registration (code and
-  `IConfiguration`) so the client is authenticated without an extra imperative step.
-- Keep the interactive OAuth flow (start → user authorizes → complete) available for apps that must
-  obtain tokens at runtime, but cleanly separated from the "I already have a token" path.
-- Reduce/rethink shared mutable singleton state and its thread-safety.
-- Keep everything AOT/trim-safe and consistent with the §4.7 options/DI patterns.
+**Chosen direction (implemented):** authentication is now an **explicit, single choice made at DI
+registration time**, mirroring `AddAuthentication().AddJwtBearer(...)`-style ecosystem patterns,
+rather than the originally-sketched "seed everything through one shared options surface" idea below.
 
-#### 4.9.1 Enable pre-authentication at registration
-- [ ] Provide a way to supply a PAT via options/config (e.g. a `PersonalAccessToken` value on the
-      options, or a dedicated registration overload) so `AddDiscogsApiClient` yields an authenticated client.
-- [ ] Provide a way to supply an already-obtained OAuth access token + secret via options/config
-      alongside the existing consumer key/secret + callback URL.
-- [ ] Decide precedence/validation when both PAT and OAuth token material are supplied (mirror the
-      existing all-or-nothing OAuth-credentials validation in `DiscogsApiClientOptionsValidator`).
+- `AddDiscogsApiClient(...)` alone registers **no** auth mechanism — requests are sent unauthenticated
+  by default (valid Discogs usage for public endpoints), with no exception thrown for that state.
+- `.WithPatAuthentication(Action<DiscogsPatOptions>? configure = null)` opts into the Personal Access
+  Token mechanism. `DiscogsPatOptions.Token` is bindable from `IConfiguration` (`"Discogs:Pat"`) —
+  a PAT is a single static app-level secret, so config-binding it is appropriate. Supplying it via
+  options/config means the resolved `IDiscogsPatAuthenticationProvider` is **already authenticated**
+  immediately after the container is built, with no imperative call required; an interactive
+  `Authenticate(token)` call remains available for apps that collect the token at runtime instead.
+- `.WithOAuthAuthentication(Action<DiscogsOAuthOptions>? configure = null)` opts into the OAuth 1.0a
+  mechanism. `DiscogsOAuthOptions` carries only the static app-identity secrets (`ConsumerKey`,
+  `ConsumerSecret`, `VerifierCallbackUrl`) — **not** user access tokens. The OAuth user access
+  token/secret are dynamic, per-user values obtained (and cached by the consuming application) at
+  runtime through the interactive `StartAuthentication`/`CompleteAuthentication` flow, or supplied
+  via a direct `Authenticate(accessToken, accessTokenSecret)` call when an app has cached tokens from
+  a previous run — this remains a **code/runtime** action, not static configuration (decided against
+  adding a pluggable token-store abstraction: DI-registration time can't do async retrieval anyway,
+  and multi-tenant apps would need their own per-tenant caching layer regardless).
+- Calling **both** `.WithPatAuthentication()` and `.WithOAuthAuthentication()` on the same registration
+  throws `InvalidOperationException` at registration time (fail-fast, not "last wins").
+- The facade `IDiscogsAuthenticationService`/`DiscogsAuthenticationService` was **removed**.
+  Consumers who need the mechanism-specific API resolve the concrete provider interface they
+  registered (`IDiscogsPatAuthenticationProvider`/`IDiscogsOAuthAuthenticationProvider`) directly —
+  these were promoted from implementation details to polished, customer-facing public API with a
+  `Discogs`-prefixed rename pass (`IPersonalAccessTokenAuthenticationProvider` →
+  `IDiscogsPatAuthenticationProvider`, `IOAuthAuthenticationProvider` →
+  `IDiscogsOAuthAuthenticationProvider`), matching the existing `Discogs`-prefix convention
+  (`DiscogsApiClientOptions`, `DiscogsRateLimitState*`).
+- An internal `IDiscogsAuthenticationHeaderProvider` contract (single implementation,
+  `DiscogsAuthenticationHeaderProvider`) composes two optional nullable provider dependencies
+  (`IDiscogsPatAuthenticationProvider?`, `IDiscogsOAuthAuthenticationProvider?`) — the built-in DI
+  container supplies `null` for an unregistered service, so the default "unauthenticated" state falls
+  out naturally with no sentinel/no-op type needed. `AuthenticationDelegatingHandler` depends only on
+  this internal contract and is itself now `internal`.
+- Both providers hold their token state in an immutable snapshot swapped via
+  `Interlocked.Exchange`/`Volatile.Read`, mirroring the existing `DiscogsRateLimitStateService`
+  pattern — no more unsynchronized flags.
+- Fixed a lifetime bug surfaced by DI tests during implementation: `DiscogsOAuthAuthenticationProvider`
+  holds mutable token state and must be a **singleton** so the instance a consumer authenticates is
+  the same instance the header provider reads from; `AddHttpClient<TClient, TImplementation>()`
+  registers the typed client as **transient**, so its `HttpClient` is instead created via a named
+  client (`IHttpClientFactory`) and the provider registered as a manual singleton factory.
 
-#### 4.9.2 Review provider & service registration / lifetimes
-- [ ] Re-evaluate singleton lifetime + mutable state (`_lastAuthenticatedWith*`, token fields) for
-      thread-safety; consider immutable, config-seeded credential state where pre-authenticated.
-- [ ] Confirm provider registration (`IPersonalAccessTokenAuthenticationProvider`,
-      `IOAuthAuthenticationProvider`, `IDiscogsAuthenticationService`) still composes correctly with
-      the seeded-credentials path and the named `OAuthAuthenticationProvider` HttpClient.
+**Tests:** provider unit tests updated for the renamed types/thread-safe implementation (including a
+new "authenticated from options at registration" PAT test); DI/registration tests cover
+`.WithPatAuthentication()`, `.WithOAuthAuthentication()`, the mutual-exclusivity conflict, and the
+unauthenticated-default state; a new `DiscogsAuthenticationHeaderProviderTests` covers the internal
+composition logic directly. All 257 tests pass.
 
-#### 4.9.3 Reassess the `IDiscogsAuthenticationService` surface
-- [ ] Separate the interactive OAuth flow (start/complete) from static token supply so consumers who
-      pre-authenticate don't see mutation methods they shouldn't call.
-- [ ] Decide whether the imperative `Authenticate*` methods remain public, become internal, or are
-      replaced/augmented by config-seeded credentials.
-
-#### 4.9.4 Optional: token source abstraction
-- [ ] Consider an (async) token-provider hook so tokens can be sourced from a secret store/`IServiceProvider`
-      at resolve time rather than being hard-coded at registration.
-
-#### 4.9.5 Tests
-- [ ] Registration-time PAT pre-authentication → client authenticated with no imperative call.
-- [ ] Registration-time OAuth access-token pre-authentication → client authenticated.
-- [ ] `IConfiguration`-bound credentials pre-authenticate the client.
-- [ ] Validation for conflicting/partial credential combinations.
-- [ ] Existing interactive OAuth start/complete flow still works and remains covered.
-
-**Open questions:**
-- Should PAT/OAuth user tokens live on `DiscogsApiClientOptions` (simple, bindable) or on a dedicated
-  credentials type to keep app-identity vs. user-token concerns separate?
-- Is storing user access tokens in `IConfiguration`/`appsettings.json` an acceptable pattern to
-  document, or should config-seeding be positioned only for PATs / secret-store scenarios?
+**Demos updated:** `DiscogsApiClientDemo.PersonalAccessToken`, `DiscogsApiClientDemo.OAuth`, and
+`DiscogsApiClientDemo.AotConsole` all updated to the new `.With*Authentication()` registration +
+provider-resolution model.
 
 
 - [ ] All C# 12 features adopted where appropriate
@@ -705,7 +714,7 @@ in imperatively after the container is built.
 - [-] ~~`AddDiscogsApiClient` returns `IDiscogsApiClientBuilder`~~ — superseded: returns `IServiceCollection` + optional `Action<IHttpClientBuilder>` hook
 - [x] `IConfiguration` overload available for binding from `appsettings.json`
 - [x] Options validation uses a hand-written AOT-safe `IValidateOptions<T>` and `ValidateOnStart()`
-- [ ] Authentication setup reviewed (§4.9): pre-authentication supported at registration (PAT + existing OAuth tokens) and shared mutable auth state reassessed
+- [x] Authentication setup reviewed (§4.9): pre-authentication supported at registration (PAT + existing OAuth tokens) and shared mutable auth state reassessed
 - [x] Generated code uses modern C# features (file-scoped ns, `#nullable enable`, pattern matching, AOT-safe, `// <auto-generated/>` header + `[GeneratedCode]` attribute)
 - [ ] Generated code is well-documented
 - [ ] All tests pass (validates refactoring didn't break functionality)
@@ -892,7 +901,7 @@ prematurely would mislead 4.x users reading `main`. This is the single consolida
 | TBD | Merge to main ≠ release | Package publication is separate process | Cleaner release workflow |
 | TBD | Service registration modernization (§4.7) | Align with `IOptions<T>`, hand-written `IValidateOptions<T>` + `ValidateOnStart()`, `TryAdd*` idempotency, `IConfiguration` binding, and DI-namespace discoverability used by modern .NET libraries | **Breaking** — extension moved to `Microsoft.Extensions.DependencyInjection`; invalid options now throw `OptionsValidationException` at startup instead of `InvalidOperationException` at registration; `OAuthAuthenticationProvider` ctor takes `IOptions<T>` |
 | 2025-01-XX | **Rate limiting: Remove built-in limiter** | Sliding window implementation was unreliable and didn't align with Discogs methodology; feature not widely used; exposing raw metadata provides maximum flexibility | **Breaking** — consumers must remove `UseRateLimiting` and related config; can now access rate limit state via `IDiscogsRateLimitStateService` |
-| TBD | Authentication setup modernization (§4.9) | Consumers currently cannot pre-authenticate at registration; tokens are runtime-only mutable singleton state, not bindable via options/`IConfiguration` | Likely **breaking** — TBD; may add credential options and reshape the `IDiscogsAuthenticationService` surface |
+| TBD | Authentication setup modernization (§4.9) | `IDiscogsAuthenticationService` facade allowed half-configured/conflicting auth state and had no way to pre-authenticate at registration; tokens were runtime-only mutable singleton state, not bindable via options/`IConfiguration` | **Breaking** — `IDiscogsAuthenticationService`/`DiscogsAuthenticationService` removed; `IPersonalAccessTokenAuthenticationProvider`/`PersonalAccessTokenAuthenticationProvider` renamed to `IDiscogsPatAuthenticationProvider`/`DiscogsPatAuthenticationProvider`; `IOAuthAuthenticationProvider`/`OAuthAuthenticationProvider` renamed to `IDiscogsOAuthAuthenticationProvider`/`DiscogsOAuthAuthenticationProvider`; `DiscogsApiClientOptions.ConsumerKey`/`ConsumerSecret`/`VerifierCallbackUrl` moved to new `DiscogsOAuthOptions`; new `DiscogsPatOptions`; consumers must call `.WithPatAuthentication(...)` or `.WithOAuthAuthentication(...)` to opt into a mechanism (calling both throws `InvalidOperationException`); calling neither yields a valid, permanent unauthenticated client |
 
 ### Risks & Mitigations
 - **Risk:** Breaking changes impact existing consumers
