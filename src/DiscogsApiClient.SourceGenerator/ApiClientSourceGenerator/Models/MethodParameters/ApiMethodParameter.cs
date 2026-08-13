@@ -1,7 +1,16 @@
+﻿using DiscogsApiClient.SourceGenerator.Shared.Models;
+
 namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models.MethodParameters;
 
-internal sealed record ApiMethodParameter(
-    Shared.Models.ParsedParameterTypeInfo TypeInfo,
-    ApiMethodParameterType ParameterType,
-    string? RoutePart = null,
-    EquatableArray<QueryParameter> QueryParameters = default);
+internal abstract class ApiMethodParameter
+{
+    public ParsedParameterTypeInfo TypeInfo { get; private set; }
+
+    public ApiMethodParameterType Type { get; private set; }
+
+    public ApiMethodParameter(ParsedParameterTypeInfo typeInfo, ApiMethodParameterType parameterType)
+    {
+        TypeInfo = typeInfo;
+        Type = parameterType;
+    }
+}

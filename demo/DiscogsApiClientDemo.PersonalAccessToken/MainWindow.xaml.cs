@@ -1,11 +1,11 @@
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DiscogsApiClient;
-using DiscogsApiClient.Authentication.Pat;
+using DiscogsApiClient.Authentication;
 
 namespace DiscogsApiClientDemo.PersonalAccessToken;
 
@@ -13,7 +13,7 @@ namespace DiscogsApiClientDemo.PersonalAccessToken;
 public partial class MainWindow : Window
 {
     private readonly IDiscogsApiClient _discogsApiClient;
-    private readonly IDiscogsPatAuthenticationProvider _authProvider;
+    private readonly IDiscogsAuthenticationService _discogsAuthenticationService;
 
     [ObservableProperty]
     private string _userToken = "";
@@ -22,10 +22,10 @@ public partial class MainWindow : Window
     private string _userName = "";
 
 
-    public MainWindow(IDiscogsApiClient discogsApiClient, IDiscogsPatAuthenticationProvider authProvider)
+    public MainWindow(IDiscogsApiClient discogsApiClient, IDiscogsAuthenticationService discogsAuthenticationService)
     {
         _discogsApiClient = discogsApiClient;
-        _authProvider = authProvider;
+        _discogsAuthenticationService = discogsAuthenticationService;
         InitializeComponent();
     }
 
@@ -35,7 +35,7 @@ public partial class MainWindow : Window
         try
         {
             // Authenticate/login with your user token from your Discogs account settings.
-            _authProvider.Authenticate(UserToken);
+            _discogsAuthenticationService.AuthenticateWithPersonalAccessToken(UserToken);
             var identityResponse = await _discogsApiClient.GetIdentity(cancellationToken);
             UserName = identityResponse.Username;
         }

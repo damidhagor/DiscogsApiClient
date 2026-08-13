@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
 
 namespace DiscogsApiClient.Middleware;
@@ -10,17 +10,15 @@ public sealed class ErrorHandlingDelegatingHandler : DelegatingHandler
 {
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        var response = await base.SendAsync(request, cancellationToken);
 
         if (response.IsSuccessStatusCode)
-        {
             return response;
-        }
 
         string? message = null;
         try
         {
-            var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+            var content = await response.Content.ReadAsStringAsync(cancellationToken);
             message = JsonSerializer.Deserialize<ErrorMessage>(content, DiscogsJsonSerializerContext.Default.ErrorMessage)?.Message;
         }
         catch { }

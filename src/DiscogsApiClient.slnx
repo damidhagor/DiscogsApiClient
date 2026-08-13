@@ -1,6 +1,0 @@
-<Solution>
-  <Project Path="DiscogsApiClient.SourceGenerator.Tests/DiscogsApiClient.SourceGenerator.Tests.csproj" />
-  <Project Path="DiscogsApiClient.SourceGenerator/DiscogsApiClient.SourceGenerator.csproj" />
-  <Project Path="DiscogsApiClient.Tests/DiscogsApiClient.Tests.csproj" />
-  <Project Path="DiscogsApiClient/DiscogsApiClient.csproj" />
-</Solution>

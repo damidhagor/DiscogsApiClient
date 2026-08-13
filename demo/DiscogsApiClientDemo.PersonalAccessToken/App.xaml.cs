@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 using DiscogsApiClient;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -18,8 +18,8 @@ public partial class App : Application
                 services.AddDiscogsApiClient(options =>
                 {
                     options.UserAgent = "AwesomeAppDemo/1.0.0";
-                })
-                .WithPatAuthentication();
+                    options.UseRateLimiting = true;
+                });
                 services.AddSingleton<MainWindow>();
             })
             .Build();

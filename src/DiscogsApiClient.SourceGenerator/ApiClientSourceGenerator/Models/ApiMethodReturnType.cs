@@ -1,10 +1,19 @@
-using DiscogsApiClient.SourceGenerator.Shared.Models;
+﻿using DiscogsApiClient.SourceGenerator.Shared.Models;
 
 namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models;
 
-internal sealed record ApiMethodReturnType(ParsedTypeInfo TypeInfo)
+internal sealed class ApiMethodReturnType
 {
-    public bool IsTask { get; } = TypeInfo.IsType<Task>();
-    
-    public bool IsTaskWithResult { get; } = TypeInfo.IsType<Task>() && TypeInfo.GenericTypeArguments.Length == 1;
+    public ParsedTypeInfo TypeInfo { get; private set; }
+
+    public bool IsTask { get; private set; }
+
+    public bool IsTaskWithResult { get; private set; }
+
+    public ApiMethodReturnType(ParsedTypeInfo typeInfo)
+    {
+        TypeInfo = typeInfo;
+        IsTask = typeInfo.IsType<Task>();
+        IsTaskWithResult = IsTask && typeInfo.GenericTypeArguments.Count == 1;
+    }
 }

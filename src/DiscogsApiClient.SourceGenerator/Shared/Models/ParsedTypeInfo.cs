@@ -1,66 +1,89 @@
-namespace DiscogsApiClient.SourceGenerator.Shared.Models;
+﻿namespace DiscogsApiClient.SourceGenerator.Shared.Models;
 
-internal sealed record ParsedTypeInfo(
-    string Name,
-    string Namespace,
-    bool NeedsGlobalPrefix,
-    bool IsNullable,
-    EquatableArray<ParsedTypeInfo> GenericTypeArguments,
-    EquatableArray<EnumerationMember> EnumMembers)
+internal class ParsedTypeInfo
 {
-    public string FullTypeName { get; }
-        = GetFullTypeName(Name, Namespace, NeedsGlobalPrefix, IsNullable, GenericTypeArguments, true);
+    public string FullTypeName { get; private set; }
 
-    public bool IsGeneric { get; } = GenericTypeArguments.Length > 0;
+    public string Name { get; private set; }
 
-    public bool IsEnum { get; } = EnumMembers.Length > 0;
+    public string Namespace { get; private set; }
 
-    public bool IsVoid { get; } = IsType(Namespace, Name, typeof(void));
+    public bool NeedsGlobalPrefix { get; private set; }
 
-    public string GetFullTypeName(bool includeNullable = true)
-        => GetFullTypeName(Name, Namespace, NeedsGlobalPrefix, IsNullable, GenericTypeArguments, includeNullable);
+    public bool IsNullable { get; private set; }
 
-    private static string GetFullTypeName(
+    public List<ParsedTypeInfo> GenericTypeArguments { get; private set; }
+
+    public bool IsGeneric { get; private set; }
+
+    public List<EnumerationMember> EnumMembers { get; private set; }
+
+    public bool IsEnum { get; private set; }
+
+    public bool IsVoid { get; private set; }
+
+    public ParsedTypeInfo(
         string name,
         string @namespace,
         bool needsGlobalPrefix,
         bool isNullable,
-        EquatableArray<ParsedTypeInfo> genericTypeArguments,
-        bool includeNullable)
+        List<ParsedTypeInfo>? genericTypeArguments = null,
+        List<EnumerationMember>? enumMembers = null)
     {
-        var prefix = needsGlobalPrefix ? "global::" : "";
-        var genericPart = genericTypeArguments.Length > 0
-            ? $"<{string.Join(", ", genericTypeArguments.Select(a => a.FullTypeName))}>"
-            : "";
-        var nullableSuffix = isNullable && includeNullable ? "?" : "";
-
-        return $"{prefix}{@namespace}.{name}{genericPart}{nullableSuffix}";
+        Name = name;
+        Namespace = @namespace;
+        NeedsGlobalPrefix = needsGlobalPrefix;
+        IsNullable = isNullable;
+        IsVoid = IsType(typeof(void));
+        GenericTypeArguments = genericTypeArguments ?? new();
+        IsGeneric = GenericTypeArguments.Count > 0;
+        EnumMembers = enumMembers ?? new();
+        IsEnum = EnumMembers.Count > 0;
+        FullTypeName = GetFullTypeName(true);
     }
 
-    public bool IsType<T>(bool genericComparison = false) => IsType(typeof(T), genericComparison);
+    public string GetFullTypeName(bool includeNullable = true)
+        => $"{(NeedsGlobalPrefix ? "global::" : "")}{Namespace}.{Name}{(IsGeneric ? $"<{string.Join(", ", GenericTypeArguments.Select(a => a.FullTypeName))}>" : "")}{(IsNullable && includeNullable ? "?" : "")}";
+
+    public bool IsType<T>(bool genericComparison = false)
+    {
+        return IsType(typeof(T), genericComparison);
+    }
 
     public bool IsType(Type type, bool genericComparison = false)
     {
-        if (!genericComparison)
+        if (genericComparison)
+        {
+            if (type.GenericTypeArguments.Length != GenericTypeArguments.Count)
+            {
+                return false;
+            }
+
+            if (type.IsGenericType)
+            {
+                foreach (var genericTypeArg in type.GenericTypeArguments)
+                {
+                    if (!GenericTypeArguments.Any(a => a.IsType(genericTypeArg)))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+            else
+            {
+                return IsType(type.Namespace, type.Name);
+            }
+        }
+        else
         {
             return IsType(type.Namespace, type.Name);
         }
-
-        if (type.GenericTypeArguments.Length != GenericTypeArguments.Length)
-        {
-            return false;
-        }
-
-        if (type.IsGenericType)
-        {
-            return type.GenericTypeArguments.All(arg => GenericTypeArguments.Any(a => a.IsType(arg)));
-        }
-
-        return IsType(type.Namespace, type.Name);
     }
 
-    public bool IsType(string @namespace, string name) => @namespace == Namespace && name == Name;
-
-    private static bool IsType(string @namespace, string name, Type type)
-        => type.Namespace == @namespace && type.Name == name;
+    public bool IsType(string @namespace, string name)
+    {
+        return @namespace == Namespace && name == Name;
+    }
 }

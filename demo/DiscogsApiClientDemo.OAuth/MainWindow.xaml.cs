@@ -1,11 +1,11 @@
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DiscogsApiClient;
-using DiscogsApiClient.Authentication.OAuth;
+using DiscogsApiClient.Authentication;
 
 namespace DiscogsApiClientDemo.OAuth;
 
@@ -13,7 +13,7 @@ namespace DiscogsApiClientDemo.OAuth;
 public partial class MainWindow : Window
 {
     private readonly IDiscogsApiClient _discogsApiClient;
-    private readonly IDiscogsOAuthAuthenticationProvider _authProvider;
+    private readonly IDiscogsAuthenticationService _discogsAuthenticationService;
 
     [ObservableProperty]
     private string _accessToken = "";
@@ -24,10 +24,10 @@ public partial class MainWindow : Window
     [ObservableProperty]
     private string _username = "";
 
-    public MainWindow(IDiscogsApiClient discogsApiClient, IDiscogsOAuthAuthenticationProvider authProvider)
+    public MainWindow(IDiscogsApiClient discogsApiClient, IDiscogsAuthenticationService discogsAuthenticationService)
     {
         _discogsApiClient = discogsApiClient;
-        _authProvider = authProvider;
+        _discogsAuthenticationService = discogsAuthenticationService;
         InitializeComponent();
     }
 
@@ -37,7 +37,7 @@ public partial class MainWindow : Window
         try
         {
             // Start authentication.
-            var session = await _authProvider.StartAuthentication(cancellationToken);
+            var session = await _discogsAuthenticationService.StartOAuthAuthentication(cancellationToken);
 
             // Retrieve Verifier Token.
             var loginWindow = new LoginWindow(session.AuthorizeUrl, session.VerifierCallbackUrl);
@@ -45,7 +45,7 @@ public partial class MainWindow : Window
             var verifierToken = loginWindow.Result;
 
             // Complete authentication.
-            (AccessToken, AccessTokenSecret) = await _authProvider.CompleteAuthentication(session, verifierToken, cancellationToken);
+            (AccessToken, AccessTokenSecret) = await _discogsAuthenticationService.CompleteOAuthAuthentication(session, verifierToken, cancellationToken);
 
             // If login successful (No Exceptions thrown) you can make calls to the Discogs Api.
             var identityResponse = await _discogsApiClient.GetIdentity(cancellationToken);

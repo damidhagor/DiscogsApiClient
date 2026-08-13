@@ -1,4 +1,4 @@
-using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Attributes;
+﻿using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Attributes;
 
 namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Generators;
 
@@ -6,7 +6,7 @@ internal static class AttributeGenerator
 {
     public static IncrementalGeneratorPostInitializationContext AddApiClientAttribute(this IncrementalGeneratorPostInitializationContext context)
     {
-        context.AddSource(ApiClientAttribute.SourceHint, CreateSourceText(ApiClientAttribute.Source));
+        context.AddSource(ApiCLientAttribute.SourceHint, CreateSourceText(ApiCLientAttribute.Source));
         return context;
     }
 

@@ -1,106 +1,55 @@
-using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Attributes;
+﻿using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Attributes;
 using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models;
 using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models.MethodParameters;
-using DiscogsApiClient.SourceGenerator.Diagnostics;
 using DiscogsApiClient.SourceGenerator.Shared.Helpers;
 
 namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Parser;
 
 internal static class ApiMethodParser
 {
-    public static EquatableArray<ApiMethod> ParseApiMethods(
-        this INamedTypeSymbol interfaceSymbol,
-        DiagnosticLocation location,
-        ImmutableArray<DiagnosticInfo>.Builder diagnostics,
-        CancellationToken cancellationToken)
+    public static List<ApiMethod> ParseApiMethods(this INamedTypeSymbol interfaceSymbol, CancellationToken cancellationToken)
     {
-        var builder = ImmutableArray.CreateBuilder<ApiMethod>();
+        var methodSymbols = interfaceSymbol.GetMembers().Where(m => m.Kind == SymbolKind.Method).Cast<IMethodSymbol>();
 
-        foreach (var methodSymbol in interfaceSymbol.GetMembers().OfType<IMethodSymbol>())
+        var apiMethodsToGenerate = new List<ApiMethod>();
+        foreach (var methodSymbol in methodSymbols)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (methodSymbol.ParseApiMethod(location, diagnostics, cancellationToken) is { } apiMethod)
+            var apiMethod = methodSymbol.ParseApiMethod(cancellationToken);
+
+            if (apiMethod is not null)
             {
-                builder.Add(apiMethod);
+                apiMethodsToGenerate.Add(apiMethod);
             }
         }
 
-        return new(builder.ToImmutable());
+        return apiMethodsToGenerate;
     }
 
-    private static ApiMethod? ParseApiMethod(
-        this IMethodSymbol methodSymbol,
-        DiagnosticLocation location,
-        ImmutableArray<DiagnosticInfo>.Builder diagnostics,
-        CancellationToken cancellationToken)
+    private static ApiMethod? ParseApiMethod(this IMethodSymbol methodSymbol, CancellationToken cancellationToken)
     {
         if (!methodSymbol.TryParseHttpMethodAttribute(out var methodType, out var route))
         {
-            if (methodSymbol.HasAttribute(Constants.ApiClientNamespace, HttpMethodBaseAttribute.Name))
-            {
-                diagnostics.Add(new(DiagnosticDescriptors.UnknownHttpMethod, location, [methodSymbol.Name, "unrecognized"]));
-            }
-
             return null;
         }
 
-        if (!methodSymbol.IsPartialDefinition)
-        {
-            diagnostics.Add(new(DiagnosticDescriptors.ApiMethodMustBePartial, location, [methodSymbol.Name]));
-            return null;
-        }
+        var methodName = methodSymbol.Name;
 
         if (!methodSymbol.ReturnType.TryParseApiMethodReturnType(out var returnType))
         {
-            diagnostics.Add(new(DiagnosticDescriptors.InvalidMethodReturnType, location, [methodSymbol.Name]));
             return null;
         }
 
-        // Validate route parameters (DISCOGS004)
-        var index = 0;
-        while (index < route.Length)
-        {
-            var open = route.IndexOf('{', index);
-            if (open < 0)
-            {
-                break;
-            }
+        var parameters = methodSymbol.ParseApiMethodParameters(route!, cancellationToken);
 
-            var close = route.IndexOf('}', open);
-            if (close < 0)
-            {
-                break;
-            }
-
-            var routeParam = route.Substring(open + 1, close - open - 1);
-            if (!methodSymbol.Parameters.Any(p => p.Name == routeParam))
-            {
-                diagnostics.Add(new(DiagnosticDescriptors.RouteParameterMismatch, location, [routeParam, route]));
-            }
-
-            index = close + 1;
-        }
-
-        var parameters = methodSymbol.ParseApiMethodParameters(route, location, diagnostics, cancellationToken);
-
-        var accessModifier = methodSymbol.DeclaredAccessibility switch
-        {
-            Accessibility.Public => "public",
-            Accessibility.Internal => "internal",
-            Accessibility.Protected => "protected",
-            Accessibility.ProtectedOrInternal => "protected internal",
-            Accessibility.ProtectedAndInternal => "private protected",
-            _ => "private"
-        };
-
-        return new(methodSymbol.Name, route, methodType, accessModifier, parameters, returnType!);
+        return new(methodName, route, methodType, parameters, returnType!);
     }
 
     private static bool TryParseHttpMethodAttribute(this IMethodSymbol methodSymbol, out ApiMethodType apiMethodType, out string route)
     {
         apiMethodType = ApiMethodType.Unknown;
-        route = string.Empty;
+        route = "";
 
         if (!methodSymbol.TryGetAttributeConstructorArgument<string>(
             Constants.ApiClientNamespace,
@@ -130,32 +79,25 @@ internal static class ApiMethodParser
             _ => ApiMethodType.Unknown
         };
 
-        return apiMethodType != ApiMethodType.Unknown;
-    }
-
-    private static bool TryParseApiMethodReturnType(this ITypeSymbol typeSymbol, out ApiMethodReturnType? returnType)
-    {
-        returnType = new(typeSymbol.GetSymbolTypeInfo());
-
-        if (!returnType.IsTask)
+        if (apiMethodType == ApiMethodType.Unknown)
         {
-            returnType = null;
             return false;
         }
 
         return true;
     }
 
-    private static EquatableArray<ApiMethodParameter> ParseApiMethodParameters(
-        this IMethodSymbol methodSymbol,
-        string route,
-        DiagnosticLocation location,
-        ImmutableArray<DiagnosticInfo>.Builder diagnostics,
-        CancellationToken cancellationToken)
+    private static bool TryParseApiMethodReturnType(this ITypeSymbol typeSymbol, out ApiMethodReturnType? returnType)
     {
-        var builder = ImmutableArray.CreateBuilder<ApiMethodParameter>();
-        var hasBody = false;
-        var hasCancellationToken = false;
+        var typeInfo = typeSymbol.GetSymbolTypeInfo();
+
+        returnType = new ApiMethodReturnType(typeInfo);
+        return true;
+    }
+
+    private static List<ApiMethodParameter> ParseApiMethodParameters(this IMethodSymbol methodSymbol, string route, CancellationToken cancellationToken)
+    {
+        var parameters = new List<ApiMethodParameter>();
 
         foreach (var parameter in methodSymbol.Parameters)
         {
@@ -163,61 +105,42 @@ internal static class ApiMethodParser
 
             var typeInfo = parameter.GetParameterSymbolTypeInfo();
 
+            ApiMethodParameter apiMethodParameter;
+
             if (typeInfo.IsType<CancellationToken>())
             {
-                hasCancellationToken = true;
-                builder.Add(new(typeInfo, ApiMethodParameterType.CancellationToken));
+                apiMethodParameter = new CancellationTokenApiMethodParameter(typeInfo);
             }
             else if (parameter.HasAttribute(Constants.ApiClientNamespace, BodyAttribute.Name))
             {
-                if (hasBody)
-                {
-                    diagnostics.Add(new(DiagnosticDescriptors.DuplicateBodyParameter, location, [methodSymbol.Name]));
-                }
-                else
-                {
-                    hasBody = true;
-                    builder.Add(new(typeInfo, ApiMethodParameterType.Body));
-                }
+                apiMethodParameter = new BodyApiMethodParameter(typeInfo);
             }
             else if (route.Contains($"{{{typeInfo.ParameterName}}}"))
             {
-                builder.Add(new(typeInfo, ApiMethodParameterType.Route, RoutePart: $"{{{typeInfo.ParameterName}}}"));
+                apiMethodParameter = new RouteApiMethodParameter(typeInfo, $"{{{typeInfo.ParameterName}}}");
             }
             else
             {
-                builder.Add(new(
-                    typeInfo,
-                    ApiMethodParameterType.Query,
-                    QueryParameters: parameter.Type.ParseAsQueryParameters(
-                        location,
-                        diagnostics,
-                        cancellationToken)));
+                var queryParameters = parameter.Type.ParseAsQueryParameters(cancellationToken);
+                apiMethodParameter = new QueryApiMethodParameter(typeInfo, queryParameters);
             }
+
+            parameters.Add(apiMethodParameter);
         }
 
-        if (!hasCancellationToken)
-        {
-            diagnostics.Add(new(DiagnosticDescriptors.MissingCancellationToken, location, [methodSymbol.Name]));
-        }
-
-        return new(builder.ToImmutable());
+        return parameters;
     }
 
-    private static EquatableArray<QueryParameter> ParseAsQueryParameters(
-        this ITypeSymbol type,
-        DiagnosticLocation location,
-        ImmutableArray<DiagnosticInfo>.Builder diagnostics,
-        CancellationToken cancellationToken)
+    private static List<QueryParameter> ParseAsQueryParameters(this ITypeSymbol type, CancellationToken cancellationToken)
     {
-        var builder = ImmutableArray.CreateBuilder<QueryParameter>();
+        var parameters = new List<QueryParameter>();
 
         var properties = type
             .GetMembers()
-            .OfType<IPropertySymbol>()
-            .Where(m => m.DeclaredAccessibility == Accessibility.Public);
+            .Where(m => m.DeclaredAccessibility == Accessibility.Public
+                     && m.Kind == SymbolKind.Property);
 
-        foreach (var property in properties)
+        foreach (var property in properties.OfType<IPropertySymbol>())
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -225,26 +148,18 @@ internal static class ApiMethodParser
 
             if (typeInfo.IsType<string>())
             {
-                builder.Add(new(typeInfo, QueryParameterType.String));
+                parameters.Add(new QueryParameter(typeInfo, QueryParameterType.String));
             }
             else if (typeInfo.IsType<int>())
             {
-                builder.Add(new(typeInfo, QueryParameterType.Integer));
+                parameters.Add(new QueryParameter(typeInfo, QueryParameterType.Integer));
             }
             else if (typeInfo.IsEnum)
             {
-                builder.Add(new(typeInfo, QueryParameterType.Enum));
-            }
-            else
-            {
-                diagnostics.Add(
-                    new(
-                        DiagnosticDescriptors.UnsupportedQueryParameterType,
-                        location,
-                        [property.Name, type.Name, property.Type.ToDisplayString()]));
+                parameters.Add(new QueryParameter(typeInfo, QueryParameterType.Enum));
             }
         }
 
-        return new(builder.ToImmutable());
+        return parameters;
     }
 }

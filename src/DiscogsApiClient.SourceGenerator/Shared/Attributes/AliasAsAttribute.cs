@@ -8,16 +8,19 @@ internal static class AliasAsAttribute
 
     public const string Source =
         $$"""
-        {{Constants.GeneratedFileHeader}}
         #nullable enable
 
         namespace {{Constants.SharedNamespace}};
 
-        {{Constants.GeneratedCodeAttribute}}
         [global::System.AttributeUsage(global::System.AttributeTargets.Property | global::System.AttributeTargets.Field)]
-        internal sealed class {{Name}}(string alias) : global::System.Attribute
+        internal sealed class {{Name}} : global::System.Attribute
         {
-            public string Alias { get; } = alias;
+            public string Alias { get; set; }
+        
+            public {{Name}}(string alias)
+            {
+                Alias = alias;
+            }
         }
         """;
 }

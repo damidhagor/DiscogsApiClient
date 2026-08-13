@@ -1,4 +1,4 @@
-using DiscogsApiClient.SourceGenerator.Shared;
+﻿using DiscogsApiClient.SourceGenerator.Shared;
 
 namespace DiscogsApiClient.QueryParameters;
 
@@ -7,6 +7,7 @@ namespace DiscogsApiClient.QueryParameters;
 /// </summary>
 public sealed record PaginationQueryParameters()
 {
+    private int? _page = default;
     /// <summary>
     /// Indicates which page should be returned.
     /// Pages are counted starting with 1.
@@ -14,10 +15,11 @@ public sealed record PaginationQueryParameters()
     [AliasAs("page")]
     public int? Page
     {
-        get;
-        init => field = value is not null ? Math.Max(1, value.Value) : null;
+        get => _page;
+        init => _page = value != null ? Math.Max(1, value.Value) : null;
     }
 
+    private int? _pageSize = default;
     /// <summary>
     /// Indicates the size of the requested page.
     /// The value must be between 1 and 100. The default value is 50.
@@ -25,7 +27,7 @@ public sealed record PaginationQueryParameters()
     [AliasAs("per_page")]
     public int? PageSize
     {
-        get;
-        init => field = value is not null ? Math.Clamp(value.Value, 1, 100) : value;
+        get => _pageSize;
+        init => _pageSize = value != null ? Math.Clamp(value.Value, 1, 100) : value;
     }
 }

@@ -4,13 +4,12 @@ This document describes the architecture and design of the DiscogsApiClient libr
 
 ## Overview
 
-DiscogsApiClient is a strongly-typed .NET library for accessing the Discogs API v2. It uses **C# Source Generators** to automatically generate HTTP client code from a partial class annotated with `[ApiClient]`, providing a type-safe and AOT-compatible API surface.
+DiscogsApiClient is a strongly-typed .NET library for accessing the Discogs API v2. It uses **C# Source Generators** to automatically generate HTTP client code from interface definitions, providing a type-safe and AOT-compatible API surface.
 
 **Key Features:**
 - Source Generator-based client implementation
 - Multiple authentication methods (Personal Access Token, OAuth 1.0a)
-- Error handling with custom exceptions
-- Extensibility via middleware and DI
+- Built-in rate limiting and error handling
 - Native AOT compatibility
 - System.Text.Json with source-generated serialization
 - Multi-targeting (.NET 6, 7, 8)
@@ -26,16 +25,16 @@ graph TB
     end
 
     subgraph "DiscogsApiClient Library"
-        Interface[IDiscogsApiClient<br/>Contract Interface]
-        Client[DiscogsApiClient<br/>partial class]
-        Generated[Generated partial<br/>class half]
-        Auth[Authentication<br/>Header Provider]
+        Interface[IDiscogsApiClient<br/>Interface]
+        Generated[Generated Client<br/>Implementation]
+        Auth[Authentication<br/>Service]
         PAT[Personal Access<br/>Token Provider]
         OAuth[OAuth<br/>Provider]
 
         subgraph "Middleware Pipeline"
-            AH[Authentication<br/>Handler] --> EH[Error<br/>Handler]
-            EH --> RLS[Rate Limit State<br/>Handler]
+            RL[Rate Limiter<br/>Handler]
+            AH[Authentication<br/>Handler]
+            EH[Error<br/>Handler]
         end
 
         subgraph "Models & Serialization"
@@ -54,14 +53,15 @@ graph TB
     end
 
     App -->|Uses| Interface
-    Interface -.->|Implemented by| Client
-    Generated -.->|Completes| Client
-    Client -->|HTTP Request| AH
-    RLS -->|HTTPS| API
+    Interface -.->|Implemented by| Generated
+    Generated -->|Uses| RL
+    RL --> AH
+    AH --> EH
+    EH -->|HTTPS| API
 
-    Client -.->|Serializes with| Json
-    Client -.->|Uses| Contract
-    Client -.->|Uses| Query
+    Generated -.->|Serializes with| Json
+    Generated -.->|Uses| Contract
+    Generated -.->|Uses| Query
 
     Auth -->|Manages| PAT
     Auth -->|Manages| OAuth
@@ -99,62 +99,52 @@ DiscogsApiClient/
 
 ## Core Components
 
-### 1. API Client Contract & Class (`IDiscogsApiClient` / `DiscogsApiClient`)
+### 1. API Client Interface (`IDiscogsApiClient`)
 
-**Location:** `DiscogsApiClient/IDiscogsApiClient.cs`, `DiscogsApiClient/DiscogsApiClient.cs`
+**Location:** `DiscogsApiClient/IDiscogsApiClient.cs`
 
-`IDiscogsApiClient` is a plain public contract interface defining all API operations (no attributes, no default implementations). `DiscogsApiClient` is an `internal sealed partial class` that implements it and is decorated with `[ApiClient(typeof(DiscogsJsonSerializerContext))]` to trigger source generation.
+The primary interface defining all API operations. Decorated with `[ApiClient]` attribute to trigger source generation.
 
 **Key Patterns:**
-- The code owner writes the hand-authored partial half: the primary constructor declaring the dependencies (`HttpClient` + `DiscogsJsonSerializerContext`) and assigning them to fields, the `partial` method definitions carrying HTTP attributes (`[HttpGet]`, `[HttpPost]`, `[HttpPut]`, `[HttpDelete]`), and public validation wrappers.
-- The generator emits the other partial half: the implementing `partial` method bodies plus the `Send`/`SendAsync`/`SerializeContent` helpers and route builders.
-- Dependencies are discovered by **type** — any field/property of type `HttpClient`, and any field/property whose type is or derives from the context type in `[ApiClient(...)]`. Names are up to the code owner. A primary constructor may declare the dependencies as long as it assigns them to a field or property (the generator only inspects fields and properties, never constructor parameters).
-- Async/await throughout with `CancellationToken` support.
-- Guard clauses using native `ArgumentNullException`/`ArgumentException` throw helpers.
+- Internal methods with HTTP attributes (`[HttpGet]`, `[HttpPost]`, `[HttpPut]`, `[HttpDelete]`)
+- Public wrapper methods with parameter validation
+- Async/await throughout with `CancellationToken` support
+- Guard clauses using `CommunityToolkit.Diagnostics`
 
 **Example:**
 ```csharp
-[ApiClient(typeof(DiscogsJsonSerializerContext))]
-internal sealed partial class DiscogsApiClient(HttpClient httpClient, DiscogsJsonSerializerContext jsonSerializerContext) : IDiscogsApiClient
+[HttpGet("/users/{username}")]
+internal Task<User> GetUserInternal(string username, CancellationToken cancellationToken = default);
+
+public async Task<User> GetUser(string username, CancellationToken cancellationToken = default)
 {
-    private readonly HttpClient _httpClient = httpClient;
-    private readonly DiscogsJsonSerializerContext _jsonSerializerContext = jsonSerializerContext;
-
-    [HttpGet("/users/{username}")]
-    private partial Task<User> GetUserInternal(string username, CancellationToken cancellationToken);
-
-    public async Task<User> GetUser(string username, CancellationToken cancellationToken)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(username);
-        return await GetUserInternal(username, cancellationToken).ConfigureAwait(false);
-    }
+    Guard.IsNotNullOrWhiteSpace(username);
+    return await GetUserInternal(username, cancellationToken);
 }
 ```
-
-Endpoints that need no validation can instead be declared as a `public partial` method that directly implements the interface member; the generator supplies the body.
 
 ### 2. Source Generator (`DiscogsApiClient.SourceGenerator`)
 
 **Location:** `DiscogsApiClient.SourceGenerator/`
 
-An incremental source generator that analyzes the `[ApiClient]` partial class and generates the implementing partial-class half.
+An incremental source generator that analyzes interface definitions and generates the actual HTTP client implementation.
 
 **Components:**
-- **Parser** - Parses the annotated class, discovers the `HttpClient` and context members, and parses the `partial` API methods
-- **Generators** - Generates the partial-class half, query parameter serialization, and method bodies
+- **Parser** - Parses `IDiscogsApiClient` interface and methods
+- **Generators** - Generates client implementation, query parameter serialization, and method bodies
 - **Attributes** - Custom attributes for API definition (`[ApiClient]`, `[HttpGet]`, `[Body]`, etc.)
 
 **Generated Code:**
-- The other half of the `partial` API client class (implementing partial methods)
+- Concrete implementation of `IDiscogsApiClient`
 - HTTP request construction
 - URL building with route/query parameters
 - Response deserialization
 
 **Key Classes:**
 - `ApiClientSourceGenerator` - Main generator entry point
-- `ApiClientParser` - Parses the annotated class and discovers dependency members
-- `ApiMethodParser` - Parses `partial` method declarations
-- `ApiClientGenerator` - Generates the partial-class half
+- `ApiClientParser` - Parses interface declarations
+- `ApiMethodParser` - Parses method declarations
+- `ApiClientGenerator` - Generates client class
 - `ApiMethodGenerator` - Generates HTTP method implementations
 - `QueryParameterGenerator` - Generates query string serialization
 
@@ -162,131 +152,99 @@ An incremental source generator that analyzes the `[ApiClient]` partial class an
 
 **Location:** `DiscogsApiClient/Authentication/`
 
-Authentication is an **explicit, single choice made at DI registration time**, mirroring
-`AddAuthentication().AddJwtBearer(...)`-style ecosystem patterns. `AddDiscogsApiClient(...)` alone
-registers no authentication mechanism (unauthenticated by default); consumers opt into exactly one
-mechanism via `.WithPatAuthentication(...)` or `.WithOAuthAuthentication(...)`.
+Provides multiple authentication strategies:
 
 #### Personal Access Token
+**Classes:** 
+- `IPersonalAccessTokenAuthenticationProvider`
+- `PersonalAccessTokenAuthenticationProvider`
 
-**Location:** `DiscogsApiClient/Authentication/Pat/`
-
-**Classes:**
-- `IDiscogsPatAuthenticationProvider` (public)
-- `DiscogsPatAuthenticationProvider` (internal implementation, registered via DI)
-- `DiscogsPatOptions` (bindable from `"Discogs:Pat"`)
-
-Simple token-based authentication using `Authorization: Discogs token={token}` header. The token can
-be supplied at DI-registration time via options/`IConfiguration` (the provider is then already
-authenticated once the container is built) or later via a runtime `Authenticate(token)` call.
-Consumers resolve `IDiscogsPatAuthenticationProvider` from the container — the concrete
-`DiscogsPatAuthenticationProvider` type is an internal implementation detail and never referenced directly.
+Simple token-based authentication using `Authorization: Discogs token={token}` header.
 
 #### OAuth 1.0a (Plain)
-
-**Location:** `DiscogsApiClient/Authentication/OAuth/`
-
 **Classes:**
-- `IDiscogsOAuthAuthenticationProvider` (public)
-- `DiscogsOAuthAuthenticationProvider` (internal implementation, registered via DI)
-- `OAuthAuthenticationSession` (public)
-- `DiscogsOAuthOptions` (bindable from `"Discogs:OAuth"`; app-identity secrets only — `ConsumerKey`,
-  `ConsumerSecret`, `VerifierCallbackUrl`)
+- `IOAuthAuthenticationProvider`
+- `OAuthAuthenticationProvider`
+- `OAuthAuthenticationSession`
 
 Full OAuth 1.0a flow implementation:
 1. Request token acquisition
 2. User authorization (external browser)
 3. Access token exchange using verifier
 
-The obtained user access token/secret are **never** stored in options/configuration — they're
-dynamic, per-user values returned directly to the caller from `CompleteAuthentication(...)`, and
-caching them between runs (e.g. to disk or a secret store) is the consuming application's
-responsibility. An app with a previously-cached token/secret pair can skip the interactive flow by
-calling `Authenticate(accessToken, accessTokenSecret)` directly after resolving the provider.
-
 **Note:** Uses plain (unencrypted) OAuth as recommended by Discogs since all requests are over HTTPS.
-Consumers resolve `IDiscogsOAuthAuthenticationProvider` from the container — the concrete
-`DiscogsOAuthAuthenticationProvider` type is an internal implementation detail and never referenced directly.
 
-#### Internal composition
+#### Authentication Service
+**Class:** `DiscogsAuthenticationService`
 
-**Class:** `DiscogsAuthenticationHeaderProvider` (internal, implements internal `IDiscogsAuthenticationHeaderProvider`)
-
-Composes at most one authenticated provider via two **optional, nullable** constructor
-dependencies (`IDiscogsPatAuthenticationProvider?`, `IDiscogsOAuthAuthenticationProvider?`). The
-built-in DI container supplies `null` for a dependency that was never registered, so the
-"unauthenticated" default state falls out naturally — no sentinel/no-op registration needed. Since
-`WithPatAuthentication`/`WithOAuthAuthentication` are mutually exclusive, at most one of the two is
-ever non-null, so the constructor resolves and caches the single active one (typed as the internal
-`IDiscogsAuthenticationProvider` shared shape) once, instead of re-checking both nullable
-dependencies on every `IsAuthenticated`/`GetHeader()` call. This is the only type
-`AuthenticationDelegatingHandler` depends on; it is not part of the public API.
+Facade that manages authentication state and provides unified access to authentication providers.
 
 #### Authentication Class Diagram
 
 ```mermaid
 classDiagram
-    class IDiscogsAuthenticationHeaderProvider {
-        <<interface, internal>>
+    class IDiscogsAuthenticationService {
+        <<interface>>
         +bool IsAuthenticated
-        +CreateAuthenticationHeader()
+        +AuthenticateWithPersonalAccessToken(token)
+        +StartOAuthAuthentication()
+        +CompleteOAuthAuthentication(session, verifier)
     }
 
-    class DiscogsAuthenticationHeaderProvider {
-        <<internal>>
-        -IDiscogsPatAuthenticationProvider? patProvider
-        -IDiscogsOAuthAuthenticationProvider? oAuthProvider
+    class DiscogsAuthenticationService {
+        -IPersonalAccessTokenAuthenticationProvider _patProvider
+        -IOAuthAuthenticationProvider _oauthProvider
+        -bool _lastAuthenticatedWithPersonalAccessToken
+        -bool _lastAuthenticatedWithOAuth
         +bool IsAuthenticated
-        +CreateAuthenticationHeader()
+        +AuthenticateWithPersonalAccessToken(token)
+        +StartOAuthAuthentication()
+        +CompleteOAuthAuthentication(session, verifier)
     }
 
-    class IDiscogsPatAuthenticationProvider {
+    class IPersonalAccessTokenAuthenticationProvider {
         <<interface>>
         +bool IsAuthenticated
         +Authenticate(token)
-        +CreateAuthenticationHeader()
+        +GetAuthenticationHeader()
     }
 
-    class DiscogsPatAuthenticationProvider {
-        <<internal>>
+    class PersonalAccessTokenAuthenticationProvider {
         -string? _token
         +bool IsAuthenticated
         +Authenticate(token)
-        +CreateAuthenticationHeader()
+        +GetAuthenticationHeader()
     }
 
-    class IDiscogsOAuthAuthenticationProvider {
+    class IOAuthAuthenticationProvider {
         <<interface>>
         +bool IsAuthenticated
         +StartAuthentication()
         +CompleteAuthentication(session, verifier)
-        +Authenticate(accessToken, accessTokenSecret)
-        +CreateAuthenticationHeader()
+        +GetAuthenticationHeader()
     }
 
-    class DiscogsOAuthAuthenticationProvider {
-        <<internal>>
-        -TokenState? _tokenState
+    class OAuthAuthenticationProvider {
+        -string? _token
+        -string? _tokenSecret
         +bool IsAuthenticated
         +StartAuthentication()
         +CompleteAuthentication(session, verifier)
-        +Authenticate(accessToken, accessTokenSecret)
-        +CreateAuthenticationHeader()
+        +GetAuthenticationHeader()
     }
 
     class OAuthAuthenticationSession {
-        +string RequestToken
-        +string RequestTokenSecret
+        +string Token
+        +string TokenSecret
         +string AuthorizeUrl
-        +string? VerifierCallbackUrl
     }
 
-    IDiscogsAuthenticationHeaderProvider <|.. DiscogsAuthenticationHeaderProvider
-    DiscogsAuthenticationHeaderProvider --> IDiscogsPatAuthenticationProvider : optional
-    DiscogsAuthenticationHeaderProvider --> IDiscogsOAuthAuthenticationProvider : optional
-    IDiscogsPatAuthenticationProvider <|.. DiscogsPatAuthenticationProvider
-    IDiscogsOAuthAuthenticationProvider <|.. DiscogsOAuthAuthenticationProvider
-    DiscogsOAuthAuthenticationProvider ..> OAuthAuthenticationSession : returns
+    IDiscogsAuthenticationService <|.. DiscogsAuthenticationService
+    DiscogsAuthenticationService --> IPersonalAccessTokenAuthenticationProvider
+    DiscogsAuthenticationService --> IOAuthAuthenticationProvider
+    IPersonalAccessTokenAuthenticationProvider <|.. PersonalAccessTokenAuthenticationProvider
+    IOAuthAuthenticationProvider <|.. OAuthAuthenticationProvider
+    OAuthAuthenticationProvider ..> OAuthAuthenticationSession : returns
 ```
 
 ### 4. HTTP Middleware Pipeline
@@ -306,16 +264,14 @@ Custom `DelegatingHandler` implementations for cross-cutting concerns:
 - Maps 404 → `ResourceNotFoundDiscogsException`
 - Maps 429 → `RateLimitExceededDiscogsException`
 
-#### `RateLimitStateDelegatingHandler`
-- Extracts Discogs API rate limit headers from responses
-- Updates `IDiscogsRateLimitStateService` with current rate limit values
-- Provides observable rate limit state for consumers to implement custom strategies
-- **Positioned last in pipeline** to ensure headers are captured even from error responses
+#### `RateLimitedDelegatingHandler`
+- Enforces rate limiting using `System.Threading.RateLimiting`
+- Configurable sliding window rate limiter
+- Prevents API throttling
 
 **Pipeline Order:**
 ```
-Request → Authentication → ErrorHandling → RateLimitState → HttpClient → API
-Response ← RateLimitState ← ErrorHandling ← Authentication ← HttpClient ← API
+Request → RateLimiting → Authentication → ErrorHandling → HttpClient → API
 ```
 
 ### 5. Contract Models
@@ -361,86 +317,33 @@ Serialized to query strings by source generator.
 
 **Location:** `DiscogsApiClient/ServiceCollectionExtensions.cs`
 
-The `AddDiscogsApiClient` extension methods live in the `Microsoft.Extensions.DependencyInjection`
-namespace so they surface in IntelliSense without an extra `using`. Three overloads are provided,
-and `WithPatAuthentication`/`WithOAuthAuthentication` mirror the same three call patterns so
-authentication options can be configured exactly the same way as the client itself:
+Extension methods for `IServiceCollection`:
 
 ```csharp
-// A) Code-based configuration.
 services.AddDiscogsApiClient(options =>
 {
-    options.BaseUrl = "https://api.discogs.com";
     options.UserAgent = "MyApp/1.0";
-})
-.WithPatAuthentication(options => options.Token = "...");
-// or: .WithOAuthAuthentication(options => { options.ConsumerKey = "..."; options.ConsumerSecret = "..."; });
-
-// B) Bind from IConfiguration (e.g. appsettings.json "Discogs" section).
-services.AddDiscogsApiClient(configuration.GetSection(DiscogsApiClientOptions.SectionName))
-    .WithPatAuthentication(configuration.GetSection(DiscogsPatOptions.SectionName));
-// or (auto-bind from a registered IConfiguration, no explicit section):
-services.AddDiscogsApiClient(configuration.GetSection(DiscogsApiClientOptions.SectionName))
-    .WithPatAuthentication(); // Token bound from "Discogs:Pat" if IConfiguration is registered.
-
-// C) DI-aware configuration (delegate receives the IServiceProvider).
-services.AddDiscogsApiClient((serviceProvider, options) =>
-{
-    options.UserAgent = serviceProvider.GetRequiredService<IAppInfo>().UserAgent;
-})
-.WithPatAuthentication((serviceProvider, options) => options.Token = serviceProvider.GetRequiredService<ITokenStore>().Token);
+    options.ConsumerKey = "...";      // For OAuth
+    options.ConsumerSecret = "...";   // For OAuth
+    options.UseRateLimiting = true;
+    options.RateLimitingPermits = 60;
+    options.RateLimitingWindow = TimeSpan.FromMinutes(1);
+});
 ```
 
-**Configuration & options pattern:**
-- Options flow through `IOptions<DiscogsApiClientOptions>` (no raw singleton).
-- The delegate overloads (A & C) first bind the `DiscogsApiClientOptions.SectionName` (`"Discogs"`)
-  section **if** an `IConfiguration` is registered, then apply the delegate on top (code overrides config).
-- Validation is reflection-free and AOT-safe via a hand-written `IValidateOptions<DiscogsApiClientOptions>`
-  (`DiscogsApiClientOptionsValidator`) and runs at startup through `.ValidateOnStart()`. It enforces
-  required `BaseUrl`/`UserAgent` and that URL values are constructable absolute URIs.
-- `.WithPatAuthentication(...)`/`.WithOAuthAuthentication(...)` each bind their own dedicated options
-  type (`DiscogsPatOptions` from `"Discogs:Pat"`, `DiscogsOAuthOptions` from `"Discogs:OAuth"`) the
-  same way, through the same three overload patterns (A/B/C above), each with their own
-  `IValidateOptions<T>` + `.ValidateOnStart()`. Calling both on the same `IServiceCollection` throws
-  `InvalidOperationException` — only one mechanism may be active.
-- An optional `Action<IHttpClientBuilder>? configureClient` hook on every `AddDiscogsApiClient` overload
-  lets callers add their own handlers; they sit **outermost** in the pipeline.
-
-**OAuth provider's HTTP client:** `DiscogsOAuthAuthenticationProvider` holds mutable token state and must
-be a DI **singleton** so the instance a consumer authenticates via `StartAuthentication`/`CompleteAuthentication`/
-`Authenticate` is the same instance `DiscogsAuthenticationHeaderProvider` reads from. `AddHttpClient<TClient,
-TImplementation>()` always registers the typed client as **transient**, which would defeat that. Instead, the
-provider takes a plain `IHttpClientFactory` in its constructor and creates its own named client from it
-(`httpClientFactory.CreateClient(HttpClientName)`), where `HttpClientName` is a `public const string` on
-`DiscogsOAuthAuthenticationProvider` itself (`nameof(DiscogsOAuthAuthenticationProvider)`) — not a
-loosely-related string owned by `ServiceCollectionExtensions`. `WithOAuthAuthentication` only needs to
-`AddHttpClient(DiscogsOAuthAuthenticationProvider.HttpClientName)` (to configure the named client) and
-`TryAddSingleton<IDiscogsOAuthAuthenticationProvider, DiscogsOAuthAuthenticationProvider>()` — the container
-resolves the constructor's `IHttpClientFactory`/`IOptions<DiscogsOAuthOptions>` automatically, no manual
-factory delegate needed.
-
-**Idempotency:** infrastructure services are registered with `TryAdd*`, so calling `AddDiscogsApiClient`
-twice is safe and callers can pre-register overrides.
-
-**Handler pipeline (outer → inner):** `[user handlers] → Error → Auth → RateLimit`. `RateLimitStateDelegatingHandler`
-is innermost so it captures rate-limit headers from every response before `ErrorHandlingDelegatingHandler`
-can translate a non-success status into a `DiscogsException`.
-
 **Registered Services:**
-- `IDiscogsApiClient` (typed `HttpClient`)
-- `IDiscogsAuthenticationHeaderProvider` (internal, Singleton) — always registered
-- `IDiscogsPatAuthenticationProvider` / `IDiscogsOAuthAuthenticationProvider` (Singleton) — only
-  registered when `.WithPatAuthentication(...)` / `.WithOAuthAuthentication(...)` is called; neither
-  is registered by default (unauthenticated client)
-- `IDiscogsRateLimitStateService` / `IDiscogsRateLimitStateUpdateService` (single shared Singleton)
+- `IDiscogsApiClient` (Scoped, via HttpClient)
+- `IDiscogsAuthenticationService` (Singleton)
+- Authentication providers (Singleton/Scoped)
 - Middleware handlers (Transient)
+- Rate limiter (Singleton, if enabled)
 
 ---
 
 ## Design Patterns
 
 ### 1. Source Generator Pattern
-- **What:** Compile-time code generation from a `[ApiClient]` partial class
+- **What:** Compile-time code generation from interface definitions
 - **Why:** Type safety, AOT compatibility, reduced reflection overhead
 - **Trade-off:** Longer compile times, generated code debugging
 
@@ -449,13 +352,10 @@ can translate a non-success status into a `DiscogsException`.
 - **Why:** Separation of concerns, composable pipeline
 - **Implementation:** ASP.NET Core `DelegatingHandler`
 
-### 3. Optional-Dependency Composition Pattern
-- **What:** `DiscogsAuthenticationHeaderProvider` composes at most one authenticated provider via
-  two optional, nullable constructor dependencies
-- **Why:** The "unauthenticated by default" state falls out naturally from unregistered DI
-  dependencies resolving to `null` — no sentinel/no-op provider type is needed
-- **Alternative:** A swappable facade with runtime-mutable "last authenticated wins" state (the
-  previous design) — rejected because it allowed conflicting/half-configured auth state
+### 3. Facade Pattern
+- **What:** `DiscogsAuthenticationService` provides unified interface
+- **Why:** Simplifies switching between authentication methods
+- **Alternative:** Could expose providers directly
 
 ### 4. Guard Clause Pattern
 - **What:** Early parameter validation in public methods
@@ -488,29 +388,26 @@ sequenceDiagram
     participant User as User Code
     participant API as IDiscogsApiClient
     participant Gen as Generated Implementation
+    participant RL as RateLimitHandler
     participant Auth as AuthHandler
     participant Error as ErrorHandler
-    participant RLS as RateLimitStateHandler
     participant HTTP as HttpClient
     participant Discogs as Discogs API
 
     User->>API: GetUser(username)
     API->>API: Validate parameters (Guard)
     API->>Gen: Call internal method
-    Gen->>Auth: HTTP Request
+    Gen->>RL: HTTP Request
+    RL->>RL: Check rate limit
+    RL->>Auth: Forward request
     Auth->>Auth: Add auth headers
     Auth->>Error: Forward request
-    Error->>RLS: Forward request
-    RLS->>HTTP: Forward request
+    Error->>HTTP: Forward request
     HTTP->>Discogs: HTTPS Request
     Discogs-->>HTTP: Response (200 OK)
-    HTTP-->>RLS: Response
-    RLS->>RLS: Extract rate limit headers
-    RLS->>RLS: Update IDiscogsRateLimitStateService
-    RLS-->>Error: Forward response
+    HTTP-->>Error: Response
     Error->>Error: Check for errors
-    Error-->>Auth: Forward response
-    Auth-->>Gen: Forward response
+    Error-->>Gen: Forward response
     Gen->>Gen: Deserialize JSON
     Gen-->>API: Return User
     API-->>User: Return User
@@ -547,12 +444,14 @@ sequenceDiagram
 
 | Technology | Purpose | Version |
 |------------|---------|---------|
-| C# | Primary language | 12+ |
-| .NET | Target frameworks | 8, 9, 10 |
+| C# | Primary language | 11+ |
+| .NET | Target frameworks | 6, 7, 8 |
 | System.Text.Json | Serialization | Built-in |
 | Source Generators | Code generation | Roslyn |
 | HttpClient | HTTP communication | Built-in |
-| Microsoft.Extensions.Http | HttpClient factory | 10.0.8 |
+| System.Threading.RateLimiting | Rate limiting | 8.0+ |
+| CommunityToolkit.Diagnostics | Guard clauses | 8.2.2 |
+| Microsoft.Extensions.Http | HttpClient factory | 8.0.0 |
 
 ---
 
@@ -560,19 +459,17 @@ sequenceDiagram
 
 ### Adding New Endpoints
 
-1. **Define a `partial` method** on the `DiscogsApiClient` class with an HTTP attribute, plus a public wrapper (or a `public partial` method when no validation is needed):
+1. **Define in interface** with attributes:
    ```csharp
    [HttpGet("/new/endpoint/{id}")]
-   private partial Task<ResponseType> GetNewEndpointInternal(int id, CancellationToken ct);
+   internal Task<ResponseType> GetNewEndpointInternal(int id, CancellationToken ct);
 
    public async Task<ResponseType> GetNewEndpoint(int id, CancellationToken ct)
    {
-       ArgumentOutOfRangeException.ThrowIfNegativeOrZero(id);
-       return await GetNewEndpointInternal(id, ct).ConfigureAwait(false);
+       Guard.IsGreaterThan(id, 0);
+       return await GetNewEndpointInternal(id, ct);
    }
    ```
-
-   Add the matching method signature to the `IDiscogsApiClient` contract interface.
 
 2. **Create contract models** in `Contract/` folder
 
@@ -593,6 +490,10 @@ Add custom `DelegatingHandler` to the pipeline in `ServiceCollectionExtensions`:
 ```csharp
 builder.AddHttpMessageHandler<CustomDelegatingHandler>();
 ```
+
+### Custom Rate Limiting
+
+Replace `SlidingWindowRateLimiter` with custom `RateLimiter` implementation.
 
 ---
 
@@ -621,10 +522,11 @@ The library is designed for Native AOT compatibility:
 
 ## Performance Considerations
 
-1. **Connection Pooling:** HttpClient factory provides connection reuse
-2. **Async/Await:** All I/O operations are async throughout
-3. **Source Generation:** No runtime reflection overhead
-4. **Minimal Allocations:** Uses `Span<T>` and value types where appropriate
+1. **Rate Limiting:** Optional sliding window limiter prevents API throttling
+2. **Connection Pooling:** HttpClient factory provides connection reuse
+3. **Async/Await:** All I/O operations are async throughout
+4. **Source Generation:** No runtime reflection overhead
+5. **Minimal Allocations:** Uses `Span<T>` and value types where appropriate
 
 ---
 

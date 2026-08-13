@@ -1,4 +1,4 @@
-namespace DiscogsApiClient;
+﻿namespace DiscogsApiClient;
 
 // General
 [JsonSerializable(typeof(ErrorMessage))]
@@ -56,4 +56,7 @@ namespace DiscogsApiClient;
 [JsonSerializable(typeof(SearchResultsResponse))]
 [JsonSerializable(typeof(SearchResultType))]
 [JsonSerializable(typeof(SearchResultUserData))]
-internal partial class DiscogsJsonSerializerContext : JsonSerializerContext;
+internal partial class DiscogsJsonSerializerContext : JsonSerializerContext
+{
+
+}

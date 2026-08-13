@@ -1,4 +1,4 @@
-using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models;
+﻿using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models;
 using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models.MethodParameters;
 
 namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Generators;
@@ -8,7 +8,7 @@ internal static class ApiClientGenerator
     public static (string hint, SourceText) GenerateApiClient(this ApiClient apiClient, CancellationToken cancellationToken)
     {
         var source = GenerateApiClientSource(apiClient, cancellationToken);
-        var hint = $"{apiClient.ClassTypeInfo.Namespace}.{apiClient.ClassTypeInfo.Name}.g.cs";
+        var hint = $"{apiClient.InterfaceTypeInfo.Namespace}.{apiClient.ClientName}.g.cs";
 
         return (hint, SourceText.From(source, Encoding.UTF8));
     }
@@ -22,12 +22,12 @@ internal static class ApiClientGenerator
         foreach (var apiMethod in apiClient.Methods)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            builder.GenerateApiMethod(apiMethod, apiClient, cancellationToken);
+            builder.GenerateApiMethod(apiMethod, cancellationToken);
         }
 
         builder.GenerateRouteBuilderMethods(apiClient.Methods, cancellationToken);
 
-        builder.GenerateApiClientEnd(apiClient.HttpClientMemberName);
+        builder.GenerateApiClientEnd();
 
         builder.GenerateQueryParameterClasses(apiClient.Methods, cancellationToken);
 
@@ -36,35 +36,42 @@ internal static class ApiClientGenerator
 
     private static void GenerateApiClientStart(this StringBuilder builder, ApiClient apiClient)
     {
-        builder.Append(
+        builder.AppendLine(
             $$"""
-            {{Constants.GeneratedFileHeader}}
             #nullable enable
 
-            namespace {{apiClient.ClassTypeInfo.Namespace}};
-
-            partial class {{apiClient.ClassTypeInfo.Name}}
+            namespace {{apiClient.ClientNamespace}};
+        
+            internal partial class {{apiClient.ClientName}} : {{apiClient.InterfaceTypeInfo.FullTypeName}}
             {
+                private readonly global::System.Net.Http.HttpClient _httpClient;
+                private readonly global::{{ApiClientSettingsGenerator.Namespace}}.{{ApiClientSettingsGenerator.Name}}<{{apiClient.InterfaceTypeInfo.FullTypeName}}, {{apiClient.JsonSerializerContextTypeSymbol.FullTypeName}}> _apiClientSettings;
+
+                public {{apiClient.ClientName}}(
+                    global::System.Net.Http.HttpClient httpClient,
+                    global::{{ApiClientSettingsGenerator.Namespace}}.{{ApiClientSettingsGenerator.Name}}<{{apiClient.InterfaceTypeInfo.FullTypeName}}, {{apiClient.JsonSerializerContextTypeSymbol.FullTypeName}}> apiClientSettings)
+                {
+                    _httpClient = httpClient;
+                    _apiClientSettings = apiClientSettings;
+                }
             """);
     }
 
-    private static void GenerateApiClientEnd(this StringBuilder builder, string httpClientMemberName)
+    private static void GenerateApiClientEnd(this StringBuilder builder)
     {
         builder.Append(
-            $$"""
+            """
 
-            {{Constants.GeneratedCodeAttribute}}
             private string SerializeContent<T>(T payload, global::System.Text.Json.Serialization.Metadata.JsonTypeInfo<T> jsonTypeInfo)
             {
                 return global::System.Text.Json.JsonSerializer.Serialize(payload, jsonTypeInfo);
             }
 
-            {{Constants.GeneratedCodeAttribute}}
             private void Send(
                 global::System.Net.Http.HttpMethod httpMethod,
                 string route,
-                string? content,
-                global::System.Threading.CancellationToken cancellationToken)
+                string? content = null,
+                global::System.Threading.CancellationToken cancellationToken = default)
             {
                 using var request = new global::System.Net.Http.HttpRequestMessage(httpMethod, route);
 
@@ -73,17 +80,16 @@ internal static class ApiClientGenerator
                     request.Content = new global::System.Net.Http.StringContent(content, global::System.Text.Encoding.UTF8, "application/json");
                 }
 
-                using var response = {{httpClientMemberName}}.Send(request, cancellationToken);
+                using var response = _httpClient.Send(request, cancellationToken);
                 response.EnsureSuccessStatusCode();
             }
 
-            {{Constants.GeneratedCodeAttribute}}
             private T Send<T>(
                 global::System.Net.Http.HttpMethod httpMethod,
                 string route,
                 global::System.Text.Json.Serialization.Metadata.JsonTypeInfo<T> jsonTypeInfo,
-                string? content,
-                global::System.Threading.CancellationToken cancellationToken)
+                string? content = null,
+                global::System.Threading.CancellationToken cancellationToken = default)
             {
                 using var request = new global::System.Net.Http.HttpRequestMessage(httpMethod, route);
         
@@ -92,7 +98,7 @@ internal static class ApiClientGenerator
                     request.Content = new global::System.Net.Http.StringContent(content, global::System.Text.Encoding.UTF8, "application/json");
                 }
         
-                using var response = {{httpClientMemberName}}.Send(request, cancellationToken);
+                using var response = _httpClient.Send(request, cancellationToken);
                 response.EnsureSuccessStatusCode();
 
                 using var responseStream = response.Content.ReadAsStream();
@@ -101,12 +107,11 @@ internal static class ApiClientGenerator
                     ?? throw new global::System.InvalidOperationException($"The response for the request '{route}' could not be deserialized.");
             }
 
-            {{Constants.GeneratedCodeAttribute}}
             private async Task SendAsync(
                 global::System.Net.Http.HttpMethod httpMethod,
                 string route,
-                string? content,
-                global::System.Threading.CancellationToken cancellationToken)
+                string? content = null,
+                global::System.Threading.CancellationToken cancellationToken = default)
             {
                 using var request = new global::System.Net.Http.HttpRequestMessage(httpMethod, route);
         
@@ -115,17 +120,16 @@ internal static class ApiClientGenerator
                     request.Content = new global::System.Net.Http.StringContent(content, global::System.Text.Encoding.UTF8, "application/json");
                 }
         
-                using var response = await {{httpClientMemberName}}.SendAsync(request, cancellationToken);
+                using var response = await _httpClient.SendAsync(request, cancellationToken);
                 response.EnsureSuccessStatusCode();
             }
         
-            {{Constants.GeneratedCodeAttribute}}
             private async Task<T> SendAsync<T>(
                 global::System.Net.Http.HttpMethod httpMethod,
                 string route,
                 global::System.Text.Json.Serialization.Metadata.JsonTypeInfo<T> jsonTypeInfo,
-                string? content,
-                global::System.Threading.CancellationToken cancellationToken)
+                string? content = null,
+                global::System.Threading.CancellationToken cancellationToken = default)
             {
                 using var request = new global::System.Net.Http.HttpRequestMessage(httpMethod, route);
         
@@ -134,7 +138,7 @@ internal static class ApiClientGenerator
                     request.Content = new global::System.Net.Http.StringContent(content, global::System.Text.Encoding.UTF8, "application/json");
                 }
         
-                using var response = await {{httpClientMemberName}}.SendAsync(request, cancellationToken);
+                using var response = await _httpClient.SendAsync(request, cancellationToken);
                 response.EnsureSuccessStatusCode();
 
                 using var responseStream = response.Content.ReadAsStream();
@@ -146,24 +150,17 @@ internal static class ApiClientGenerator
         """);
     }
 
-    private static void GenerateRouteBuilderMethods(this StringBuilder builder, EquatableArray<ApiMethod> apiMethods, CancellationToken cancellationToken)
+    private static void GenerateRouteBuilderMethods(this StringBuilder builder, List<ApiMethod> apiMethods, CancellationToken cancellationToken)
     {
         foreach (var apiMethod in apiMethods)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var queryParameters = apiMethod.Parameters
-                .Where(p => p.ParameterType == ApiMethodParameterType.Query)
-                .ToArray();
-
+            var queryParameters = apiMethod.Parameters.OfType<QueryApiMethodParameter>().ToArray();
             if (queryParameters.Length > 0)
             {
-                builder.Append(
-                    $$"""
-
-                        {{Constants.GeneratedCodeAttribute}}
-                        private string BuildRouteFor{{apiMethod.Name}}(string route, 
-                    """);
+                builder.AppendLine();
+                builder.Append($"\tprivate string BuildRouteFor{apiMethod.Name}(string route, ");
 
                 for (var i = 0; i < queryParameters.Length; i++)
                 {
@@ -180,15 +177,16 @@ internal static class ApiClientGenerator
                 }
 
                 builder.AppendLine(")");
-                builder.AppendLine("    {");
+                builder.AppendLine("\t{");
 
-                builder.AppendLine("        var capacity = route.Length;");
-                builder.AppendLine("        var parameterCount = 0;");
+                builder.AppendLine("\t\tvar capacity = route.Length;");
+                builder.AppendLine("\t\tvar parameterCount = 0;");
                 builder.AppendLine();
+
 
                 for (var i = 0; i < queryParameters.Length; i++)
                 {
-                    builder.AppendLine($"        {queryParameters[i].TypeInfo.ParameterName}.CalculateQuerySize(ref capacity, ref parameterCount);");
+                    builder.AppendLine($"\t\t{queryParameters[i].TypeInfo.ParameterName}.CalculateQuerySize(ref capacity, ref parameterCount);");
                 }
 
                 builder.AppendLine(
@@ -201,19 +199,19 @@ internal static class ApiClientGenerator
 
                     """);
 
-                builder.AppendLine("        var routeLength = queryBuilder.Length + 1;");
+                builder.AppendLine("\t\tvar routeLength = queryBuilder.Length + 1;");
 
                 builder.AppendLine();
 
                 for (var i = 0; i < queryParameters.Length; i++)
                 {
-                    builder.AppendLine($"        {queryParameters[i].TypeInfo.ParameterName}.AppendQuery(queryBuilder, routeLength);");
+                    builder.AppendLine($"\t\t{queryParameters[i].TypeInfo.ParameterName}.AppendQuery(queryBuilder, routeLength);");
                 }
 
                 builder.AppendLine(
                     """
 
-                            if (queryBuilder[^1] == '?')
+                            if (queryBuilder[queryBuilder.Length - 1] == '?')
                             {
                                 queryBuilder.Length--;
                             }
