@@ -1,29 +1,34 @@
-﻿using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models;
+using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models;
 using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models.MethodParameters;
 
 namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Generators;
 
 internal static class ApiMethodBodyGenerator
 {
-    public static void GenerateApiMethodBody(this StringBuilder builder, ApiMethod apiMethod)
+    public static void GenerateApiMethodBody(this StringBuilder builder, ApiMethod apiMethod, ApiClient apiClient)
     {
         builder.GenerateRoute(apiMethod, apiMethod.Parameters);
         builder.AppendLine();
-        builder.GenerateHttpCall(apiMethod);
+        builder.GenerateHttpCall(apiMethod, apiClient);
     }
 
-    private static void GenerateRoute(this StringBuilder builder, ApiMethod apiMethod, List<ApiMethodParameter> parameters)
+    private static void GenerateRoute(this StringBuilder builder, ApiMethod apiMethod, EquatableArray<ApiMethodParameter> parameters)
     {
         var constructedRoute = $"{apiMethod.Route}";
-        foreach (var parameter in parameters.OfType<RouteApiMethodParameter>())
+        foreach (var parameter in parameters.Where(p => p.ParameterType == ApiMethodParameterType.Route))
         {
-            constructedRoute = constructedRoute.Replace(parameter.RoutePart, $"{{{parameter.TypeInfo.ParameterName}}}");
+            constructedRoute = constructedRoute.Replace(parameter.RoutePart!, $"{{{parameter.TypeInfo.ParameterName}}}");
         }
 
-        var queryParameters = parameters.OfType<QueryApiMethodParameter>().ToArray();
+        var routePrefix = constructedRoute.Contains("{") ? "$" : "";
+
+        var queryParameters = parameters
+            .Where(p => p.ParameterType == ApiMethodParameterType.Query)
+            .ToArray();
+
         if (queryParameters.Length > 0)
         {
-            builder.Append($"\t\tvar route = BuildRouteFor{apiMethod.Name}($\"{constructedRoute}\", ");
+            builder.Append($"        var route = BuildRouteFor{apiMethod.Name}({routePrefix}\"{constructedRoute}\", ");
 
             for (var i = 0; i < queryParameters.Length; i++)
             {
@@ -41,11 +46,11 @@ internal static class ApiMethodBodyGenerator
         }
         else
         {
-            builder.AppendLine($"\t\tvar route = $\"{constructedRoute}\";");
+            builder.AppendLine($"        var route = {routePrefix}\"{constructedRoute}\";");
         }
     }
 
-    private static void GenerateHttpCall(this StringBuilder builder, ApiMethod apiMethod)
+    private static void GenerateHttpCall(this StringBuilder builder, ApiMethod apiMethod, ApiClient apiClient)
     {
         var httpMethod = apiMethod switch
         {
@@ -57,24 +62,24 @@ internal static class ApiMethodBodyGenerator
         };
 
         var bodyParameter = apiMethod.Parameters
-            .FirstOrDefault(p => p.Type == ApiMethodParameterType.Body);
+            .FirstOrDefault(p => p.ParameterType == ApiMethodParameterType.Body);
 
         var cancellationTokenParameter = apiMethod.Parameters
-            .FirstOrDefault(p => p.Type == ApiMethodParameterType.CancellationToken);
+            .FirstOrDefault(p => p.ParameterType == ApiMethodParameterType.CancellationToken);
 
         if (bodyParameter is not null)
         {
             builder.AppendLine(
                 $$"""
-                        var content = SerializeContent({{bodyParameter.TypeInfo.ParameterName}}, _apiClientSettings.JsonSerializerContext.{{bodyParameter.TypeInfo.Name}});
+                        var content = SerializeContent({{bodyParameter.TypeInfo.ParameterName}}, {{apiClient.ContextMemberName}}.{{bodyParameter.TypeInfo.Name}});
                 """);
         }
 
-        builder.Append("\t\t");
+        builder.Append("        ");
 
         if (apiMethod.ReturnType.IsTaskWithResult)
         {
-            builder.Append("var result = ");
+            builder.Append("return ");
         }
 
         if (apiMethod.ReturnType.IsTask)
@@ -101,16 +106,20 @@ internal static class ApiMethodBodyGenerator
 
         if (apiMethod.ReturnType.IsTaskWithResult)
         {
-            builder.Append($", _apiClientSettings.JsonSerializerContext.{apiMethod.ReturnType.TypeInfo.GenericTypeArguments[0].Name}");
+            builder.Append($", {apiClient.ContextMemberName}.{apiMethod.ReturnType.TypeInfo.GenericTypeArguments[0].Name}");
         }
         else if (!apiMethod.ReturnType.TypeInfo.IsVoid && !apiMethod.ReturnType.IsTask)
         {
-            builder.Append($", _apiClientSettings.JsonSerializerContext.{apiMethod.ReturnType.TypeInfo.Name}");
+            builder.Append($", {apiClient.ContextMemberName}.{apiMethod.ReturnType.TypeInfo.Name}");
         }
 
         if (bodyParameter is not null)
         {
             builder.Append(", content: content");
+        }
+        else
+        {
+            builder.Append(", content: null");
         }
 
         if (cancellationTokenParameter is not null)
@@ -118,13 +127,11 @@ internal static class ApiMethodBodyGenerator
             builder.Append(", cancellationToken: ");
             builder.Append(cancellationTokenParameter.TypeInfo.ParameterName);
         }
+        else
+        {
+            builder.Append(", cancellationToken: global::System.Threading.CancellationToken.None");
+        }
 
         builder.AppendLine(");");
-
-        if (apiMethod.ReturnType.IsTaskWithResult)
-        {
-            builder.AppendLine();
-            builder.AppendLine("\t\treturn result;");
-        }
     }
 }

@@ -1,0 +1,58 @@
+[
+  {
+    "requestMethod": "GET",
+    "requestUrl": "https://api.discogs.com/users/DamIDhagor/collection/folders/999/releases",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 404,
+    "responseHeaders": {
+      "Date": [
+        "Sat, 13 Jun 2026 22:52:46 GMT"
+      ],
+      "Transfer-Encoding": [
+        "chunked"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "Vary": [
+        "Accept-Encoding"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "54"
+      ],
+      "x-discogs-ratelimit-used": [
+        "6"
+      ],
+      "Set-Cookie": [
+        "__cf_bm=KbZoSGNurAGCVleM5WF8SjM2pmrWwpwSiL6VHjFrCvU-1781391165.9435062-1.0.1.1-DdYW3KT26UDupaWPhky6aZU0CegtYxzGyVaUHj6MTd5qYh8PlKmKuXZx3LUCSyIQSO4qDSyace3itcvOmWLhooYd0oVQXTHrOZoSRj7WrBuMjs_Zt_HBbKV6rtqJATLj; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Sat, 13 Jun 2026 23:22:46 GMT"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a0b4aae32b6e290f-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022message\u0022:\u0022The requested folder does not exist.\u0022}"
+  }
+]

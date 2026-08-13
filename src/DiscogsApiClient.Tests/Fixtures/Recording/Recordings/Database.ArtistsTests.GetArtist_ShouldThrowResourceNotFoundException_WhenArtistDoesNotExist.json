@@ -1,0 +1,82 @@
+[
+  {
+    "requestMethod": "GET",
+    "requestUrl": "https://api.discogs.com/artists/2147483647",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 404,
+    "responseHeaders": {
+      "Date": [
+        "Sat, 13 Jun 2026 22:49:04 GMT"
+      ],
+      "Transfer-Encoding": [
+        "chunked"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Access-Control-Allow-Headers": [
+        "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID"
+      ],
+      "Access-Control-Allow-Methods": [
+        "HEAD,OPTIONS,GET,OPTIONS"
+      ],
+      "Access-Control-Allow-Origin": [
+        "*"
+      ],
+      "Access-Control-Expose-Headers": [
+        "Location"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "Vary": [
+        "Accept-Encoding"
+      ],
+      "X-Content-Type-Options": [
+        "nosniff"
+      ],
+      "x-discogs-media-type": [
+        "discogs.v2"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "29"
+      ],
+      "x-discogs-ratelimit-used": [
+        "31"
+      ],
+      "X-Frame-Options": [
+        "SAMEORIGIN"
+      ],
+      "X-XSS-Protection": [
+        "1; mode=block"
+      ],
+      "Set-Cookie": [
+        "__cf_bm=QpDEnpMercpwoRmPu_9a8ca2F78P9f9DMcIeJ8n_2R4-1781390944.7290506-1.0.1.1-lRSLTwJErNjVC8fqOg5_3P4hWLxaWl5HL1ryYMAjjWuy_oxUnjdjMQ3fu8CB6ey8Sx0WTl7B5zUNnjXiJZwF77C6pEIolhwEWW0hfqoW7x1UTKpS9pPUeFhi5JT_9GV2; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Sat, 13 Jun 2026 23:19:04 GMT"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a0b4a57c88cd1619-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022message\u0022:\u0022Artist not found.\u0022}"
+  }
+]

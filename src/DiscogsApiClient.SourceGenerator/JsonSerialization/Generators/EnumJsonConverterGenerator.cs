@@ -1,4 +1,4 @@
-﻿using DiscogsApiClient.SourceGenerator.JsonSerialization.Models;
+using DiscogsApiClient.SourceGenerator.JsonSerialization.Models;
 
 namespace DiscogsApiClient.SourceGenerator.JsonSerialization.Generators;
 
@@ -39,10 +39,12 @@ internal static class EnumJsonConverterGenerator
     {
         builder.AppendLine(
             $$"""
+            {{Constants.GeneratedFileHeader}}
             #nullable enable
 
             namespace {{Namespace}};
         
+            {{Constants.GeneratedCodeAttribute}}
             internal static class {{ClassName}}
             {
                 public static global::System.Text.Json.JsonSerializerOptions AddGeneratedEnumJsonConverters(this global::System.Text.Json.JsonSerializerOptions options)
@@ -52,7 +54,7 @@ internal static class EnumJsonConverterGenerator
         for (var i = 0; i < enums.Count; i++)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            builder.AppendLine($"\t\toptions.Converters.Add(new {enums[i].GetJsonConverterClassName()}());");
+            builder.AppendLine($"        options.Converters.Add(new {enums[i].GetJsonConverterClassName()}());");
         }
 
         builder.AppendLine(
@@ -69,7 +71,7 @@ internal static class EnumJsonConverterGenerator
         builder.AppendLine(
             $$"""
 
-
+                {{Constants.GeneratedCodeAttribute}}
                 private sealed class {{className}}
                     : global::System.Text.Json.Serialization.JsonConverter<{{enumeration.TypeInfo.FullTypeName}}>
                 {
@@ -82,7 +84,7 @@ internal static class EnumJsonConverterGenerator
 
             """);
 
-        for (var i = 0; i < enumeration.TypeInfo.EnumMembers.Count; i++)
+        for (var i = 0; i < enumeration.TypeInfo.EnumMembers.Length; i++)
         {
             var enumMember = enumeration.TypeInfo.EnumMembers[i];
 

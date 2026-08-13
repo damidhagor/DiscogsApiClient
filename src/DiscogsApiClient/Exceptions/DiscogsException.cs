@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Exceptions;
+namespace DiscogsApiClient.Exceptions;
 
 /// <summary>
 /// An <see cref="Exception"/> representing that a request to the Discogs Api failed.
@@ -6,7 +6,7 @@
 /// </summary>
 public class DiscogsException : Exception
 {
-    public DiscogsException(string? message = null, Exception? innerException = null)
-        : base(message, innerException)
-    { }
+    public DiscogsException() { }
+    public DiscogsException(string? message) : base(message) { }
+    public DiscogsException(string? message, Exception? innerException) : base(message, innerException) { }
 }

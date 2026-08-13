@@ -1,11 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+		<TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<IsAotCompatible>true</IsAotCompatible>
+		<AnalysisMode>All</AnalysisMode>
+		<LangVersion>latest</LangVersion>
 		<JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
+		<EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -33,9 +36,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Diagnostics" Version="8.2.2" />
-		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
-		<PackageReference Include="System.Threading.RateLimiting" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="10.0.8" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="10.0.8" />
 	</ItemGroup>
 
 	<ItemGroup>

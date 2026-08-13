@@ -1,0 +1,99 @@
+[
+  {
+    "requestMethod": "PUT",
+    "requestUrl": "https://api.discogs.com/users/DamIDhagor/wants/5134861",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 201,
+    "responseHeaders": {
+      "Date": [
+        "Sat, 13 Jun 2026 22:55:13 GMT"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "50"
+      ],
+      "x-discogs-ratelimit-used": [
+        "10"
+      ],
+      "Set-Cookie": [
+        "__cf_bm=vXdHxa.5ft0Wo.zo5OTPhA4VgbMdg2X09q4idDsldSE-1781391312.817306-1.0.1.1-lwyD4xM.ZB.4Zkjy2qyF8.qh5p0ABhrXRI4eV09m6KmZFXgOf.efIn5xM97qMse4H0S8czGo40T.DYhHJc_MnG7Tp_I1.5yWQaFPlZA3q0EnnrUfSWPArcDp4zPZcKG4; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Sat, 13 Jun 2026 23:25:13 GMT"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a0b4ae791ea5b64b-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022id\u0022:5134861,\u0022resource_url\u0022:\u0022https://api.discogs.com/users/DamIDhagor/wants/5134861\u0022,\u0022date_added\u0022:\u00222026-06-13T15:55:13-07:00\u0022,\u0022basic_information\u0022:{\u0022id\u0022:5134861,\u0022master_id\u0022:156551,\u0022master_url\u0022:\u0022https://api.discogs.com/masters/156551\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/releases/5134861\u0022,\u0022title\u0022:\u0022Glory To The Brave\u0022,\u0022year\u0022:1997,\u0022formats\u0022:[{\u0022name\u0022:\u0022CD\u0022,\u0022qty\u0022:\u00221\u0022,\u0022descriptions\u0022:[\u0022Album\u0022,\u0022Promo\u0022]}],\u0022artists\u0022:[{\u0022name\u0022:\u0022HammerFall\u0022,\u0022anv\u0022:\u0022\u0022,\u0022join\u0022:\u0022\u0022,\u0022role\u0022:\u0022\u0022,\u0022tracks\u0022:\u0022\u0022,\u0022id\u0022:287459,\u0022resource_url\u0022:\u0022https://api.discogs.com/artists/287459\u0022}],\u0022labels\u0022:[{\u0022name\u0022:\u0022Nuclear Blast\u0022,\u0022catno\u0022:\u0022NB 265-2\u0022,\u0022entity_type\u0022:\u00221\u0022,\u0022entity_type_name\u0022:\u0022Label\u0022,\u0022id\u0022:11499,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/11499\u0022}],\u0022thumb\u0022:\u0022https://i.discogs.com/z-WOVc6-4Jj7uQfLfZlcOLKmTR6Pdal_cBRJm5WoBKY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny04MTkyLmpwZWc.jpeg\u0022,\u0022cover_image\u0022:\u0022https://i.discogs.com/UETvnaefHj6HfXSgYx8R1pc-juBrScOdt79dOSeH3gk/rs:fit/g:sm/q:90/h:596/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny04MTkyLmpwZWc.jpeg\u0022,\u0022genres\u0022:[\u0022Rock\u0022],\u0022styles\u0022:[\u0022Heavy Metal\u0022]},\u0022rating\u0022:0,\u0022notes\u0022:\u0022\u0022}"
+  },
+  {
+    "requestMethod": "DELETE",
+    "requestUrl": "https://api.discogs.com/users/DamIDhagor/wants/5134861",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 204,
+    "responseHeaders": {
+      "Date": [
+        "Sat, 13 Jun 2026 22:55:13 GMT"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "49"
+      ],
+      "x-discogs-ratelimit-used": [
+        "11"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a0b4ae7cdbc1b64b-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": ""
+  }
+]
