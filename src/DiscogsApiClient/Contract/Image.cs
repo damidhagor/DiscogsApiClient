@@ -32,6 +32,7 @@ public sealed record Image(
 [GenerateJsonConverter]
 public enum ImageType : int
 {
+    Unknown = 0,
     [AliasAs("primary")]
     Primary = 1,
     [AliasAs("secondary")]
