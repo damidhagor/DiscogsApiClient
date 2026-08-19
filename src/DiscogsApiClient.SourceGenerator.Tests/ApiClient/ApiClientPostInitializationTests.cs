@@ -89,5 +89,4 @@ public sealed class ApiClientPostInitializationTests
         await Assert.That(GeneratorTestHelper.NormalizeLineEndings(generated))
                     .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(BodyAttribute.Source));
     }
-
 }

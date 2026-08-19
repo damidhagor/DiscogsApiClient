@@ -372,18 +372,21 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
             await Assert.That(country.Key).IsNotNullOrWhiteSpace();
             await Assert.That(country.Value).IsGreaterThan(0);
         }
+
         await Assert.That(response.Filters.AvailableFilters.Format).IsNotNull();
         foreach (var format in response.Filters.AvailableFilters.Format!)
         {
             await Assert.That(format.Key).IsNotNullOrWhiteSpace();
             await Assert.That(format.Value).IsGreaterThan(0);
         }
+
         await Assert.That(response.Filters.AvailableFilters.Label).IsNotNull();
         foreach (var label in response.Filters.AvailableFilters.Label!)
         {
             await Assert.That(label.Key).IsNotNullOrWhiteSpace();
             await Assert.That(label.Value).IsGreaterThan(0);
         }
+
         await Assert.That(response.Filters.AvailableFilters.Year).IsNotNull();
         foreach (var year in response.Filters.AvailableFilters.Year!)
         {
