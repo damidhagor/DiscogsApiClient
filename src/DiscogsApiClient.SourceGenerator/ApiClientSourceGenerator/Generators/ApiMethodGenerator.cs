@@ -5,46 +5,46 @@ namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Generators;
 
 internal static class ApiMethodGenerator
 {
-    private const string _partial = "partial ";
-    private const string _async = "async ";
-    private const string _methodBodyStart =
+    private const string Partial = "partial ";
+    private const string Async = "async ";
+    private const string MethodBodyStart =
         """
             {
         """;
-    private const string _methodBodyEnd =
+    private const string MethodBodyEnd =
         """
             }
         """;
-    private const string _openParenthesis = "(";
-    private const string _closedParenthesis = ")";
-    private const string _space = " ";
-    private const string _indent = "    ";
-    private const string _parameterSeparator = ", ";
+    private const string OpenParenthesis = "(";
+    private const string ClosedParenthesis = ")";
+    private const string Space = " ";
+    private const string Indent = "    ";
+    private const string ParameterSeparator = ", ";
 
     public static void GenerateApiMethod(this StringBuilder builder, ApiMethod apiMethod, ApiClient apiClient, CancellationToken cancellationToken)
     {
         builder.AppendLine();
 
-        builder.Append(_indent);
+        builder.Append(Indent);
         builder.AppendLine(Constants.GeneratedCodeAttribute);
 
-        builder.Append(_indent);
+        builder.Append(Indent);
         builder.Append(apiMethod.AccessModifier);
-        builder.Append(_space);
+        builder.Append(Space);
 
         if (apiMethod.ReturnType.IsTask)
         {
-            builder.Append(_async);
+            builder.Append(Async);
         }
 
-        builder.Append(_partial);
+        builder.Append(Partial);
         builder.GenerateMethodReturnType(apiMethod.ReturnType);
         builder.Append(apiMethod.Name);
         builder.GenerateMethodParameters(apiMethod.Parameters, cancellationToken);
 
-        builder.AppendLine(_methodBodyStart);
+        builder.AppendLine(MethodBodyStart);
         builder.GenerateApiMethodBody(apiMethod, apiClient);
-        builder.AppendLine(_methodBodyEnd);
+        builder.AppendLine(MethodBodyEnd);
     }
 
     private static void GenerateMethodReturnType(this StringBuilder builder, ApiMethodReturnType returnType)
@@ -58,12 +58,12 @@ internal static class ApiMethodGenerator
             builder.Append(returnType.TypeInfo.FullTypeName);
         }
 
-        builder.Append(_space);
+        builder.Append(Space);
     }
 
     private static void GenerateMethodParameters(this StringBuilder builder, EquatableArray<ApiMethodParameter> parameters, CancellationToken cancellationToken)
     {
-        builder.Append(_openParenthesis);
+        builder.Append(OpenParenthesis);
 
         for (var i = 0; i < parameters.Length; i++)
         {
@@ -72,15 +72,15 @@ internal static class ApiMethodGenerator
             var parameter = parameters[i];
 
             builder.Append(parameter.TypeInfo.FullTypeName);
-            builder.Append(_space);
+            builder.Append(Space);
             builder.Append(parameter.TypeInfo.ParameterName);
 
             if (i < parameters.Length - 1)
             {
-                builder = builder.Append(_parameterSeparator);
+                builder = builder.Append(ParameterSeparator);
             }
         }
 
-        builder.AppendLine(_closedParenthesis);
+        builder.AppendLine(ClosedParenthesis);
     }
 }
