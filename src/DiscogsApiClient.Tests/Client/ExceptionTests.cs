@@ -7,7 +7,7 @@ public sealed class ExceptionTests
     {
         var message = "Error";
         var inner = new Exception("Inner");
-        
+
         var ex = new DiscogsException(message, inner);
         await Assert.That(ex.Message).IsEqualTo(message);
         await Assert.That(ex.InnerException).IsEqualTo(inner);
@@ -22,7 +22,7 @@ public sealed class ExceptionTests
     {
         var message = "Auth failed";
         var inner = new Exception("Inner");
-        
+
         var ex = new AuthenticationFailedDiscogsException(message, inner);
         await Assert.That(ex.Message).IsEqualTo(message);
         await Assert.That(ex.InnerException).IsEqualTo(inner);
@@ -37,7 +37,7 @@ public sealed class ExceptionTests
     {
         var message = "Rate limit hit";
         var inner = new Exception("Inner");
-        
+
         var ex = new RateLimitExceededDiscogsException(message, inner);
         await Assert.That(ex.Message).IsEqualTo(message);
         await Assert.That(ex.InnerException).IsEqualTo(inner);
@@ -52,7 +52,7 @@ public sealed class ExceptionTests
     {
         var message = "Not found";
         var inner = new Exception("Inner");
-        
+
         var ex = new ResourceNotFoundDiscogsException(message, inner);
         await Assert.That(ex.Message).IsEqualTo(message);
         await Assert.That(ex.InnerException).IsEqualTo(inner);
@@ -67,7 +67,7 @@ public sealed class ExceptionTests
     {
         var message = "Serialization failed";
         var inner = new Exception("Inner");
-        
+
         var ex = new SerializationDiscogsException(message, inner);
         await Assert.That(ex.Message).IsEqualTo(message);
         await Assert.That(ex.InnerException).IsEqualTo(inner);
@@ -82,7 +82,7 @@ public sealed class ExceptionTests
     {
         var message = "Unauthenticated";
         var inner = new Exception("Inner");
-        
+
         var ex = new UnauthenticatedDiscogsException(message, inner);
         await Assert.That(ex.Message).IsEqualTo(message);
         await Assert.That(ex.InnerException).IsEqualTo(inner);
