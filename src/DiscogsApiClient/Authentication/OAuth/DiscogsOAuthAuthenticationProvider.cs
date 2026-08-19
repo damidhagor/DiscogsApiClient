@@ -33,8 +33,8 @@ internal sealed class DiscogsOAuthAuthenticationProvider(IHttpClientFactory http
             throw new AuthenticationFailedDiscogsException("Getting request token failed.");
         }
 
-        var authorizeUrl = $"https://discogs.com/oauth/authorize?oauth_token={requestToken}";
-        return new(authorizeUrl, verifierCallbackUrl, requestToken, requestTokenSecret);
+        var authorizeUrl = new Uri($"https://discogs.com/oauth/authorize?oauth_token={requestToken}");
+        return new(authorizeUrl, new(verifierCallbackUrl), requestToken, requestTokenSecret);
     }
 
     public async Task<(string AccessToken, string AccessTokenSecret)> CompleteAuthentication(

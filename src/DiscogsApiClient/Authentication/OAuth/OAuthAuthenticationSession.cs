@@ -8,7 +8,7 @@ namespace DiscogsApiClient.Authentication.OAuth;
 /// <param name="RequestToken">The returned request token from starting the authentication flow.</param>
 /// <param name="RequestTokenSecret">The returned request token secret from starting the authentication flow.</param>
 public sealed record OAuthAuthenticationSession(
-    string AuthorizeUrl,
-    string VerifierCallbackUrl,
+    Uri AuthorizeUrl,
+    Uri VerifierCallbackUrl,
     string RequestToken,
     string RequestTokenSecret);

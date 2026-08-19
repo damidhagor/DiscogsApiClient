@@ -19,8 +19,8 @@ public sealed class DiscogsOAuthAuthenticationProviderTests
         var session = await authProvider.StartAuthentication(cancellationToken);
 
         await Assert.That(authProvider.IsAuthenticated).IsFalse();
-        await Assert.That(session.AuthorizeUrl).IsEqualTo("https://discogs.com/oauth/authorize?oauth_token=requesttoken");
-        await Assert.That(session.VerifierCallbackUrl).IsEqualTo("http://localhost/access_token");
+        await Assert.That(session.AuthorizeUrl).IsEqualTo(new("https://discogs.com/oauth/authorize?oauth_token=requesttoken"));
+        await Assert.That(session.VerifierCallbackUrl).IsEqualTo(new("http://localhost/access_token"));
         await Assert.That(session.RequestToken).IsEqualTo("requesttoken");
         await Assert.That(session.RequestTokenSecret).IsEqualTo("requesttokensecret");
 
@@ -140,7 +140,7 @@ public sealed class DiscogsOAuthAuthenticationProviderTests
         var oauthMockHandler = new OAuthMockDelegatingHandler();
         var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
         var options = new DiscogsOAuthOptions { ConsumerKey = consumerKey!, ConsumerSecret = consumerSecret! };
-        var session = new OAuthAuthenticationSession("", "", requestToken!, requestTokenSecret!);
+        var session = new OAuthAuthenticationSession(new("http://localhost"), new("http://localhost"), requestToken!, requestTokenSecret!);
 
         var authProvider = new DiscogsOAuthAuthenticationProvider(new FakeHttpClientFactory(httpClient), Options.Create(options));
 
@@ -164,7 +164,7 @@ public sealed class DiscogsOAuthAuthenticationProviderTests
         var oauthMockHandler = new OAuthMockDelegatingHandler { AccessToken = accessToken!, AccessTokenSecret = accessTokenSecret! };
         var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
         var options = new DiscogsOAuthOptions { ConsumerKey = "key", ConsumerSecret = "secret" };
-        var session = new OAuthAuthenticationSession("", "", "requesttoken", "requesttokensecret");
+        var session = new OAuthAuthenticationSession(new("http://localhost"), new("http://localhost"), "requesttoken", "requesttokensecret");
 
         var authProvider = new DiscogsOAuthAuthenticationProvider(new FakeHttpClientFactory(httpClient), Options.Create(options));
 
@@ -178,7 +178,7 @@ public sealed class DiscogsOAuthAuthenticationProviderTests
         var oauthMockHandler = new OAuthMockDelegatingHandler();
         var httpClient = new HttpClient(oauthMockHandler) { BaseAddress = new Uri("http://mock.discogs.com") };
         var options = new DiscogsOAuthOptions { ConsumerKey = "key", ConsumerSecret = "secret" };
-        var session = new OAuthAuthenticationSession("", "", "requesttoken", "requesttokensecret");
+        var session = new OAuthAuthenticationSession(new("http://localhost"), new("http://localhost"), "requesttoken", "requesttokensecret");
 
         var authProvider = new DiscogsOAuthAuthenticationProvider(new FakeHttpClientFactory(httpClient), Options.Create(options));
 

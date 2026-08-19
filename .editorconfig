@@ -78,6 +78,8 @@ dotnet_remove_unnecessary_suppression_exclusions = none
 # Code quality rules
 # CA1056: URI properties should not be strings
 dotnet_diagnostic.CA1056.severity = none
+# CA1054: URI parameters should not be strings
+dotnet_diagnostic.CA1054.severity = none
 
 # New line preferences
 dotnet_style_allow_multiple_blank_lines_experimental = true:suggestion

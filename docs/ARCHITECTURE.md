@@ -277,8 +277,8 @@ classDiagram
     class OAuthAuthenticationSession {
         +string RequestToken
         +string RequestTokenSecret
-        +string AuthorizeUrl
-        +string? VerifierCallbackUrl
+        +Uri AuthorizeUrl
+        +Uri VerifierCallbackUrl
     }
 
     IDiscogsAuthenticationHeaderProvider <|.. DiscogsAuthenticationHeaderProvider

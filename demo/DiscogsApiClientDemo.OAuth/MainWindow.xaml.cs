@@ -40,7 +40,7 @@ public partial class MainWindow : Window
             var session = await _authProvider.StartAuthentication(cancellationToken);
 
             // Retrieve Verifier Token.
-            var loginWindow = new LoginWindow(session.AuthorizeUrl, session.VerifierCallbackUrl);
+            var loginWindow = new LoginWindow(session.AuthorizeUrl.ToString(), session.VerifierCallbackUrl.ToString());
             loginWindow.ShowDialog();
             var verifierToken = loginWindow.Result;
 
