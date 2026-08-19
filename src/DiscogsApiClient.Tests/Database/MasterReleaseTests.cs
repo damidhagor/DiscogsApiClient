@@ -112,7 +112,7 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
         await Assert.That(response.ReleaseVersions).IsNotNull();
         await Assert.That(response.ReleaseVersions.Count).IsEqualTo(50);
 
-        var version = response.ReleaseVersions.First();
+        var version = response.ReleaseVersions[0];
         await Assert.That(version.Id).IsGreaterThan(0);
         await Assert.That(version.Label).IsNotNullOrWhiteSpace();
         await Assert.That(version.Country).IsNotNullOrWhiteSpace();

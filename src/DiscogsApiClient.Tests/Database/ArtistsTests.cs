@@ -39,10 +39,9 @@ public sealed class ArtistsTests(DiscogsApiClientFixture fixture)
         await Assert.That(() => new Uri(member.ThumbnailUrl)).ThrowsNothing();
 
         await Assert.That(artist.Images.Count).IsGreaterThan(0);
-        var image = artist.Images.FirstOrDefault();
-        await Assert.That(image).IsNotNull();
-        await Assert.That(image!.Width).IsGreaterThan(0);
-        await Assert.That(image!.Height).IsGreaterThan(0);
+        var image = artist.Images[0];
+        await Assert.That(image.Width).IsGreaterThan(0);
+        await Assert.That(image.Height).IsGreaterThan(0);
         await Assert.That(image.ResourceUrl).IsNotNullOrWhiteSpace();
         await Assert.That(() => new Uri(image.ResourceUrl)).ThrowsNothing();
         await Assert.That(image.ImageUri).IsNotNullOrWhiteSpace();
@@ -89,7 +88,7 @@ public sealed class ArtistsTests(DiscogsApiClientFixture fixture)
         await Assert.That(response.Releases).IsNotNull();
         await Assert.That(response.Releases.Count).IsEqualTo(50);
 
-        var release = response.Releases.First();
+        var release = response.Releases[0];
         await Assert.That(release).IsNotNull();
         await Assert.That(release.Id).IsGreaterThan(0);
         await Assert.That(() => new Uri(release.ResourceUrl)).ThrowsNothing();
