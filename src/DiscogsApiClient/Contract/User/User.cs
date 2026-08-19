@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.User;
+namespace DiscogsApiClient.Contract.User;
 
 /// <summary>
 /// Information about a user. If the user is not the currently authenticated user the information in the response is limited.

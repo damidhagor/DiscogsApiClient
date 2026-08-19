@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.Release;
+namespace DiscogsApiClient.Contract.Release;
 
 /// <summary>
 /// Filters and their possible values for a master release request.

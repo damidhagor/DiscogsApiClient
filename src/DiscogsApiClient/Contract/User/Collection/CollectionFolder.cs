@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.User.Collection;
+namespace DiscogsApiClient.Contract.User.Collection;
 
 /// <summary>
 /// Represents a folder in the user's collection

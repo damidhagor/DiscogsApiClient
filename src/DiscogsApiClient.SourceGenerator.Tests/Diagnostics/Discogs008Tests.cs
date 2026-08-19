@@ -15,7 +15,7 @@ public sealed class Discogs008Tests
 
         await Assert.That(diagnostic.Length).IsEqualTo(1);
         await Assert.That(diagnostic[0].Severity).IsEqualTo(DiagnosticSeverity.Error);
-        await Assert.That(diagnostic[0].GetMessage()).IsEqualTo("Class 'TestApiClient' is marked with [ApiClient] but is not declared 'partial' — the generated methods cannot be emitted");
+        await Assert.That(diagnostic[0].GetMessage()).IsEqualTo("Class 'TestApiClient' is marked with [ApiClient] but is not declared 'partial' â€” the generated methods cannot be emitted");
     }
 
     [Test]

@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.SourceGenerator;
+namespace DiscogsApiClient.SourceGenerator;
 
 internal static class Constants
 {

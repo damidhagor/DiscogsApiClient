@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.SourceGenerator.JsonSerialization.Attributes;
+namespace DiscogsApiClient.SourceGenerator.JsonSerialization.Attributes;
 
 internal static class GenerateJsonConverterAttribute
 {

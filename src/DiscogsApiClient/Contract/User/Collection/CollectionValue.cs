@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.User.Collection;
+namespace DiscogsApiClient.Contract.User.Collection;
 
 /// <summary>
 /// The estimated value of the user's collection

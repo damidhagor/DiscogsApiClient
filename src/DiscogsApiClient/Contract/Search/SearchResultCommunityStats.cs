@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.Search;
+namespace DiscogsApiClient.Contract.Search;
 
 /// <summary>
 /// Community statistics for a search result

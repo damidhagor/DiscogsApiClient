@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Attributes;
+namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Attributes;
 
 internal static class HttpPostAttribute
 {

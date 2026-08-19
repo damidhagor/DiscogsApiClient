@@ -15,7 +15,7 @@ public sealed class Discogs011Tests
 
         await Assert.That(diagnostic.Length).IsEqualTo(1);
         await Assert.That(diagnostic[0].Severity).IsEqualTo(DiagnosticSeverity.Error);
-        await Assert.That(diagnostic[0].GetMessage()).IsEqualTo("Method 'GetTestAsync' is marked with an HTTP attribute but is not a 'partial' method definition — the generated implementation cannot be emitted");
+        await Assert.That(diagnostic[0].GetMessage()).IsEqualTo("Method 'GetTestAsync' is marked with an HTTP attribute but is not a 'partial' method definition â€” the generated implementation cannot be emitted");
     }
 
     [Test]

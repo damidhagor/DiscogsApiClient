@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using Microsoft.Web.WebView2.Core;
 

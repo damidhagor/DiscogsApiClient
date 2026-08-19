@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.SourceGenerator.Shared.Helpers;
+namespace DiscogsApiClient.SourceGenerator.Shared.Helpers;
 
 internal static class FileOutputDebugHelper
 {

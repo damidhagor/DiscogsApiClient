@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract;
+namespace DiscogsApiClient.Contract;
 
 /// <summary>
 /// Represents the pagination state in requests which support pagination.

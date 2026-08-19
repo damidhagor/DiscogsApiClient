@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.Label;
+namespace DiscogsApiClient.Contract.Label;
 
 /// <summary>
 /// Information about a release of a label

@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.SourceGenerator.Shared.Attributes;
+namespace DiscogsApiClient.SourceGenerator.Shared.Attributes;
 
 internal static class AliasAsAttribute
 {
