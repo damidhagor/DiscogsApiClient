@@ -8,6 +8,13 @@ namespace DiscogsApiClient.SourceGenerator.Tests.ApiClient;
 
 public sealed class ApiMethodGeneratorTests
 {
+    private static readonly ApiClientSourceGenerator.Models.ApiClient ApiClient = new(
+        new ParsedTypeInfo("TestApiClient", "TestNamespace", true, false, [], []),
+        new ParsedTypeInfo("TestJsonContext", "TestNamespace", true, false, [], []),
+        "_httpClient",
+        "_context",
+        []);
+
     [Test]
     public async Task ShouldGenerateMethodBody_WhenMethodIsGet()
     {
@@ -27,26 +34,29 @@ public sealed class ApiMethodGeneratorTests
             "GetItemAsync",
             "/items/{id}",
             ApiMethodType.Get,
+            "public",
             [cancellationTokenParam],
             returnType);
 
         var builder = new StringBuilder();
-        builder.GenerateApiMethod(apiMethod, default);
+        builder.GenerateApiMethod(apiMethod, ApiClient, default);
         var source = builder.ToString();
 
         var expected =
             """
-            
-                public async global::System.Threading.Tasks.Task GetItemAsync(global::System.Threading.CancellationToken cancellationToken)
+
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
+                public async partial global::System.Threading.Tasks.Task GetItemAsync(global::System.Threading.CancellationToken cancellationToken)
                 {
-            		var route = $"/items/{id}";
-            
-            		await SendAsync(global::System.Net.Http.HttpMethod.Get, route, cancellationToken: cancellationToken);
+                    var route = $"/items/{id}";
+
+                    await SendAsync(global::System.Net.Http.HttpMethod.Get, route, content: null, cancellationToken: cancellationToken);
                 }
+
             """;
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(source))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(expected));
     }
 
     [Test]
@@ -68,26 +78,29 @@ public sealed class ApiMethodGeneratorTests
             "CreateItemAsync",
             "/items/{id}",
             ApiMethodType.Post,
+            "public",
             [cancellationTokenParam],
             returnType);
 
         var builder = new StringBuilder();
-        builder.GenerateApiMethod(apiMethod, default);
+        builder.GenerateApiMethod(apiMethod, ApiClient, default);
         var source = builder.ToString();
 
         var expected =
             """
-            
-                public async global::System.Threading.Tasks.Task CreateItemAsync(global::System.Threading.CancellationToken cancellationToken)
+
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
+                public async partial global::System.Threading.Tasks.Task CreateItemAsync(global::System.Threading.CancellationToken cancellationToken)
                 {
-            		var route = $"/items/{id}";
-            
-            		await SendAsync(global::System.Net.Http.HttpMethod.Post, route, cancellationToken: cancellationToken);
+                    var route = $"/items/{id}";
+
+                    await SendAsync(global::System.Net.Http.HttpMethod.Post, route, content: null, cancellationToken: cancellationToken);
                 }
+
             """;
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(source))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(expected));
     }
 
     [Test]
@@ -109,26 +122,29 @@ public sealed class ApiMethodGeneratorTests
             "UpdateItemAsync",
             "/items/{id}",
             ApiMethodType.Put,
+            "public",
             [cancellationTokenParam],
             returnType);
 
         var builder = new StringBuilder();
-        builder.GenerateApiMethod(apiMethod, default);
+        builder.GenerateApiMethod(apiMethod, ApiClient, default);
         var source = builder.ToString();
 
         var expected =
             """
-            
-                public async global::System.Threading.Tasks.Task UpdateItemAsync(global::System.Threading.CancellationToken cancellationToken)
+
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
+                public async partial global::System.Threading.Tasks.Task UpdateItemAsync(global::System.Threading.CancellationToken cancellationToken)
                 {
-            		var route = $"/items/{id}";
-            
-            		await SendAsync(global::System.Net.Http.HttpMethod.Put, route, cancellationToken: cancellationToken);
+                    var route = $"/items/{id}";
+
+                    await SendAsync(global::System.Net.Http.HttpMethod.Put, route, content: null, cancellationToken: cancellationToken);
                 }
+
             """;
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(source))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(expected));
     }
 
     [Test]
@@ -150,26 +166,29 @@ public sealed class ApiMethodGeneratorTests
             "DeleteItemAsync",
             "/items/{id}",
             ApiMethodType.Delete,
+            "public",
             [cancellationTokenParam],
             returnType);
 
         var builder = new StringBuilder();
-        builder.GenerateApiMethod(apiMethod, default);
+        builder.GenerateApiMethod(apiMethod, ApiClient, default);
         var source = builder.ToString();
 
         var expected =
             """
-            
-                public async global::System.Threading.Tasks.Task DeleteItemAsync(global::System.Threading.CancellationToken cancellationToken)
+
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
+                public async partial global::System.Threading.Tasks.Task DeleteItemAsync(global::System.Threading.CancellationToken cancellationToken)
                 {
-            		var route = $"/items/{id}";
-            
-            		await SendAsync(global::System.Net.Http.HttpMethod.Delete, route, cancellationToken: cancellationToken);
+                    var route = $"/items/{id}";
+
+                    await SendAsync(global::System.Net.Http.HttpMethod.Delete, route, content: null, cancellationToken: cancellationToken);
                 }
+
             """;
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(source))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(expected));
     }
 
     [Test]
@@ -209,28 +228,29 @@ public sealed class ApiMethodGeneratorTests
             "GetItemAsync",
             "/items/{id}",
             ApiMethodType.Get,
+            "public",
             [routeParam, cancellationTokenParam],
             returnType);
 
         var builder = new StringBuilder();
-        builder.GenerateApiMethod(apiMethod, default);
+        builder.GenerateApiMethod(apiMethod, ApiClient, default);
         var source = builder.ToString();
 
         var expected =
             """
-            
-                public async global::System.Threading.Tasks.Task<global::System.String> GetItemAsync(global::System.Int32 id, global::System.Threading.CancellationToken cancellationToken)
+
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
+                public async partial global::System.Threading.Tasks.Task<global::System.String> GetItemAsync(global::System.Int32 id, global::System.Threading.CancellationToken cancellationToken)
                 {
-            		var route = $"/items/{id}";
-            
-            		var result = await SendAsync<global::System.String>(global::System.Net.Http.HttpMethod.Get, route, _apiClientSettings.JsonSerializerContext.String, cancellationToken: cancellationToken);
-            
-            		return result;
+                    var route = $"/items/{id}";
+
+                    return await SendAsync<global::System.String>(global::System.Net.Http.HttpMethod.Get, route, _context.String, content: null, cancellationToken: cancellationToken);
                 }
+
             """;
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(source))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(expected));
     }
 
     [Test]
@@ -280,28 +300,29 @@ public sealed class ApiMethodGeneratorTests
             "GetUserItemAsync",
             "/users/{userId}/items/{itemId}",
             ApiMethodType.Get,
+            "public",
             [userRouteParam, itemRouteParam, cancellationTokenParam],
             returnType);
 
         var builder = new StringBuilder();
-        builder.GenerateApiMethod(apiMethod, default);
+        builder.GenerateApiMethod(apiMethod, ApiClient, default);
         var source = builder.ToString();
 
         var expected =
             """
-            
-                public async global::System.Threading.Tasks.Task<global::System.String> GetUserItemAsync(global::System.String userId, global::System.Int32 itemId, global::System.Threading.CancellationToken cancellationToken)
+
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
+                public async partial global::System.Threading.Tasks.Task<global::System.String> GetUserItemAsync(global::System.String userId, global::System.Int32 itemId, global::System.Threading.CancellationToken cancellationToken)
                 {
-            		var route = $"/users/{userId}/items/{itemId}";
-            
-            		var result = await SendAsync<global::System.String>(global::System.Net.Http.HttpMethod.Get, route, _apiClientSettings.JsonSerializerContext.String, cancellationToken: cancellationToken);
-            
-            		return result;
+                    var route = $"/users/{userId}/items/{itemId}";
+
+                    return await SendAsync<global::System.String>(global::System.Net.Http.HttpMethod.Get, route, _context.String, content: null, cancellationToken: cancellationToken);
                 }
+
             """;
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(source))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(expected));
     }
 
     [Test]
@@ -340,28 +361,29 @@ public sealed class ApiMethodGeneratorTests
             "GetItemsAsync",
             "/items",
             ApiMethodType.Get,
+            "public",
             [queryParam, cancellationTokenParam],
             returnType);
 
         var builder = new StringBuilder();
-        builder.GenerateApiMethod(apiMethod, default);
+        builder.GenerateApiMethod(apiMethod, ApiClient, default);
         var source = builder.ToString();
 
         var expected =
             """
-            
-                public async global::System.Threading.Tasks.Task<global::System.String> GetItemsAsync(global::TestNamespace.QueryParams queryParams, global::System.Threading.CancellationToken cancellationToken)
+
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
+                public async partial global::System.Threading.Tasks.Task<global::System.String> GetItemsAsync(global::TestNamespace.QueryParams queryParams, global::System.Threading.CancellationToken cancellationToken)
                 {
-            		var route = BuildRouteForGetItemsAsync($"/items", queryParams);
-            
-            		var result = await SendAsync<global::System.String>(global::System.Net.Http.HttpMethod.Get, route, _apiClientSettings.JsonSerializerContext.String, cancellationToken: cancellationToken);
-            
-            		return result;
+                    var route = BuildRouteForGetItemsAsync("/items", queryParams);
+
+                    return await SendAsync<global::System.String>(global::System.Net.Http.HttpMethod.Get, route, _context.String, content: null, cancellationToken: cancellationToken);
                 }
+
             """;
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(source))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(expected));
     }
 
     [Test]
@@ -401,26 +423,29 @@ public sealed class ApiMethodGeneratorTests
             "GetItemsAsync",
             "/items",
             ApiMethodType.Get,
+            "public",
             [queryParam1, queryParam2, cancellationTokenParam],
             returnType);
 
         var builder = new StringBuilder();
-        builder.GenerateApiMethod(apiMethod, default);
+        builder.GenerateApiMethod(apiMethod, ApiClient, default);
         var source = builder.ToString();
 
         var expected =
             """
-            
-                public async global::System.Threading.Tasks.Task GetItemsAsync(global::TestNamespace.QueryParams1 queryParams1, global::TestNamespace.QueryParams2 queryParams2, global::System.Threading.CancellationToken cancellationToken)
+
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
+                public async partial global::System.Threading.Tasks.Task GetItemsAsync(global::TestNamespace.QueryParams1 queryParams1, global::TestNamespace.QueryParams2 queryParams2, global::System.Threading.CancellationToken cancellationToken)
                 {
-            		var route = BuildRouteForGetItemsAsync($"/items", queryParams1, queryParams2);
-            
-            		await SendAsync(global::System.Net.Http.HttpMethod.Get, route, cancellationToken: cancellationToken);
+                    var route = BuildRouteForGetItemsAsync("/items", queryParams1, queryParams2);
+
+                    await SendAsync(global::System.Net.Http.HttpMethod.Get, route, content: null, cancellationToken: cancellationToken);
                 }
+
             """;
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(source))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(expected));
     }
 
     [Test]
@@ -461,26 +486,29 @@ public sealed class ApiMethodGeneratorTests
             "GetItemWithQueryAsync",
             "/items/{id}",
             ApiMethodType.Get,
+            "public",
             [routeParam, queryParam, cancellationTokenParam],
             returnType);
 
         var builder = new StringBuilder();
-        builder.GenerateApiMethod(apiMethod, default);
+        builder.GenerateApiMethod(apiMethod, ApiClient, default);
         var source = builder.ToString();
 
         var expected =
             """
-            
-                public async global::System.Threading.Tasks.Task GetItemWithQueryAsync(global::System.Int32 id, global::TestNamespace.QueryParams queryParams, global::System.Threading.CancellationToken cancellationToken)
+
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
+                public async partial global::System.Threading.Tasks.Task GetItemWithQueryAsync(global::System.Int32 id, global::TestNamespace.QueryParams queryParams, global::System.Threading.CancellationToken cancellationToken)
                 {
-            		var route = BuildRouteForGetItemWithQueryAsync($"/items/{id}", queryParams);
-            
-            		await SendAsync(global::System.Net.Http.HttpMethod.Get, route, cancellationToken: cancellationToken);
+                    var route = BuildRouteForGetItemWithQueryAsync($"/items/{id}", queryParams);
+
+                    await SendAsync(global::System.Net.Http.HttpMethod.Get, route, content: null, cancellationToken: cancellationToken);
                 }
+
             """;
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(source))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(expected));
     }
 
     [Test]
@@ -511,27 +539,30 @@ public sealed class ApiMethodGeneratorTests
             "CreateItemAsync",
             "/items",
             ApiMethodType.Post,
+            "public",
             [bodyParam, cancellationTokenParam],
             returnType);
 
         var builder = new StringBuilder();
-        builder.GenerateApiMethod(apiMethod, default);
+        builder.GenerateApiMethod(apiMethod, ApiClient, default);
         var source = builder.ToString();
 
         var expected =
             """
-            
-                public async global::System.Threading.Tasks.Task CreateItemAsync(global::TestNamespace.TestRequest request, global::System.Threading.CancellationToken cancellationToken)
+
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
+                public async partial global::System.Threading.Tasks.Task CreateItemAsync(global::TestNamespace.TestRequest request, global::System.Threading.CancellationToken cancellationToken)
                 {
-            		var route = $"/items";
-            
-                    var content = SerializeContent(request, _apiClientSettings.JsonSerializerContext.TestRequest);
-            		await SendAsync(global::System.Net.Http.HttpMethod.Post, route, content: content, cancellationToken: cancellationToken);
+                    var route = "/items";
+
+                    var content = SerializeContent(request, _context.TestRequest);
+                    await SendAsync(global::System.Net.Http.HttpMethod.Post, route, content: content, cancellationToken: cancellationToken);
                 }
+
             """;
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(source))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(expected));
     }
 
     [Test]
@@ -553,26 +584,29 @@ public sealed class ApiMethodGeneratorTests
             "GetItemAsync",
             "/items",
             ApiMethodType.Get,
+            "public",
             [cancellationTokenParam],
             returnType);
 
         var builder = new StringBuilder();
-        builder.GenerateApiMethod(apiMethod, default);
+        builder.GenerateApiMethod(apiMethod, ApiClient, default);
         var source = builder.ToString();
 
         var expected =
             """
-            
-                public async global::System.Threading.Tasks.Task GetItemAsync(global::System.Threading.CancellationToken cancellationToken)
+
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
+                public async partial global::System.Threading.Tasks.Task GetItemAsync(global::System.Threading.CancellationToken cancellationToken)
                 {
-            		var route = $"/items";
-            
-            		await SendAsync(global::System.Net.Http.HttpMethod.Get, route, cancellationToken: cancellationToken);
+                    var route = "/items";
+
+                    await SendAsync(global::System.Net.Http.HttpMethod.Get, route, content: null, cancellationToken: cancellationToken);
                 }
+
             """;
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(source))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(expected));
     }
 
     [Test]
@@ -585,26 +619,29 @@ public sealed class ApiMethodGeneratorTests
             "GetItemAsync",
             "/items",
             ApiMethodType.Get,
+            "public",
             [],
             returnType);
 
         var builder = new StringBuilder();
-        builder.GenerateApiMethod(apiMethod, default);
+        builder.GenerateApiMethod(apiMethod, ApiClient, default);
         var source = builder.ToString();
 
         var expected =
             """
-            
-                public async global::System.Threading.Tasks.Task GetItemAsync()
+
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
+                public async partial global::System.Threading.Tasks.Task GetItemAsync()
                 {
-            		var route = $"/items";
-            
-            		await SendAsync(global::System.Net.Http.HttpMethod.Get, route);
+                    var route = "/items";
+
+                    await SendAsync(global::System.Net.Http.HttpMethod.Get, route, content: null, cancellationToken: global::System.Threading.CancellationToken.None);
                 }
+
             """;
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(source))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(expected));
     }
 
 
@@ -627,26 +664,29 @@ public sealed class ApiMethodGeneratorTests
             "GetItemAsync",
             "/items",
             ApiMethodType.Get,
+            "public",
             [cancellationTokenParam],
             returnType);
 
         var builder = new StringBuilder();
-        builder.GenerateApiMethod(apiMethod, default);
+        builder.GenerateApiMethod(apiMethod, ApiClient, default);
         var source = builder.ToString();
 
         var expected =
             """
-            
-                public async global::System.Threading.Tasks.Task GetItemAsync(global::System.Threading.CancellationToken cancellationToken)
+
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
+                public async partial global::System.Threading.Tasks.Task GetItemAsync(global::System.Threading.CancellationToken cancellationToken)
                 {
-            		var route = $"/items";
-            
-            		await SendAsync(global::System.Net.Http.HttpMethod.Get, route, cancellationToken: cancellationToken);
+                    var route = "/items";
+
+                    await SendAsync(global::System.Net.Http.HttpMethod.Get, route, content: null, cancellationToken: cancellationToken);
                 }
+
             """;
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(source))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(expected));
     }
 
     [Test]
@@ -676,28 +716,29 @@ public sealed class ApiMethodGeneratorTests
             "GetItemAsync",
             "/items",
             ApiMethodType.Get,
+            "public",
             [cancellationTokenParam],
             returnType);
 
         var builder = new StringBuilder();
-        builder.GenerateApiMethod(apiMethod, default);
+        builder.GenerateApiMethod(apiMethod, ApiClient, default);
         var source = builder.ToString();
 
         var expected =
             """
-            
-                public async global::System.Threading.Tasks.Task<global::System.String> GetItemAsync(global::System.Threading.CancellationToken cancellationToken)
+
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
+                public async partial global::System.Threading.Tasks.Task<global::System.String> GetItemAsync(global::System.Threading.CancellationToken cancellationToken)
                 {
-            		var route = $"/items";
-            
-            		var result = await SendAsync<global::System.String>(global::System.Net.Http.HttpMethod.Get, route, _apiClientSettings.JsonSerializerContext.String, cancellationToken: cancellationToken);
-            
-            		return result;
+                    var route = "/items";
+
+                    return await SendAsync<global::System.String>(global::System.Net.Http.HttpMethod.Get, route, _context.String, content: null, cancellationToken: cancellationToken);
                 }
+
             """;
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(source))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(expected));
     }
 
     [Test]
@@ -719,26 +760,29 @@ public sealed class ApiMethodGeneratorTests
             "GetItemSync",
             "/items",
             ApiMethodType.Get,
+            "public",
             [cancellationTokenParam],
             returnType);
 
         var builder = new StringBuilder();
-        builder.GenerateApiMethod(apiMethod, default);
+        builder.GenerateApiMethod(apiMethod, ApiClient, default);
         var source = builder.ToString();
 
         var expected =
             """
-            
-                public void GetItemSync(global::System.Threading.CancellationToken cancellationToken)
+
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
+                public partial void GetItemSync(global::System.Threading.CancellationToken cancellationToken)
                 {
-            		var route = $"/items";
-            
-            		Send(global::System.Net.Http.HttpMethod.Get, route, cancellationToken: cancellationToken);
+                    var route = "/items";
+
+                    Send(global::System.Net.Http.HttpMethod.Get, route, content: null, cancellationToken: cancellationToken);
                 }
+
             """;
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(source))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(expected));
     }
 
     [Test]
@@ -760,25 +804,28 @@ public sealed class ApiMethodGeneratorTests
             "GetItemSync",
             "/items",
             ApiMethodType.Get,
+            "public",
             [cancellationTokenParam],
             returnType);
 
         var builder = new StringBuilder();
-        builder.GenerateApiMethod(apiMethod, default);
+        builder.GenerateApiMethod(apiMethod, ApiClient, default);
         var source = builder.ToString();
 
         var expected =
             """
-            
-                public global::System.String GetItemSync(global::System.Threading.CancellationToken cancellationToken)
+
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
+                public partial global::System.String GetItemSync(global::System.Threading.CancellationToken cancellationToken)
                 {
-            		var route = $"/items";
-            
-            		Send<global::System.String>(global::System.Net.Http.HttpMethod.Get, route, _apiClientSettings.JsonSerializerContext.String, cancellationToken: cancellationToken);
+                    var route = "/items";
+
+                    Send<global::System.String>(global::System.Net.Http.HttpMethod.Get, route, _context.String, content: null, cancellationToken: cancellationToken);
                 }
+
             """;
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(source))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(expected));
     }
 }

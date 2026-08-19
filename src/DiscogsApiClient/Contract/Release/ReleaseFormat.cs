@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.Release;
+namespace DiscogsApiClient.Contract.Release;
 
 /// <summary>
 /// Format of a release
@@ -12,7 +12,7 @@ public sealed record ReleaseFormat(
     [property:JsonPropertyName("qty")]
     string Count,
     [property:JsonPropertyName("descriptions")]
-    List<string> Descriptions);
+    IReadOnlyList<string> Descriptions);
 
 
 /**

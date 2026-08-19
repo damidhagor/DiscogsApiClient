@@ -1,4 +1,4 @@
-﻿using DiscogsApiClient.SourceGenerator.JsonSerialization;
+using DiscogsApiClient.SourceGenerator.JsonSerialization;
 using DiscogsApiClient.SourceGenerator.Shared;
 using static DiscogsApiClient.QueryParameters.MasterReleaseVersionFilterQueryParameters;
 

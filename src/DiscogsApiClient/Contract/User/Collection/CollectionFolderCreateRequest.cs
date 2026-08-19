@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.User.Collection;
+namespace DiscogsApiClient.Contract.User.Collection;
 
 /// <summary>
 /// Request for creating or updating a collection folder.

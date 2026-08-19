@@ -14,7 +14,7 @@ public class ApiClientSourceGenerator : IIncrementalGenerator
         var apiClients = context.SyntaxProvider
             .ForAttributeWithMetadataName(
                 $"{Constants.ApiClientNamespace}.{ApiClientAttribute.Name}",
-                predicate: static (node, _) => node is InterfaceDeclarationSyntax,
+                predicate: static (node, _) => node is ClassDeclarationSyntax,
                 transform: static (ctx, ct) => ApiClientParser.ParseApiClient(ctx, ct))
             .WithTrackingName("ApiClientTransform");
 
@@ -48,7 +48,6 @@ public class ApiClientSourceGenerator : IIncrementalGenerator
                .AddHttpPostAttribute()
                .AddHttpPutAttribute()
                .AddHttpDeleteAttribute()
-               .AddBodyAttribute()
-               .AddApiClientSettings();
+               .AddBodyAttribute();
     }
 }

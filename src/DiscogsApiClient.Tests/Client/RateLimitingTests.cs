@@ -1,33 +1,43 @@
+using System.Net;
+using DiscogsApiClient.RateLimiting;
+using Microsoft.Extensions.DependencyInjection;
+
 namespace DiscogsApiClient.Tests.Client;
 
-[ClassDataSource<DiscogsApiClientFixture>(Shared = SharedType.PerTestSession)]
-public sealed class RateLimitingTests(DiscogsApiClientFixture fixture)
+public sealed class RateLimitingTests
 {
-    private readonly IDiscogsApiClient _apiClient = fixture.GetAuthenticatedClient();
-
     [Test]
-    [Explicit]
-    public async Task GetIdentity_ShouldRateLimitClient_WhenConcurrencyIsHigh(CancellationToken cancellationToken)
+    public async Task HandlerPipeline_ShouldUpdateRateLimitState_WhenResponseIsAnError()
     {
-        var succeeded = 0;
-        var failed = 0;
-
-        for (var i = 0; i < 100; i++)
-        {
-            try
+        var services = new ServiceCollection();
+        services.AddDiscogsApiClient(
+            options =>
             {
-                _ = await _apiClient.GetIdentity(cancellationToken);
-                succeeded++;
-                TestContext.Current!.Output.WriteLine($"[{DateTime.Now:HH:mm:ss:fff}] {i:D2} SUCCESS");
-            }
-            catch (Exception)
-            {
-                failed++;
-                TestContext.Current!.Output.WriteLine($"[{DateTime.Now:HH:mm:ss:fff}] {i:D2} FAIL");
-            }
-        }
+                options.BaseUrl = "https://api.discogs.com";
+                options.UserAgent = "TestUserAgent";
+            },
+            configureClient: builder => builder.ConfigurePrimaryHttpMessageHandler(
+                () => new HttpMessageHandlerFixture(_ =>
+                {
+                    var response = new HttpResponseMessage(HttpStatusCode.TooManyRequests);
+                    response.Headers.Add("x-discogs-ratelimit", "60");
+                    response.Headers.Add("x-discogs-ratelimit-remaining", "50");
+                    response.Headers.Add("x-discogs-ratelimit-used", "10");
+                    return response;
+                })));
 
-        await Assert.That(succeeded).IsEqualTo(100);
-        await Assert.That(failed).IsEqualTo(0);
+        using var serviceProvider = services.BuildServiceProvider();
+
+        var httpClientFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
+        var httpClient = httpClientFactory.CreateClient(nameof(IDiscogsApiClient));
+
+        await Assert.That(async () => await httpClient.GetAsync(new Uri("/oauth/identity", UriKind.Relative)))
+            .Throws<RateLimitExceededDiscogsException>();
+
+        var rateLimitState = serviceProvider.GetRequiredService<IDiscogsRateLimitStateService>().GetCurrentState();
+        await Assert.That(rateLimitState).IsNotNull();
+        await Assert.That(rateLimitState!.Limit).IsEqualTo(60);
+        await Assert.That(rateLimitState.Remaining).IsEqualTo(50);
+        await Assert.That(rateLimitState.Used).IsEqualTo(10);
     }
 }

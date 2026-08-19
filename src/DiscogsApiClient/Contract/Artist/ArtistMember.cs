@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.Artist;
+namespace DiscogsApiClient.Contract.Artist;
 
 /// <summary>
 /// A member of an artist (band)

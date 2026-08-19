@@ -75,6 +75,14 @@ dotnet_code_quality_unused_parameters = all
 # Suppression preferences
 dotnet_remove_unnecessary_suppression_exclusions = none
 
+# Code quality rules
+# CA1056: URI properties should not be strings
+dotnet_diagnostic.CA1056.severity = none
+# CA1054: URI parameters should not be strings
+dotnet_diagnostic.CA1054.severity = none
+# CA1724: Type name conflicts with namespace name (primary DTO named after its domain namespace)
+dotnet_diagnostic.CA1724.severity = none
+
 # New line preferences
 dotnet_style_allow_multiple_blank_lines_experimental = true:suggestion
 dotnet_style_allow_statement_immediately_after_block_experimental = false:suggestion
@@ -209,6 +217,14 @@ dotnet_naming_rule.non_field_members_should_be_pascal_case.severity = suggestion
 dotnet_naming_rule.non_field_members_should_be_pascal_case.symbols = non_field_members
 dotnet_naming_rule.non_field_members_should_be_pascal_case.style = pascal_case
 
+dotnet_naming_rule.private_or_internal_const_field_should_be_pascal_case.severity = warning
+dotnet_naming_rule.private_or_internal_const_field_should_be_pascal_case.symbols = private_or_internal_const_field
+dotnet_naming_rule.private_or_internal_const_field_should_be_pascal_case.style = pascal_case
+
+dotnet_naming_rule.private_or_internal_static_readonly_field_should_be_pascal_case.severity = warning
+dotnet_naming_rule.private_or_internal_static_readonly_field_should_be_pascal_case.symbols = private_or_internal_static_readonly_field
+dotnet_naming_rule.private_or_internal_static_readonly_field_should_be_pascal_case.style = pascal_case
+
 dotnet_naming_rule.private_or_internal_field_should_be_private_underscore.severity = warning
 dotnet_naming_rule.private_or_internal_field_should_be_private_underscore.symbols = private_or_internal_field
 dotnet_naming_rule.private_or_internal_field_should_be_private_underscore.style = private_underscore
@@ -218,6 +234,14 @@ dotnet_naming_rule.private_or_internal_field_should_be_private_underscore.style 
 dotnet_naming_symbols.interface.applicable_kinds = interface
 dotnet_naming_symbols.interface.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
 dotnet_naming_symbols.interface.required_modifiers = 
+
+dotnet_naming_symbols.private_or_internal_const_field.applicable_kinds = field
+dotnet_naming_symbols.private_or_internal_const_field.applicable_accessibilities = internal, private, private_protected
+dotnet_naming_symbols.private_or_internal_const_field.required_modifiers = const
+
+dotnet_naming_symbols.private_or_internal_static_readonly_field.applicable_kinds = field
+dotnet_naming_symbols.private_or_internal_static_readonly_field.applicable_accessibilities = internal, private, private_protected
+dotnet_naming_symbols.private_or_internal_static_readonly_field.required_modifiers = static, readonly
 
 dotnet_naming_symbols.private_or_internal_field.applicable_kinds = field
 dotnet_naming_symbols.private_or_internal_field.applicable_accessibilities = internal, private, private_protected

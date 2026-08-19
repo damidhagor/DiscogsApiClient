@@ -11,14 +11,76 @@ with newer C# language features, ensure the style guidelines are updated to pref
 
 - Use the latest stable C# language features (primary constructors, collection expressions, file-scoped namespaces, etc.).
 - Prefer modern idioms over legacy patterns. Always use the newest C# features available for the target language version.
+- Actively look for and remove redundancy that a newer language feature eliminates — e.g. a redundant constructor
+  type name in a `new TypeName(...)` expression where the target type is already clear from context should use
+  target-typed `new()` instead (see the Target-typed new rule below). Don't just apply new features to new code;
+  when touching existing code, simplify it to the modern idiom if it's trivial to do so.
 - Code should be self-explanatory. Avoid verbose XML documentation on internal types — keep doc comments brief or omit them when the implementation is clear from reading.
+- **XML documentation is for the public API surface only.** Only document `public`/`protected` members that
+  are part of the library's external contract. Do not add XML doc comments to `internal`/`private` members —
+  add a brief inline comment only if the implementation genuinely isn't self-explanatory from reading it.
+- **Member accessibility modifiers should reflect the member's intended accessibility on its own terms, not be
+  downgraded just because the containing type happens to be `internal`.** A `public` member on an `internal` class
+  is not a mistake — its effective visibility is still capped to the assembly by the containing type, but declaring
+  it `public` means promoting the containing type to `public` later requires no member-by-member audit. Apply the
+  "public API surface only" XML-doc rule based on the member's own declared accessibility (`public`/`protected`),
+  regardless of whether the containing type is `public` or `internal`.
 - Attribution comments (crediting authors of referenced implementations) must always be preserved.
 
+## Diagnostics and Warnings
+
+- All diagnostic messages must be checked for a correct implementation — this includes compiler warnings,
+  analyzer warnings, and IDE-level diagnostics (e.g. suggestions, refactoring proposals, code-style hints).
+- This does **not** mean every diagnostic must be auto-fixed. Where it isn't clear whether a diagnostic is
+  critical, or whether fixing it would introduce other problems or contradict existing code/design
+  decisions, at minimum triage it and surface it to the user for their evaluation rather than silently
+  fixing or silently ignoring it.
+
+### Full Diagnostics Check Procedure
+
+A normal `dotnet build` (even incremental, even with `AnalysisMode=All`) does **not** surface everything —
+IDE-only diagnostics (`IDE00xx`) and anything below `warning` severity (`suggestion`/`silent`, e.g. many
+`csharp_style_*` rules in `.editorconfig`) are invisible to it. Before considering a non-trivial change
+(or a dedicated diagnostics pass) complete, run **both** of the following steps, and evaluate **every**
+diagnostic they report — including `message`/`suggestion`-level ones, not just `warning`/`error`:
+
+1. **Clean, non-cached rebuild** (picks up compiler + analyzer warnings/errors at their full configured
+   severity, forced to run instead of relying on incremental/cached state):
+   ```powershell
+   Get-ChildItem -Recurse -Directory -Include bin,obj | Remove-Item -Recurse -Force
+   dotnet build src\DiscogsApiClient.slnx -v normal /p:EnforceCodeStyleInBuild=true -t:Rebuild > build.log 2>&1
+   ```
+2. **IDE/style diagnostics pass** (surfaces `IDE00xx` and suggestion/silent-severity style rules that step 1
+   still won't show, even with `EnforceCodeStyleInBuild=true`):
+   ```powershell
+   dotnet format src\DiscogsApiClient.slnx --verify-no-changes --severity info --no-restore > format.log 2>&1
+   ```
+
+Notes for parsing results correctly:
+- Redirect output to a file rather than reading the console directly — PowerShell's console width wraps
+  long diagnostic lines and breaks line-based parsing; `Tee-Object` to a real console still wraps.
+- The solution multi-targets `net8.0`/`net9.0`/`net10.0`, and MSBuild prints each warning once during
+  `CoreCompile` and again in the end-of-build summary — so raw line counts overstate real occurrences by
+  roughly 6x. Deduplicate by stripping the trailing `[project::TargetFramework=X]` suffix and the
+  `CoreCompile`-vs-summary duplication before treating a count as authoritative.
+
+Once both passes are run, **triage every finding with the user** per the policy above: fix, suppress with
+rationale (e.g. `.editorconfig` `dotnet_diagnostic.<CODE>.severity`), or explicitly accept as a known
+tradeoff — but do not silently resolve or silently ignore any of them, regardless of severity tier.
+
 ## Formatting
+
+### Line Endings
+
+- This repository uses **CRLF** line endings (`core.autocrlf=true`, consistent with all existing tracked files).
+- When creating or editing files, always preserve the existing line-ending style of that file — never mix CRLF and LF
+  within the same document, and never introduce an all-LF file into a CRLF repository. Verify line endings after edits
+  if there's any doubt (e.g. after tool-based file creation/edits that may default to LF).
 
 ### Braces
 
 - **Always** use curly braces `{}` around `if`, `else`, `foreach`, `for`, `while`, and `using` blocks — even for single-line bodies.
+- This means single-line/brace-less forms like `if (x) return;` or `if (x) throw new ...;` are **never** allowed, no matter how short the body is — always write the braced multi-line form.
 - This rule does **not** apply to expression-bodied members (`=>`), which are a different construct.
 - Early return conditions must not be squashed into one-liners.
 
@@ -75,6 +137,7 @@ with newer C# language features, ensure the style guidelines are updated to pref
 
 ## Collections and Expressions
 
+- **Target-typed new (`new()`)**: Use only when the target type is explicitly declared on the left (e.g., fields, properties, or explicitly typed variables) or in constructor/method arguments where the parameter type is clear. Otherwise, prefer using `var` with the explicit constructor on the right (e.g., `var options = new DiscogsApiClientOptions();`).
 - Use **collection expressions** (`[]`) for empty collections and short initializers wherever the target type supports it.
 - `EquatableArray<T>` supports collection expressions via `[CollectionBuilder]` — prefer `["a", "b"]` over `ImmutableArray.Create(...)`.
 - Use `default` only when the target type doesn't support collection expressions.
@@ -98,13 +161,26 @@ with newer C# language features, ensure the style guidelines are updated to pref
 - Never leak Roslyn symbols (`ITypeSymbol`, `Compilation`, etc.) past the transform step.
 - Report diagnostics via `DiagnosticInfo` records that decouple from Roslyn's `Location` type.
 - Diagnostics are collected via `ImmutableArray<DiagnosticInfo>.Builder` passed through parser methods and surfaced via `GeneratorResult<T>`.
-- StringBuilder-based code generation is the standard pattern. Do not use Scriban, T4, or other template engines.
+- StringBuilder-based code generation is the standard pattern. Do not use Scriban, T4, or other template engines. Within a template, prefer a single raw string literal (`"""`/`$$"""`) over many successive `builder.Append`/`AppendLine` calls — it is more readable and emits in one call. Reserve individual `Append` calls for genuinely dynamic, per-iteration fragments.
+- Emitted code must itself be modern, idiomatic C# for the consuming target (.NET 8+), consistently across **every** generator (API client, JSON converters, and the post-initialization attribute templates): primary constructors instead of an explicit constructor that only assigns parameters (e.g. `internal sealed class HttpGetAttribute(string route) : HttpMethodBaseAttribute(route)`), get-only auto-properties for values only set once (`public string Route { get; } = route;`), index-from-end (`buffer[^1]`) instead of `buffer[buffer.Length - 1]`, no placeholder-free interpolated strings (emit `"/oauth/identity"`, not `$"/oauth/identity"` — gate the `$` prefix on the route actually containing a `{` placeholder), and `return await Xxx(...)` directly rather than `var result = await Xxx(...); return result;`.
+- Generated source must be emitted already correctly formatted: 4-space indentation, no tabs, no trailing whitespace, exactly one blank line between members, and no stray blank line directly after an opening `{`. Do not emit empty or unreferenced helper types at all — skip them entirely (e.g. `QueryParameterHelper` is omitted when a client has no query parameters, since nothing references it). If a body-less type genuinely must be emitted, use the single-line form ending in `;` rather than an empty `{ }`. Do not post-process the output through Roslyn (`NormalizeWhitespace`) — parsing every generated tree is wasteful for a source generator; get the raw templates right instead.
+- Generator tests assert the **exact** emitted source via `GeneratorTestHelper.NormalizeLineEndings`, which normalizes line endings only (no trimming of any kind). There is a single normalization method — `NormalizeSource`/per-line trimming was removed because it hid real formatting defects. Because assertions are byte-exact, fragment-level tests that exercise a composition helper (e.g. `GenerateApiMethod`) must include that helper's composition seams (a leading blank line and/or a trailing newline) verbatim in the expected raw string, represented as a blank line immediately after the opening `"""` and/or before the closing `"""`. The full-document output has no such seams (starts with `#nullable enable`, ends with `}` and no trailing newline).
 - Diagnostics are registered in `AnalyzerReleases.Unshipped.md` until a NuGet release, then moved to `AnalyzerReleases.Shipped.md`.
 
 ## Testing
 
 - Use TUnit as the test framework.
 - Keep test infrastructure similar to the existing patterns in the project.
+
+## Git Workflow
+
+- **NEVER commit changes without explicit user approval first.**
+- **NEVER push changes (e.g. `git push`) without explicit user approval first**, even if a commit was already approved earlier — pushing is a separate approval step.
+- Always present changes to the user for review before running `git commit` or `git push`.
+- When presenting changes for review, **propose a suitable commit message** following conventional commit format.
+- The user must approve both the changes **and** the commit message before proceeding.
+- This applies to all commits and pushes, including code changes, test recordings, documentation updates, etc.
+- After making changes, inform the user what was changed and wait for their approval to commit and/or push.
 
 ## Project Structure
 
@@ -120,7 +196,7 @@ DiscogsApiClient/
 │   ├── DiscogsApiClient.SourceGenerator/ ← Source generator (netstandard2.0)
 │   ├── DiscogsApiClient.Tests/         ← Library tests
 │   ├── DiscogsApiClient.SourceGenerator.Tests/ ← Generator tests
-│   └── DiscogsApiClient.sln
+│   └── DiscogsApiClient.slnx
 ├── AGENTS.md                           ← This file
 └── README.md
 ```
@@ -129,8 +205,11 @@ DiscogsApiClient/
 
 ### API Endpoint Pattern
 
-- Internal method with `[HttpGet/Post/Put/Delete]` attribute (source-generated).
-- Public wrapper with `Guard` validation and XML docs.
+- `[ApiClient(typeof(DiscogsJsonSerializerContext))]` is applied to the `internal sealed partial class DiscogsApiClient`, which implements the pure `IDiscogsApiClient` contract interface.
+- Endpoints are `partial` method definitions carrying a `[HttpGet/Post/Put/Delete]` attribute; the generator emits their implementing bodies in the other partial half.
+- Validated endpoints: a `private partial XxxInternal` method (generated body) + a hand-written `public` wrapper with native guard validation and XML docs.
+- Endpoints without validation: a `public partial` method that directly implements the interface member (generated body).
+- The generator discovers dependencies by **type** — an `HttpClient` field/property and a field/property whose type is or derives from the context type — so the constructor and fields are owned by the class, not the generator. Prefer a primary constructor that assigns its parameters to fields (no null-guards needed thanks to nullable reference types); the generator only inspects fields and properties, never constructor parameters.
 - See `docs/ARCHITECTURE.md` for detailed examples.
 
 ### Parameter Validation
@@ -140,6 +219,14 @@ DiscogsApiClient/
   - `ArgumentException.ThrowIfNullOrWhiteSpace()` instead of `Guard.IsNotNullOrWhiteSpace()`
   - `ArgumentOutOfRangeException.ThrowIfLessThanOrEqual()` instead of `Guard.IsGreaterThan()`
   - `ArgumentOutOfRangeException.ThrowIfNegativeOrZero()` instead of `Guard.IsGreaterThan(value, 0)`
+- Do **not** pass the parameter name explicitly to native guards (e.g. use `ArgumentNullException.ThrowIfNull(session)` rather than `ArgumentNullException.ThrowIfNull(session, nameof(session))`). The compiler automatically infers parameter names in C# 11+ via `[CallerArgumentExpression]`.
+- Always validate reference parameters in public/externally visible methods (e.g. `ArgumentNullException.ThrowIfNull`) to prevent **CA1062** analyzer warnings.
+
+### Async/Await and ConfigureAwait
+
+- Always append `.ConfigureAwait(false)` to all awaited operations in library code to prevent synchronization context capture/deadlocks and resolve **CA2007** warnings.
+- `CancellationToken` parameters on public API methods are **mandatory** — never give them a `= default` value. Cancellation support should be an explicit, deliberate choice by the caller. As a consequence, any preceding optional parameters (e.g. nullable query-parameter objects) must also be required (no `= null`) so the trailing token stays required.
+
 
 ### Contract Models
 
@@ -152,8 +239,9 @@ DiscogsApiClient/
 1. Check `docs/API_COVERAGE.md` for status.
 2. Create contract models.
 3. Add to JSON serialization context.
-4. Define in `IDiscogsApiClient` (internal + public method pair).
-5. Update `docs/API_COVERAGE.md`.
+4. Add the method signature to the `IDiscogsApiClient` contract interface.
+5. Add the `partial` method (+ public wrapper if validated) to the `DiscogsApiClient` partial class.
+6. Update `docs/API_COVERAGE.md`.
 
 ## Project Characteristics
 

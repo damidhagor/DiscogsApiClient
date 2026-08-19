@@ -5,7 +5,7 @@ namespace DiscogsApiClient.SourceGenerator.Tests;
 
 internal static class GeneratorTestHelper
 {
-    private static readonly MetadataReference[] _compilationReferences =
+    private static readonly MetadataReference[] CompilationReferences =
     [
         MetadataReference.CreateFromFile(typeof(object).Assembly.Location),        // System.Runtime
         MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location),    // System.Linq
@@ -23,7 +23,7 @@ internal static class GeneratorTestHelper
         return CSharpCompilation.Create(
             assemblyName: "TestAssembly",
             syntaxTrees: syntaxTrees,
-            references: _compilationReferences,
+            references: CompilationReferences,
             options: new(OutputKind.DynamicallyLinkedLibrary));
     }
 
@@ -42,13 +42,6 @@ internal static class GeneratorTestHelper
         return driver.GetRunResult();
     }
 
-    public static string NormalizeSource(string source)
-    {
-        var lines = source
-            .ReplaceLineEndings("\n")
-            .Split("\n")
-            .Select(l => l.Trim());
-
-        return string.Join("\n", lines).Trim();
-    }
+    public static string NormalizeLineEndings(string source)
+        => source.ReplaceLineEndings("\n");
 }

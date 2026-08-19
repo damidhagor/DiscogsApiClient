@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models;
+namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Models;
 
 internal enum ApiMethodType
 {

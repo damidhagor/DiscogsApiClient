@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract;
+namespace DiscogsApiClient.Contract;
 
 /// <summary>
 /// Represents an error message returned from the Discogs Api.

@@ -52,15 +52,8 @@ internal static class SymbolAttributeExtensions
     {
         value = default;
 
-        if (!symbol.TryGetAttribute(
-            attributeNamespace,
-            attributeName,
-            out var attribute))
-        {
-            return false;
-        }
-
-        return attribute.TryGetAttributeConstructorArgument(index, out value);
+        return symbol.TryGetAttribute(attributeNamespace, attributeName, out var attribute)
+            && attribute.TryGetAttributeConstructorArgument(index, out value);
     }
 
     public static bool TryGetAttributeNamedArgument<T>(
@@ -72,15 +65,8 @@ internal static class SymbolAttributeExtensions
     {
         value = default;
 
-        if (!symbol.TryGetAttribute(
-            attributeNamespace,
-            attributeName,
-            out var attribute))
-        {
-            return false;
-        }
-
-        return attribute.TryGetAttributeNamedArgument(name, out value);
+        return symbol.TryGetAttribute(attributeNamespace, attributeName, out var attribute)
+            && attribute.TryGetAttributeNamedArgument(name, out value);
     }
 
     public static bool TryGetAttributeConstructorArgument<T>(this AttributeData? attributeData, out T? value)
@@ -136,14 +122,7 @@ internal static class SymbolAttributeExtensions
     {
         value = default;
 
-        if (!symbol.TryGetAttribute(
-            attributeNamespace,
-            attributeName,
-            out var attribute))
-        {
-            return false;
-        }
-
-        return attribute!.AttributeClass.TryGetConstFieldValue(fieldName, out value);
+        return symbol.TryGetAttribute(attributeNamespace, attributeName, out var attribute)
+            && attribute!.AttributeClass.TryGetConstFieldValue(fieldName, out value);
     }
 }

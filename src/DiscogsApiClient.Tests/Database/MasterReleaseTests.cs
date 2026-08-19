@@ -112,7 +112,7 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
         await Assert.That(response.ReleaseVersions).IsNotNull();
         await Assert.That(response.ReleaseVersions.Count).IsEqualTo(50);
 
-        var version = response.ReleaseVersions.First();
+        var version = response.ReleaseVersions[0];
         await Assert.That(version.Id).IsGreaterThan(0);
         await Assert.That(version.Label).IsNotNullOrWhiteSpace();
         await Assert.That(version.Country).IsNotNullOrWhiteSpace();
@@ -189,6 +189,7 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
         var exception = await Assert.That(async () => await _apiClient.GetMasterReleaseVersions(masterReleaseId, paginationParams, null, cancellationToken))
             .Throws<DiscogsException>();
 
+        await Assert.That(exception).IsNotNull();
         await Assert.That(exception.Message).Contains("internal server error");
     }
 
@@ -371,18 +372,21 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
             await Assert.That(country.Key).IsNotNullOrWhiteSpace();
             await Assert.That(country.Value).IsGreaterThan(0);
         }
+
         await Assert.That(response.Filters.AvailableFilters.Format).IsNotNull();
         foreach (var format in response.Filters.AvailableFilters.Format!)
         {
             await Assert.That(format.Key).IsNotNullOrWhiteSpace();
             await Assert.That(format.Value).IsGreaterThan(0);
         }
+
         await Assert.That(response.Filters.AvailableFilters.Label).IsNotNull();
         foreach (var label in response.Filters.AvailableFilters.Label!)
         {
             await Assert.That(label.Key).IsNotNullOrWhiteSpace();
             await Assert.That(label.Value).IsGreaterThan(0);
         }
+
         await Assert.That(response.Filters.AvailableFilters.Year).IsNotNull();
         foreach (var year in response.Filters.AvailableFilters.Year!)
         {

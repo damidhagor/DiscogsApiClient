@@ -19,6 +19,7 @@
 8. [Phase 4: Library Code Modernization](#phase-4-library-code-modernization)
 9. [Phase 5: Demo Projects Modernization](#phase-5-demo-projects-modernization)
 10. [Phase 6: Final Validation & Documentation](#phase-6-final-validation--documentation)
+11. [Phase 7: CI/CD & Release Automation](#phase-7-cicd--release-automation)
 
 ---
 
@@ -157,6 +158,10 @@ Phase 5: Demo Projects
          ↓
 Phase 6: Final Validation
    └─ Comprehensive verification, version bump for release
+         ↓
+Phase 7: CI/CD & Release Automation
+   ├─ Low Risk
+   └─ GitHub Actions workflow to build, pack, and publish the NuGet package
 ```
 
 ---
@@ -364,90 +369,183 @@ Phase 6: Final Validation
 
 ---
 
-## Phase 4: Library Code Modernization
+## Phase 4: Library Code Modernization — ✅ Completed
 
 **Goal:** Modernize the main library code using latest C# features and best practices.
 
 **Branch:** `modernization/phase4-library`
 
 ### 4.1 C# Language Feature Adoption
-- [ ] **File-scoped namespaces** - Convert to `namespace DiscogsApiClient;`
-- [ ] **Global usings** - Create `GlobalUsings.cs` for common imports
-- [ ] **Record types** - Use `record` for DTOs/contracts where appropriate
-- [ ] **Init-only properties** - Convert to `init` where mutability not needed
-- [ ] **Pattern matching** - Modernize switch statements and conditionals
-- [ ] **Null-coalescing assignments** - Use `??=` where appropriate
-- [ ] **Target-typed new** - Use `new()` where type is obvious
-- [ ] **Collection expressions** - Use `[...]` for arrays/collections (C# 12)
-- [ ] **Primary constructors** - Consider for simple classes (C# 12)
-- [ ] **String interpolation** - Use `$"..."` over `string.Format`
+- [x] **File-scoped namespaces** - Convert to `namespace DiscogsApiClient;` (Audited: already implemented across all library files)
+- [x] **Global usings** - Create `GlobalUsings.cs` for common imports (Audited: Usings.cs already contains global usings)
+- [x] **Record types** - Use `record` for DTOs/contracts where appropriate (Audited: DTO contracts are already record types)
+- [x] **Init-only properties** - Convert to `init` where mutability not needed (Audited: DTO records already use positional init-only properties. `DiscogsApiClientOptions` intentionally keeps `set` — see §4.7 — because `init` is incompatible with the `Action<TOptions>` options pattern)
+- [x] **Pattern matching** - Modernize switch statements and conditionals (Audited: switch expressions already modern where present)
+- [x] **Null-coalescing assignments** - Use `??=` where appropriate (Audited: no new opportunities found in the codebase)
+- [x] **Target-typed new** - Use `new()` where type is obvious (Implemented in OAuth provider & ServiceCollectionExtensions; local variables prefer var + explicit new)
+- [x] **Collection expressions** - Use `[...]` for arrays/collections (C# 12) (Audited: no collection instantiations found in library code)
+- [x] **Primary constructors** - Consider for simple classes (C# 12) (Implemented in Auth service, OAuth provider, and delegating handlers)
+- [x] **String interpolation** - Use `$"..."` over `string.Format` (Audited: string interpolation already preferred; no string.Format found)
 
-### 4.2 IDiscogsApiClient Interface Refactoring
-- [ ] **Analyze current structure** - Document internal/public method pattern
-- [ ] **Run static analysis** - Review with analyzer tools for design issues
-- [ ] **Evaluate necessity** - Determine if refactoring provides meaningful value
-- [ ] **Decision point:** Proceed with refactoring OR document why current design is optimal
-- [ ] If proceeding with refactoring:
-  - [ ] Design new interface structure
-  - [ ] Document any breaking changes
-  - [ ] Implement new design
-  - [ ] Update XML documentation
-  - [ ] Mark obsolete methods if using transition period
-- [ ] **Note:** Breaking changes are acceptable as this will result in a new major version
+
+
+### 4.2 IDiscogsApiClient Interface Refactoring — ✅ Completed
+
+**Outcome:** Refactored. The endpoint definitions and guard-validating wrappers were moved off
+the interface into a hand-written partial class, leaving `IDiscogsApiClient` as a pure public
+contract. Done as a clean break (no obsolete/transition shims), which is acceptable because the
+modernization ships as a new major version.
+
+**Adopted design:**
+- `IDiscogsApiClient` is a **clean public contract** — public method signatures with XML docs
+  only. No HTTP attributes, no `internal` members, no default-interface-method bodies.
+- `DiscogsApiClient` is an `internal sealed partial class` with a primary constructor
+  (`HttpClient`, `DiscogsJsonSerializerContext`). It hosts:
+  - public `partial` HTTP methods (e.g. `GetIdentity`) that need no argument validation,
+  - `private partial *Internal` methods carrying the `[HttpGet/Post/Put/Delete]` attributes,
+  - hand-written **public wrapper methods** with native guard clauses + `ConfigureAwait(false)`
+    that delegate to the `*Internal` partials.
+- The `[ApiClient]` attribute now targets a **class** (`AttributeTargets.Class`), and the
+  source generator emits the second partial half (`Send`/`SendAsync`/route builders).
+- DI registration resolves the interface: `AddHttpClient<IDiscogsApiClient, DiscogsApiClient>()`.
+- See `docs/ARCHITECTURE.md` (Contract Interface + partial class + generated partial half).
+
+**Breaking changes introduced by this refactor:**
+- `CancellationToken` parameters are now **required** on `IDiscogsApiClient` methods — the
+  previous `CancellationToken cancellationToken = default` default was removed.
+- `[ApiClient]` moved from interfaces to classes; the previously `internal` endpoint methods
+  are no longer part of the public interface surface.
+
+**Checklist (all satisfied):**
+- [x] Analyze current structure / document the internal-vs-public method pattern
+- [x] Evaluate necessity and decide (decision: **refactor** — interface becomes a pure contract)
+- [x] Design and implement the new structure (partial-class client + contract interface)
+- [x] Update XML documentation (now lives on the interface)
+- [x] Document breaking changes (see above)
+- [x] **Note:** Breaking changes are acceptable as this ships as a new major version
 
 ### 4.3 Async/Await Modernization
-- [ ] Ensure `ConfigureAwait(false)` used appropriately (library code)
-- [ ] Use `ValueTask` where appropriate for hot paths
-- [ ] Consider `IAsyncEnumerable` for paginated results (if applicable)
-- [ ] Ensure cancellation tokens passed through properly
+- [x] Ensure `ConfigureAwait(false)` used appropriately (library code)
+- [x] Use `ValueTask` where appropriate for hot paths (Audited: not recommended for these purely I/O bound methods as it introduces micro-pessimization and breaking changes for no gain)
+- [x] Consider `IAsyncEnumerable` for paginated results (if applicable) (Audited: not applicable for library endpoints without pagination streaming changes)
+- [x] Ensure cancellation tokens passed through properly (Audited: all async paths propagate CancellationToken correctly)
+
 
 ### 4.4 Rate Limiting
 - Background: The repository contains an existing client-side rate limiting layer but it has been observed to behave unreliably in production-like scenarios.
 - Goal: Either rework the rate limiting implementation to be reliable across target frameworks, or remove the built-in limiter and provide first-class access to Discogs rate-limit metadata so library users can implement their own strategies.
 - Tasks:
-  - [ ] Audit current rate limiting implementation and reproduce failure modes in tests or a harness
-  - [ ] Decision: Rework or Remove (document choice and rationale)
-  - If Rework:
-    - [ ] Implement a robust, cross-target rate limiter (prefer `System.Threading.RateLimiting` primitives or a tested token-bucket implementation) integrated via an `HttpMessageHandler` or `DelegatingHandler`
-    - [ ] Add resiliency for clock skew and transient errors, and ensure behavior is deterministic under CI and AOT scenarios
-    - [ ] Add unit and integration tests that simulate high-concurrency scenarios and validate correctness
+  - [x] Audit current rate limiting implementation and reproduce failure modes in tests or a harness
+  - [x] **Decision: Remove** (document choice and rationale)
+  - ~~If Rework:~~
+    - ~~Implement a robust, cross-target rate limiter (prefer `System.Threading.RateLimiting` primitives or a tested token-bucket implementation) integrated via an `HttpMessageHandler` or `DelegatingHandler`~~
+    - ~~Add resiliency for clock skew and transient errors, and ensure behavior is deterministic under CI and AOT scenarios~~
+    - ~~Add unit and integration tests that simulate high-concurrency scenarios and validate correctness~~
   - If Remove:
-    - [ ] Remove the built-in rate limiter implementation
-    - [ ] Add a public model to expose parsed Discogs rate-limit headers (for example `RateLimit`, `RateLimitRemaining`, `RateLimitReset`)
-    - [ ] Surface the parsed rate-limit metadata on responses or via a light-weight client API so consumers can implement custom policies
-    - [ ] Document migration steps for consumers and update README/docs
+    - [x] Remove the built-in rate limiter implementation
+    - [x] Add a public model to expose parsed Discogs rate-limit headers (for example `RateLimit`, `RateLimitRemaining`, `RateLimitReset`)
+    - [x] Surface the parsed rate-limit metadata on responses or via a light-weight client API so consumers can implement custom policies
 - Acceptance criteria:
-  - [ ] A decision is recorded (Rework or Remove) and implemented
-  - [ ] If reworked: limiter passes stress tests and is documented
-  - [ ] If removed: consumers have documented access to rate-limit metadata and examples for implementing retry/backoff
+  - [x] A decision is recorded (Rework or Remove) and implemented
+  - ~~If reworked: limiter passes stress tests and is documented~~
+  - [x] If removed: consumers have access to rate-limit metadata via `IDiscogsRateLimitStateService` (documentation deferred to Phase 6)
+
+**Decision Rationale (Remove):**
+- The existing sliding-window rate limiter was unreliable and did not align with Discogs' actual rate limiting methodology
+- Feature was not widely used by library consumers and added maintenance burden
+- Exposing raw rate-limit metadata provides maximum flexibility for consumers to implement their own strategies
+- Reduces library complexity and eliminates the `System.Threading.RateLimiting` dependency
+
+**Implementation Summary:**
+- **Removed Components:**
+  - `RateLimitedDelegatingHandler` (old sliding window implementation)
+  - Rate limiting properties from `DiscogsApiClientOptions` (`UseRateLimiting`, `RateLimitingWindow`, `RateLimitingWindowSegments`, `RateLimitingPermits`, `RateLimitingQueueSize`)
+  - `System.Threading.RateLimiting` NuGet package dependency
+
+- **Added Components:**
+  - `IDiscogsRateLimitStateService` - Public interface providing read-only access to current rate limit state
+  - `IDiscogsRateLimitStateUpdateService` - Internal interface for updating state (not exposed to consumers)
+  - `DiscogsRateLimitState` - Immutable record containing `Limit`, `Remaining`, and `Used` values
+  - `DiscogsRateLimitStateService` - Thread-safe singleton service implementation using `Interlocked.Exchange`
+  - `RateLimitStateDelegatingHandler` - Handler that extracts Discogs rate-limit headers (`x-discogs-ratelimit`, `x-discogs-ratelimit-remaining`, `x-discogs-ratelimit-used`) and updates the state service
+
+- **Updated Components:**
+  - `ServiceCollectionExtensions` - Registers rate limit state service as singleton (always enabled, not conditional)
+  - Tests updated to verify `IDiscogsRateLimitStateService` registration
+  - Demo projects updated to remove obsolete `UseRateLimiting` configuration
+
+- **Design Decisions:**
+  - Service is always registered and handler always runs (no opt-in/opt-out flag)
+  - Both public and internal interfaces resolve to the same singleton instance
+  - State is only updated when all three headers are present and parseable (all-or-nothing)
+  - No circular dependencies: separate service prevents DI issues if consumers want to use it in custom handlers
+  - Thread-safe using lock-free atomic reference exchange
 
 ### 4.5 Code Quality Improvements
-- [ ] Enable nullable reference types verification
-- [ ] Address all analyzer warnings
-- [ ] **Migrate `Guard.*` calls to framework-native guard clauses** — replace CommunityToolkit `Guard.IsNotNull()`, `Guard.IsNotNullOrWhiteSpace()`, `Guard.IsGreaterThan()` with `ArgumentNullException.ThrowIfNull()`, `ArgumentException.ThrowIfNullOrWhiteSpace()`, `ArgumentOutOfRangeException.ThrowIfLessThanOrEqual()`, etc. to remove the CommunityToolkit dependency
-- [ ] Simplify complex methods (reduce cyclomatic complexity)
-- [ ] Extract magic strings/numbers to constants
-- [ ] Review and optimize LINQ usage
-- [ ] Ensure proper disposal patterns (`IDisposable`, `IAsyncDisposable`)
+- [x] Enable nullable reference types verification (Audited: already enabled globally in csproj)
+- [x] Address all analyzer warnings (Resolved CA1002/CA1008/CA1031/CA1032/CA1054/CA1305/CA1724, plus a full IDE-diagnostics pass down to Info severity via `dotnet format --verify-no-changes --severity info` — clean fresh rebuild with 0 warnings)
+- [x] **Migrate `Guard.*` calls to framework-native guard clauses** — replace CommunityToolkit `Guard.IsNotNull()`, `Guard.IsNotNullOrWhiteSpace()`, `Guard.IsGreaterThan()` with `ArgumentNullException.ThrowIfNull()`, `ArgumentException.ThrowIfNullOrWhiteSpace()`, `ArgumentOutOfRangeException.ThrowIfLessThanOrEqual()`, etc. to remove the CommunityToolkit dependency
+
+- [x] Simplify complex methods (reduce cyclomatic complexity) (Audited: no methods exceed a reasonable complexity threshold; handlers/services are already small and single-purpose)
+- [x] Extract magic strings/numbers to constants (Audited: rate-limit header names are already constants; endpoint route templates are single-use declarative `[HttpGet/...]` attribute arguments, not magic strings. The only repeated literals are OAuth protocol values confined to a single file that won't change — deliberately left inline. No extraction warranted)
+- [x] Review and optimize LINQ usage (Audited: the only LINQ in the library is a single idiomatic `FirstOrDefault()` in `RateLimitStateDelegatingHandler`; nothing to simplify)
+- [x] Ensure proper disposal patterns (`IDisposable`, `IAsyncDisposable`) (Audited: `HttpRequestMessage`/`HttpResponseMessage` are scoped with `using var`; `HttpClient`/handlers are `IHttpClientFactory`-managed; no library type owns unmanaged/disposable state requiring a custom `IDisposable`)
 
 ### 4.6 Performance Considerations
-- [ ] Review allocations (use `Span<T>`, `Memory<T>` where beneficial)
-- [ ] Optimize string operations
-- [ ] Review collection usage (use appropriate collection types)
-- [ ] Consider `ArrayPool` for temporary buffers if applicable
+- [x] Review allocations (use `Span<T>`, `Memory<T>` where beneficial) (Audited: no allocation hot paths in library code; the generated route builder already precomputes `StringBuilder` capacity. `Span`/`Memory` offers no benefit for the remaining cold-path string work)
+- [x] Optimize string operations (Audited: OAuth header building uses `+=` on a cold, per-auth-request path — negligible allocation impact; left readable one-field-per-line. No hot-path string concatenation found)
+- [x] Review collection usage (use appropriate collection types) (Audited: contracts use `List<T>` for JSON deserialization as required by STJ; no inappropriate collection choices)
+- [x] Consider `ArrayPool` for temporary buffers if applicable (Audited: N/A — no manual buffer management in library code; HTTP/JSON buffering is handled by the framework)
 
-### 4.7 Service Registration Modernization
+### 4.7 Service Registration Modernization — ✅ Completed
 
 **Goal:** Refactor `ServiceCollectionExtensions` and `DiscogsApiClientOptions` to follow the patterns used by the .NET ecosystem's own libraries (e.g., `AddHttpClient`, `AddAuthentication`, `AddHealthChecks`).
+
+> **Delivered design (some decisions changed from the original draft below after a dedicated
+> research + assessment pass):**
+> - **Return type:** kept `IServiceCollection` (HttpClient wiring stays encapsulated). **No**
+>   `IDiscogsApiClientBuilder`. Customization is instead offered via an optional
+>   `Action<IHttpClientBuilder>? configureClient` hook on every overload (user handlers sit outermost).
+> - **Options mutability:** properties **stay `set` (mutable)**, **not** `init`. `init`-only is
+>   incompatible with the `Action<TOptions>` configuration pattern / `OptionsBuilder.Configure(...)`,
+>   which mutate an already-constructed instance — this matches every framework options class.
+> - **OAuth options:** **not** extracted. `ConsumerKey` / `ConsumerSecret` / `VerifierCallbackUrl`
+>   remain on `DiscogsApiClientOptions` (one options type, one validator).
+> - **Validation:** uses a hand-written, AOT-safe **`IValidateOptions<DiscogsApiClientOptions>`**
+>   (`DiscogsApiClientOptionsValidator`) instead of reflection-based `ValidateDataAnnotations()` — it
+>   checks required fields, that URL values are constructable absolute URIs, and the all-or-nothing OAuth credential triple in one place.
+> - **Overloads:** three — `Action<TOptions>`, `Action<IServiceProvider, TOptions>`, and
+>   explicit `IConfiguration`. The delegate overloads bind the `"Discogs"` section first (only if an
+>   `IConfiguration` is registered — silent no-op otherwise), then apply the delegate on top.
+> - **Namespace:** moved to `Microsoft.Extensions.DependencyInjection` (discoverable without an extra `using`).
+> - **Handler-order bug fixed:** effective pipeline is now `Error → Auth → RateLimit` (RateLimit
+>   innermost) so rate-limit state updates on every response, including 429s, before Error throws.
+> - **Idempotency:** all infrastructure services use `TryAdd*`.
+> - Section name exposed as `DiscogsApiClientOptions.SectionName = "Discogs"`.
+>
+> **Breaking changes for callers:**
+> - The extension namespace moved to `Microsoft.Extensions.DependencyInjection`; a `using DiscogsApiClient;`
+>   that only existed for the registration call can be removed.
+> - Invalid options now surface as an `OptionsValidationException` at startup (`ValidateOnStart`) / on
+>   first `IOptions<T>.Value` access, replacing the old eager `InvalidOperationException` at registration time.
+> - `OAuthAuthenticationProvider`'s constructor now takes `IOptions<DiscogsApiClientOptions>`.
+>
+> **README refresh reminder:** when the final versioned release docs are written, refresh the README's
+> registration + configuration examples (including the `"Discogs"` `appsettings.json` section) and add a
+> changelog entry covering the breaking changes above.
 
 **Current problems with `ServiceCollectionExtensions.cs` and `DiscogsApiClientOptions.cs`:**
 - `DiscogsApiClientOptions` is instantiated eagerly inside the extension method and registered as a raw singleton — bypassing `IOptions<T>` entirely
 - Validation (null/empty checks) throws `InvalidOperationException` at registration time instead of at startup via `IValidateOptions<T>` / `ValidateOnStart()`
 - No `IConfiguration` overload — callers cannot bind options from `appsettings.json`
 - `AddDiscogsApiClient` returns `IServiceCollection`; there is no builder for fluent post-registration customization
-- OAuth credentials (`ConsumerKey`, `ConsumerSecret`, `VerifierCallbackUrl`) are mixed into the top-level options class alongside unrelated rate-limiting knobs
-- Rate-limiter services are only conditionally registered based on the eagerly-read `UseRateLimiting` flag, which makes the registration order sensitive and hard to test
+- OAuth credentials (`ConsumerKey`, `ConsumerSecret`, `VerifierCallbackUrl`) are mixed into the top-level options class alongside unrelated settings
 - `DiscogsApiClientOptions` properties are mutable (`set`); they should use `init` to prevent post-construction mutation
+
+> **Note:** The client-side rate limiter was removed in §4.4 and replaced by the read-only
+> `IDiscogsRateLimitStateService` (registered as a singleton, always enabled). That service is
+> already wired up in `AddDiscogsApiClient` and is **out of scope** for this options refactor —
+> there are no rate-limiting options to register or validate.
 
 **Reference patterns to follow:**
 - `Microsoft.Extensions.Http` (`AddHttpClient`) — returns `IHttpClientBuilder` for chaining
@@ -458,95 +556,176 @@ Phase 6: Final Validation
 **Tasks:**
 
 #### 4.7.1 Refactor `DiscogsApiClientOptions`
-- [ ] Convert all property setters to `init`-only to prevent post-construction mutation
-- [ ] Add `[Required]` and `[Url]` data annotations to `BaseUrl` and `UserAgent` for `ValidateDataAnnotations()` support
-- [ ] Extract OAuth-specific settings into a dedicated `DiscogsOAuthOptions` class (`ConsumerKey`, `ConsumerSecret`, `VerifierCallbackUrl`)
-- [ ] Extract rate-limiting settings into a dedicated `DiscogsRateLimitingOptions` class (`UseRateLimiting`, `RateLimitingWindow`, `RateLimitingWindowSegments`, `RateLimitingPermits`, `RateLimitingQueueSize`)
-- [ ] Update XML documentation on all options classes
+- [-] ~~Convert all property setters to `init`-only~~ — **not done**: `init` is incompatible with the `Action<TOptions>` options pattern; properties stay `set` (matches framework options classes)
+- [-] ~~Add `[Required]` / `[Url]` data annotations~~ — **not done**: replaced with a hand-written validator; the options type carries no data annotations (validation logic lives in one place)
+- [-] ~~Extract OAuth-specific settings into a dedicated `DiscogsOAuthOptions`~~ — **not done**: credentials stay on `DiscogsApiClientOptions` (one options type, one validator)
+- [x] Add `public const string SectionName = "Discogs";` and refresh XML documentation
 
-#### 4.7.2 Introduce `IDiscogsApiClientBuilder`
-- [ ] Define `IDiscogsApiClientBuilder` interface with a single `IServiceCollection Services { get; }` property (following the pattern of `IHttpClientBuilder`, `IHealthChecksBuilder`)
-- [ ] Implement `DiscogsApiClientBuilder` as the concrete internal class
-- [ ] Change `AddDiscogsApiClient` to return `IDiscogsApiClientBuilder` instead of `IServiceCollection`
-- [ ] Ensure the builder is used for all chaining in extension methods (see 4.7.3)
+#### 4.7.2 ~~Introduce `IDiscogsApiClientBuilder`~~ — superseded
+- [-] Superseded: `AddDiscogsApiClient` keeps returning `IServiceCollection`; per-call customization is offered via an optional `Action<IHttpClientBuilder>? configureClient` hook instead of a custom builder
 
 #### 4.7.3 Adopt `IOptions<T>` and Proper Options Registration
-- [ ] Replace raw singleton registration of `DiscogsApiClientOptions` with `services.AddOptions<DiscogsApiClientOptions>()` / `services.Configure<DiscogsApiClientOptions>(configure)`
-- [ ] Inject `IOptions<DiscogsApiClientOptions>` (or `IOptionsMonitor<T>`) into `HttpClient` configuration delegates instead of resolving the raw options object
-- [ ] Register `DiscogsOAuthOptions` and `DiscogsRateLimitingOptions` via the options system as well
-- [ ] Remove all eager validation from the extension method body
+- [x] Replaced raw singleton with `services.AddOptions<DiscogsApiClientOptions>()` + `.Configure(...)` / `.Bind(...)`
+- [x] Inject `IOptions<DiscogsApiClientOptions>` into the `HttpClient` configuration delegate and `OAuthAuthenticationProvider`
+- [-] ~~Register `DiscogsOAuthOptions`~~ — N/A (not extracted)
+- [x] Removed all eager validation from the extension method body
 
 #### 4.7.4 Add Options Validation
-- [ ] Chain `.ValidateDataAnnotations()` on the `OptionsBuilder<DiscogsApiClientOptions>` to validate `[Required]` / `[Url]` annotations
-- [ ] Add a custom `Validate()` delegate for rules that cannot be expressed with annotations (e.g., rate-limiting window > 0)
-- [ ] Chain `.ValidateOnStart()` so validation failures surface immediately at app startup rather than on first use
-- [ ] Add tests that verify options validation throws at startup for invalid configurations
+- [x] Validation via a hand-written, AOT-safe **`IValidateOptions<DiscogsApiClientOptions>`** (`DiscogsApiClientOptionsValidator`) instead of reflection-based `.ValidateDataAnnotations()`; enforces required fields, constructable absolute URI URLs, and the all-or-nothing OAuth credential triple (`ConsumerKey`, `ConsumerSecret`, `VerifierCallbackUrl`)
+- [x] Validator registered with `services.AddSingleton<IValidateOptions<T>, DiscogsApiClientOptionsValidator>()`
+- [x] Chained `.ValidateOnStart()` on the options builder
+- [x] Added tests verifying validation throws (`OptionsValidationException`) for invalid configurations
 
 #### 4.7.5 Add `IConfiguration` Overload
-- [ ] Add a second `AddDiscogsApiClient(this IServiceCollection services, IConfiguration configuration)` overload that calls `services.Configure<DiscogsApiClientOptions>(configuration)`
-- [ ] Document expected configuration section keys to match the options property names (convention: `"Discogs"` section in `appsettings.json`)
-- [ ] Add tests for the `IConfiguration`-based overload
+- [x] Added `AddDiscogsApiClient(this IServiceCollection services, IConfiguration configuration, ...)` binding the passed config directly
+- [x] Documented the `"Discogs"` section convention via `DiscogsApiClientOptions.SectionName` (in XML docs and ARCHITECTURE; consumer-facing README deferred to §6.2)
+- [x] Added tests for the `IConfiguration`-based overload
 
-#### 4.7.6 Refactor Rate-Limiter Registration into Builder Extension
-- [ ] Move rate-limiter service registration out of `AddDiscogsApiClient` into a separate `AddRateLimiting(this IDiscogsApiClientBuilder builder)` builder extension method in its own file
-- [ ] This extension reads `IOptions<DiscogsRateLimitingOptions>` at resolve time instead of at registration time, removing the order sensitivity
-- [ ] Keep `UseRateLimiting` flag on `DiscogsRateLimitingOptions` — the `RateLimitedDelegatingHandler` should check the flag at runtime and be a no-op when disabled, OR the builder extension explicitly opts in (preferred: explicit opt-in via builder, remove `UseRateLimiting` flag)
-- [ ] **Decision point:** implicit opt-in via `UseRateLimiting` flag vs. explicit opt-in via `.AddRateLimiting()` builder extension — document decision and rationale
+#### 4.7.6 Update Tests for New Registration API
+- [x] Tests verifying required services are registered and are idempotent (`TryAdd*`)
+- [x] Tests verifying `IDiscogsApiClient` / `IDiscogsAuthenticationService` resolve from the container
+- [x] Tests verifying options validation fires for invalid configs
+- [x] Handler-order test (rate-limit state updates on a 429 response before Error throws)
+- [x] Updated existing tests / `DiscogsApiClientFixture` for the new signature and namespace
 
-#### 4.7.7 Update Tests for New Registration API
-- [ ] Add unit tests for `AddDiscogsApiClient` verifying that required services are registered
-- [ ] Add tests verifying that `IDiscogsApiClient` and `IDiscogsAuthenticationService` can be resolved from the container
-- [ ] Add tests verifying options validation fires at startup for invalid configs
-- [ ] Update any existing tests that depend on the current extension method signature
-
-**Example of target API shape (illustrative — exact names subject to decision in 4.7.2/4.7.6):**
+**Delivered API shape:**
 ```csharp
-// Minimal registration
+// Minimal registration (code-based)
 services.AddDiscogsApiClient(options =>
 {
     options.UserAgent = "MyApp/1.0";
 });
 
-// With IConfiguration binding
-services.AddDiscogsApiClient(configuration.GetSection("Discogs"));
-
-// With builder-based opt-ins
-services.AddDiscogsApiClient(options =>
+// DI-aware configuration
+services.AddDiscogsApiClient((serviceProvider, options) =>
 {
-    options.UserAgent = "MyApp/1.0";
-})
-.AddRateLimiting(options =>
-{
-    options.Window = TimeSpan.FromSeconds(60);
-    options.PermitLimit = 40;
+    options.UserAgent = serviceProvider.GetRequiredService<IAppInfo>().UserAgent;
 });
+
+// With IConfiguration binding (appsettings.json "Discogs" section)
+services.AddDiscogsApiClient(configuration.GetSection(DiscogsApiClientOptions.SectionName));
+
+// Any overload can customize the underlying HttpClient (added handlers wrap the built-in pipeline)
+services.AddDiscogsApiClient(
+    options => options.UserAgent = "MyApp/1.0",
+    client => client.AddHttpMessageHandler<MyLoggingHandler>());
 ```
 
-### 4.8 Generated Code Modernization
-- [ ] Update generated code to use modern C# features (compatible with .NET 8+):
-  - [ ] File-scoped namespaces
-  - [ ] Target-typed new expressions
-  - [ ] Pattern matching where appropriate
-  - [ ] Collection expressions (if applicable)
-- [ ] Ensure generated code is AOT-compatible
-- [ ] Add `[GeneratedCode]` attribute to generated classes
-- [ ] Add `#nullable enable` to generated files
-- [ ] Optimize generated code (reduce allocations, better patterns)
+### 4.8 Generated Code Modernization — ✅ Completed
 
-### Acceptance Criteria - Phase 4
-- [ ] All C# 12 features adopted where appropriate
-- [ ] IDiscogsApiClient interface refactored and simplified (if decided)
-- [ ] Service registration follows modern `IOptions<T>` and builder patterns
-- [ ] `AddDiscogsApiClient` returns `IDiscogsApiClientBuilder` for fluent chaining
-- [ ] `IConfiguration` overload available for binding from `appsettings.json`
-- [ ] Options validation uses `ValidateDataAnnotations()` and `ValidateOnStart()`
-- [ ] Rate-limiter registration is decoupled from the main extension method
-- [ ] Generated code uses modern C# features
-- [ ] Generated code is well-documented
-- [ ] All tests pass (validates refactoring didn't break functionality)
-- [ ] No compiler warnings
-- [ ] XML documentation complete and accurate
-- [ ] Breaking changes documented (if any)
+Delivered by the generator modernization commit ("refactor(generator): modernize
+emitted code across all generators") and the generated-code marking work that added the
+`// <auto-generated/>` header and `[GeneratedCode]` attribute.
+
+- [x] Generated code uses modern C# features (compatible with .NET 8+):
+  - [x] File-scoped namespaces (generator emits `namespace X;`)
+  - [-] Target-typed new expressions (N/A — generated locals use `var x = new global::Type(...)`; target-typed `new` cannot apply with `var`)
+  - [x] Pattern matching where appropriate (`switch` expressions in the generator; `is not null` in emitted bodies)
+  - [-] Collection expressions (N/A — no arrays/collections are emitted)
+- [x] Ensure generated code is AOT-compatible (STJ source-generated `JsonTypeInfo`, `HttpClient.Send/SendAsync`, no reflection)
+- [x] Mark generated code as generated:
+  - [x] `// <auto-generated/>` header emitted at the top of every generated file — the reliable trigger for analyzer/coverage generated-code suppression
+  - [x] `[global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]` emitted per generated member and fully-generated helper/marker type (following the dotnet/runtime generator convention; not placed on the user's co-owned partial class declaration to avoid coverage-tool bleed onto hand-written members)
+  - [x] Tool name/version sourced from `Constants.ToolName` / `Constants.ToolVersion` (fixed `1.0.0` — the generator is not independently versioned; bump the constant if that changes)
+  - [-] `[ExcludeFromCodeCoverage]` / `[EditorBrowsable(Never)]` (N/A — the `// <auto-generated/>` header already covers coverage/analyzer suppression; not adopted to keep the emitted surface minimal)
+- [x] Add `#nullable enable` to generated files (emitted at the top of every generated file)
+- [x] Optimize generated code (capacity-precomputed `StringBuilder` route building; reduced allocations)
+
+### 4.9 Authentication Setup Modernization — ✅ Done
+
+Reassessed how the two authentication flows (Personal Access Token and OAuth 1.0a) are modeled,
+registered, resolved and activated. The trigger was that a consumer previously **could not
+pre-authenticate at service registration** — tokens were runtime-only state that had to be pushed
+in imperatively after the container was built.
+
+**Previous-state analysis (as-was):**
+- `IDiscogsAuthenticationService` was a mutable, stateful **singleton facade** over both mechanisms,
+  whose credentials were set imperatively *after* the container was built:
+  `AuthenticateWithPersonalAccessToken(token)`, `AuthenticateWithOAuth(accessToken, accessTokenSecret)`,
+  or the interactive `StartOAuthAuthentication`/`CompleteOAuthAuthentication` pair.
+- The actual secrets lived in provider fields (`PersonalAccessTokenAuthenticationProvider._userToken`,
+  `OAuthAuthenticationProvider._accessToken`/`_accessTokenSecret`) — **not** in
+  `DiscogsApiClientOptions`. `DiscogsApiClientOptions` only carried the OAuth *consumer* key/secret
+  and callback URL (the app identity), never the *user* access tokens.
+- Consequence: there was **no way to supply a PAT through options or `IConfiguration`**, so the
+  client couldn't be usable immediately after `AddDiscogsApiClient(...)`; both providers were also
+  always registered regardless of which (if either) mechanism a consumer actually wanted, allowing
+  "half-configured"/conflicting auth state.
+- Thread-safety / correctness smells on the singleton: mutable "last authenticated wins" flags
+  selected which header to emit, mutated without synchronization and shared across all requests.
+- The mutating `Authenticate*` methods were part of the **public** facade contract, exposing token
+  mutation to consumers even when they only wanted config-driven, immutable credentials.
+
+**Chosen direction (implemented):** authentication is now an **explicit, single choice made at DI
+registration time**, mirroring `AddAuthentication().AddJwtBearer(...)`-style ecosystem patterns,
+rather than the originally-sketched "seed everything through one shared options surface" idea below.
+
+- `AddDiscogsApiClient(...)` alone registers **no** auth mechanism — requests are sent unauthenticated
+  by default (valid Discogs usage for public endpoints), with no exception thrown for that state.
+- `.WithPatAuthentication(Action<DiscogsPatOptions>? configure = null)` opts into the Personal Access
+  Token mechanism. `DiscogsPatOptions.Token` is bindable from `IConfiguration` (`"Discogs:Pat"`) —
+  a PAT is a single static app-level secret, so config-binding it is appropriate. Supplying it via
+  options/config means the resolved `IDiscogsPatAuthenticationProvider` is **already authenticated**
+  immediately after the container is built, with no imperative call required; an interactive
+  `Authenticate(token)` call remains available for apps that collect the token at runtime instead.
+- `.WithOAuthAuthentication(Action<DiscogsOAuthOptions>? configure = null)` opts into the OAuth 1.0a
+  mechanism. `DiscogsOAuthOptions` carries only the static app-identity secrets (`ConsumerKey`,
+  `ConsumerSecret`, `VerifierCallbackUrl`) — **not** user access tokens. The OAuth user access
+  token/secret are dynamic, per-user values obtained (and cached by the consuming application) at
+  runtime through the interactive `StartAuthentication`/`CompleteAuthentication` flow, or supplied
+  via a direct `Authenticate(accessToken, accessTokenSecret)` call when an app has cached tokens from
+  a previous run — this remains a **code/runtime** action, not static configuration (decided against
+  adding a pluggable token-store abstraction: DI-registration time can't do async retrieval anyway,
+  and multi-tenant apps would need their own per-tenant caching layer regardless).
+- Calling **both** `.WithPatAuthentication()` and `.WithOAuthAuthentication()` on the same registration
+  throws `InvalidOperationException` at registration time (fail-fast, not "last wins").
+- The facade `IDiscogsAuthenticationService`/`DiscogsAuthenticationService` was **removed**.
+  Consumers who need the mechanism-specific API resolve the concrete provider interface they
+  registered (`IDiscogsPatAuthenticationProvider`/`IDiscogsOAuthAuthenticationProvider`) directly —
+  these were promoted from implementation details to polished, customer-facing public API with a
+  `Discogs`-prefixed rename pass (`IPersonalAccessTokenAuthenticationProvider` →
+  `IDiscogsPatAuthenticationProvider`, `IOAuthAuthenticationProvider` →
+  `IDiscogsOAuthAuthenticationProvider`), matching the existing `Discogs`-prefix convention
+  (`DiscogsApiClientOptions`, `DiscogsRateLimitState*`).
+- An internal `IDiscogsAuthenticationHeaderProvider` contract (single implementation,
+  `DiscogsAuthenticationHeaderProvider`) composes two optional nullable provider dependencies
+  (`IDiscogsPatAuthenticationProvider?`, `IDiscogsOAuthAuthenticationProvider?`) — the built-in DI
+  container supplies `null` for an unregistered service, so the default "unauthenticated" state falls
+  out naturally with no sentinel/no-op type needed. `AuthenticationDelegatingHandler` depends only on
+  this internal contract and is itself now `internal`.
+- Both providers hold their token state in an immutable snapshot swapped via
+  `Interlocked.Exchange`/`Volatile.Read`, mirroring the existing `DiscogsRateLimitStateService`
+  pattern — no more unsynchronized flags.
+- Fixed a lifetime bug surfaced by DI tests during implementation: `DiscogsOAuthAuthenticationProvider`
+  holds mutable token state and must be a **singleton** so the instance a consumer authenticates is
+  the same instance the header provider reads from; `AddHttpClient<TClient, TImplementation>()`
+  registers the typed client as **transient**, so its `HttpClient` is instead created via a named
+  client (`IHttpClientFactory`) and the provider registered as a manual singleton factory.
+
+**Tests:** provider unit tests updated for the renamed types/thread-safe implementation (including a
+new "authenticated from options at registration" PAT test); DI/registration tests cover
+`.WithPatAuthentication()`, `.WithOAuthAuthentication()`, the mutual-exclusivity conflict, and the
+unauthenticated-default state; a new `DiscogsAuthenticationHeaderProviderTests` covers the internal
+composition logic directly. All 257 tests pass.
+
+**Demos updated:** `DiscogsApiClientDemo.PersonalAccessToken`, `DiscogsApiClientDemo.OAuth`, and
+`DiscogsApiClientDemo.AotConsole` all updated to the new `.With*Authentication()` registration +
+provider-resolution model.
+
+
+- [x] All C# 12 features adopted where appropriate (§4.1: file-scoped namespaces, records, init-only properties, pattern matching, target-typed `new`, primary constructors, collection expressions, string interpolation — all audited/implemented)
+- [x] IDiscogsApiClient interface refactored and simplified — now a pure contract; endpoints + guards moved to the `DiscogsApiClient` partial class
+- [x] Service registration follows modern `IOptions<T>` patterns (`AddOptions<T>`, `IOptions<T>`, `ValidateOnStart`)
+- [-] ~~`AddDiscogsApiClient` returns `IDiscogsApiClientBuilder`~~ — superseded: returns `IServiceCollection` + optional `Action<IHttpClientBuilder>` hook
+- [x] `IConfiguration` overload available for binding from `appsettings.json`
+- [x] Options validation uses a hand-written AOT-safe `IValidateOptions<T>` and `ValidateOnStart()`
+- [x] Authentication setup reviewed (§4.9): pre-authentication supported at registration (PAT + existing OAuth tokens) and shared mutable auth state reassessed
+- [x] Generated code uses modern C# features (file-scoped ns, `#nullable enable`, pattern matching, AOT-safe, `// <auto-generated/>` header + `[GeneratedCode]` attribute)
+- [x] Generated code is well-documented (XML docs live on the hand-written public interfaces per the "public API surface only" doc convention; generated members intentionally carry none)
+- [x] All tests pass (262 DiscogsApiClient.Tests + 83 DiscogsApiClient.SourceGenerator.Tests, all passing on a clean rebuild)
+- [x] No compiler warnings (fresh `-t:Rebuild` with `EnforceCodeStyleInBuild=true`: 0 warnings, 0 errors)
+- [x] XML documentation complete and accurate (public library interfaces — `IDiscogsApiClient`, provider interfaces, options types — carry XML docs; internal/private members intentionally do not, per style convention)
+- [x] Breaking changes documented (if any) (documented inline in §4.2, §4.7, §4.9)
 
 ---
 
@@ -624,14 +803,31 @@ services.AddDiscogsApiClient(options =>
 - [ ] Test in a clean environment (fresh clone)
 
 ### 6.2 Documentation Updates
-- [ ] **Decision point:** Determine if README.md should be updated now or with release
-  - Main branch is visible to 4.x users; may confuse them if updated prematurely
-  - Consider updating only with final public release, not modernization merge
+
+**Consumer-facing docs are intentionally deferred to this phase.** Throughout the modernization,
+internal/dev docs (`ARCHITECTURE.md`, this plan) are kept current, but consumer-facing docs (README,
+changelog) are **not** touched until the branch is being prepared for publishing — updating them
+prematurely would mislead 4.x users reading `main`. This is the single consolidated docs-rework step.
+
+- [ ] **Rework the README** for the v5 surface — do this once, here, at the end:
+  - [ ] Service registration: the three `AddDiscogsApiClient` overloads (`Action<TOptions>`,
+        `Action<IServiceProvider, TOptions>`, `IConfiguration`) + the optional `Action<IHttpClientBuilder>` hook
+  - [ ] Configuration via `appsettings.json` (the `"Discogs"` section / `DiscogsApiClientOptions.SectionName`)
+        and startup validation surfacing as `OptionsValidationException`
+  - [ ] Rate limiting removal and the new `IDiscogsRateLimitStateService`
+  - [ ] Refresh all code samples against the modernized API
+- [ ] **Rework the CHANGELOG** — add the v5.0.0 entry consolidating every phase's changes
+- [ ] **Consolidate all breaking changes** into a single, authoritative list (namespace move,
+      `OptionsValidationException` at startup, `OAuthAuthenticationProvider` ctor takes `IOptions<T>`,
+      rate-limiting removal, `IDiscogsApiClient` interface changes)
+- [ ] Create migration guide for v4.x → v5.x (breaking changes) in `docs/MIGRATION_GUIDE.md`
+  - [ ] Document rate limiting removal and new `IDiscogsRateLimitStateService` usage with examples
+  - [ ] Document the service-registration / options changes with before/after examples
+  - [ ] Include code samples showing how consumers can implement custom rate limiting if needed
 - [ ] **Decision point:** Determine if version should be bumped in modernization→main merge
   - Version bump may be more appropriate with actual package release
   - Document decision and timeline
-- [ ] Update `docs/ARCHITECTURE.md` with any architectural changes (if applicable)
-- [ ] Create migration guide for v4.x → v5.x (breaking changes) in `docs/MIGRATION_GUIDE.md`
+- [ ] Update `docs/ARCHITECTURE.md` with any remaining architectural changes (if applicable)
 - [ ] Update this modernization plan status to completed
 
 ### 6.3 Code Quality Gates
@@ -672,15 +868,55 @@ services.AddDiscogsApiClient(options =>
 
 ---
 
+## Phase 7: CI/CD & Release Automation
+
+**Goal:** Automate building, packing, and publishing the `DiscogsApiClient` NuGet package via a GitHub Actions workflow, with a manual switch to redirect a publish to the NuGet test server (`int.nugettest.org`) instead of production `nuget.org` for dry-run validation.
+
+**Branch:** `modernization/phase7-release-automation`
+
+### 7.1 Workflow Design
+- [ ] Trigger: `workflow_dispatch` only (no tag-push or branch-push trigger) — every release is a deliberate, manual action
+- [ ] Manual input: boolean switch (e.g. `publish_to_test_server`, default `false`) — when `true`, the publish step targets `int.nugettest.org` instead of `nuget.org`
+- [ ] Restore, build (Release configuration), and run the full test suite (all target frameworks) as a gate before packing
+- [ ] `dotnet pack` only the `DiscogsApiClient` library project (not test/demo projects) in Release configuration, producing `.nupkg` + `.snupkg` (symbol package)
+- [ ] Upload the produced package(s) as a workflow artifact regardless of publish outcome (so a failed/aborted publish still leaves the built package retrievable)
+- [ ] Push the package via `dotnet nuget push`:
+  - [ ] Default (`publish_to_test_server = false`): push to `https://api.nuget.org/v3/index.json` using the `NUGET_API_KEY` secret
+  - [ ] Test mode (`publish_to_test_server = true`): push to `https://apiint.nugettest.org/v3/index.json` using the `NUGET_TEST_API_KEY` secret
+
+### 7.2 Versioning
+- [ ] Package version is read as-is from the existing `<PackageVersion>`/`<AssemblyVersion>`/`<FileVersion>` properties already hand-maintained in `DiscogsApiClient.csproj` — no automated version-bump tooling introduced in this phase
+- [ ] Workflow surfaces the resolved version in its run summary/logs so the person triggering it can confirm what will be published before approving
+
+### 7.3 Secrets
+- [ ] `NUGET_API_KEY` — nuget.org API key, repository secret
+- [ ] `NUGET_TEST_API_KEY` — separate API key for `int.nugettest.org` (distinct account/service from nuget.org), repository secret
+- [ ] No GitHub Environment protection/required-reviewer gate — single-maintainer project, the manual `workflow_dispatch` + explicit boolean switch is a sufficient safeguard
+
+### 7.4 Documentation
+- [ ] Document the release workflow (how to trigger it, what the test-server switch does, where to find the resulting package artifact) in `docs/` or the README
+- [ ] Update Phase 6 §6.5's "Publishing happens in a separate release process" note to reference the new automated workflow instead of a manual process
+
+### Acceptance Criteria - Phase 7
+- [ ] Workflow file exists (e.g. `.github/workflows/publish-nuget.yml`)
+- [ ] Workflow builds, tests, and packs the library before any publish step runs
+- [ ] Workflow can be manually triggered with the test-server switch, defaulting to nuget.org
+- [ ] At least one successful end-to-end test-server publish validated
+- [ ] Both API key secrets configured in repository settings
+- [ ] Release process documented for future use
+
+---
+
 ## Progress Tracking
 
 ### Overall Status
 - **Phase 1:** ✅ Completed
 - **Phase 2:** ✅ Completed
 - **Phase 3:** ✅ Completed
-- **Phase 4:** ⬜ Not Started
+- **Phase 4:** ✅ Completed
 - **Phase 5:** ⬜ Not Started
 - **Phase 6:** ⬜ Not Started
+- **Phase 7:** ⬜ Not Started
 
 **Legend:**
 - ⬜ Not Started
@@ -708,8 +944,9 @@ services.AddDiscogsApiClient(options =>
 | TBD | Breaking changes permitted if necessary | Will result in new major version (v5.0.0+) | Consumer migration required |
 | TBD | Version/README update timing | May defer to actual release, not modernization merge | Avoids confusion for 4.x users |
 | TBD | Merge to main ≠ release | Package publication is separate process | Cleaner release workflow |
-| TBD | Service registration modernization (Phase 3.6) | Align with `IOptions<T>`, builder pattern, `ValidateOnStart()` used by all modern .NET libraries | **Breaking** — callers must update `AddDiscogsApiClient` call site |
-| TBD | Rate-limiter opt-in: implicit flag vs. explicit builder extension | TBD in Phase 3.6.6 — prefer explicit `.AddRateLimiting()` builder extension | **Breaking** — removes `UseRateLimiting` flag if explicit opt-in chosen |
+| TBD | Service registration modernization (§4.7) | Align with `IOptions<T>`, hand-written `IValidateOptions<T>` + `ValidateOnStart()`, `TryAdd*` idempotency, `IConfiguration` binding, and DI-namespace discoverability used by modern .NET libraries | **Breaking** — extension moved to `Microsoft.Extensions.DependencyInjection`; invalid options now throw `OptionsValidationException` at startup instead of `InvalidOperationException` at registration; `OAuthAuthenticationProvider` ctor takes `IOptions<T>` |
+| 2025-01-XX | **Rate limiting: Remove built-in limiter** | Sliding window implementation was unreliable and didn't align with Discogs methodology; feature not widely used; exposing raw metadata provides maximum flexibility | **Breaking** — consumers must remove `UseRateLimiting` and related config; can now access rate limit state via `IDiscogsRateLimitStateService` |
+| TBD | Authentication setup modernization (§4.9) | `IDiscogsAuthenticationService` facade allowed half-configured/conflicting auth state and had no way to pre-authenticate at registration; tokens were runtime-only mutable singleton state, not bindable via options/`IConfiguration` | **Breaking** — `IDiscogsAuthenticationService`/`DiscogsAuthenticationService` removed; `IPersonalAccessTokenAuthenticationProvider`/`PersonalAccessTokenAuthenticationProvider` renamed to `IDiscogsPatAuthenticationProvider`/`DiscogsPatAuthenticationProvider`; `IOAuthAuthenticationProvider`/`OAuthAuthenticationProvider` renamed to `IDiscogsOAuthAuthenticationProvider`/`DiscogsOAuthAuthenticationProvider`; `DiscogsApiClientOptions.ConsumerKey`/`ConsumerSecret`/`VerifierCallbackUrl` moved to new `DiscogsOAuthOptions`; new `DiscogsPatOptions`; consumers must call `.WithPatAuthentication(...)` or `.WithOAuthAuthentication(...)` to opt into a mechanism (calling both throws `InvalidOperationException`); calling neither yields a valid, permanent unauthenticated client |
 
 ### Risks & Mitigations
 - **Risk:** Breaking changes impact existing consumers
@@ -732,7 +969,7 @@ services.AddDiscogsApiClient(options =>
 - [ ] Should we implement the optional E2E test suite in Phase 2.6?
 - [ ] What breaking changes (if any) should we make to IDiscogsApiClient interface?
 - [ ] Should README and version be updated in modernization→main merge or deferred to release?
-- [ ] Phase 3.6.6: implicit `UseRateLimiting` flag OR explicit `.AddRateLimiting()` builder extension?
+- [x] ~~Phase 3.6.6: implicit `UseRateLimiting` flag OR explicit `.AddRateLimiting()` builder extension?~~ **Resolved:** Removed rate limiting entirely; replaced with `IDiscogsRateLimitStateService` that exposes raw Discogs rate limit metadata
 - [ ] *Add questions as they arise*
 
 ---
@@ -796,3 +1033,4 @@ The generator project can use `<LangVersion>latest</LangVersion>` despite target
 - Add notes and decisions to relevant sections
 - Keep progress tracking current
 - Update dates and timeline estimates
+

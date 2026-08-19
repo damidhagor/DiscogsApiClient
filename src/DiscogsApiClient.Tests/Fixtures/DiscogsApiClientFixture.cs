@@ -22,12 +22,10 @@ public sealed class DiscogsApiClientFixture : IAsyncInitializer, IAsyncDisposabl
 
     public Task InitializeAsync()
     {
-        _authenticatedProvider = BuildServiceProvider();
-        _unauthenticatedProvider = BuildServiceProvider();
-
         var userToken = TestContext.Configuration.Get("DiscogsUserToken") ?? "token";
-        _authenticatedProvider.GetRequiredService<IDiscogsAuthenticationService>()
-            .AuthenticateWithPersonalAccessToken(userToken);
+
+        _authenticatedProvider = BuildServiceProvider(userToken);
+        _unauthenticatedProvider = BuildServiceProvider(userToken: null);
 
         return Task.CompletedTask;
     }
@@ -39,7 +37,7 @@ public sealed class DiscogsApiClientFixture : IAsyncInitializer, IAsyncDisposabl
         return ValueTask.CompletedTask;
     }
 
-    private ServiceProvider BuildServiceProvider()
+    private ServiceProvider BuildServiceProvider(string? userToken)
     {
         var isRecording = RecordingHelper.IsRecording;
 
@@ -48,8 +46,12 @@ public sealed class DiscogsApiClientFixture : IAsyncInitializer, IAsyncDisposabl
             {
                 o.BaseUrl = "https://api.discogs.com";
                 o.UserAgent = "DiscogsApiClientTests/1.0";
-                o.UseRateLimiting = isRecording;
             });
+
+        if (userToken is not null)
+        {
+            services.WithPatAuthentication(o => o.Token = userToken);
+        }
 
         if (isRecording)
         {

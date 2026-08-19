@@ -21,7 +21,7 @@ public sealed class IdentityTests(DiscogsApiClientFixture fixture)
     [Test]
     public async Task GetIdentity_ShouldThrowUnauthenticatedException_WhenUnauthenticated(CancellationToken cancellationToken)
     {
-        
+
         await Assert.That(async () => await _unauthenticatedApiClient.GetIdentity(cancellationToken))
             .Throws<UnauthenticatedDiscogsException>();
     }

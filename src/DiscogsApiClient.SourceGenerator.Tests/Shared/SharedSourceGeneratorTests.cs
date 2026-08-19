@@ -20,7 +20,7 @@ public sealed class SharedSourceGeneratorTests
 
         var expected = AliasAsAttribute.Source;
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(source))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(expected));
     }
 }

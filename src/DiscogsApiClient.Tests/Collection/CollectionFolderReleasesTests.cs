@@ -75,8 +75,8 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
         var sortParametersDescending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Artist, SortOrder = SortOrder.Descending };
         var responseDescending = await _apiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, cancellationToken);
 
-        await Assert.That(responseAscending.Releases.Select(r => r.Release.Artists.First().Name)).IsInOrder();
-        await Assert.That(responseDescending.Releases.Select(r => r.Release.Artists.First().Name)).IsInDescendingOrder();
+        await Assert.That(responseAscending.Releases.Select(r => r.Release.Artists[0].Name)).IsInOrder();
+        await Assert.That(responseDescending.Releases.Select(r => r.Release.Artists[0].Name)).IsInDescendingOrder();
 
         // Label
         sortParametersAscending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Label, SortOrder = SortOrder.Ascending };
@@ -84,8 +84,8 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
         sortParametersDescending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Label, SortOrder = SortOrder.Descending };
         responseDescending = await _apiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, cancellationToken);
 
-        await Assert.That(responseAscending.Releases.Select(r => r.Release.Labels.First().Name)).IsInOrder();
-        await Assert.That(responseDescending.Releases.Select(r => r.Release.Labels.First().Name)).IsInDescendingOrder();
+        await Assert.That(responseAscending.Releases.Select(r => r.Release.Labels[0].Name)).IsInOrder();
+        await Assert.That(responseDescending.Releases.Select(r => r.Release.Labels[0].Name)).IsInDescendingOrder();
 
         // Title
         sortParametersAscending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Title, SortOrder = SortOrder.Ascending };
@@ -102,8 +102,8 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
         sortParametersDescending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.CatalogNumber, SortOrder = SortOrder.Descending };
         responseDescending = await _apiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, cancellationToken);
 
-        await Assert.That(responseAscending.Releases.Select(r => r.Release.Labels.First().CatalogNumber)).IsInOrder();
-        await Assert.That(responseDescending.Releases.Select(r => r.Release.Labels.First().CatalogNumber)).IsInDescendingOrder();
+        await Assert.That(responseAscending.Releases.Select(r => r.Release.Labels[0].CatalogNumber)).IsInOrder();
+        await Assert.That(responseDescending.Releases.Select(r => r.Release.Labels[0].CatalogNumber)).IsInDescendingOrder();
 
         // Format
         sortParametersAscending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Format, SortOrder = SortOrder.Ascending };
@@ -111,8 +111,8 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
         sortParametersDescending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Format, SortOrder = SortOrder.Descending };
         responseDescending = await _apiClient.GetCollectionFolderReleases(username, folderId, paginationParams, sortParametersDescending, cancellationToken);
 
-        await Assert.That(responseAscending.Releases.Select(r => r.Release.Formats.First().Name)).IsInOrder();
-        await Assert.That(responseDescending.Releases.Select(r => r.Release.Formats.First().Name)).IsInDescendingOrder();
+        await Assert.That(responseAscending.Releases.Select(r => r.Release.Formats[0].Name)).IsInOrder();
+        await Assert.That(responseDescending.Releases.Select(r => r.Release.Formats[0].Name)).IsInDescendingOrder();
 
         // Rating
         sortParametersAscending = new CollectionFolderReleaseSortQueryParameters { SortProperty = SortableProperty.Rating, SortOrder = SortOrder.Ascending };
@@ -310,7 +310,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
     [Test]
     [Arguments(-1)]
     [Arguments(0)]
-    public async Task DeleteReleaseFromCollectionFolder_ShouldThrowArgumentOutOfRangeException_WhenInstanceIdIsInvalid(int instanceId, CancellationToken cancellationToken)
+    public async Task DeleteReleaseFromCollectionFolder_ShouldThrowArgumentOutOfRangeException_WhenInstanceIdIsInvalid(long instanceId, CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var folderId = 999;
@@ -326,7 +326,7 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
         var username = "DamIDhagor";
         var folderId = 999;
         var releaseId = 5134861;
-        var instanceId = int.MaxValue;
+        var instanceId = long.MaxValue;
 
         await Assert.That(async () => await _apiClient.DeleteReleaseFromCollectionFolder(username, folderId, releaseId, instanceId, cancellationToken))
             .Throws<ResourceNotFoundDiscogsException>();

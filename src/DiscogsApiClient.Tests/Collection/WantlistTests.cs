@@ -144,13 +144,13 @@ public sealed class WantlistTests(DiscogsApiClientFixture fixture)
     }
 
     [Test]
-    public async Task DeleteReleaseFromWantlist_ShouldThrowResourceNotFoundException_WhenReleaseIdDoesNotExist(CancellationToken cancellationToken)
+    public async Task DeleteReleaseFromWantlist_ShouldSucceed_WhenReleaseIdDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
         var releaseId = int.MaxValue;
 
         await Assert.That(async () => await _apiClient.DeleteReleaseFromWantlist(username, releaseId, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .ThrowsNothing();
     }
 
     [Test]

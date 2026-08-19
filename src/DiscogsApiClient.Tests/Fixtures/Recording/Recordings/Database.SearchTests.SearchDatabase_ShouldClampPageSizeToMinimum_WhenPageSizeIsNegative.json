@@ -14,7 +14,7 @@
     "responseStatusCode": 200,
     "responseHeaders": {
       "Date": [
-        "Tue, 26 May 2026 13:23:46 GMT"
+        "Sat, 13 Jun 2026 22:50:21 GMT"
       ],
       "Transfer-Encoding": [
         "chunked"
@@ -37,9 +37,6 @@
       "Cache-Control": [
         "public, must-revalidate"
       ],
-      "cf-cache-status": [
-        "DYNAMIC"
-      ],
       "Strict-Transport-Security": [
         "max-age=15552000"
       ],
@@ -56,10 +53,10 @@
         "60"
       ],
       "x-discogs-ratelimit-remaining": [
-        "42"
+        "29"
       ],
       "x-discogs-ratelimit-used": [
-        "18"
+        "31"
       ],
       "X-Frame-Options": [
         "SAMEORIGIN"
@@ -67,16 +64,22 @@
       "X-XSS-Protection": [
         "1; mode=block"
       ],
+      "Set-Cookie": [
+        "__cf_bm=aLTHpOorEkcs24DnSj7NQM5qHQdJx_BmmzMCYqwDtj0-1781391020.819185-1.0.1.1-1ZIVtEyvKRFjFD7lU9Kk2fFPDxdx.8jZ_Ky_PJhS9zT25t0RXsYNZXid1xZRLeg54JPSFzw7hBUFt4G_5ZZdfFqCAIDjN5bB4lgJlPbjdDxkABAT.SApJqCO8Cmq8yr4; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Sat, 13 Jun 2026 23:20:21 GMT"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
       "Server": [
         "cloudflare"
       ],
       "CF-RAY": [
-        "a01d18a8696ff95e-DUS"
+        "a0b4a75819d0160f-DUS"
       ],
       "Alt-Svc": [
         "h3=\u0022:443\u0022"
       ]
     },
-    "responseBody": "{\u0022pagination\u0022:{\u0022page\u0022:1,\u0022pages\u0022:1296,\u0022per_page\u0022:1,\u0022items\u0022:1296,\u0022urls\u0022:{\u0022last\u0022:\u0022https://api.discogs.com/database/search?q=hammerfall\u0026page=1296\u0026per_page=1\u0022,\u0022next\u0022:\u0022https://api.discogs.com/database/search?q=hammerfall\u0026page=2\u0026per_page=1\u0022}},\u0022results\u0022:[{\u0022id\u0022:287459,\u0022type\u0022:\u0022artist\u0022,\u0022user_data\u0022:{\u0022in_wantlist\u0022:true,\u0022in_collection\u0022:true},\u0022master_id\u0022:null,\u0022master_url\u0022:null,\u0022uri\u0022:\u0022/artist/287459-HammerFall\u0022,\u0022title\u0022:\u0022HammerFall\u0022,\u0022thumb\u0022:\u0022https://i.discogs.com/DHXUrHfWHSb9a7DDoRO7pA00R5Zkd13rF56JM3NBThU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTI4NzQ1/OS0xNzI0NDI5MjMy/LTU5ODEuanBlZw.jpeg\u0022,\u0022cover_image\u0022:\u0022https://i.discogs.com/RDQAZC0moF-6OPsWKvI1GkZUW8WcteG2kfazZmEvJwE/rs:fit/g:sm/q:90/h:550/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTI4NzQ1/OS0xNzI0NDI5MjMy/LTU5ODEuanBlZw.jpeg\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/artists/287459\u0022}]}"
+    "responseBody": "{\u0022pagination\u0022:{\u0022page\u0022:1,\u0022pages\u0022:1304,\u0022per_page\u0022:1,\u0022items\u0022:1304,\u0022urls\u0022:{\u0022last\u0022:\u0022https://api.discogs.com/database/search?q=hammerfall\u0026page=1304\u0026per_page=1\u0022,\u0022next\u0022:\u0022https://api.discogs.com/database/search?q=hammerfall\u0026page=2\u0026per_page=1\u0022}},\u0022results\u0022:[{\u0022id\u0022:287459,\u0022type\u0022:\u0022artist\u0022,\u0022user_data\u0022:{\u0022in_wantlist\u0022:false,\u0022in_collection\u0022:true},\u0022master_id\u0022:null,\u0022master_url\u0022:null,\u0022uri\u0022:\u0022/artist/287459-HammerFall\u0022,\u0022title\u0022:\u0022HammerFall\u0022,\u0022thumb\u0022:\u0022https://i.discogs.com/DHXUrHfWHSb9a7DDoRO7pA00R5Zkd13rF56JM3NBThU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTI4NzQ1/OS0xNzI0NDI5MjMy/LTU5ODEuanBlZw.jpeg\u0022,\u0022cover_image\u0022:\u0022https://i.discogs.com/RDQAZC0moF-6OPsWKvI1GkZUW8WcteG2kfazZmEvJwE/rs:fit/g:sm/q:90/h:550/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTI4NzQ1/OS0xNzI0NDI5MjMy/LTU5ODEuanBlZw.jpeg\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/artists/287459\u0022}]}"
   }
 ]

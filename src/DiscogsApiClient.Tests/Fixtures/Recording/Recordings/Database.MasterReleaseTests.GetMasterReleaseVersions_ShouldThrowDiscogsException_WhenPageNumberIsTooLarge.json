@@ -14,7 +14,7 @@
     "responseStatusCode": 500,
     "responseHeaders": {
       "Date": [
-        "Tue, 26 May 2026 13:22:37 GMT"
+        "Sat, 13 Jun 2026 22:48:53 GMT"
       ],
       "Connection": [
         "keep-alive"
@@ -44,10 +44,10 @@
         "60"
       ],
       "x-discogs-ratelimit-remaining": [
-        "35"
+        "54"
       ],
       "x-discogs-ratelimit-used": [
-        "25"
+        "6"
       ],
       "X-Frame-Options": [
         "SAMEORIGIN"
@@ -56,7 +56,7 @@
         "1; mode=block"
       ],
       "Set-Cookie": [
-        "__cf_bm=OOwe6vnYjvsDuMwRoOw.mAwIR1z.COsMPRO2y9VdKsw-1779801756.7847962-1.0.1.1-ZUrEtncpVwLN_DoK8hHV7ZuZ4XGfqQ5w.MCff6_8ep4hB2EP8ZeRuPlRwTl54q6RJeQx_X4L_7nrC9qtz8gezsR9vKb2J0pKhnwSaaSGUCwIwZWqX8aLjCggcmVgVbAS; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Tue, 26 May 2026 13:52:37 GMT"
+        "__cf_bm=YxSu2PFFkT2_K1i8lCIh8B7ygIjTF.q1VR.9wH91R8I-1781390932.6583118-1.0.1.1-EmtKEjXRZWleAgYqYXf3ghxP8QUwoSamuEU4FokXXg.BiBMwQih4m6duVweykzU25TuXRSmV4m4eQxUbE1_GFT9aJNSTo6lPaKNAmJ0IaFNXz42QFWO5Gaghv.iGZ5kJ; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Sat, 13 Jun 2026 23:18:53 GMT"
       ],
       "cf-cache-status": [
         "DYNAMIC"
@@ -65,12 +65,12 @@
         "cloudflare"
       ],
       "CF-RAY": [
-        "a01d16f3ee3a0121-DUS"
+        "a0b4a5311f0cf815-DUS"
       ],
       "Alt-Svc": [
         "h3=\u0022:443\u0022"
       ]
     },
-    "responseBody": "{\u0022message\u0022:\u0022An internal server error occurred (code: 5bee0c8aa4ef4eec9e7dcdcafce508c9).\u0022}"
+    "responseBody": "{\u0022message\u0022:\u0022An internal server error occurred (code: d3ede955d36b462ca795818e6048c6f6).\u0022}"
   }
 ]

@@ -82,7 +82,7 @@ public sealed class LabelsTests(DiscogsApiClientFixture fixture)
         await Assert.That(response.Releases).IsNotNull();
         await Assert.That(response.Releases.Count).IsEqualTo(50);
 
-        var release = response.Releases.First();
+        var release = response.Releases[0];
         await Assert.That(release).IsNotNull();
         await Assert.That(() => new Uri(release.ResourceUrl)).ThrowsNothing();
         await Assert.That(() => new Uri(release.ThumbnailUrl)).ThrowsNothing();

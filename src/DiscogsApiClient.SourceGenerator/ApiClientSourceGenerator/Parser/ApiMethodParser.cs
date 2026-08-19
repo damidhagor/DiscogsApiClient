@@ -45,6 +45,12 @@ internal static class ApiMethodParser
             return null;
         }
 
+        if (!methodSymbol.IsPartialDefinition)
+        {
+            diagnostics.Add(new(DiagnosticDescriptors.ApiMethodMustBePartial, location, [methodSymbol.Name]));
+            return null;
+        }
+
         if (!methodSymbol.ReturnType.TryParseApiMethodReturnType(out var returnType))
         {
             diagnostics.Add(new(DiagnosticDescriptors.InvalidMethodReturnType, location, [methodSymbol.Name]));
@@ -78,7 +84,17 @@ internal static class ApiMethodParser
 
         var parameters = methodSymbol.ParseApiMethodParameters(route, location, diagnostics, cancellationToken);
 
-        return new(methodSymbol.Name, route, methodType, parameters, returnType!);
+        var accessModifier = methodSymbol.DeclaredAccessibility switch
+        {
+            Accessibility.Public => "public",
+            Accessibility.Internal => "internal",
+            Accessibility.Protected => "protected",
+            Accessibility.ProtectedOrInternal => "protected internal",
+            Accessibility.ProtectedAndInternal => "private protected",
+            _ => "private"
+        };
+
+        return new(methodSymbol.Name, route, methodType, accessModifier, parameters, returnType!);
     }
 
     private static bool TryParseHttpMethodAttribute(this IMethodSymbol methodSymbol, out ApiMethodType apiMethodType, out string route)

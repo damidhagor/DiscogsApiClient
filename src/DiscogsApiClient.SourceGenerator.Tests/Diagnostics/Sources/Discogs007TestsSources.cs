@@ -21,10 +21,13 @@ public static class Discogs007TestsSources
         public class RequestB { }
 
         [ApiClient(typeof(TestJsonContext))]
-        public interface ITestApiClient
+        internal sealed partial class TestApiClient(System.Net.Http.HttpClient httpClient, TestJsonContext context)
         {
+            private readonly System.Net.Http.HttpClient _httpClient = httpClient;
+            private readonly TestJsonContext _context = context;
+
             [HttpPost("/test")]
-            Task CreateAsync([Body] RequestA a, [Body] RequestB b, CancellationToken cancellationToken);
+            public partial Task CreateAsync([Body] RequestA a, [Body] RequestB b, CancellationToken cancellationToken);
         }
         """;
 
@@ -46,10 +49,13 @@ public static class Discogs007TestsSources
         public class TestRequest { }
 
         [ApiClient(typeof(TestJsonContext))]
-        public interface ITestApiClient
+        internal sealed partial class TestApiClient(System.Net.Http.HttpClient httpClient, TestJsonContext context)
         {
+            private readonly System.Net.Http.HttpClient _httpClient = httpClient;
+            private readonly TestJsonContext _context = context;
+
             [HttpPost("/test")]
-            Task CreateAsync([Body] TestRequest request, CancellationToken cancellationToken);
+            public partial Task CreateAsync([Body] TestRequest request, CancellationToken cancellationToken);
         }
         """;
 
@@ -69,10 +75,13 @@ public static class Discogs007TestsSources
         }
 
         [ApiClient(typeof(TestJsonContext))]
-        public interface ITestApiClient
+        internal sealed partial class TestApiClient(System.Net.Http.HttpClient httpClient, TestJsonContext context)
         {
+            private readonly System.Net.Http.HttpClient _httpClient = httpClient;
+            private readonly TestJsonContext _context = context;
+
             [HttpGet("/items")]
-            Task<string> GetItemsAsync(CancellationToken cancellationToken);
+            public partial Task<string> GetItemsAsync(CancellationToken cancellationToken);
         }
         """;
 }

@@ -14,9 +14,9 @@ public sealed class Discogs003Tests
         var discogs003 = diagnostics.Where(d => d.Id == "DISCOGS003").ToArray();
 
         await Assert.That(discogs003.Length).IsEqualTo(1);
-        await Assert.That(discogs003[0].Severity).IsEqualTo(DiagnosticSeverity.Warning);
+        await Assert.That(discogs003[0].Severity).IsEqualTo(DiagnosticSeverity.Error);
         await Assert.That(discogs003[0].GetMessage()).IsEqualTo(
-            "Method 'GetTestAsync' has no CancellationToken parameter — consider adding one for proper cancellation support");
+            "Method 'GetTestAsync' must have a CancellationToken parameter — every async API method requires one for cancellation support");
     }
 
     [Test]

@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="../README.md" />
+    <File Path="../AGENTS.md" />
+    <File Path="../.editorconfig" />
+  </Folder>
+  <Folder Name="/Solution Items/docs/">
+    <File Path="../docs/API_COVERAGE.md" />
+    <File Path="../docs/ARCHITECTURE.md" />
+    <File Path="../docs/MODERNIZATION_PLAN.md" />
+    <File Path="../docs/TESTING.md" />
+    <File Path="../docs/response-recording.md" />
+    <File Path="../docs/Documentation.html" />
+  </Folder>
+  <Project Path="DiscogsApiClient.SourceGenerator.Tests/DiscogsApiClient.SourceGenerator.Tests.csproj" />
+  <Project Path="DiscogsApiClient.SourceGenerator/DiscogsApiClient.SourceGenerator.csproj" />
+  <Project Path="DiscogsApiClient.Tests/DiscogsApiClient.Tests.csproj" />
+  <Project Path="DiscogsApiClient/DiscogsApiClient.csproj" />
+</Solution>

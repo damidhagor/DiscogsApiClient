@@ -34,28 +34,29 @@ Download the [Nuget Package](https://www.nuget.org/packages/DiscogsApiClient/) o
 Register and use the ```IDiscogsApiClient``` with either a personal access token
 
 ```csharp
-// At startup register the DiscogsApiClient and the authentication provider
-// with the IServiceCollection.
+// At startup register the DiscogsApiClient and opt into
+// Personal Access Token authentication with the IServiceCollection.
 
 services.AddDiscogsApiClient(options =>
 {
     options.UserAgent = "AwesomeAppDemo/1.0.0";
-});
+})
+.WithPatAuthentication();
 
-// Inject the IDiscogsAuthenticationService and IDiscogsApiClient
+// Inject the IDiscogsPatAuthenticationProvider and IDiscogsApiClient
 // and authenticate with the personal access token before using the client.
 
 public Foo(
     IDiscogsApiClient discogsApiClient,
-    IDiscogsAuthenticationService discogsAuthenticationService)
+    IDiscogsPatAuthenticationProvider authProvider)
 {
     _discogsApiClient = discogsApiClient;
-    _discogsAuthenticationService = discogsAuthenticationService;
+    _authProvider = authProvider;
 }
 
 public void Authenticate(string token)
 {
-    _discogsAuthenticationService.AuthenticateWithPersonalAccessToken(token);
+    _authProvider.Authenticate(token);
 }
 
 public async Task<string> GetUsername(CancellationToken cancellationToken)
@@ -68,25 +69,28 @@ public async Task<string> GetUsername(CancellationToken cancellationToken)
 or the OAuth flow:
 
 ```csharp
-// At startup register the DiscogsApiClient and the authentication provider.
+// At startup register the DiscogsApiClient and opt into OAuth authentication.
 // Provide the Consumer Key & Secret & verifier callback url here.
 services.AddDiscogsApiClient(options =>
 {
     options.UserAgent = "AwesomeAppDemo/1.0.0";
+})
+.WithOAuthAuthentication(options =>
+{
     options.ConsumerKey = "YourConsumerKey";
     options.ConsumerSecret = "YourConsumerSecret";
     options.VerifierCallbackUrl = "http://localhost/verifier_token";
 });
 
-// Inject the IDiscogsAuthenticationService and IDiscogsApiClient
+// Inject the IDiscogsOAuthAuthenticationProvider and IDiscogsApiClient
 // and authenticate with the OAuth flow before using the client.
 
 public Foo(
     IDiscogsApiClient discogsApiClient,
-    IDiscogsAuthenticationService discogsAuthenticationService)
+    IDiscogsOAuthAuthenticationProvider authProvider)
 {
     _discogsApiClient = discogsApiClient;
-    _discogsAuthenticationService = discogsAuthenticationService;
+    _authProvider = authProvider;
 }
 
 // Authenticate with your consumer key & secret from your Discogs application settings.
@@ -96,7 +100,7 @@ public async Task Authenticate(
     CancellationToken cancellationToken)
 {
     // Start authentication.
-    var session = await _discogsAuthenticationService.StartOAuthAuthentication(cancellationToken);
+    var session = await _authProvider.StartAuthentication(cancellationToken);
 
     // Retrieve Verifier Token.
     // 1) Open browser with session.AuthorizationUrl
@@ -105,7 +109,7 @@ public async Task Authenticate(
     // 4) Parse verifier from url and return it
 
     // Complete authentication.
-    (AccessToken, AccessTokenSecret) = await _discogsAuthenticationService.CompleteOAuthAuthentication(session, verifierToken, cancellationToken);
+    (AccessToken, AccessTokenSecret) = await _authProvider.CompleteAuthentication(session, verifierToken, cancellationToken);
 
     // Save and reuse the retrieved access token and secret.
 }
@@ -178,6 +182,8 @@ public async Task Authenticate(
   - **Breaking**:
     - Renamed ``Release.YearFormatted`` → ``ReleasedFormatted``
     - Renamed ``MasterReleaseVersion.Year`` → ``Released``
+- ### **4.1.1**
+  - Fixed improper parsing of the ``instance_id`` property of collection folder releases.
 
 
 ## **Implemented Api Functions**

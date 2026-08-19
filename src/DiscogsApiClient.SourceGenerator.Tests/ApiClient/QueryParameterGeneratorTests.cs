@@ -31,6 +31,7 @@ public sealed class QueryParameterGeneratorTests
             "GetItemAsync",
             "/items",
             ApiMethodType.Get,
+            "public",
             [queryParameter],
             new ApiMethodReturnType(new ParsedTypeInfo("Task", "System.Threading.Tasks", true, false, [], [])));
 
@@ -40,12 +41,8 @@ public sealed class QueryParameterGeneratorTests
 
         var expected =
             """
-            
-            #if NET7_0_OR_GREATER
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
             file static class TestNamespaceQueryParamsExtensions
-            #else
-            internal static class TestNamespaceQueryParamsExtensions
-            #endif
             {
                 public static void CalculateQuerySize(this global::TestNamespace.QueryParams? queryParams, ref int capacity, ref int parameterCount)
                 {
@@ -59,8 +56,7 @@ public sealed class QueryParameterGeneratorTests
                         }
                     }
                 }
-            
-            
+
                 public static void AppendQuery(this global::TestNamespace.QueryParams? queryParams, global::System.Text.StringBuilder queryBuilder, int routeLength)
                 {
                     if (queryParams is not null)
@@ -71,20 +67,16 @@ public sealed class QueryParameterGeneratorTests
                             {
                                 queryBuilder.Append('&');
                             }
-            
+
                             queryBuilder.Append("name=");
                             queryBuilder.Append(queryParams.Name);
                         }
                     }
                 }
             }
-                
-            
-            #if NET7_0_OR_GREATER
+
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
             file static class QueryParameterHelper
-            #else
-            internal static class QueryParameterHelper
-            #endif
             {
                 public static int CalculateQuerySize(string? text)
                 {
@@ -93,8 +85,8 @@ public sealed class QueryParameterGeneratorTests
             }
             """;
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(source))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(expected));
     }
 
     [Test]
@@ -119,6 +111,7 @@ public sealed class QueryParameterGeneratorTests
             "GetItemAsync",
             "/items",
             ApiMethodType.Get,
+            "public",
             [queryParameter],
             new ApiMethodReturnType(new ParsedTypeInfo("Task", "System.Threading.Tasks", true, false, [], [])));
 
@@ -128,12 +121,8 @@ public sealed class QueryParameterGeneratorTests
 
         var expected =
             """
-            
-            #if NET7_0_OR_GREATER
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
             file static class TestNamespaceQueryParamsExtensions
-            #else
-            internal static class TestNamespaceQueryParamsExtensions
-            #endif
             {
                 public static void CalculateQuerySize(this global::TestNamespace.QueryParams? queryParams, ref int capacity, ref int parameterCount)
                 {
@@ -147,8 +136,7 @@ public sealed class QueryParameterGeneratorTests
                         }
                     }
                 }
-            
-            
+
                 public static void AppendQuery(this global::TestNamespace.QueryParams? queryParams, global::System.Text.StringBuilder queryBuilder, int routeLength)
                 {
                     if (queryParams is not null)
@@ -159,20 +147,16 @@ public sealed class QueryParameterGeneratorTests
                             {
                                 queryBuilder.Append('&');
                             }
-            
+
                             queryBuilder.Append("page=");
                             queryBuilder.Append(queryParams.Page);
                         }
                     }
                 }
             }
-                
-            
-            #if NET7_0_OR_GREATER
+
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
             file static class QueryParameterHelper
-            #else
-            internal static class QueryParameterHelper
-            #endif
             {
                 public static int CalculateQuerySize(int? number)
                 {
@@ -181,8 +165,8 @@ public sealed class QueryParameterGeneratorTests
             }
             """;
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(source))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(expected));
     }
 
     [Test]
@@ -211,6 +195,7 @@ public sealed class QueryParameterGeneratorTests
             "GetItemAsync",
             "/items",
             ApiMethodType.Get,
+            "public",
             [queryParameter],
             new ApiMethodReturnType(new ParsedTypeInfo("Task", "System.Threading.Tasks", true, false, [], [])));
 
@@ -220,12 +205,8 @@ public sealed class QueryParameterGeneratorTests
 
         var expected =
             """
-            
-            #if NET7_0_OR_GREATER
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
             file static class TestNamespaceQueryParamsExtensions
-            #else
-            internal static class TestNamespaceQueryParamsExtensions
-            #endif
             {
                 public static void CalculateQuerySize(this global::TestNamespace.QueryParams? queryParams, ref int capacity, ref int parameterCount)
                 {
@@ -239,8 +220,7 @@ public sealed class QueryParameterGeneratorTests
                         }
                     }
                 }
-            
-            
+
                 public static void AppendQuery(this global::TestNamespace.QueryParams? queryParams, global::System.Text.StringBuilder queryBuilder, int routeLength)
                 {
                     if (queryParams is not null)
@@ -251,7 +231,7 @@ public sealed class QueryParameterGeneratorTests
                             {
                                 queryBuilder.Append('&');
                             }
-            
+
                             queryBuilder.Append("sort=");
                             queryBuilder.Append(queryParams.Sort switch
                             {
@@ -263,39 +243,36 @@ public sealed class QueryParameterGeneratorTests
                     }
                 }
             }
-                
-            
-            #if NET7_0_OR_GREATER
+
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
             file static class QueryParameterHelper
-            #else
-            internal static class QueryParameterHelper
-            #endif
             {
                 public static int CalculateQuerySize(global::TestNamespace.SortOrder? enumValue)
                 {
                     return enumValue.HasValue
                         ? enumValue switch
                         {
-             global::TestNamespace.SortOrder.Ascending => 3, // asc
-             global::TestNamespace.SortOrder.Descending => 4, // desc
+                            global::TestNamespace.SortOrder.Ascending => 3, // asc
+                            global::TestNamespace.SortOrder.Descending => 4, // desc
                             _ => throw new global::System.ArgumentOutOfRangeException(nameof(enumValue))
                         }
-                    : 0;
+                        : 0;
                 }
             }
             """;
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(source))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(expected));
     }
 
     [Test]
-    public async Task ShouldGenerateEmptyHelper_WhenNoQueryParameters()
+    public async Task ShouldNotGenerateHelper_WhenNoQueryParameters()
     {
         var apiMethod = new ApiMethod(
             "GetItemAsync",
             "/items",
             ApiMethodType.Get,
+            "public",
             [],
             new ApiMethodReturnType(new ParsedTypeInfo("Task", "System.Threading.Tasks", true, false, [], [])));
 
@@ -303,20 +280,7 @@ public sealed class QueryParameterGeneratorTests
         builder.GenerateQueryParameterClasses([apiMethod], CancellationToken.None);
         var source = builder.ToString();
 
-        var expected =
-            """
-            
-            #if NET7_0_OR_GREATER
-            file static class QueryParameterHelper
-            #else
-            internal static class QueryParameterHelper
-            #endif
-            {
-            }
-            """;
-
-        await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(source).IsEmpty();
     }
 
     [Test]
@@ -361,6 +325,7 @@ public sealed class QueryParameterGeneratorTests
             "GetItemAsync",
             "/items",
             ApiMethodType.Get,
+            "public",
             [queryParameter],
             new ApiMethodReturnType(new ParsedTypeInfo("Task", "System.Threading.Tasks", true, false, [], [])));
 
@@ -370,12 +335,8 @@ public sealed class QueryParameterGeneratorTests
 
         var expected =
             """
-            
-            #if NET7_0_OR_GREATER
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
             file static class TestNamespaceQueryParamsExtensions
-            #else
-            internal static class TestNamespaceQueryParamsExtensions
-            #endif
             {
                 public static void CalculateQuerySize(this global::TestNamespace.QueryParams? queryParams, ref int capacity, ref int parameterCount)
                 {
@@ -387,12 +348,14 @@ public sealed class QueryParameterGeneratorTests
                             capacity += QueryParameterHelper.CalculateQuerySize(queryParams.Name);
                             parameterCount++;
                         }
+
                         if (queryParams.Page is not null)
                         {
                             capacity += 5; // Page
                             capacity += QueryParameterHelper.CalculateQuerySize(queryParams.Page);
                             parameterCount++;
                         }
+
                         if (queryParams.Sort is not null)
                         {
                             capacity += 5; // Sort
@@ -401,8 +364,7 @@ public sealed class QueryParameterGeneratorTests
                         }
                     }
                 }
-            
-            
+
                 public static void AppendQuery(this global::TestNamespace.QueryParams? queryParams, global::System.Text.StringBuilder queryBuilder, int routeLength)
                 {
                     if (queryParams is not null)
@@ -413,27 +375,29 @@ public sealed class QueryParameterGeneratorTests
                             {
                                 queryBuilder.Append('&');
                             }
-            
+
                             queryBuilder.Append("name=");
                             queryBuilder.Append(queryParams.Name);
                         }
+
                         if (queryParams.Page is not null)
                         {
                             if (queryBuilder.Length > routeLength)
                             {
                                 queryBuilder.Append('&');
                             }
-            
+
                             queryBuilder.Append("page=");
                             queryBuilder.Append(queryParams.Page);
                         }
+
                         if (queryParams.Sort is not null)
                         {
                             if (queryBuilder.Length > routeLength)
                             {
                                 queryBuilder.Append('&');
                             }
-            
+
                             queryBuilder.Append("sort=");
                             queryBuilder.Append(queryParams.Sort switch
                             {
@@ -445,37 +409,35 @@ public sealed class QueryParameterGeneratorTests
                     }
                 }
             }
-                
-            
-            #if NET7_0_OR_GREATER
+
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DiscogsApiClient.SourceGenerator", "1.0.0")]
             file static class QueryParameterHelper
-            #else
-            internal static class QueryParameterHelper
-            #endif
             {
                 public static int CalculateQuerySize(string? text)
                 {
                     return text?.Length ?? 0;
                 }
+
                 public static int CalculateQuerySize(int? number)
                 {
                     return number?.ToString()?.Length ?? 0;
                 }
+
                 public static int CalculateQuerySize(global::TestNamespace.SortOrder? enumValue)
                 {
                     return enumValue.HasValue
                         ? enumValue switch
                         {
-             global::TestNamespace.SortOrder.Ascending => 3, // asc
-             global::TestNamespace.SortOrder.Descending => 4, // desc
+                            global::TestNamespace.SortOrder.Ascending => 3, // asc
+                            global::TestNamespace.SortOrder.Descending => 4, // desc
                             _ => throw new global::System.ArgumentOutOfRangeException(nameof(enumValue))
                         }
-                    : 0;
+                        : 0;
                 }
             }
             """;
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(source))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(source))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(expected));
     }
 }

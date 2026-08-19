@@ -2,7 +2,7 @@ namespace DiscogsApiClient.SourceGenerator.Tests.ApiClient.Sources;
 
 public static class ApiClientSourceGeneratorTestsSources
 {
-    public const string WhenValidInterface =
+    public const string WhenValidClass =
         """
         using System.Threading;
         using System.Threading.Tasks;
@@ -18,17 +18,20 @@ public static class ApiClientSourceGeneratorTestsSources
         }
 
         [ApiClient(typeof(TestJsonContext))]
-        public interface ITestApiClient
+        internal sealed partial class TestApiClient(System.Net.Http.HttpClient httpClient, TestJsonContext context)
         {
+            private readonly System.Net.Http.HttpClient _httpClient = httpClient;
+            private readonly TestJsonContext _context = context;
+
             [HttpGet("/items/{id}")]
-            Task<string> GetItemAsync(int id, CancellationToken cancellationToken);
+            public partial Task<string> GetItemAsync(int id, CancellationToken cancellationToken);
 
             [HttpPost("/items")]
-            Task CreateItemAsync([Body] string item, CancellationToken cancellationToken);
+            public partial Task CreateItemAsync([Body] string item, CancellationToken cancellationToken);
         }
         """;
 
-    public const string WhenInterfaceIsEmpty =
+    public const string WhenClassIsEmpty =
         """
         using System.Threading;
         using System.Threading.Tasks;
@@ -44,12 +47,14 @@ public static class ApiClientSourceGeneratorTestsSources
         }
 
         [ApiClient(typeof(TestJsonContext))]
-        public interface ITestApiClient
+        internal sealed partial class TestApiClient(System.Net.Http.HttpClient httpClient, TestJsonContext context)
         {
+            private readonly System.Net.Http.HttpClient _httpClient = httpClient;
+            private readonly TestJsonContext _context = context;
         }
         """;
 
-    public const string WhenAttributeHasCustomName =
+    public const string WhenClassHasPropertyMembers =
         """
         using System.Threading;
         using System.Threading.Tasks;
@@ -64,55 +69,18 @@ public static class ApiClientSourceGeneratorTestsSources
             protected TestJsonContext(System.Text.Json.JsonSerializerOptions? options) : base(options) { }
         }
 
-        [ApiClient(typeof(TestJsonContext), Name = "MyCustomClient")]
-        public interface ITestApiClient
+        [ApiClient(typeof(TestJsonContext))]
+        internal sealed partial class TestApiClient(System.Net.Http.HttpClient client, TestJsonContext context)
         {
+            public System.Net.Http.HttpClient Client { get; } = client;
+            public TestJsonContext Context { get; } = context;
+
+            [HttpGet("/items/{id}")]
+            public partial Task<string> GetItemAsync(int id, CancellationToken cancellationToken);
         }
         """;
 
-    public const string WhenAttributeHasCustomNamespace =
-        """
-        using System.Threading;
-        using System.Threading.Tasks;
-        using System.Text.Json.Serialization;
-        using DiscogsApiClient.SourceGenerator.ApiClient;
-
-        namespace TestNamespace;
-
-        [JsonSerializable(typeof(string))]
-        internal partial class TestJsonContext : JsonSerializerContext
-        {
-            protected TestJsonContext(System.Text.Json.JsonSerializerOptions? options) : base(options) { }
-        }
-
-        [ApiClient(typeof(TestJsonContext), Namespace = "MyCustomNamespace")]
-        public interface ITestApiClient
-        {
-        }
-        """;
-
-    public const string WhenAttributeHasCustomNameAndNamespace =
-        """
-        using System.Threading;
-        using System.Threading.Tasks;
-        using System.Text.Json.Serialization;
-        using DiscogsApiClient.SourceGenerator.ApiClient;
-
-        namespace TestNamespace;
-
-        [JsonSerializable(typeof(string))]
-        internal partial class TestJsonContext : JsonSerializerContext
-        {
-            protected TestJsonContext(System.Text.Json.JsonSerializerOptions? options) : base(options) { }
-        }
-
-        [ApiClient(typeof(TestJsonContext), Name = "MyCustomClient", Namespace = "MyCustomNamespace")]
-        public interface ITestApiClient
-        {
-        }
-        """;
-
-    public const string WhenInterfaceHasQueryParameters =
+    public const string WhenClassHasQueryParameters =
         """
         using System.Threading;
         using System.Threading.Tasks;
@@ -133,10 +101,13 @@ public static class ApiClientSourceGeneratorTestsSources
         }
 
         [ApiClient(typeof(TestJsonContext))]
-        public interface ITestApiClient
+        internal sealed partial class TestApiClient(System.Net.Http.HttpClient httpClient, TestJsonContext context)
         {
+            private readonly System.Net.Http.HttpClient _httpClient = httpClient;
+            private readonly TestJsonContext _context = context;
+
             [HttpGet("/items")]
-            Task<string> GetItemsAsync(QueryParams queryParams, CancellationToken cancellationToken);
+            public partial Task<string> GetItemsAsync(QueryParams queryParams, CancellationToken cancellationToken);
         }
         """;
 }

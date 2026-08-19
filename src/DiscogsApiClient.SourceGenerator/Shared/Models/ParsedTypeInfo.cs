@@ -37,27 +37,7 @@ internal sealed record ParsedTypeInfo(
         return $"{prefix}{@namespace}.{name}{genericPart}{nullableSuffix}";
     }
 
-    public bool IsType<T>(bool genericComparison = false) => IsType(typeof(T), genericComparison);
-
-    public bool IsType(Type type, bool genericComparison = false)
-    {
-        if (!genericComparison)
-        {
-            return IsType(type.Namespace, type.Name);
-        }
-
-        if (type.GenericTypeArguments.Length != GenericTypeArguments.Length)
-        {
-            return false;
-        }
-
-        if (type.IsGenericType)
-        {
-            return type.GenericTypeArguments.All(arg => GenericTypeArguments.Any(a => a.IsType(arg)));
-        }
-
-        return IsType(type.Namespace, type.Name);
-    }
+    public bool IsType<T>() => IsType(typeof(T).Namespace, typeof(T).Name);
 
     public bool IsType(string @namespace, string name) => @namespace == Namespace && name == Name;
 

@@ -13,8 +13,8 @@ public sealed class ApiClientPostInitializationTests
             .First(s => s.HintName == ApiClientAttribute.SourceHint)
             .SourceText.ToString();
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(generated))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(ApiClientAttribute.Source));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(generated))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(ApiClientAttribute.Source));
     }
 
     [Test]
@@ -26,8 +26,8 @@ public sealed class ApiClientPostInitializationTests
             .SourceText.ToString();
 
         var expected = HttpMethodBaseAttribute.Source;
-        await Assert.That(GeneratorTestHelper.NormalizeSource(generated))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(expected));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(generated))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(expected));
     }
 
     [Test]
@@ -38,8 +38,8 @@ public sealed class ApiClientPostInitializationTests
             .First(s => s.HintName == HttpGetAttribute.SourceHint)
             .SourceText.ToString();
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(generated))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(HttpGetAttribute.Source));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(generated))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(HttpGetAttribute.Source));
     }
 
     [Test]
@@ -50,8 +50,8 @@ public sealed class ApiClientPostInitializationTests
             .First(s => s.HintName == HttpPostAttribute.SourceHint)
             .SourceText.ToString();
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(generated))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(HttpPostAttribute.Source));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(generated))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(HttpPostAttribute.Source));
     }
 
     [Test]
@@ -62,8 +62,8 @@ public sealed class ApiClientPostInitializationTests
             .First(s => s.HintName == HttpPutAttribute.SourceHint)
             .SourceText.ToString();
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(generated))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(HttpPutAttribute.Source));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(generated))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(HttpPutAttribute.Source));
     }
 
     [Test]
@@ -74,8 +74,8 @@ public sealed class ApiClientPostInitializationTests
             .First(s => s.HintName == HttpDeleteAttribute.SourceHint)
             .SourceText.ToString();
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(generated))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(HttpDeleteAttribute.Source));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(generated))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(HttpDeleteAttribute.Source));
     }
 
     [Test]
@@ -86,19 +86,7 @@ public sealed class ApiClientPostInitializationTests
             .First(s => s.HintName == BodyAttribute.SourceHint)
             .SourceText.ToString();
 
-        await Assert.That(GeneratorTestHelper.NormalizeSource(generated))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(BodyAttribute.Source));
-    }
-
-    [Test]
-    public async Task ShouldGenerateApiClientSettings_WhenPostInit()
-    {
-        var result = GeneratorTestHelper.RunGenerator<ApiClientSourceGenerator.ApiClientSourceGenerator>("");
-        var generated = result.Results.Single().GeneratedSources
-            .First(s => s.HintName == ApiClientSettingsGenerator.SourceHint)
-            .SourceText.ToString();
-
-        await Assert.That(GeneratorTestHelper.NormalizeSource(generated))
-                    .IsEqualTo(GeneratorTestHelper.NormalizeSource(ApiClientSettingsGenerator.Source));
+        await Assert.That(GeneratorTestHelper.NormalizeLineEndings(generated))
+                    .IsEqualTo(GeneratorTestHelper.NormalizeLineEndings(BodyAttribute.Source));
     }
 }
