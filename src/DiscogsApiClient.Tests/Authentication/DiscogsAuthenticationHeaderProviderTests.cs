@@ -1,4 +1,3 @@
-using DiscogsApiClient.Authentication;
 using DiscogsApiClient.Authentication.OAuth;
 using DiscogsApiClient.Authentication.Pat;
 using Microsoft.Extensions.Options;

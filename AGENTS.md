@@ -56,6 +56,10 @@ diagnostic they report — including `message`/`suggestion`-level ones, not just
    dotnet format src\DiscogsApiClient.slnx --verify-no-changes --severity info --no-restore > format.log 2>&1
    ```
 
+Repeat both steps against `demo\DiscogsApiClientDemo.slnx` as well — it is a separate solution not covered by
+the two commands above, so changes there (e.g. demo project modernization) are not diagnosed unless run
+explicitly against it too.
+
 Notes for parsing results correctly:
 - Redirect output to a file rather than reading the console directly — PowerShell's console width wraps
   long diagnostic lines and breaks line-based parsing; `Tee-Object` to a real console still wraps.

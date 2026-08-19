@@ -1,6 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -16,13 +13,13 @@ public partial class MainWindow : Window
     private readonly IDiscogsOAuthAuthenticationProvider _authProvider;
 
     [ObservableProperty]
-    private string _accessToken = "";
+    public partial string AccessToken { get; set; } = "";
 
     [ObservableProperty]
-    private string _accessTokenSecret = "";
+    public partial string AccessTokenSecret { get; set; } = "";
 
     [ObservableProperty]
-    private string _username = "";
+    public partial string Username { get; set; } = "";
 
     public MainWindow(IDiscogsApiClient discogsApiClient, IDiscogsOAuthAuthenticationProvider authProvider)
     {
@@ -40,7 +37,7 @@ public partial class MainWindow : Window
             var session = await _authProvider.StartAuthentication(cancellationToken);
 
             // Retrieve Verifier Token.
-            var loginWindow = new LoginWindow(session.AuthorizeUrl.ToString(), session.VerifierCallbackUrl.ToString());
+            var loginWindow = new LoginWindow(session.AuthorizeUrl, session.VerifierCallbackUrl);
             loginWindow.ShowDialog();
             var verifierToken = loginWindow.Result;
 

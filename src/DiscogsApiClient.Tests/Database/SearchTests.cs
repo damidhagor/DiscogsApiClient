@@ -1,4 +1,3 @@
-using DiscogsApiClient.Contract;
 using DiscogsApiClient.Contract.Search;
 
 namespace DiscogsApiClient.Tests.Database;
