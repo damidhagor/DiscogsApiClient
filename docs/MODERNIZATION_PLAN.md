@@ -2,7 +2,7 @@
 
 **Branch Strategy:** All work is performed in the `modernization` branch. Individual tasks are completed in feature branches and merged back to `modernization` via PRs. A final PR to `main` is created only after all modernization work is complete.
 
-**Version:** 1.0  
+**Version:** 1.1  
 **Status:** Phase 5 Complete - Ready for Phase 6  
 **Last Updated:** 2026-08-19  
 
@@ -19,7 +19,8 @@
 8. [Phase 4: Library Code Modernization](#phase-4-library-code-modernization)
 9. [Phase 5: Demo Projects Modernization](#phase-5-demo-projects-modernization)
 10. [Phase 6: Final Validation & Documentation](#phase-6-final-validation--documentation)
-11. [Phase 7: CI/CD & Release Automation](#phase-7-cicd--release-automation)
+11. [Phase 7: CI/CD Automation](#phase-7-cicd-automation)
+12. [Phase 8: Release Preparation & Merge to Main](#phase-8-release-preparation--merge-to-main)
 
 ---
 
@@ -40,7 +41,7 @@ This document outlines the technical modernization of the DiscogsApiClient libra
 - ✅ Modernize testing infrastructure with mocking and improved coverage (Complete)
 - ✅ Update source generators to follow latest Roslyn best practices (Complete)
 - ✅ Ensure all code follows modern C# best practices (Phases 3-5)
-- **Breaking changes are acceptable** - will result in new major version (v5.0.0+)
+- **Breaking changes are acceptable** - this branch will be published as **v5.0.0**
 
 ### Strategy
 The modernization follows a **risk-minimization approach**:
@@ -51,9 +52,9 @@ The modernization follows a **risk-minimization approach**:
 5. Update demo projects (showcase modern patterns)
 
 ### Version Strategy
-- Library version (4.1.0) remains unchanged throughout modernization branch
-- Version bump to 5.0.0+ happens as part of the final release to main
-- This allows development without premature version commits
+- Library version (4.1.0) remains unchanged through Phases 1-7 (framework/code work, docs, CI)
+- Version bump to **5.0.0** happens in Phase 8, as part of preparing the final PR from `modernization` to `main`
+- This allows development without premature version commits, while confirming upfront that this branch **will** ship as v5.0.0 (not a "maybe")
 
 ---
 
@@ -156,12 +157,15 @@ Phase 5: Demo Projects
    ├─ Low Risk
    └─ Showcase modern features, .NET 10
          ↓
-Phase 6: Final Validation
-   └─ Comprehensive verification, version bump for release
+Phase 6: Final Validation & Documentation
+   └─ Comprehensive verification, README/CHANGELOG/migration guide split
          ↓
-Phase 7: CI/CD & Release Automation
+Phase 7: CI/CD Automation
    ├─ Low Risk
-   └─ GitHub Actions workflow to build, pack, and publish the NuGet package
+   └─ PR-validation workflow (build, test, format, vulnerability check) + NuGet publish workflow
+         ↓
+Phase 8: Release Preparation & Merge to Main
+   └─ Version bump to 5.0.0, PR to main, tag + publish v5.0.0
 ```
 
 ---
@@ -791,7 +795,7 @@ provider-resolution model.
 
 ## Phase 6: Final Validation & Documentation
 
-**Goal:** Comprehensive validation and documentation updates before merging to main.
+**Goal:** Comprehensive validation and documentation rework before Phase 7 (CI) and Phase 8 (release).
 
 **Branch:** `modernization` (final validation)
 
@@ -802,37 +806,55 @@ provider-resolution model.
 - [ ] Test NuGet package generation
 - [ ] Test in a clean environment (fresh clone)
 
-### 6.2 Documentation Updates
+### 6.2 Documentation Rework
 
 **Consumer-facing docs are intentionally deferred to this phase.** Throughout the modernization,
 internal/dev docs (`ARCHITECTURE.md`, this plan) are kept current, but consumer-facing docs (README,
 changelog) are **not** touched until the branch is being prepared for publishing — updating them
 prematurely would mislead 4.x users reading `main`. This is the single consolidated docs-rework step.
 
-- [ ] **Rework the README** for the v5 surface — do this once, here, at the end:
+**Doc split:** The current README bundles getting-started content, an inline version-by-version
+changelog, and scattered breaking-change callouts into one long file. This phase splits it into
+focused, purpose-specific documents:
+
+| Doc | Purpose | Audience |
+|---|---|---|
+| `README.md` | Quick intro, authentication overview, getting-started code samples, links out to the docs below | New/casual consumers |
+| `docs/CHANGELOG.md` | Full version history (Keep a Changelog style); each entry lists its own breaking changes inline, including the new v5.0.0 entry | Consumers checking what changed |
+| `docs/MIGRATION_GUIDE.md` | Consolidated breaking-change/migration guide with before/after code samples, covering the v5.0.0 changes and any still-relevant migration steps carried forward from prior breaking releases (3.0.0, 4.0.0, 4.1.0, etc.) | Consumers upgrading from any older version |
+| `docs/API_COVERAGE.md` *(existing)* | Detailed endpoint-by-endpoint implementation status | Consumers checking API surface coverage |
+
+- [ ] **Rework the README:**
+  - [ ] Trim to: intro/disclaimer, authentication overview, getting-started samples (refreshed against the modernized API)
   - [ ] Service registration: the three `AddDiscogsApiClient` overloads (`Action<TOptions>`,
         `Action<IServiceProvider, TOptions>`, `IConfiguration`) + the optional `Action<IHttpClientBuilder>` hook
   - [ ] Configuration via `appsettings.json` (the `"Discogs"` section / `DiscogsApiClientOptions.SectionName`)
         and startup validation surfacing as `OptionsValidationException`
   - [ ] Rate limiting removal and the new `IDiscogsRateLimitStateService`
-  - [ ] Refresh all code samples against the modernized API
-- [ ] **Rework the CHANGELOG** — add the v5.0.0 entry consolidating every phase's changes
-- [ ] **Consolidate all breaking changes** into a single, authoritative list (namespace move,
+  - [ ] Remove the inline "Changelog" section, the "Implemented Api Functions" list, and the "Roadmap" section entirely
+  - [ ] Add a short "Documentation" section linking to `docs/CHANGELOG.md`, `docs/MIGRATION_GUIDE.md`,
+        and `docs/API_COVERAGE.md` so the extracted docs stay discoverable
+- [ ] **Extract and rework `docs/CHANGELOG.md`** — move the existing README version history here,
+      keep it in Keep a Changelog-style format, with each version's own **Breaking** subsection called out
+      inline (not just the latest release), and add the v5.0.0 entry consolidating every phase's changes
+- [ ] **Consolidate all v5.0.0 breaking changes** into a single, authoritative list (namespace move,
       `OptionsValidationException` at startup, `OAuthAuthenticationProvider` ctor takes `IOptions<T>`,
       rate-limiting removal, `IDiscogsApiClient` interface changes)
-- [ ] Create migration guide for v4.x → v5.x (breaking changes) in `docs/MIGRATION_GUIDE.md`
+- [ ] Create `docs/MIGRATION_GUIDE.md` covering breaking changes and migration steps
   - [ ] Document rate limiting removal and new `IDiscogsRateLimitStateService` usage with examples
   - [ ] Document the service-registration / options changes with before/after examples
   - [ ] Include code samples showing how consumers can implement custom rate limiting if needed
-- [ ] **Decision point:** Determine if version should be bumped in modernization→main merge
-  - Version bump may be more appropriate with actual package release
-  - Document decision and timeline
+  - [ ] Review the old README changelog entries for prior breaking releases (3.0.0, 4.0.0, 4.1.0) and
+        carry forward any still-relevant migration steps/before-after samples (e.g. Refit → source
+        generator, OAuth flow call changes, renamed properties) so the guide is a single place consumers
+        jumping from any older 3.x/4.x version can follow, not just the v4.x → v5.0.0 delta
 - [ ] Update `docs/ARCHITECTURE.md` with any remaining architectural changes (if applicable)
 - [ ] Update this modernization plan status to completed
 
 ### 6.3 Code Quality Gates
 - [ ] Zero compiler warnings
 - [ ] Zero analyzer warnings
+- [ ] Full IDE/style diagnostics pass (`dotnet format --verify-no-changes --severity info`) is clean
 - [ ] Code coverage reports generated
 - [ ] Static analysis passes
 - [ ] NuGet package builds successfully (even if not published yet)
@@ -841,40 +863,38 @@ prematurely would mislead 4.x users reading `main`. This is the single consolida
 - [ ] Review all merged PRs
 - [ ] Verify branching strategy was followed
 - [ ] Check for any missed tasks
-- [ ] Prepare comprehensive changelog
-- [ ] **Note:** Actual NuGet package release happens separately from merge to main
-
-### 6.5 Merge to Main
-- [ ] Create PR: `modernization` → `main`
-- [ ] Comprehensive PR description with summary of all changes
-- [ ] List all breaking changes
-- [ ] Final review and approval
-- [ ] Merge to main
-- [ ] **Note:** Publishing happens in a separate release process:
-  - Version bump (if not done in modernization)
-  - README update (if not done in modernization)
-  - Tag release (e.g., `v5.0.0`)
-  - Build and publish NuGet package
-  - Create GitHub release with notes
 
 ### Acceptance Criteria - Phase 6
 - [ ] All tests pass on all frameworks
-- [ ] Documentation strategy decided and documented
+- [ ] README, CHANGELOG, and migration guide split completed and cross-linked
 - [ ] Migration guide created
 - [ ] No warnings or errors
-- [ ] NuGet package can be built successfully
-- [ ] Successfully merged to main
-- [ ] Release process documented (even if not executed yet)
 
 ---
 
-## Phase 7: CI/CD & Release Automation
+## Phase 7: CI/CD Automation
 
-**Goal:** Automate building, packing, and publishing the `DiscogsApiClient` NuGet package via a GitHub Actions workflow, with a manual switch to redirect a publish to the NuGet test server (`int.nugettest.org`) instead of production `nuget.org` for dry-run validation.
+**Goal:** Add two GitHub Actions workflows: (1) a PR-validation workflow that enforces the project's
+quality bar (build, tests, style/diagnostics, dependency security) on every pull request, and (2) a
+manually-triggered NuGet publish workflow, with a switch to redirect a publish to the NuGet test
+server (`int.nugettest.org`) instead of production `nuget.org` for dry-run validation. The actual
+v5.0.0 release publish itself happens in Phase 8, using the workflow built here.
 
-**Branch:** `modernization/phase7-release-automation`
+**Branch:** `modernization/phase7-ci-automation`
 
-### 7.1 Workflow Design
+### 7.1 PR Validation Workflow
+- [ ] Trigger: `pull_request` (targeting `main` and/or `modernization`)
+- [ ] Restore and build (all target frameworks) as a gate
+- [ ] Run the full test suite (all target frameworks)
+- [ ] Diagnostics/style check: `dotnet format <solution> --verify-no-changes --severity info` (mirrors the
+      AGENTS.md "IDE/style diagnostics pass"), failing the check on any violation
+- [ ] NuGet dependency/vulnerability check: `dotnet list package --vulnerable --include-transitive`
+      (or `nuget-fix_vulnerable_packages`-equivalent CLI check), failing the workflow if any vulnerable
+      package is found
+- [ ] Run against both `src/DiscogsApiClient.slnx` and `demo/DiscogsApiClientDemo.slnx`
+- [ ] Workflow file: e.g. `.github/workflows/pr-validation.yml`
+
+### 7.2 NuGet Publish Workflow Design
 - [ ] Trigger: `workflow_dispatch` only (no tag-push or branch-push trigger) — every release is a deliberate, manual action
 - [ ] Manual input: boolean switch (e.g. `publish_to_test_server`, default `false`) — when `true`, the publish step targets `int.nugettest.org` instead of `nuget.org`
 - [ ] Restore, build (Release configuration), and run the full test suite (all target frameworks) as a gate before packing
@@ -883,27 +903,58 @@ prematurely would mislead 4.x users reading `main`. This is the single consolida
 - [ ] Push the package via `dotnet nuget push`:
   - [ ] Default (`publish_to_test_server = false`): push to `https://api.nuget.org/v3/index.json` using the `NUGET_API_KEY` secret
   - [ ] Test mode (`publish_to_test_server = true`): push to `https://apiint.nugettest.org/v3/index.json` using the `NUGET_TEST_API_KEY` secret
+- [ ] Workflow file: e.g. `.github/workflows/publish-nuget.yml`
 
-### 7.2 Versioning
+### 7.3 Versioning
 - [ ] Package version is read as-is from the existing `<PackageVersion>`/`<AssemblyVersion>`/`<FileVersion>` properties already hand-maintained in `DiscogsApiClient.csproj` — no automated version-bump tooling introduced in this phase
 - [ ] Workflow surfaces the resolved version in its run summary/logs so the person triggering it can confirm what will be published before approving
 
-### 7.3 Secrets
+### 7.4 Secrets
 - [ ] `NUGET_API_KEY` — nuget.org API key, repository secret
 - [ ] `NUGET_TEST_API_KEY` — separate API key for `int.nugettest.org` (distinct account/service from nuget.org), repository secret
 - [ ] No GitHub Environment protection/required-reviewer gate — single-maintainer project, the manual `workflow_dispatch` + explicit boolean switch is a sufficient safeguard
 
-### 7.4 Documentation
-- [ ] Document the release workflow (how to trigger it, what the test-server switch does, where to find the resulting package artifact) in `docs/` or the README
-- [ ] Update Phase 6 §6.5's "Publishing happens in a separate release process" note to reference the new automated workflow instead of a manual process
+### 7.5 Documentation
+- [ ] Document both workflows (what the PR-validation workflow enforces; how to trigger the release workflow, what the test-server switch does, where to find the resulting package artifact) in `docs/` or the README
 
 ### Acceptance Criteria - Phase 7
-- [ ] Workflow file exists (e.g. `.github/workflows/publish-nuget.yml`)
-- [ ] Workflow builds, tests, and packs the library before any publish step runs
-- [ ] Workflow can be manually triggered with the test-server switch, defaulting to nuget.org
+- [ ] PR-validation workflow file exists and runs build + tests + format check + vulnerability check on every PR
+- [ ] Publish workflow file exists (e.g. `.github/workflows/publish-nuget.yml`)
+- [ ] Publish workflow builds, tests, and packs the library before any publish step runs
+- [ ] Publish workflow can be manually triggered with the test-server switch, defaulting to nuget.org
 - [ ] At least one successful end-to-end test-server publish validated
 - [ ] Both API key secrets configured in repository settings
-- [ ] Release process documented for future use
+- [ ] Both workflows documented for future use
+
+---
+
+## Phase 8: Release Preparation & Merge to Main
+
+**Goal:** Bump the version, finalize the PR from `modernization` to `main`, and execute the actual
+v5.0.0 NuGet release using the Phase 7 publish workflow.
+
+**Branch:** `modernization` (final)
+
+### 8.1 Version Bump
+- [ ] Bump `<PackageVersion>`/`<AssemblyVersion>`/`<FileVersion>` in `DiscogsApiClient.csproj` to `5.0.0`
+- [ ] Confirm `docs/CHANGELOG.md`'s v5.0.0 entry and release date are up to date
+
+### 8.2 Merge to Main
+- [ ] Create PR: `modernization` → `main`
+- [ ] Comprehensive PR description with summary of all changes across all phases
+- [ ] List all breaking changes (link to `docs/MIGRATION_GUIDE.md`)
+- [ ] Final review and approval
+- [ ] Merge to main
+
+### 8.3 Release
+- [ ] Tag release `v5.0.0` on `main`
+- [ ] Trigger the Phase 7 publish workflow (`publish_to_test_server = false`) to push v5.0.0 to `nuget.org`
+- [ ] Create a GitHub release with notes sourced from `docs/CHANGELOG.md`
+
+### Acceptance Criteria - Phase 8
+- [ ] Version bumped to 5.0.0 and merged to `main`
+- [ ] `v5.0.0` tag and GitHub release created
+- [ ] Package published to `nuget.org` and installable
 
 ---
 
@@ -917,6 +968,7 @@ prematurely would mislead 4.x users reading `main`. This is the single consolida
 - **Phase 5:** ⬜ Not Started
 - **Phase 6:** ⬜ Not Started
 - **Phase 7:** ⬜ Not Started
+- **Phase 8:** ⬜ Not Started
 
 **Legend:**
 - ⬜ Not Started
@@ -942,8 +994,10 @@ prematurely would mislead 4.x users reading `main`. This is the single consolida
 | TBD | Source generator changes in Phase 4 only | Wait until tests are fully modernized | Risk mitigation |
 | TBD | Optional E2E test suite | TBD - evaluate necessity and feasibility | May improve real-world validation |
 | TBD | Breaking changes permitted if necessary | Will result in new major version (v5.0.0+) | Consumer migration required |
-| TBD | Version/README update timing | May defer to actual release, not modernization merge | Avoids confusion for 4.x users |
-| TBD | Merge to main ≠ release | Package publication is separate process | Cleaner release workflow |
+| 2026-08-19 | Version bump timing: confirmed 5.0.0, deferred to Phase 8 | Modernization branch is confirmed to ship as v5.0.0; version stays untouched through Phases 6-7 (docs/CI work) and is only bumped in Phase 8 as part of preparing the `modernization` → `main` PR | Avoids premature version commits while removing ambiguity about the target version |
+| 2026-08-19 | Docs split into README + `docs/CHANGELOG.md` + `docs/MIGRATION_GUIDE.md` | One long README mixing intro, full version history, and breaking changes was hard to navigate; `docs/API_COVERAGE.md` already covers endpoint status in more detail than README's list | README becomes a short entry point that links to the other docs; each doc has one clear audience/purpose |
+| 2026-08-19 | Phase 7 also adds a PR-validation workflow (build+tests+`dotnet format --verify-no-changes`+NuGet vulnerability audit) | Merge to main ≠ release, so quality gates should already be enforced automatically before that point, not just checked manually in Phase 6 | Every PR is now gated by the same checks documented in AGENTS.md, reducing reliance on manual review |
+| TBD | Merge to main ≠ release | Package publication is a separate, deliberate step (Phase 8), executed via the Phase 7 publish workflow | Cleaner release workflow |
 | TBD | Service registration modernization (§4.7) | Align with `IOptions<T>`, hand-written `IValidateOptions<T>` + `ValidateOnStart()`, `TryAdd*` idempotency, `IConfiguration` binding, and DI-namespace discoverability used by modern .NET libraries | **Breaking** — extension moved to `Microsoft.Extensions.DependencyInjection`; invalid options now throw `OptionsValidationException` at startup instead of `InvalidOperationException` at registration; `OAuthAuthenticationProvider` ctor takes `IOptions<T>` |
 | 2025-01-XX | **Rate limiting: Remove built-in limiter** | Sliding window implementation was unreliable and didn't align with Discogs methodology; feature not widely used; exposing raw metadata provides maximum flexibility | **Breaking** — consumers must remove `UseRateLimiting` and related config; can now access rate limit state via `IDiscogsRateLimitStateService` |
 | TBD | Authentication setup modernization (§4.9) | `IDiscogsAuthenticationService` facade allowed half-configured/conflicting auth state and had no way to pre-authenticate at registration; tokens were runtime-only mutable singleton state, not bindable via options/`IConfiguration` | **Breaking** — `IDiscogsAuthenticationService`/`DiscogsAuthenticationService` removed; `IPersonalAccessTokenAuthenticationProvider`/`PersonalAccessTokenAuthenticationProvider` renamed to `IDiscogsPatAuthenticationProvider`/`DiscogsPatAuthenticationProvider`; `IOAuthAuthenticationProvider`/`OAuthAuthenticationProvider` renamed to `IDiscogsOAuthAuthenticationProvider`/`DiscogsOAuthAuthenticationProvider`; `DiscogsApiClientOptions.ConsumerKey`/`ConsumerSecret`/`VerifierCallbackUrl` moved to new `DiscogsOAuthOptions`; new `DiscogsPatOptions`; consumers must call `.WithPatAuthentication(...)` or `.WithOAuthAuthentication(...)` to opt into a mechanism (calling both throws `InvalidOperationException`); calling neither yields a valid, permanent unauthenticated client |
