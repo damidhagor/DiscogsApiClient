@@ -17,13 +17,7 @@ public sealed class ErrorHandlingDelegatingHandler : DelegatingHandler
             return response;
         }
 
-        string? message = null;
-        try
-        {
-            var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-            message = JsonSerializer.Deserialize<ErrorMessage>(content, DiscogsJsonSerializerContext.Default.ErrorMessage)?.Message;
-        }
-        catch { }
+        var message = await GetErrorMessage(response, cancellationToken).ConfigureAwait(false);
 
         throw response.StatusCode switch
         {
@@ -33,5 +27,20 @@ public sealed class ErrorHandlingDelegatingHandler : DelegatingHandler
             HttpStatusCode.TooManyRequests => new RateLimitExceededDiscogsException(message),
             _ => new DiscogsException(message),
         };
+    }
+
+    private static async Task<string?> GetErrorMessage(HttpResponseMessage response, CancellationToken cancellationToken)
+    {
+#pragma warning disable CA1031
+        try
+        {
+            var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+            return JsonSerializer.Deserialize<ErrorMessage>(content, DiscogsJsonSerializerContext.Default.ErrorMessage)?.Message;
+        }
+        catch
+        {
+            return null;
+        }
+#pragma warning restore CA1031
     }
 }
