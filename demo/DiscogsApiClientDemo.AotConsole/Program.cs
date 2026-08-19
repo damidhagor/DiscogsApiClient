@@ -5,10 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 var personalAccessToken = "";
 
 var services = new ServiceCollection()
-    .AddDiscogsApiClient(options =>
-    {
-        options.UserAgent = "AwesomeAppDemo/1.0.0";
-    })
+    .AddDiscogsApiClient(options => options.UserAgent = "AwesomeAppDemo/1.0.0")
     .WithPatAuthentication()
     .BuildServiceProvider();
 

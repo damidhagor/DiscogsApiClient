@@ -1,6 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -16,10 +13,10 @@ public partial class MainWindow : Window
     private readonly IDiscogsPatAuthenticationProvider _authProvider;
 
     [ObservableProperty]
-    private string _userToken = "";
+    public partial string UserToken { get; set; } = "";
 
     [ObservableProperty]
-    private string _userName = "";
+    public partial string UserName { get; set; } = "";
 
 
     public MainWindow(IDiscogsApiClient discogsApiClient, IDiscogsPatAuthenticationProvider authProvider)

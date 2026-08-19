@@ -1,5 +1,4 @@
 using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Attributes;
-using DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Generators;
 
 namespace DiscogsApiClient.SourceGenerator.Tests.ApiClient;
 
