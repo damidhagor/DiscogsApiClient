@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.Label;
+namespace DiscogsApiClient.Contract.Label;
 
 /// <summary>
 /// Returns the list of release published by a label
@@ -9,7 +9,7 @@ public sealed record LabelReleasesResponse(
     [property:JsonPropertyName("pagination")]
     Pagination Pagination,
     [property:JsonPropertyName("releases")]
-    List<LabelRelease> Releases);
+    IReadOnlyList<LabelRelease> Releases);
 
 
 /*

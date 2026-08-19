@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.Release;
+namespace DiscogsApiClient.Contract.Release;
 
 /// <summary>
 /// The master version of a release which represents its multiple versions
@@ -8,7 +8,7 @@
 /// <param name="MostRecentReleaseId">Od of the most recently released versions</param>
 /// <param name="ResourceUrl">The Api url for this master release</param>
 /// <param name="Uri">The url to the master release's page on the Discogs website</param>
-/// <param name="VersionsUrl">The Api url for the release versions list</param>
+/// <param name="VersionsUrl">The Api url for the release versions IReadOnlyList</param>
 /// <param name="MainReleaseUrl">The Api url for the main release version</param>
 /// <param name="MostRecentReleaseUrl">The Api url for the most recently released version</param>
 /// <param name="NumForSale">How many of this release are for sale</param>
@@ -17,7 +17,7 @@
 /// <param name="Genres">List of this master release's genres</param>
 /// <param name="Styles">List of this master release's styles</param>
 /// <param name="Year">Release year</param>
-/// <param name="Tracklist">Track list</param>
+/// <param name="Tracklist">Track IReadOnlyList</param>
 /// <param name="Artists">Artists of this master release</param>
 /// <param name="Title">Release title</param>
 /// <param name="DataQuality"></param>
@@ -44,23 +44,23 @@ public sealed record MasterRelease(
     [property:JsonPropertyName("lowest_price")]
     float? LowestPrice,
     [property:JsonPropertyName("images")]
-    List<Image> Images,
+    IReadOnlyList<Image> Images,
     [property:JsonPropertyName("genres")]
-    List<string> Genres,
+    IReadOnlyList<string> Genres,
     [property:JsonPropertyName("styles")]
-    List<string> Styles,
+    IReadOnlyList<string> Styles,
     [property:JsonPropertyName("year")]
     int Year,
     [property:JsonPropertyName("tracklist")]
-    List<TracklistItem> Tracklist,
+    IReadOnlyList<TracklistItem> Tracklist,
     [property:JsonPropertyName("artists")]
-    List<ReleaseArtist> Artists,
+    IReadOnlyList<ReleaseArtist> Artists,
     [property:JsonPropertyName("title")]
     string Title,
     [property:JsonPropertyName("data_quality")]
     string DataQuality,
     [property:JsonPropertyName("videos")]
-    List<Video> Videos);
+    IReadOnlyList<Video> Videos);
 
 
 /**

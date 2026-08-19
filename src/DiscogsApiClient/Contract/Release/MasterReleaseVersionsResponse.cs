@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.Release;
+namespace DiscogsApiClient.Contract.Release;
 
 /// <summary>
 /// Returns paginated release versions for a master release
@@ -13,9 +13,9 @@ public sealed record MasterReleaseVersionsResponse(
     [property:JsonPropertyName("filters")]
     MasterReleaseVersionFilters Filters,
     [property:JsonPropertyName("filter_facets")]
-    List<MasterReleaseVersionFilterFacet> FilterFacets,
+    IReadOnlyList<MasterReleaseVersionFilterFacet> FilterFacets,
     [property:JsonPropertyName("versions")]
-    List<MasterReleaseVersion> ReleaseVersions);
+    IReadOnlyList<MasterReleaseVersion> ReleaseVersions);
 
 
 /**

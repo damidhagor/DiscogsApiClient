@@ -25,7 +25,7 @@ public sealed record MasterReleaseVersion(
     [property:JsonPropertyName("title")]
     string Title,
     [property:JsonPropertyName("major_formats")]
-    List<string> MajorFormats,
+    IReadOnlyList<string> MajorFormats,
     [property:JsonPropertyName("format")]
     string Format,
     [property:JsonPropertyName("catno")]

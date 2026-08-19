@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.Search;
+namespace DiscogsApiClient.Contract.Search;
 
 /// <summary>
 /// Represents a search result of a database search.
@@ -54,19 +54,19 @@ public sealed record SearchResult(
     [property:JsonPropertyName("master_url")]
     string MasterReleaseUrl,
     [property:JsonPropertyName("format")]
-    List<string> Format,
+    IReadOnlyList<string> Format,
     [property:JsonPropertyName("genre")]
-    List<string> Genres,
+    IReadOnlyList<string> Genres,
     [property:JsonPropertyName("style")]
-    List<string> Styles,
+    IReadOnlyList<string> Styles,
     [property:JsonPropertyName("label")]
-    List<string> Labels,
+    IReadOnlyList<string> Labels,
     [property:JsonPropertyName("barcode")]
-    List<string> Barcodes,
+    IReadOnlyList<string> Barcodes,
     [property:JsonPropertyName("format_quantity")]
     int FormatCount,
     [property:JsonPropertyName("formats")]
-    List<ReleaseFormat> Formats,
+    IReadOnlyList<ReleaseFormat> Formats,
     [property:JsonPropertyName("community")]
     SearchResultCommunityStats CommunityStatistics,
     [property:JsonPropertyName("user_data")]

@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.Label;
+namespace DiscogsApiClient.Contract.Label;
 
 /// <summary>
 /// Information about a label
@@ -31,13 +31,13 @@ public sealed record Label(
     [property:JsonPropertyName("releases_url")]
     string ReleasesUrl,
     [property:JsonPropertyName("images")]
-    List<Image> Images,
+    IReadOnlyList<Image> Images,
     [property:JsonPropertyName("parent_label")]
     LabelShortInfo ParentLabel,
     [property:JsonPropertyName("sublabels")]
-    List<LabelShortInfo> SubLabels,
+    IReadOnlyList<LabelShortInfo> SubLabels,
     [property:JsonPropertyName("urls")]
-    List<string> Urls,
+    IReadOnlyList<string> Urls,
     [property:JsonPropertyName("data_quality")]
     string DataQuality);
 

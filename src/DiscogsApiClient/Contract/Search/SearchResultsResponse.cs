@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.Search;
+namespace DiscogsApiClient.Contract.Search;
 
 /// <summary>
 /// Return paginated search results
@@ -9,7 +9,7 @@ public sealed record SearchResultsResponse(
     [property:JsonPropertyName("pagination")]
     Pagination Pagination,
     [property:JsonPropertyName("results")]
-    List<SearchResult> Results);
+    IReadOnlyList<SearchResult> Results);
 
 
 /**

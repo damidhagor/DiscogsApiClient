@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.User;
+namespace DiscogsApiClient.Contract.User;
 
 /// <summary>
 /// Reduced information about a release which is used for releases in the collection and wantlist of a user.
@@ -30,19 +30,19 @@ public sealed record UserListReleaseInformation(
     [property:JsonPropertyName("year")]
     int Year,
     [property:JsonPropertyName("formats")]
-    List<ReleaseFormat> Formats,
+    IReadOnlyList<ReleaseFormat> Formats,
     [property:JsonPropertyName("labels")]
-    List<ReleaseLabel> Labels,
+    IReadOnlyList<ReleaseLabel> Labels,
     [property:JsonPropertyName("artists")]
-    List<ReleaseArtist> Artists,
+    IReadOnlyList<ReleaseArtist> Artists,
     [property:JsonPropertyName("thumb")]
     string ThumbnailUrl,
     [property:JsonPropertyName("cover_image")]
     string CoverImageUrl,
     [property:JsonPropertyName("genres")]
-    List<string> Genres,
+    IReadOnlyList<string> Genres,
     [property:JsonPropertyName("styles")]
-    List<string> Styles);
+    IReadOnlyList<string> Styles);
 
 
 /**

@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.User.Collection;
+namespace DiscogsApiClient.Contract.User.Collection;
 
 /// <summary>
 /// Returns a paged list of releases in a collection folder.
@@ -9,7 +9,7 @@ public sealed record CollectionFolderReleasesResponse(
     [property:JsonPropertyName("pagination")]
     Pagination Pagination,
     [property:JsonPropertyName("releases")]
-    List<CollectionFolderRelease> Releases);
+    IReadOnlyList<CollectionFolderRelease> Releases);
 
 
 /**

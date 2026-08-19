@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.Release;
+namespace DiscogsApiClient.Contract.Release;
 
 /// <summary>
 /// Applied filters and their applied values for a master release request.
@@ -9,13 +9,13 @@
 /// <param name="Year">Filtered Releaseby</param>
 public sealed record MasterReleaseVersionAppliedFilter(
     [property:JsonPropertyName("format")]
-    List<string>? Formats,
+    IReadOnlyList<string>? Formats,
     [property:JsonPropertyName("label")]
-    List<string>? Labels,
+    IReadOnlyList<string>? Labels,
     [property:JsonPropertyName("country")]
-    List<string>? Countries,
+    IReadOnlyList<string>? Countries,
     [property:JsonPropertyName("released")]
-    List<string>? Years);
+    IReadOnlyList<string>? Years);
 
 
 /**

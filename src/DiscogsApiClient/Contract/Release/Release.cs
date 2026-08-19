@@ -28,7 +28,7 @@ namespace DiscogsApiClient.Contract.Release;
 /// <param name="Videos">List of related videos</param>
 /// <param name="Genres">List of genres</param>
 /// <param name="Styles">List of styles</param>
-/// <param name="Tracklist">track list</param>
+/// <param name="Tracklist">track IReadOnlyList</param>
 /// <param name="ExtraArtists"></param>
 /// <param name="Images">List of images for this release</param>
 /// <param name="ThumbnailUrl">Thumbnail image url</param>
@@ -43,13 +43,13 @@ public sealed record Release(
     [property:JsonPropertyName("uri")]
     string Uri,
     [property:JsonPropertyName("artists")]
-    List<ReleaseArtist> Artists,
+    IReadOnlyList<ReleaseArtist> Artists,
     [property:JsonPropertyName("artists_sort")]
     string ArtistsSort,
     [property:JsonPropertyName("labels")]
-    List<ReleaseLabel> Labels,
+    IReadOnlyList<ReleaseLabel> Labels,
     [property:JsonPropertyName("formats")]
-    List<ReleaseFormat> Formats,
+    IReadOnlyList<ReleaseFormat> Formats,
     [property:JsonPropertyName("community")]
     ReleaseCommunity CommunityStatistics,
     [property:JsonPropertyName("format_quantity")]
@@ -79,19 +79,19 @@ public sealed record Release(
     [property:JsonPropertyName("released_formatted")]
     string? ReleasedFormatted,
     [property:JsonPropertyName("identifiers")]
-    List<ReleaseIdentifier> Identifiers,
+    IReadOnlyList<ReleaseIdentifier> Identifiers,
     [property:JsonPropertyName("videos")]
-    List<Video> Videos,
+    IReadOnlyList<Video> Videos,
     [property:JsonPropertyName("genres")]
-    List<string> Genres,
+    IReadOnlyList<string> Genres,
     [property:JsonPropertyName("styles")]
-    List<string> Styles,
+    IReadOnlyList<string> Styles,
     [property:JsonPropertyName("tracklist")]
-    List<TracklistItem> Tracklist,
+    IReadOnlyList<TracklistItem> Tracklist,
     [property:JsonPropertyName("extraartists")]
-    List<ReleaseArtist> ExtraArtists,
+    IReadOnlyList<ReleaseArtist> ExtraArtists,
     [property:JsonPropertyName("images")]
-    List<Image> Images,
+    IReadOnlyList<Image> Images,
     [property:JsonPropertyName("thumb")]
     string ThumbnailUrl,
     [property:JsonPropertyName("estimated_weight")]

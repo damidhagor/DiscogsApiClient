@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.User.Wantlist;
+namespace DiscogsApiClient.Contract.User.Wantlist;
 
 /// <summary>
 /// Contains paged releases from the user's wantlist.
@@ -9,7 +9,7 @@ public sealed record WantlistReleasesResponse(
     [property:JsonPropertyName("pagination")]
     Pagination Pagination,
     [property:JsonPropertyName("wants")]
-    List<WantlistRelease> Releases);
+    IReadOnlyList<WantlistRelease> Releases);
 
 
 /**

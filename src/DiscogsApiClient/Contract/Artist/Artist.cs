@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.Artist;
+namespace DiscogsApiClient.Contract.Artist;
 
 /// <summary>
 /// Represents an artist
@@ -28,13 +28,13 @@ public sealed record Artist(
     [property:JsonPropertyName("releases_url")]
     string ReleasesUrl,
     [property:JsonPropertyName("images")]
-    List<Image> Images,
+    IReadOnlyList<Image> Images,
     [property:JsonPropertyName("urls")]
-    List<string> Urls,
+    IReadOnlyList<string> Urls,
     [property:JsonPropertyName("namevariations")]
-    List<string> NameVariations,
+    IReadOnlyList<string> NameVariations,
     [property:JsonPropertyName("members")]
-    List<ArtistMember> Members,
+    IReadOnlyList<ArtistMember> Members,
     [property:JsonPropertyName("data_quality")]
     string DataQuality);
 
