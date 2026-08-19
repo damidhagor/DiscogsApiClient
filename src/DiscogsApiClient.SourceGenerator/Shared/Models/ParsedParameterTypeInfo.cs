@@ -25,7 +25,7 @@ internal sealed record ParsedParameterTypeInfo(
 
     public string GetFullTypeName(bool includeNullable = true) => TypeInfo.GetFullTypeName(includeNullable);
 
-    public bool IsType<T>(bool genericComparison = false) => TypeInfo.IsType<T>(genericComparison);
+    public bool IsType<T>() => TypeInfo.IsType<T>();
 
     public bool IsType(string @namespace, string name) => TypeInfo.IsType(@namespace, name);
 }

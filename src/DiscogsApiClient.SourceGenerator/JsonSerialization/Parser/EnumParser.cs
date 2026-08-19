@@ -18,12 +18,8 @@ internal static class EnumParser
         var typeInfo = enumSymbol.GetSymbolTypeInfo();
         var location = DiagnosticLocation.From(context.TargetNode.GetLocation());
 
-        if (typeInfo.EnumMembers.Length == 0)
-        {
-            return GeneratorResult<Enumeration>.Failure(
-                [new(DiagnosticDescriptors.EmptyEnum, location, [enumSymbol.Name])]);
-        }
-
-        return GeneratorResult<Enumeration>.Success(new(typeInfo));
+        return typeInfo.EnumMembers.Length == 0
+            ? GeneratorResult<Enumeration>.Failure([new(DiagnosticDescriptors.EmptyEnum, location, [enumSymbol.Name])])
+            : GeneratorResult<Enumeration>.Success(new(typeInfo));
     }
 }

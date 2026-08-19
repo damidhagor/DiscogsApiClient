@@ -23,19 +23,9 @@ internal readonly struct EquatableArray<T>(ImmutableArray<T> array) : IEquatable
     public T this[int index] => _array[index];
 
     public bool Equals(EquatableArray<T> other)
-    {
-        if (_array.IsDefault && other._array.IsDefault)
-        {
-            return true;
-        }
-
-        if (_array.IsDefault || other._array.IsDefault)
-        {
-            return false;
-        }
-
-        return _array.SequenceEqual(other._array);
-    }
+        => !_array.IsDefault && !other._array.IsDefault
+            ? _array.SequenceEqual(other._array)
+            : _array.IsDefault && other._array.IsDefault;
 
     public override bool Equals(object? obj) => obj is EquatableArray<T> other && Equals(other);
 

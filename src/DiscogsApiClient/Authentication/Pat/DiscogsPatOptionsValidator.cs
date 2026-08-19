@@ -6,11 +6,8 @@ internal sealed class DiscogsPatOptionsValidator : IValidateOptions<DiscogsPatOp
 {
     public ValidateOptionsResult Validate(string? name, DiscogsPatOptions options)
     {
-        if (options.Token is not null && string.IsNullOrWhiteSpace(options.Token))
-        {
-            return ValidateOptionsResult.Fail($"{nameof(DiscogsPatOptions.Token)} must not be empty or whitespace when provided.");
-        }
-
-        return ValidateOptionsResult.Success;
+        return options.Token is not null && string.IsNullOrWhiteSpace(options.Token)
+            ? ValidateOptionsResult.Fail($"{nameof(DiscogsPatOptions.Token)} must not be empty or whitespace when provided.")
+            : ValidateOptionsResult.Success;
     }
 }
