@@ -36,6 +36,38 @@ with newer C# language features, ensure the style guidelines are updated to pref
   decisions, at minimum triage it and surface it to the user for their evaluation rather than silently
   fixing or silently ignoring it.
 
+### Full Diagnostics Check Procedure
+
+A normal `dotnet build` (even incremental, even with `AnalysisMode=All`) does **not** surface everything —
+IDE-only diagnostics (`IDE00xx`) and anything below `warning` severity (`suggestion`/`silent`, e.g. many
+`csharp_style_*` rules in `.editorconfig`) are invisible to it. Before considering a non-trivial change
+(or a dedicated diagnostics pass) complete, run **both** of the following steps, and evaluate **every**
+diagnostic they report — including `message`/`suggestion`-level ones, not just `warning`/`error`:
+
+1. **Clean, non-cached rebuild** (picks up compiler + analyzer warnings/errors at their full configured
+   severity, forced to run instead of relying on incremental/cached state):
+   ```powershell
+   Get-ChildItem -Recurse -Directory -Include bin,obj | Remove-Item -Recurse -Force
+   dotnet build src\DiscogsApiClient.slnx -v normal /p:EnforceCodeStyleInBuild=true -t:Rebuild > build.log 2>&1
+   ```
+2. **IDE/style diagnostics pass** (surfaces `IDE00xx` and suggestion/silent-severity style rules that step 1
+   still won't show, even with `EnforceCodeStyleInBuild=true`):
+   ```powershell
+   dotnet format src\DiscogsApiClient.slnx --verify-no-changes --severity info --no-restore > format.log 2>&1
+   ```
+
+Notes for parsing results correctly:
+- Redirect output to a file rather than reading the console directly — PowerShell's console width wraps
+  long diagnostic lines and breaks line-based parsing; `Tee-Object` to a real console still wraps.
+- The solution multi-targets `net8.0`/`net9.0`/`net10.0`, and MSBuild prints each warning once during
+  `CoreCompile` and again in the end-of-build summary — so raw line counts overstate real occurrences by
+  roughly 6x. Deduplicate by stripping the trailing `[project::TargetFramework=X]` suffix and the
+  `CoreCompile`-vs-summary duplication before treating a count as authoritative.
+
+Once both passes are run, **triage every finding with the user** per the policy above: fix, suppress with
+rationale (e.g. `.editorconfig` `dotnet_diagnostic.<CODE>.severity`), or explicitly accept as a known
+tradeoff — but do not silently resolve or silently ignore any of them, regardless of severity tier.
+
 ## Formatting
 
 ### Line Endings
