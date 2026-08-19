@@ -27,7 +27,7 @@ internal static class EnumJsonConverterGenerator
         foreach (var enumeration in enums)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            builder.GenerateEnumJsonConverter(enumeration, cancellationToken);
+            builder.GenerateEnumJsonConverter(enumeration);
         }
 
         builder.AppendLine("}");
@@ -64,7 +64,7 @@ internal static class EnumJsonConverterGenerator
             """);
     }
 
-    private static void GenerateEnumJsonConverter(this StringBuilder builder, Enumeration enumeration, CancellationToken cancellationToken)
+    private static void GenerateEnumJsonConverter(this StringBuilder builder, Enumeration enumeration)
     {
         var className = enumeration.GetJsonConverterClassName();
 
