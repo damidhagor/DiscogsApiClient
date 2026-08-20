@@ -76,10 +76,11 @@ tradeoff — but do not silently resolve or silently ignore any of them, regardl
 
 ### Line Endings
 
-- This repository uses **CRLF** line endings (`core.autocrlf=true`, consistent with all existing tracked files).
-- When creating or editing files, always preserve the existing line-ending style of that file — never mix CRLF and LF
-  within the same document, and never introduce an all-LF file into a CRLF repository. Verify line endings after edits
-  if there's any doubt (e.g. after tool-based file creation/edits that may default to LF).
+- This repository uses **LF** line endings, enforced by `.editorconfig` (`end_of_line = lf`) and `.gitattributes`
+  (`* text=auto`, normalizing to LF in the repo regardless of local `core.autocrlf`).
+- When creating or editing files, always use LF — never introduce CRLF, and never mix line-ending styles within
+  the same document. Verify line endings after edits if there's any doubt (e.g. after tool-based file creation/edits
+  that may default to the platform's native line ending).
 
 ### Braces
 
@@ -142,6 +143,7 @@ tradeoff — but do not silently resolve or silently ignore any of them, regardl
 ## Collections and Expressions
 
 - **Target-typed new (`new()`)**: Use only when the target type is explicitly declared on the left (e.g., fields, properties, or explicitly typed variables) or in constructor/method arguments where the parameter type is clear. Otherwise, prefer using `var` with the explicit constructor on the right (e.g., `var options = new DiscogsApiClientOptions();`).
+  - **Diagnostics gap**: `IDE0090`/`csharp_style_implicit_object_creation_when_type_is_apparent` (configured in `.editorconfig`) only fires for explicit-typed variable declarations, field initializers, and similar — **not** for `new TypeName(...)` in method-call-argument positions, even though the parameter type is just as apparent there. `dotnet format` cannot auto-detect or auto-fix that case; it must be applied and checked manually during review.
 - Use **collection expressions** (`[]`) for empty collections and short initializers wherever the target type supports it.
 - `EquatableArray<T>` supports collection expressions via `[CollectionBuilder]` — prefer `["a", "b"]` over `ImmutableArray.Create(...)`.
 - Use `default` only when the target type doesn't support collection expressions.
@@ -185,6 +187,47 @@ tradeoff — but do not silently resolve or silently ignore any of them, regardl
 - The user must approve both the changes **and** the commit message before proceeding.
 - This applies to all commits and pushes, including code changes, test recordings, documentation updates, etc.
 - After making changes, inform the user what was changed and wait for their approval to commit and/or push.
+
+## Release & Branching Workflow
+
+- **`main` is always the last released version.** The only exceptions are non-code changes — e.g. docs
+  fixes unrelated to an in-flight version, CI workflow tweaks — which can be branched directly off `main`
+  and merged straight back into `main` without a version branch.
+- **Every change goes through a branch + PR, merged via a squash commit.** This applies uniformly: feature
+  branches into a version branch, a version branch into `main`, and hotfix/docs/CI branches into `main`.
+- **Code changes that require a version bump** (new features, breaking changes, anything that isn't a pure
+  docs/CI change) are made on a dedicated version branch named after the target version (e.g. `v5.1.0`),
+  branched off `main`.
+  - Individual planned features/changes for that version are implemented on their own branches, branched
+    off the version branch and named simply after the feature being implemented (no required prefix), each
+    merged back into the version branch via its own squashed PR.
+  - When the version branch is opened, immediately bump `<PackageVersion>`/`<AssemblyVersion>`/
+    `<FileVersion>` in `DiscogsApiClient.csproj` to the target version, and add the corresponding
+    `## [x.y.z] - Unreleased` entry to `docs/CHANGELOG.md` (the version number is fixed up front; only the
+    date is a placeholder until release — see "Documentation Maintenance" below).
+  - When the version branch is feature-complete:
+    1. Remove the `Unreleased` date placeholder from that version's `docs/CHANGELOG.md` entry (leave the
+       date to be finalized right before/at merge time, matching the actual release date).
+    2. Double-check the version metadata in `DiscogsApiClient.csproj` matches the documented/planned
+       version exactly — no leftover `-preview`/`-beta` suffix or mismatched value.
+    3. Confirm `docs/MIGRATION_GUIDE.md` has a migration section covering every **Breaking** entry added
+       for this version.
+    4. Optionally do a dry-run of the NuGet publish workflow against the test server
+       (`publish_to_test_server = true`, see Phase 7 in `docs/MODERNIZATION_PLAN.md`) from the version
+       branch, to validate packaging before opening the final PR.
+    5. Open the big version PR: `<version-branch>` → `main`, with a comprehensive description
+       summarizing all changes and linking to the relevant `docs/CHANGELOG.md`/`docs/MIGRATION_GUIDE.md`
+       sections.
+- **Hotfix/patch releases** (e.g. a v5.0.1 bugfix with no new features) skip the version-branch/feature-
+  branch accumulation step: branch a hotfix branch directly off `main`, make the fix, bump the version and
+  add the changelog entry on that same branch, and PR straight back into `main`.
+- **After the version PR merges into `main`:**
+  1. Tag the merge commit (e.g. `v5.1.0`).
+  2. Trigger the Phase 7 NuGet publish workflow (`publish_to_test_server = false`) from that `main` commit
+     to push the real release to `nuget.org`.
+  3. Create a GitHub release for the tag, with release notes sourced from that version's
+     `docs/CHANGELOG.md` entry, linking to the relevant `docs/MIGRATION_GUIDE.md` section if the release
+     contains breaking changes.
 
 ## Project Structure
 
@@ -241,11 +284,55 @@ DiscogsApiClient/
 ### Adding New API Endpoints
 
 1. Check `docs/API_COVERAGE.md` for status.
-2. Create contract models.
-3. Add to JSON serialization context.
-4. Add the method signature to the `IDiscogsApiClient` contract interface.
-5. Add the `partial` method (+ public wrapper if validated) to the `DiscogsApiClient` partial class.
-6. Update `docs/API_COVERAGE.md`.
+2. Create `Contract` request/response models (records with init-only properties) under `Contract/<Domain>/`.
+3. Register the new models in `DiscogsJsonSerializerContext.cs` for source-generated JSON serialization.
+4. Add the XML-documented method signature (with `<exception>` tags for any validation) to the
+   `IDiscogsApiClient` contract interface — no attributes here, this is the pure public contract.
+5. Add the implementation to the `DiscogsApiClient` partial class in `DiscogsApiClient.cs`:
+   - No validation needed → a single `public partial` method decorated with
+     `[HttpGet/Post/Put/Delete("/route/{param}")]` that directly implements the interface member.
+   - Validation needed → a `private partial <Name>Internal(...)` method carrying the attribute, plus a
+     hand-written `public async` wrapper (matching the interface signature) that validates parameters with
+     native guard clauses (see "Parameter Validation" above) and calls
+     `await XxxInternal(..., cancellationToken).ConfigureAwait(false)`.
+6. Update `docs/API_COVERAGE.md` with the new endpoint's status.
+
+## Documentation Maintenance
+
+The consumer-facing docs are split by purpose: `README.md` (intro/getting started), `docs/CHANGELOG.md`
+(full version history), `docs/MIGRATION_GUIDE.md` (breaking-change migration steps), and
+`docs/API_COVERAGE.md` (endpoint coverage). Keep them current as part of the same change that causes them
+to go stale — do not defer this to a separate documentation pass.
+
+### `docs/CHANGELOG.md`
+
+- Follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format, adapted for this project's
+  branching model: each in-flight version gets its own `## [x.y.z] - Unreleased` heading (the version
+  number is fixed as soon as its version branch opens — see "Release & Branching Workflow" — only the date
+  is a placeholder). The `Unreleased` date placeholder is replaced with the actual release date right
+  before/at merge time; never bump the version number preemptively before its branch is opened.
+- Whenever a change is user-observable (new/changed/removed public API, behavior change, bug fix), add an
+  entry to the current in-flight version's `Unreleased` entry in the same commit/PR that makes the change
+  — not retroactively before a release.
+- Any breaking change (renamed/removed/retyped public member, changed default behavior, new required
+  parameter, etc.) **must** be called out inline under a **Breaking:** sub-list within that same version
+  entry — never bury it in a plain bullet. Every past released version's own breaking changes stay listed
+  under that version's entry permanently; this file is the authoritative, permanent breaking-change
+  history, not just a log of the latest release.
+- Each version entry's **Breaking** items must have a corresponding entry added to
+  `docs/MIGRATION_GUIDE.md` (see below) in the same change.
+
+### `docs/MIGRATION_GUIDE.md`
+
+- Add a before/after code sample for every new **Breaking** changelog entry, in the same commit/PR that
+  introduces the break. Keep the primary "Migrating from `<previous version>` to `<in-flight version>`"
+  section in sync with that version's `Unreleased` entry in the changelog — when unsure what the in-flight
+  version number is, ask rather than guessing.
+- Do not remove older migration sections when a new version ships; they remain useful for consumers
+  jumping multiple versions at once (e.g. 3.x → 5.x). Only prune a section if it becomes truly obsolete
+  (e.g. the intermediate API shape it describes no longer exists anywhere in history relevant to current
+  consumers).
+- Add the new version's section link to the bulleted list near the top of the file in the same change.
 
 ## Project Characteristics
 
