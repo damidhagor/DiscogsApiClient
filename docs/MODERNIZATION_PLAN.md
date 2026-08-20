@@ -800,11 +800,11 @@ provider-resolution model.
 **Branch:** `modernization` (final validation)
 
 ### 6.1 Comprehensive Testing
-- [ ] Run full test suite on all target frameworks (.NET 8, 9, 10)
-- [ ] Perform manual testing of key scenarios
-- [ ] Run performance benchmarks (if available)
-- [ ] Test NuGet package generation
-- [ ] Test in a clean environment (fresh clone)
+- [x] Run full test suite on all target frameworks (.NET 8, 9, 10) — 262/262 passed on net8.0/net9.0/net10.0; SourceGenerator tests 83/83 on net10.0
+- [x] Perform manual testing of key scenarios — user manually tested the demo projects (PAT, OAuth, AOT console) with real Discogs credentials in Visual Studio. **Found and fixed a real bug in the process:** `demo/DiscogsApiClientDemo.slnx` didn't include `DiscogsApiClient.SourceGenerator.csproj`, so Visual Studio failed to build `DiscogsApiClient.dll` (the generator wasn't built/available as an analyzer in the VS session). Root cause pre-dates this modernization branch — the original `.sln` (before the Phase 4 `.slnx` migration) never referenced the generator project either; `dotnet build`/CLI never surfaced it because `DiscogsApiClient.csproj` already has its own `Analyzer`-only `ProjectReference` to the generator, which MSBuild resolves independent of solution membership — this is a Visual Studio-specific out-of-solution-reference quirk. Fixed by adding the generator project to the demo `.slnx`. All demo scenarios passed after the fix.
+- [x] Run performance benchmarks — N/A, no BenchmarkDotNet project exists in the repo; out of scope for this modernization
+- [x] Test NuGet package generation — `dotnet pack` (Release) succeeds; verified the produced `.nupkg` contains `lib/net8.0`, `lib/net9.0`, `lib/net10.0` assemblies, the embedded `README.md`, and a valid `.nuspec`. Also verified end-to-end integration: packed into a local folder feed, consumed via `PackageReference` (not a project reference) from a scratch console app, called `AddDiscogsApiClient(...).WithPatAuthentication(...)`, resolved `IDiscogsApiClient` via DI, and ran successfully. All done locally with scratch temp directories — nothing published to nuget.org, no repo files touched.
+- [x] Test in a clean environment (fresh clone) — cloned the branch into a fresh temp directory and ran a full build + test cycle (net10.0: 262/262 passed). **Finding:** on default Windows `git` settings (`core.longpaths` not enabled), the clone failed with "Filename too long" due to deeply-nested test recording fixture filenames (~241+ chars); succeeded once `core.longpaths=true` was set for the clone. Affects only contributors building from source (not NuGet consumers). Decision: deferred — revisit only if Phase 7 CI surfaces the same failure.
 
 ### 6.2 Documentation Rework
 
@@ -852,12 +852,16 @@ focused, purpose-specific documents:
 - [ ] Update this modernization plan status to completed
 
 ### 6.3 Code Quality Gates
-- [ ] Zero compiler warnings
-- [ ] Zero analyzer warnings
-- [ ] Full IDE/style diagnostics pass (`dotnet format --verify-no-changes --severity info`) is clean
+- [x] Zero compiler warnings
+- [x] Zero analyzer warnings
+- [ ] Full IDE/style diagnostics pass (`dotnet format --verify-no-changes --severity info`) is clean —
+      **known false positives deferred:** 67x `IDE0060` on `DiscogsApiClient.cs`'s generator-implemented
+      `private partial` method declarations, and 9x `IDE0005` on files using `[GenerateJsonConverter]`/
+      `[AliasAs(...)]` (both confirmed by revert-and-rebuild testing to be real usages the analyzer can't
+      see across generated code). Deferred; revisit if Phase 7 CI surfaces the same findings.
 - [ ] Code coverage reports generated
 - [ ] Static analysis passes
-- [ ] NuGet package builds successfully (even if not published yet)
+- [x] NuGet package builds successfully (even if not published yet) — see 6.1
 
 ### 6.4 Final Review
 - [ ] Review all merged PRs
@@ -998,9 +1002,14 @@ v5.0.0 NuGet release using the Phase 7 publish workflow.
 | 2026-08-19 | Docs split into README + `docs/CHANGELOG.md` + `docs/MIGRATION_GUIDE.md` | One long README mixing intro, full version history, and breaking changes was hard to navigate; `docs/API_COVERAGE.md` already covers endpoint status in more detail than README's list | README becomes a short entry point that links to the other docs; each doc has one clear audience/purpose |
 | 2026-08-19 | Phase 7 also adds a PR-validation workflow (build+tests+`dotnet format --verify-no-changes`+NuGet vulnerability audit) | Merge to main ≠ release, so quality gates should already be enforced automatically before that point, not just checked manually in Phase 6 | Every PR is now gated by the same checks documented in AGENTS.md, reducing reliance on manual review |
 | TBD | Merge to main ≠ release | Package publication is a separate, deliberate step (Phase 8), executed via the Phase 7 publish workflow | Cleaner release workflow |
+| 2026-08-19 | Deferred: `IDE0060`/`IDE0005` false positives from `dotnet format --severity info` | 67x `IDE0060` on `DiscogsApiClient.cs`'s generator-implemented `private partial` method declarations (parameters are used by the source-generator-emitted body, which the analyzer doesn't see across); 9x `IDE0005` on files using `[GenerateJsonConverter]`/`[AliasAs(...)]` (usings resolve source-generator-emitted attribute types the analyzer doesn't recognize). Both confirmed as false positives via revert-and-rebuild testing (removal breaks the build with `CS0246`). Both are inherent to the project's source-generator architecture, not real issues. | Left unresolved for now (already `suggestion` severity, doesn't fail `dotnet build`); revisit suppression (e.g. `.editorconfig`) only if Phase 7's CI format-check surfaces the same findings |
 | TBD | Service registration modernization (§4.7) | Align with `IOptions<T>`, hand-written `IValidateOptions<T>` + `ValidateOnStart()`, `TryAdd*` idempotency, `IConfiguration` binding, and DI-namespace discoverability used by modern .NET libraries | **Breaking** — extension moved to `Microsoft.Extensions.DependencyInjection`; invalid options now throw `OptionsValidationException` at startup instead of `InvalidOperationException` at registration; `OAuthAuthenticationProvider` ctor takes `IOptions<T>` |
 | 2025-01-XX | **Rate limiting: Remove built-in limiter** | Sliding window implementation was unreliable and didn't align with Discogs methodology; feature not widely used; exposing raw metadata provides maximum flexibility | **Breaking** — consumers must remove `UseRateLimiting` and related config; can now access rate limit state via `IDiscogsRateLimitStateService` |
 | TBD | Authentication setup modernization (§4.9) | `IDiscogsAuthenticationService` facade allowed half-configured/conflicting auth state and had no way to pre-authenticate at registration; tokens were runtime-only mutable singleton state, not bindable via options/`IConfiguration` | **Breaking** — `IDiscogsAuthenticationService`/`DiscogsAuthenticationService` removed; `IPersonalAccessTokenAuthenticationProvider`/`PersonalAccessTokenAuthenticationProvider` renamed to `IDiscogsPatAuthenticationProvider`/`DiscogsPatAuthenticationProvider`; `IOAuthAuthenticationProvider`/`OAuthAuthenticationProvider` renamed to `IDiscogsOAuthAuthenticationProvider`/`DiscogsOAuthAuthenticationProvider`; `DiscogsApiClientOptions.ConsumerKey`/`ConsumerSecret`/`VerifierCallbackUrl` moved to new `DiscogsOAuthOptions`; new `DiscogsPatOptions`; consumers must call `.WithPatAuthentication(...)` or `.WithOAuthAuthentication(...)` to opt into a mechanism (calling both throws `InvalidOperationException`); calling neither yields a valid, permanent unauthenticated client |
+| 2026-08-19 | Manual testing found a real bug: demo `.slnx` missing `SourceGenerator` project reference | Visual Studio failed to build `DiscogsApiClient.dll` when opening `demo/DiscogsApiClientDemo.slnx` because the generator project wasn't part of the solution (pre-existing gap since before this modernization branch; CLI `dotnet build` never surfaced it because `DiscogsApiClient.csproj`'s own `Analyzer`-only `ProjectReference` is resolved by MSBuild independent of solution membership — this is a VS-specific out-of-solution-reference quirk) | Fixed by adding `DiscogsApiClient.SourceGenerator.csproj` to `demo/DiscogsApiClientDemo.slnx`; all demo scenarios (PAT, OAuth, AOT console) manually verified working afterward with real credentials |
+| 2026-08-19 | Performance benchmarks marked N/A for this modernization | No BenchmarkDotNet project exists in the repo; setting one up is out of scope for Phase 6 | Benchmarking left as a possible future addition, not tracked as a blocking item |
+| 2026-08-19 | NuGet package validated locally (build + real `PackageReference` consumption), nothing published | `dotnet pack` output verified to contain all 3 TFM assemblies + embedded README + valid `.nuspec`; consumed from a local folder feed by a scratch console app (DI registration, PAT auth, `IDiscogsApiClient` resolution all worked) | Confirms the package is structurally sound and consumable before Phase 7/8 introduce the real publish pipeline; no nuget.org publication occurred |
+| 2026-08-19 | Deferred: fresh-clone failure on default Windows git settings | Cloning without `core.longpaths=true` fails with "Filename too long" due to deeply-nested test recording fixture filenames (~241+ chars); only reproduces in deep clone paths (e.g. `%TEMP%`) and only affects contributors building from source, not NuGet consumers | Left unresolved for now; revisit (e.g. shorten fixture names or document the `core.longpaths` requirement) only if Phase 7 CI surfaces the same failure |
 
 ### Risks & Mitigations
 - **Risk:** Breaking changes impact existing consumers
