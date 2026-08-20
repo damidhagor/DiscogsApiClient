@@ -954,9 +954,11 @@ v5.0.0 release publish itself happens in Phase 8, using the workflow built here.
       nightly `schedule` + `workflow_dispatch` + PR (path-filtered) + `push` to `main` (unfiltered) —
       and only **High/Critical** severity findings fail the job; Moderate/Low surface as
       non-failing `::warning::` annotations (see Decision Log).
-- [x] Run against both `src/DiscogsApiClient.slnx` and `demo/DiscogsApiClientDemo.slnx` — split across
-      `ci-library.yml`/`ci-demo.yml` (build+format+test) and `dependency-check.yml` (vulnerability scan
-      covers both solutions in one workflow).
+- [x] Run against both `src/DiscogsApiClient.slnx` and `demo/DiscogsApiClientDemo.slnx` for
+      build+format+test, split across `ci-library.yml`/`ci-demo.yml`. **Deviation:** the vulnerability
+      scan (`dependency-check.yml`) covers `src/DiscogsApiClient.slnx` only — the demo solution is never
+      published or consumed by end users, and its WPF projects can't even restore on the scan's
+      `ubuntu-latest` runner (see Decision Log).
 - [x] Workflow files: `.github/workflows/ci-library.yml`, `.github/workflows/ci-demo.yml`,
       `.github/workflows/dependency-check.yml` (see `docs/CI_CD.md` for full details on each).
 
@@ -1086,6 +1088,8 @@ using the Phase 7 publish workflow.
 | 2026-08-21 | Only compiler errors/test failures/High+Critical vulnerabilities fail a Phase 7.1 job; everything else is a non-failing `::warning::` annotation | User explicitly did not want build warnings, `dotnet format` drift, or Moderate/Low vulnerabilities blocking a PR merge — those are advisory, not gating | `dotnet build` omits `/warnaserror`; `dotnet format --verify-no-changes` exit code is discarded; `.github/scripts/annotate-diagnostics.sh` and `.github/scripts/check-vulnerabilities.sh` implement the annotation/severity-gating split |
 | 2026-08-21 | Added root `global.json` (`{"test": {"runner": "Microsoft.Testing.Platform"}}`) | The .NET 10 SDK dropped the legacy VSTest-bridge path `dotnet test` used automatically on earlier SDKs for Microsoft.Testing.Platform-based (TUnit) test projects, failing with "Testing with VSTest target is no longer supported" | Unblocks `dotnet test` entirely on .NET 10 SDK for this repo's test suite; does not pin an SDK version |
 | 2026-08-21 | Coverage output uses MTP's auto-named per-TFM files instead of one fixed `--coverage-output` filename | The 3 parallel TFM test runs (net8/9/10) raced on writing the same fixed-name Cobertura file when one filename was specified, corrupting the report despite 0 test failures | `TestResults/*.cobertura.xml`/`TestResults/*.trx` glob patterns feed `dorny/test-reporter`/`ReportGenerator-GitHub-Action` instead of a single hardcoded path |
+| 2026-08-21 | `dependency-check.yml` scans `src/DiscogsApiClient.slnx` only, not the demo solution | First real PR run confirmed `dotnet restore demo/DiscogsApiClientDemo.slnx` fails on `ubuntu-latest` with `NETSDK1100` (the WPF demo projects target `net10.0-windows` and can't restore without the Windows Desktop targeting pack); the demo solution is also never published or consumed by end users, so scanning it carries no real value | Removed the demo restore/scan steps and `demo/**` from the `pull_request` path filter; `dependency-check.yml` now only ever touches `src/DiscogsApiClient.slnx` |
+| 2026-08-21 | `ci-library.yml`/`ci-demo.yml` build steps use `-p:EnforceCodeStyleInBuild=true` instead of `/p:...` | First real PR run showed `ci-demo.yml` (Git Bash on `windows-latest`) failing with `MSB1008: Only one project can be specified` — Git Bash's MSYS layer strips the leading `/` from an argument that looks like a POSIX path, turning `/p:EnforceCodeStyleInBuild=true` into a bogus second project argument on the MSBuild command line | `-p:` is a functionally identical MSBuild property switch that isn't subject to MSYS path-conversion (no leading `/`), so it's safe on both `ubuntu-latest` (plain bash) and `windows-latest` (Git Bash) |
 
 ### Risks & Mitigations
 - **Risk:** Breaking changes impact existing consumers

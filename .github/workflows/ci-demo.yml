@@ -33,7 +33,7 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          dotnet build demo/DiscogsApiClientDemo.slnx -c Release --no-restore /p:EnforceCodeStyleInBuild=true | tee build.log
+          dotnet build demo/DiscogsApiClientDemo.slnx -c Release --no-restore -p:EnforceCodeStyleInBuild=true | tee build.log
 
       - name: Annotate build warnings (non-failing)
         if: always()

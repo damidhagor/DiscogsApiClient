@@ -37,7 +37,7 @@ jobs:
       - name: Build
         run: |
           set -o pipefail
-          dotnet build src/DiscogsApiClient.slnx -c Release --no-restore /p:EnforceCodeStyleInBuild=true | tee build.log
+          dotnet build src/DiscogsApiClient.slnx -c Release --no-restore -p:EnforceCodeStyleInBuild=true | tee build.log
 
       - name: Annotate build warnings (non-failing)
         if: always()

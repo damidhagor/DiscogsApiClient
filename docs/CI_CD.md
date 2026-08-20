@@ -64,19 +64,21 @@ Validates the demo solution (`demo/DiscogsApiClientDemo.slnx`).
 
 ## `.github/workflows/dependency-check.yml`
 
-Scans both solutions' NuGet dependencies (direct + transitive) for known vulnerabilities.
+Scans the library solution's (`src/DiscogsApiClient.slnx`) NuGet dependencies (direct + transitive) for
+known vulnerabilities. The demo solution is intentionally **not** scanned — it's never published or
+consumed by end users, so vulnerable transitive dependencies there don't carry the same risk.
 
 - **Triggers:**
   - `schedule` — nightly at 03:00 UTC, so CVEs published against unchanged dependencies are still
     caught even with no new commits.
   - `workflow_dispatch` — manual on-demand run.
-  - `pull_request` — scoped via `paths` to `src/**`, `demo/**`, and the workflow's own files (skips
-    doc-only PRs).
+  - `pull_request` — scoped via `paths` to `src/**` and the workflow's own files (skips doc-only or
+    demo-only PRs).
   - `push` to `main` — **no** path filter, so every merge to `main` always gets a full scan regardless
     of what changed.
 - **Runner:** `ubuntu-latest`, single SDK (only `dotnet list package` runs here, no test execution).
-- **Steps:** for both `src/DiscogsApiClient.slnx` and `demo/DiscogsApiClientDemo.slnx`, restore then run
-  `.github/scripts/check-vulnerabilities.sh <solution>`, which:
+- **Steps:** restore `src/DiscogsApiClient.slnx`, then run
+  `.github/scripts/check-vulnerabilities.sh src/DiscogsApiClient.slnx`, which:
   1. Runs `dotnet list package --vulnerable --include-transitive --format json` and parses the JSON
      output with `jq`.
   2. **High or Critical** severity findings emit a `::error::` annotation and fail the job.
