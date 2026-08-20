@@ -76,10 +76,11 @@ tradeoff — but do not silently resolve or silently ignore any of them, regardl
 
 ### Line Endings
 
-- This repository uses **CRLF** line endings (`core.autocrlf=true`, consistent with all existing tracked files).
-- When creating or editing files, always preserve the existing line-ending style of that file — never mix CRLF and LF
-  within the same document, and never introduce an all-LF file into a CRLF repository. Verify line endings after edits
-  if there's any doubt (e.g. after tool-based file creation/edits that may default to LF).
+- This repository uses **LF** line endings, enforced by `.editorconfig` (`end_of_line = lf`) and `.gitattributes`
+  (`* text=auto`, normalizing to LF in the repo regardless of local `core.autocrlf`).
+- When creating or editing files, always use LF — never introduce CRLF, and never mix line-ending styles within
+  the same document. Verify line endings after edits if there's any doubt (e.g. after tool-based file creation/edits
+  that may default to the platform's native line ending).
 
 ### Braces
 
@@ -142,6 +143,7 @@ tradeoff — but do not silently resolve or silently ignore any of them, regardl
 ## Collections and Expressions
 
 - **Target-typed new (`new()`)**: Use only when the target type is explicitly declared on the left (e.g., fields, properties, or explicitly typed variables) or in constructor/method arguments where the parameter type is clear. Otherwise, prefer using `var` with the explicit constructor on the right (e.g., `var options = new DiscogsApiClientOptions();`).
+  - **Diagnostics gap**: `IDE0090`/`csharp_style_implicit_object_creation_when_type_is_apparent` (configured in `.editorconfig`) only fires for explicit-typed variable declarations, field initializers, and similar — **not** for `new TypeName(...)` in method-call-argument positions, even though the parameter type is just as apparent there. `dotnet format` cannot auto-detect or auto-fix that case; it must be applied and checked manually during review.
 - Use **collection expressions** (`[]`) for empty collections and short initializers wherever the target type supports it.
 - `EquatableArray<T>` supports collection expressions via `[CollectionBuilder]` — prefer `["a", "b"]` over `ImmutableArray.Create(...)`.
 - Use `default` only when the target type doesn't support collection expressions.
