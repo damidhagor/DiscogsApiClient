@@ -2,8 +2,8 @@
 
 This document tracks the implementation status of all Discogs API endpoints in this library.
 
-**Last Updated:** 2024
-**Total Coverage:** 26/59 endpoints (44%)
+**Last Updated:** 2026-08-19 (verified against `src/DiscogsApiClient/DiscogsApiClient.cs`)
+**Total Coverage:** 24/59 endpoints (41%)
 
 ---
 
@@ -197,12 +197,32 @@ This document tracks the implementation status of all Discogs API endpoints in t
 
 ## Notes for Implementers
 
-- All implemented endpoints are in `IDiscogsApiClient.cs`
-- When implementing new endpoints, follow the existing pattern:
-  - Create internal method with `[HttpGet/Post/Put/Delete]` attribute
-  - Create public wrapper method with parameter validation using `Guard` class
-  - Add XML documentation comments
-  - Update this document with the new endpoint status
+- The public contract lives in `IDiscogsApiClient.cs` — a plain interface with XML-documented method
+  signatures (including `<exception>` tags for any validation) but **no** `[HttpGet/Post/Put/Delete]`
+  attributes and no implementation.
+- The generator-facing implementation lives in `DiscogsApiClient.cs` (the `internal sealed partial class
+  DiscogsApiClient`, decorated with `[ApiClient(typeof(DiscogsJsonSerializerContext))]`). Follow the
+  existing pattern there when adding a new endpoint:
+  - **No parameter validation needed:** add a single `public partial` method decorated with
+    `[HttpGet/Post/Put/Delete("/route/{param}")]` that directly implements the interface member — the
+    generator emits its body.
+  - **Parameter validation needed:** add a `private partial <Name>Internal(...)` method decorated with the
+    `[HttpGet/Post/Put/Delete]` attribute (generator emits its body), plus a hand-written `public async`
+    wrapper matching the interface signature that validates parameters with native .NET guard clauses
+    (`ArgumentException.ThrowIfNullOrWhiteSpace`, `ArgumentOutOfRangeException.ThrowIfLessThanOrEqual`,
+    etc. — see `AGENTS.md`'s "Parameter Validation" section) and then calls
+    `await XxxInternal(..., cancellationToken).ConfigureAwait(false)`.
+  - Route placeholders (`{username}`, `{releaseId}`, ...) must match the method's parameter names.
+  - POST/PUT bodies are passed via a parameter attributed `[Body]` (a `Contract` request record).
+  - Optional query parameters use a `PaginationQueryParameters?`/`<Domain>QueryParameters?`-style nullable
+    parameter type, passed straight through to the internal method (not validated).
+- Add any new request/response `Contract` records under `Contract/` by domain (see "Contract Models" in
+  `AGENTS.md`) and register them in `DiscogsJsonSerializerContext.cs` for source-generated JSON
+  serialization.
+- Update this document's endpoint status table with the new row, linking to the `IDiscogsApiClient` method.
+- See `docs/ARCHITECTURE.md` ("Core Components" → "API Client Contract & Class") for the full pattern with
+  a worked example, and `AGENTS.md` ("API Endpoint Pattern" / "Adding New API Endpoints") for the
+  authoritative step-by-step checklist.
 
 ## References
 

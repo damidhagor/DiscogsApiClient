@@ -824,32 +824,44 @@ focused, purpose-specific documents:
 | `docs/MIGRATION_GUIDE.md` | Consolidated breaking-change/migration guide with before/after code samples, covering the v5.0.0 changes and any still-relevant migration steps carried forward from prior breaking releases (3.0.0, 4.0.0, 4.1.0, etc.) | Consumers upgrading from any older version |
 | `docs/API_COVERAGE.md` *(existing)* | Detailed endpoint-by-endpoint implementation status | Consumers checking API surface coverage |
 
-- [ ] **Rework the README:**
-  - [ ] Trim to: intro/disclaimer, authentication overview, getting-started samples (refreshed against the modernized API)
-  - [ ] Service registration: the three `AddDiscogsApiClient` overloads (`Action<TOptions>`,
+- [x] **Rework the README:**
+  - [x] Trim to: intro/disclaimer, authentication overview, getting-started samples (refreshed against the modernized API)
+  - [x] Service registration: the three `AddDiscogsApiClient` overloads (`Action<TOptions>`,
         `Action<IServiceProvider, TOptions>`, `IConfiguration`) + the optional `Action<IHttpClientBuilder>` hook
-  - [ ] Configuration via `appsettings.json` (the `"Discogs"` section / `DiscogsApiClientOptions.SectionName`)
+  - [x] Configuration via `appsettings.json` (the `"Discogs"` section / `DiscogsApiClientOptions.SectionName`)
         and startup validation surfacing as `OptionsValidationException`
-  - [ ] Rate limiting removal and the new `IDiscogsRateLimitStateService`
-  - [ ] Remove the inline "Changelog" section, the "Implemented Api Functions" list, and the "Roadmap" section entirely
-  - [ ] Add a short "Documentation" section linking to `docs/CHANGELOG.md`, `docs/MIGRATION_GUIDE.md`,
+  - [x] Rate limiting removal and the new `IDiscogsRateLimitStateService`
+  - [x] Remove the inline "Changelog" section, the "Implemented Api Functions" list, and the "Roadmap" section entirely
+  - [x] Add a short "Documentation" section linking to `docs/CHANGELOG.md`, `docs/MIGRATION_GUIDE.md`,
         and `docs/API_COVERAGE.md` so the extracted docs stay discoverable
-- [ ] **Extract and rework `docs/CHANGELOG.md`** — move the existing README version history here,
-      keep it in Keep a Changelog-style format, with each version's own **Breaking** subsection called out
-      inline (not just the latest release), and add the v5.0.0 entry consolidating every phase's changes
-- [ ] **Consolidate all v5.0.0 breaking changes** into a single, authoritative list (namespace move,
-      `OptionsValidationException` at startup, `OAuthAuthenticationProvider` ctor takes `IOptions<T>`,
-      rate-limiting removal, `IDiscogsApiClient` interface changes)
-- [ ] Create `docs/MIGRATION_GUIDE.md` covering breaking changes and migration steps
-  - [ ] Document rate limiting removal and new `IDiscogsRateLimitStateService` usage with examples
-  - [ ] Document the service-registration / options changes with before/after examples
-  - [ ] Include code samples showing how consumers can implement custom rate limiting if needed
-  - [ ] Review the old README changelog entries for prior breaking releases (3.0.0, 4.0.0, 4.1.0) and
-        carry forward any still-relevant migration steps/before-after samples (e.g. Refit → source
-        generator, OAuth flow call changes, renamed properties) so the guide is a single place consumers
-        jumping from any older 3.x/4.x version can follow, not just the v4.x → v5.0.0 delta
-- [ ] Update `docs/ARCHITECTURE.md` with any remaining architectural changes (if applicable)
-- [ ] Update this modernization plan status to completed
+- [x] **Extract and rework `docs/CHANGELOG.md`** — moved the existing README version history here (1.0.0
+      through 4.1.1, with real dates from git tags), kept in Keep a Changelog-style format, with each
+      version's own **Breaking** subsection called out inline (not just the latest release); roadmap
+      section dropped per user decision. Added an `## [Unreleased] (targeting 5.0.0)` entry consolidating
+      every phase's changes, with its own **Breaking** subsection.
+- [x] **Consolidate all v5.0.0 breaking changes** into a single, authoritative list — verified via
+      `git log v4.1.1..HEAD` across all phase commits plus source inspection (namespace move,
+      `OptionsValidationException` at startup, authentication provider renames + opt-in registration,
+      `DiscogsOAuthAuthenticationProvider` ctor now takes `IHttpClientFactory`, rate-limiting removal,
+      required `CancellationToken` parameters, `[ApiClient]` now targets the implementing class instead of
+      the interface, `Contract` DTO `List<T>` → `IReadOnlyList<T>` (98 properties),
+      `OAuthAuthenticationSession.AuthorizeUrl`/`VerifierCallbackUrl` `string` → `Uri`). TUnit migration
+      excluded as dev/test-only, not consumer-facing.
+- [x] Create `docs/MIGRATION_GUIDE.md` covering breaking changes and migration steps
+  - [x] Document rate limiting removal and new `IDiscogsRateLimitStateService` usage with examples
+  - [x] Document the service-registration / options changes with before/after examples
+  - [x] Include code samples showing how consumers can implement custom rate limiting if needed
+  - [x] Review the old README changelog entries for prior breaking releases (3.0.0, 4.0.0, 4.1.0) and
+        carry forward any still-relevant migration steps/before-after samples (Refit → source
+        generator/OAuth flow call changes carried in the CHANGELOG entries themselves; a dedicated
+        "Upgrading from an older version" section in the migration guide covers the OAuth call-flow
+        evolution and the 4.1.0 property renames) so the guide is a single place consumers jumping from
+        any older 3.x/4.x version can follow, not just the v4.x → v5.0.0 delta
+- [x] Update `docs/ARCHITECTURE.md` with any remaining architectural changes — reviewed; already current
+      (rate-limit-state model, native guard clauses, no stale Refit/RateLimit/NUnit references found), no
+      changes needed. Fixed one stale reference in `docs/API_COVERAGE.md`'s "Notes for Implementers"
+      section (`Guard` class → native guard clauses).
+- [x] Update this modernization plan status to completed
 
 ### 6.3 Code Quality Gates
 - [x] Zero compiler warnings
@@ -934,14 +946,18 @@ v5.0.0 release publish itself happens in Phase 8, using the workflow built here.
 
 ## Phase 8: Release Preparation & Merge to Main
 
-**Goal:** Bump the version, finalize the PR from `modernization` to `main`, and execute the actual
-v5.0.0 NuGet release using the Phase 7 publish workflow.
+**Goal:** Finalize the PR from `modernization` to `main`, and execute the actual v5.0.0 NuGet release
+using the Phase 7 publish workflow.
 
 **Branch:** `modernization` (final)
 
 ### 8.1 Version Bump
-- [ ] Bump `<PackageVersion>`/`<AssemblyVersion>`/`<FileVersion>` in `DiscogsApiClient.csproj` to `5.0.0`
-- [ ] Confirm `docs/CHANGELOG.md`'s v5.0.0 entry and release date are up to date
+- [x] Bump `<PackageVersion>`/`<AssemblyVersion>`/`<FileVersion>` in `DiscogsApiClient.csproj` to `5.0.0` —
+      done ahead of schedule during Phase 6.2 docs work (see Decision Log), since the standard release
+      workflow documented in `AGENTS.md` bumps the version at version-branch-open time; this branch is the
+      exception that established that workflow.
+- [ ] Confirm `docs/CHANGELOG.md`'s `[5.0.0]` entry has its `Unreleased` date placeholder replaced with the
+      actual release date right before/at merge time (see "Release & Branching Workflow" in `AGENTS.md`)
 
 ### 8.2 Merge to Main
 - [ ] Create PR: `modernization` → `main`
@@ -953,7 +969,8 @@ v5.0.0 NuGet release using the Phase 7 publish workflow.
 ### 8.3 Release
 - [ ] Tag release `v5.0.0` on `main`
 - [ ] Trigger the Phase 7 publish workflow (`publish_to_test_server = false`) to push v5.0.0 to `nuget.org`
-- [ ] Create a GitHub release with notes sourced from `docs/CHANGELOG.md`
+- [ ] Create a GitHub release with notes sourced from `docs/CHANGELOG.md`, linking to
+      `docs/MIGRATION_GUIDE.md` for the breaking changes
 
 ### Acceptance Criteria - Phase 8
 - [ ] Version bumped to 5.0.0 and merged to `main`
@@ -1010,6 +1027,9 @@ v5.0.0 NuGet release using the Phase 7 publish workflow.
 | 2026-08-19 | Performance benchmarks marked N/A for this modernization | No BenchmarkDotNet project exists in the repo; setting one up is out of scope for Phase 6 | Benchmarking left as a possible future addition, not tracked as a blocking item |
 | 2026-08-19 | NuGet package validated locally (build + real `PackageReference` consumption), nothing published | `dotnet pack` output verified to contain all 3 TFM assemblies + embedded README + valid `.nuspec`; consumed from a local folder feed by a scratch console app (DI registration, PAT auth, `IDiscogsApiClient` resolution all worked) | Confirms the package is structurally sound and consumable before Phase 7/8 introduce the real publish pipeline; no nuget.org publication occurred |
 | 2026-08-19 | Deferred: fresh-clone failure on default Windows git settings | Cloning without `core.longpaths=true` fails with "Filename too long" due to deeply-nested test recording fixture filenames (~241+ chars); only reproduces in deep clone paths (e.g. `%TEMP%`) and only affects contributors building from source, not NuGet consumers | Left unresolved for now; revisit (e.g. shorten fixture names or document the `core.longpaths` requirement) only if Phase 7 CI surfaces the same failure |
+| 2026-08-19 | Docs rework completed: README rewritten, `docs/CHANGELOG.md` and `docs/MIGRATION_GUIDE.md` created | README trimmed to intro/auth-overview/getting-started + a "Documentation" links section; CHANGELOG migrates the 1.0.0-4.1.1 history (real git tag dates) plus a new `[Unreleased] (targeting 5.0.0)` entry with an inline **Breaking** list covering every consolidated v5.0.0 breaking change (namespace move, auth provider renames/opt-in registration, rate-limiting removal, required `CancellationToken`, `[ApiClient]` retargeted to the implementing class, `List<T>`→`IReadOnlyList<T>`, OAuth session URL types); MIGRATION_GUIDE adds before/after samples for each plus a carried-forward section for pre-4.1.1 upgraders (OAuth call-flow evolution, 4.1.0 property renames). Also fixed a stale `Guard` class reference in `docs/API_COVERAGE.md`; `docs/ARCHITECTURE.md` reviewed and found already current, no changes needed. | Phase 6.2 fully complete; ready for user review before commit |
+| 2026-08-20 | Documented the standard release/branching workflow in `AGENTS.md` for versions after v5.0.0 | `main` = last released version (except non-code changes); code changes needing a version bump go on a dedicated version branch (e.g. `v5.1.0`) with the version/changelog set at branch-open time, feature branches merge into it, a feature-complete checklist runs before the final PR to `main`; hotfixes skip the accumulation step; all merges are squash commits | Establishes a repeatable release process going forward; this `modernization` branch predates it and is a documented one-off exception |
+| 2026-08-20 | Bumped `DiscogsApiClient.csproj` to `5.0.0` and renamed the changelog heading to `## [5.0.0] - Unreleased` now, ahead of Phase 8 | The new release workflow bumps the version at version-branch-open time rather than right before the final PR; since `modernization` never had that step, doing it now (before Phase 7's CI/NuGet testing) keeps the branch consistent with the documented workflow instead of deferring to Phase 8 as originally planned | Phase 8.1's version-bump checklist item is already done; only the `Unreleased` date placeholder and final merge/tag/publish/release steps remain |
 
 ### Risks & Mitigations
 - **Risk:** Breaking changes impact existing consumers
