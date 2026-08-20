@@ -1,0 +1,46 @@
+name: Dependency Check
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch: {}
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'demo/**'
+      - '.github/workflows/dependency-check.yml'
+      - '.github/scripts/check-vulnerabilities.sh'
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  scan-dependencies:
+    name: Scan for vulnerable packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore library solution
+        run: dotnet restore src/DiscogsApiClient.slnx
+
+      - name: Restore demo solution
+        run: dotnet restore demo/DiscogsApiClientDemo.slnx
+
+      # High/Critical severity findings fail the job (::error:: + exit 1).
+      # Moderate/Low severity findings are reported as ::warning:: only and don't fail the job.
+      # All findings are written to the job summary regardless of severity.
+      - name: Check library solution for vulnerable packages
+        run: bash .github/scripts/check-vulnerabilities.sh src/DiscogsApiClient.slnx
+
+      - name: Check demo solution for vulnerable packages
+        if: always()
+        run: bash .github/scripts/check-vulnerabilities.sh demo/DiscogsApiClientDemo.slnx

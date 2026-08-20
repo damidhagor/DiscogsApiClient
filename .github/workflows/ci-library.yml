@@ -1,0 +1,87 @@
+name: CI - Library
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - '.github/workflows/ci-library.yml'
+      - '.github/scripts/annotate-diagnostics.sh'
+      - 'global.json'
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  actions: read
+  checks: write
+
+jobs:
+  validate-library:
+    name: Build, Test & Analyze
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDKs
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+            10.0.x
+
+      - name: Restore
+        run: dotnet restore src/DiscogsApiClient.slnx
+
+      - name: Build
+        run: |
+          set -o pipefail
+          dotnet build src/DiscogsApiClient.slnx -c Release --no-restore /p:EnforceCodeStyleInBuild=true | tee build.log
+
+      - name: Annotate build warnings (non-failing)
+        if: always()
+        run: bash .github/scripts/annotate-diagnostics.sh build.log
+
+      - name: Format check
+        if: always()
+        run: |
+          dotnet format src/DiscogsApiClient.slnx --verify-no-changes --severity info --no-restore | tee format.log || true
+
+      - name: Annotate format diagnostics (non-failing)
+        if: always()
+        run: bash .github/scripts/annotate-diagnostics.sh format.log
+
+      - name: Test with coverage
+        run: |
+          dotnet test src/DiscogsApiClient.slnx -c Release --no-build \
+            --results-directory ./TestResults \
+            -- --report-trx --coverage --coverage-output-format cobertura
+
+      - name: Publish test results
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Library Test Results
+          path: 'TestResults/*.trx'
+          reporter: dotnet-trx
+          fail-on-error: true
+
+      - name: Generate coverage summary
+        if: always()
+        uses: danielpalme/ReportGenerator-GitHub-Action@5
+        with:
+          reports: 'TestResults/*.cobertura.xml'
+          targetdir: 'CoverageReport'
+          reporttypes: 'MarkdownSummaryGithub'
+
+      - name: Add coverage to job summary
+        if: always()
+        run: cat CoverageReport/SummaryGithub.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload coverage report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: library-coverage-report
+          path: CoverageReport/

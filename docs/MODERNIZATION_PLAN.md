@@ -927,16 +927,38 @@ v5.0.0 release publish itself happens in Phase 8, using the workflow built here.
 **Branch:** `modernization/phase7-ci-automation`
 
 ### 7.1 PR Validation Workflow
-- [ ] Trigger: `pull_request` (targeting `main` and/or `modernization`)
-- [ ] Restore and build (all target frameworks) as a gate
-- [ ] Run the full test suite (all target frameworks)
-- [ ] Diagnostics/style check: `dotnet format <solution> --verify-no-changes --severity info` (mirrors the
-      AGENTS.md "IDE/style diagnostics pass"), failing the check on any violation
-- [ ] NuGet dependency/vulnerability check: `dotnet list package --vulnerable --include-transitive`
-      (or `nuget-fix_vulnerable_packages`-equivalent CLI check), failing the workflow if any vulnerable
-      package is found
-- [ ] Run against both `src/DiscogsApiClient.slnx` and `demo/DiscogsApiClientDemo.slnx`
-- [ ] Workflow file: e.g. `.github/workflows/pr-validation.yml`
+- [x] Trigger: `pull_request` (no branch filter — runs for PRs against any target branch, path-filtered
+      per workflow) + `push` to `main` (**no path filter on any of the 3 workflows** — every merge to
+      `main` always runs the full build/test/coverage/vulnerability pipeline regardless of what changed,
+      so `main` never silently skips validation). **Deviation from original plan:** implemented as
+      **three** separate workflow files instead of one, so each concern triggers independently; path
+      filters apply only to `pull_request` triggers, not `push`-to-`main`. `modernization` itself is a
+      temporary branch and is excluded from all triggers.
+- [x] Restore and build (all target frameworks) as a gate — `ci-library.yml`
+      (`src/DiscogsApiClient.slnx`, .NET 8/9/10) and `ci-demo.yml` (`demo/DiscogsApiClientDemo.slnx`,
+      .NET 10 only — demos don't multi-target). **Deviation:** only actual compiler errors fail the
+      build step; analyzer/style warnings (from `/p:EnforceCodeStyleInBuild=true`) are captured and
+      re-emitted as non-failing `::warning::` annotations instead of failing the job (see Decision Log).
+- [x] Run the full test suite (all target frameworks) — `ci-library.yml` only (demo projects have no
+      tests). Uses TUnit's native TRX + Cobertura coverage output
+      (`dotnet test -- --report-trx --coverage --coverage-output-format cobertura`), reported via
+      `dorny/test-reporter` and `danielpalme/ReportGenerator-GitHub-Action`. Required adding
+      `global.json` with `{"test": {"runner": "Microsoft.Testing.Platform"}}` — the .NET 10 SDK no
+      longer supports the VSTest-bridge mode `dotnet test` used automatically on earlier SDKs.
+- [x] Diagnostics/style check: `dotnet format <solution> --verify-no-changes --severity info` (mirrors
+      the AGENTS.md "IDE/style diagnostics pass"). **Deviation:** does not fail the check on violations
+      — formatting drift is reported as non-failing `::warning::` annotations instead (see Decision Log).
+- [x] NuGet dependency/vulnerability check: `dotnet list package --vulnerable --include-transitive
+      --format json`, parsed via `jq` in `.github/scripts/check-vulnerabilities.sh`. **Deviation:**
+      implemented as its own workflow (`dependency-check.yml`) decoupled from code-change triggers —
+      nightly `schedule` + `workflow_dispatch` + PR (path-filtered) + `push` to `main` (unfiltered) —
+      and only **High/Critical** severity findings fail the job; Moderate/Low surface as
+      non-failing `::warning::` annotations (see Decision Log).
+- [x] Run against both `src/DiscogsApiClient.slnx` and `demo/DiscogsApiClientDemo.slnx` — split across
+      `ci-library.yml`/`ci-demo.yml` (build+format+test) and `dependency-check.yml` (vulnerability scan
+      covers both solutions in one workflow).
+- [x] Workflow files: `.github/workflows/ci-library.yml`, `.github/workflows/ci-demo.yml`,
+      `.github/workflows/dependency-check.yml` (see `docs/CI_CD.md` for full details on each).
 
 ### 7.2 NuGet Publish Workflow Design
 - [ ] Trigger: `workflow_dispatch` only (no tag-push or branch-push trigger) — every release is a deliberate, manual action
@@ -1060,6 +1082,10 @@ using the Phase 7 publish workflow.
 | 2026-08-20 | Bumped `DiscogsApiClient.csproj` to `5.0.0` and renamed the changelog heading to `## [5.0.0] - Unreleased` now, ahead of Phase 8 | The new release workflow bumps the version at version-branch-open time rather than right before the final PR; since `modernization` never had that step, doing it now (before Phase 7's CI/NuGet testing) keeps the branch consistent with the documented workflow instead of deferring to Phase 8 as originally planned | Phase 8.1's version-bump checklist item is already done; only the `Unreleased` date placeholder and final merge/tag/publish/release steps remain |
 | 2026-08-20 | Phase 6.3 code quality gates completed: added unit tests for the 5 uncovered internal query-parameter helpers, ran a solution-wide target-typed `new()` cleanup pass, corrected two AGENTS.md inaccuracies (LF not CRLF; documented the `IDE0090` method-argument-position analyzer gap) | Coverage improved 83.5%/85.8% → 84.4%/87.1% line/branch, flagged CRAP hotspots dropped 3 → 2; diagnostics are genuinely clean now (see resolved `IDE0060`/`IDE0005` entry above) | Phase 6.3 fully complete |
 | TBD | Open item: `modernization-phase6-final-validation` has no PR back into `modernization` yet | Unlike Phases 1–5, which each merged via PR before the next phase began, Phase 6 work has continued directly on its own branch without an intermediate merge | Needs a decision before Phase 7 starts: open a PR now to merge Phase 6 into `modernization`, or continue Phase 7/8 directly on this branch and merge everything to `main` at once |
+| 2026-08-21 | Phase 7.1 implemented as **three** workflow files instead of one `pr-validation.yml` | A single workflow triggering on any `src/`/`demo/`/dependency change couldn't cleanly path-filter doc-only PRs, forced the WPF-only demo build onto `ubuntu-latest` (which can't restore `net10.0-windows`+`UseWPF`), and coupled a slow nightly-appropriate vulnerability scan to every PR | `ci-library.yml` (`src/**`, `ubuntu-latest`, .NET 8/9/10, build+test+coverage), `ci-demo.yml` (`demo/**`, `windows-latest` — required for WPF, build only, no tests), `dependency-check.yml` (nightly + manual + PR/push, both solutions) |
+| 2026-08-21 | Only compiler errors/test failures/High+Critical vulnerabilities fail a Phase 7.1 job; everything else is a non-failing `::warning::` annotation | User explicitly did not want build warnings, `dotnet format` drift, or Moderate/Low vulnerabilities blocking a PR merge — those are advisory, not gating | `dotnet build` omits `/warnaserror`; `dotnet format --verify-no-changes` exit code is discarded; `.github/scripts/annotate-diagnostics.sh` and `.github/scripts/check-vulnerabilities.sh` implement the annotation/severity-gating split |
+| 2026-08-21 | Added root `global.json` (`{"test": {"runner": "Microsoft.Testing.Platform"}}`) | The .NET 10 SDK dropped the legacy VSTest-bridge path `dotnet test` used automatically on earlier SDKs for Microsoft.Testing.Platform-based (TUnit) test projects, failing with "Testing with VSTest target is no longer supported" | Unblocks `dotnet test` entirely on .NET 10 SDK for this repo's test suite; does not pin an SDK version |
+| 2026-08-21 | Coverage output uses MTP's auto-named per-TFM files instead of one fixed `--coverage-output` filename | The 3 parallel TFM test runs (net8/9/10) raced on writing the same fixed-name Cobertura file when one filename was specified, corrupting the report despite 0 test failures | `TestResults/*.cobertura.xml`/`TestResults/*.trx` glob patterns feed `dorny/test-reporter`/`ReportGenerator-GitHub-Action` instead of a single hardcoded path |
 
 ### Risks & Mitigations
 - **Risk:** Breaking changes impact existing consumers
