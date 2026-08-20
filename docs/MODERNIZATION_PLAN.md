@@ -3,8 +3,8 @@
 **Branch Strategy:** All work is performed in the `modernization` branch. Individual tasks are completed in feature branches and merged back to `modernization` via PRs. A final PR to `main` is created only after all modernization work is complete.
 
 **Version:** 1.1  
-**Status:** Phase 5 Complete - Ready for Phase 6  
-**Last Updated:** 2026-08-19  
+**Status:** Phase 6 Complete - Ready for Phase 7  
+**Last Updated:** 2026-08-20  
 
 ---
 
@@ -793,7 +793,7 @@ provider-resolution model.
 
 ---
 
-## Phase 6: Final Validation & Documentation
+## Phase 6: Final Validation & Documentation — ✅ Completed
 
 **Goal:** Comprehensive validation and documentation rework before Phase 7 (CI) and Phase 8 (release).
 
@@ -866,25 +866,53 @@ focused, purpose-specific documents:
 ### 6.3 Code Quality Gates
 - [x] Zero compiler warnings
 - [x] Zero analyzer warnings
-- [ ] Full IDE/style diagnostics pass (`dotnet format --verify-no-changes --severity info`) is clean —
-      **known false positives deferred:** 67x `IDE0060` on `DiscogsApiClient.cs`'s generator-implemented
-      `private partial` method declarations, and 9x `IDE0005` on files using `[GenerateJsonConverter]`/
-      `[AliasAs(...)]` (both confirmed by revert-and-rebuild testing to be real usages the analyzer can't
-      see across generated code). Deferred; revisit if Phase 7 CI surfaces the same findings.
-- [ ] Code coverage reports generated
-- [ ] Static analysis passes
+- [x] Full IDE/style diagnostics pass (`dotnet format --verify-no-changes --severity info`) is clean —
+      re-ran the full procedure (clean `bin`/`obj` removal, `-t:Rebuild` with
+      `/p:EnforceCodeStyleInBuild=true`, then `dotnet format --verify-no-changes --severity info`) against
+      both `src\DiscogsApiClient.slnx` and `demo\DiscogsApiClientDemo.slnx`: 0 warnings/0 errors, format
+      exit 0 on both. The previously-noted `IDE0060`/`IDE0005` false positives are gone (resolved by later
+      code changes); no findings deferred anymore. Also fixed two AGENTS.md inaccuracies discovered along
+      the way (repo uses LF not CRLF; documented that `dotnet format`/`IDE0090` can't detect target-typed
+      `new()` opportunities in method-argument positions — verified via an isolated repro project) and did
+      a solution-wide target-typed `new()` cleanup pass.
+- [x] Code coverage reports generated — 84.4% line / 87.1% branch coverage (up from an earlier 83.5%/85.8%
+      pass), 231 methods analyzed after filtering out non-actionable framework-generated boilerplate
+      (`System.Text.Json.SourceGeneration`, `Microsoft.Extensions.Configuration.Binder.SourceGeneration`),
+      only 2 methods flagged CRAP > 30 (both source-generator-emitted `AppendQuery` query-string builders,
+      inherently complex due to many optional fields, already covered at 96–97%). Added unit tests for the
+      5 previously-fully-uncovered internal query-parameter helpers (`SearchQueryParameters`,
+      `MasterReleaseVersionFilterQueryParameters`, `ArtistReleaseSortQueryParameters`,
+      `CollectionFolderReleaseSortQueryParameters`) via `AddDiscogsApiClient` + a custom
+      `HttpMessageHandler` fixture (no `InternalsVisibleTo` needed). Coverage tooling
+      (`Microsoft.Testing.Extensions.CodeCoverage`) is added only transiently for analysis and reverted
+      afterward — not a permanent dependency; reports are gitignored under `TestResults/`.
+- [x] Static analysis passes — zero compiler warnings, zero analyzer warnings, and the IDE/style
+      diagnostics pass above are all clean; no separate static-analysis tool beyond the Roslyn
+      analyzers/`dotnet format` is used in this repo.
 - [x] NuGet package builds successfully (even if not published yet) — see 6.1
 
 ### 6.4 Final Review
-- [ ] Review all merged PRs
-- [ ] Verify branching strategy was followed
-- [ ] Check for any missed tasks
+- [x] Review all merged PRs — verified via `gh pr list --state merged`: Phase 1 (#11), Phase 2 (#12), Phase 3
+      (#13), Phase 4 (#15/#16/#17 — see branching-strategy note below), Phase 5 (#18) all merged cleanly
+      into `modernization`. No open PRs remain outstanding.
+- [x] Verify branching strategy was followed — confirmed each phase branch (`phase1-frameworks`,
+      `phase2-testing`, `phase3-generators`, `modernization-phase4-library`, `modernization-phase5-demo`)
+      was merged into `modernization`, not `main`, per the documented strategy — **with one documented
+      exception**: PR #15 (Phase 4) was accidentally opened against `main` and merged there, then
+      immediately reverted via PR #16 and re-merged correctly into `modernization` via PR #17. `main` is
+      unaffected (the revert restored it). This branch (`modernization-phase6-final-validation`) itself
+      branches from `modernization` per plan. **Open item:** this branch has no PR back into
+      `modernization` yet — needs a decision on whether to open one before Phase 7 starts or continue
+      Phase 7/8 directly on this branch (see Decision Log).
+- [x] Check for any missed tasks — reviewed Phases 1–6 checklists; no unaddressed items found beyond the
+      branching-strategy open item above, which is flagged rather than silently resolved.
 
 ### Acceptance Criteria - Phase 6
-- [ ] All tests pass on all frameworks
-- [ ] README, CHANGELOG, and migration guide split completed and cross-linked
-- [ ] Migration guide created
-- [ ] No warnings or errors
+- [x] All tests pass on all frameworks — 308/308 (`DiscogsApiClient.Tests`) + 83/83
+      (`DiscogsApiClient.SourceGenerator.Tests`) on net10.0; net8.0/net9.0 verified passing in 6.1
+- [x] README, CHANGELOG, and migration guide split completed and cross-linked (6.2)
+- [x] Migration guide created (`docs/MIGRATION_GUIDE.md`, 6.2)
+- [x] No warnings or errors — clean rebuild + `dotnet format --verify-no-changes` on both solutions (6.3)
 
 ---
 
@@ -986,8 +1014,8 @@ using the Phase 7 publish workflow.
 - **Phase 2:** ✅ Completed
 - **Phase 3:** ✅ Completed
 - **Phase 4:** ✅ Completed
-- **Phase 5:** ⬜ Not Started
-- **Phase 6:** ⬜ Not Started
+- **Phase 5:** ✅ Completed
+- **Phase 6:** ✅ Completed
 - **Phase 7:** ⬜ Not Started
 - **Phase 8:** ⬜ Not Started
 
@@ -1019,7 +1047,7 @@ using the Phase 7 publish workflow.
 | 2026-08-19 | Docs split into README + `docs/CHANGELOG.md` + `docs/MIGRATION_GUIDE.md` | One long README mixing intro, full version history, and breaking changes was hard to navigate; `docs/API_COVERAGE.md` already covers endpoint status in more detail than README's list | README becomes a short entry point that links to the other docs; each doc has one clear audience/purpose |
 | 2026-08-19 | Phase 7 also adds a PR-validation workflow (build+tests+`dotnet format --verify-no-changes`+NuGet vulnerability audit) | Merge to main ≠ release, so quality gates should already be enforced automatically before that point, not just checked manually in Phase 6 | Every PR is now gated by the same checks documented in AGENTS.md, reducing reliance on manual review |
 | TBD | Merge to main ≠ release | Package publication is a separate, deliberate step (Phase 8), executed via the Phase 7 publish workflow | Cleaner release workflow |
-| 2026-08-19 | Deferred: `IDE0060`/`IDE0005` false positives from `dotnet format --severity info` | 67x `IDE0060` on `DiscogsApiClient.cs`'s generator-implemented `private partial` method declarations (parameters are used by the source-generator-emitted body, which the analyzer doesn't see across); 9x `IDE0005` on files using `[GenerateJsonConverter]`/`[AliasAs(...)]` (usings resolve source-generator-emitted attribute types the analyzer doesn't recognize). Both confirmed as false positives via revert-and-rebuild testing (removal breaks the build with `CS0246`). Both are inherent to the project's source-generator architecture, not real issues. | Left unresolved for now (already `suggestion` severity, doesn't fail `dotnet build`); revisit suppression (e.g. `.editorconfig`) only if Phase 7's CI format-check surfaces the same findings |
+| 2026-08-19 | Deferred: `IDE0060`/`IDE0005` false positives from `dotnet format --severity info` | 67x `IDE0060` on `DiscogsApiClient.cs`'s generator-implemented `private partial` method declarations (parameters are used by the source-generator-emitted body, which the analyzer doesn't see across); 9x `IDE0005` on files using `[GenerateJsonConverter]`/`[AliasAs(...)]` (usings resolve source-generator-emitted attribute types the analyzer doesn't recognize). Both confirmed as false positives via revert-and-rebuild testing (removal breaks the build with `CS0246`). Both are inherent to the project's source-generator architecture, not real issues. | Left unresolved for now (already `suggestion` severity, doesn't fail `dotnet build`); revisit suppression (e.g. `.editorconfig`) only if Phase 7's CI format-check surfaces the same findings — **Resolved 2026-08-20:** a full clean-rebuild + `dotnet format --verify-no-changes --severity info` re-run on both solutions no longer surfaces either finding (0 warnings/errors, format exit 0); superseded by later code changes, nothing left deferred |
 | TBD | Service registration modernization (§4.7) | Align with `IOptions<T>`, hand-written `IValidateOptions<T>` + `ValidateOnStart()`, `TryAdd*` idempotency, `IConfiguration` binding, and DI-namespace discoverability used by modern .NET libraries | **Breaking** — extension moved to `Microsoft.Extensions.DependencyInjection`; invalid options now throw `OptionsValidationException` at startup instead of `InvalidOperationException` at registration; `OAuthAuthenticationProvider` ctor takes `IOptions<T>` |
 | 2025-01-XX | **Rate limiting: Remove built-in limiter** | Sliding window implementation was unreliable and didn't align with Discogs methodology; feature not widely used; exposing raw metadata provides maximum flexibility | **Breaking** — consumers must remove `UseRateLimiting` and related config; can now access rate limit state via `IDiscogsRateLimitStateService` |
 | TBD | Authentication setup modernization (§4.9) | `IDiscogsAuthenticationService` facade allowed half-configured/conflicting auth state and had no way to pre-authenticate at registration; tokens were runtime-only mutable singleton state, not bindable via options/`IConfiguration` | **Breaking** — `IDiscogsAuthenticationService`/`DiscogsAuthenticationService` removed; `IPersonalAccessTokenAuthenticationProvider`/`PersonalAccessTokenAuthenticationProvider` renamed to `IDiscogsPatAuthenticationProvider`/`DiscogsPatAuthenticationProvider`; `IOAuthAuthenticationProvider`/`OAuthAuthenticationProvider` renamed to `IDiscogsOAuthAuthenticationProvider`/`DiscogsOAuthAuthenticationProvider`; `DiscogsApiClientOptions.ConsumerKey`/`ConsumerSecret`/`VerifierCallbackUrl` moved to new `DiscogsOAuthOptions`; new `DiscogsPatOptions`; consumers must call `.WithPatAuthentication(...)` or `.WithOAuthAuthentication(...)` to opt into a mechanism (calling both throws `InvalidOperationException`); calling neither yields a valid, permanent unauthenticated client |
@@ -1030,6 +1058,8 @@ using the Phase 7 publish workflow.
 | 2026-08-19 | Docs rework completed: README rewritten, `docs/CHANGELOG.md` and `docs/MIGRATION_GUIDE.md` created | README trimmed to intro/auth-overview/getting-started + a "Documentation" links section; CHANGELOG migrates the 1.0.0-4.1.1 history (real git tag dates) plus a new `[Unreleased] (targeting 5.0.0)` entry with an inline **Breaking** list covering every consolidated v5.0.0 breaking change (namespace move, auth provider renames/opt-in registration, rate-limiting removal, required `CancellationToken`, `[ApiClient]` retargeted to the implementing class, `List<T>`→`IReadOnlyList<T>`, OAuth session URL types); MIGRATION_GUIDE adds before/after samples for each plus a carried-forward section for pre-4.1.1 upgraders (OAuth call-flow evolution, 4.1.0 property renames). Also fixed a stale `Guard` class reference in `docs/API_COVERAGE.md`; `docs/ARCHITECTURE.md` reviewed and found already current, no changes needed. | Phase 6.2 fully complete; ready for user review before commit |
 | 2026-08-20 | Documented the standard release/branching workflow in `AGENTS.md` for versions after v5.0.0 | `main` = last released version (except non-code changes); code changes needing a version bump go on a dedicated version branch (e.g. `v5.1.0`) with the version/changelog set at branch-open time, feature branches merge into it, a feature-complete checklist runs before the final PR to `main`; hotfixes skip the accumulation step; all merges are squash commits | Establishes a repeatable release process going forward; this `modernization` branch predates it and is a documented one-off exception |
 | 2026-08-20 | Bumped `DiscogsApiClient.csproj` to `5.0.0` and renamed the changelog heading to `## [5.0.0] - Unreleased` now, ahead of Phase 8 | The new release workflow bumps the version at version-branch-open time rather than right before the final PR; since `modernization` never had that step, doing it now (before Phase 7's CI/NuGet testing) keeps the branch consistent with the documented workflow instead of deferring to Phase 8 as originally planned | Phase 8.1's version-bump checklist item is already done; only the `Unreleased` date placeholder and final merge/tag/publish/release steps remain |
+| 2026-08-20 | Phase 6.3 code quality gates completed: added unit tests for the 5 uncovered internal query-parameter helpers, ran a solution-wide target-typed `new()` cleanup pass, corrected two AGENTS.md inaccuracies (LF not CRLF; documented the `IDE0090` method-argument-position analyzer gap) | Coverage improved 83.5%/85.8% → 84.4%/87.1% line/branch, flagged CRAP hotspots dropped 3 → 2; diagnostics are genuinely clean now (see resolved `IDE0060`/`IDE0005` entry above) | Phase 6.3 fully complete |
+| TBD | Open item: `modernization-phase6-final-validation` has no PR back into `modernization` yet | Unlike Phases 1–5, which each merged via PR before the next phase began, Phase 6 work has continued directly on its own branch without an intermediate merge | Needs a decision before Phase 7 starts: open a PR now to merge Phase 6 into `modernization`, or continue Phase 7/8 directly on this branch and merge everything to `main` at once |
 
 ### Risks & Mitigations
 - **Risk:** Breaking changes impact existing consumers
