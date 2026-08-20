@@ -8,9 +8,16 @@ publish workflow is a separate, later phase and is not covered here yet.
 
 Only **actual compiler errors**, **test failures**, and **High/Critical severity vulnerabilities** fail
 a workflow job. Build warnings, analyzer suggestions, code-style/formatting drift, and Moderate/Low
-severity vulnerabilities are surfaced as non-failing `::warning::` annotations (visible on the PR's
-"Files changed"/"Checks" tabs and in the job summary) — they don't block merging, but they are never
-silently swallowed either.
+severity vulnerabilities are surfaced as non-failing `::warning::` annotations plus a markdown job
+summary — they don't block merging, but they are never silently swallowed either.
+
+> **Visibility note:** GitHub only shows `::warning::` annotations inline on a PR's "Files changed" tab
+> when the annotated file/line is part of *that PR's diff*. For a PR that doesn't touch the annotated
+> file (e.g. this CI-only PR annotating pre-existing warnings in `DiscogsApiClient.cs`), the annotations
+> won't appear anywhere on the PR conversation page or its merge/checks widget — only on the workflow
+> run's own "Summary"/"Annotations" page, one click away via each check's "Details" link. The job
+> summary (rendered at the top of that same run page) is the reliable way to see every finding without
+> digging through per-line annotations.
 
 ## `.github/workflows/ci-library.yml`
 
@@ -92,7 +99,8 @@ consumed by end users, so vulnerable transitive dependencies there don't carry t
   MSBuild-style warning lines and re-emits each as a GitHub Actions `::warning::` command (with
   file/line/diagnostic-code attribution when the line matches the standard
   `<file>(<line>,<col>): warning <CODE>: <message> [<project>]` shape, otherwise as a generic
-  annotation). Always exits `0` — never fails the calling step.
+  annotation), and also writes a markdown table of every finding to the job summary. Always exits
+  `0` — never fails the calling step.
 - **`check-vulnerabilities.sh <solution-path>`** — runs and parses `dotnet list package --vulnerable`
   for one solution, applying the High/Critical-fails vs. Moderate/Low-warns severity policy described
   above and writing a findings table to `$GITHUB_STEP_SUMMARY`.
