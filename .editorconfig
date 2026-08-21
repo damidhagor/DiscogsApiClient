@@ -85,6 +85,8 @@ dotnet_diagnostic.CA1056.severity = none
 dotnet_diagnostic.CA1054.severity = none
 # CA1724: Type name conflicts with namespace name (primary DTO named after its domain namespace)
 dotnet_diagnostic.CA1724.severity = none
+# IDE0060: Unused parameter
+dotnet_diagnostic.IDE0060.severity = warning
 
 # New line preferences
 dotnet_style_allow_multiple_blank_lines_experimental = true:suggestion

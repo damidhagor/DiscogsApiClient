@@ -1,0 +1,47 @@
+name: CI - Demo
+
+on:
+  pull_request:
+    paths:
+      - 'demo/**'
+      - '.github/workflows/ci-demo.yml'
+      - 'global.json'
+      - 'Directory.Packages.props'
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate-demo:
+    name: Build & Analyze (Demo)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('Directory.Packages.props') }}
+          restore-keys: |
+            nuget-${{ runner.os }}-
+
+      - name: Restore
+        run: dotnet restore demo/DiscogsApiClientDemo.slnx
+
+      - name: Build
+        shell: bash
+        run: dotnet build demo/DiscogsApiClientDemo.slnx -c Release --no-restore -p:EnforceCodeStyleInBuild=true -warnaserror
+
+      - name: Format check
+        if: always()
+        shell: bash
+        run: bash .github/scripts/format-check.sh demo/DiscogsApiClientDemo.slnx

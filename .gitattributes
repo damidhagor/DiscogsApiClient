@@ -1,3 +1,6 @@
 # Auto-detect text files and normalize line endings to LF in the repository,
-# regardless of a contributor's local git config (core.autocrlf).
-* text=auto
+# regardless of a contributor's local git config (core.autocrlf). eol=lf also
+# forces LF on checkout, since windows-latest GitHub Actions runners default
+# to core.autocrlf=true and would otherwise check files out as CRLF, tripping
+# the ENDOFLINE code-style analyzer (.editorconfig mandates end_of_line = lf).
+* text=auto eol=lf

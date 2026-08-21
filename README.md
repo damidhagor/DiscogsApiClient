@@ -4,6 +4,8 @@
 [![NuGet Downloads](https://img.shields.io/nuget/dt/DiscogsApiClient.svg)](https://www.nuget.org/packages/DiscogsApiClient/)
 [![.NET](https://img.shields.io/badge/.NET-8%2C%209%2C%2010-blueviolet)](https://dotnet.microsoft.com/)
 [![License](https://img.shields.io/github/license/damidhagor/DiscogsApiClient)](LICENSE)
+[![CI - Library](https://github.com/damidhagor/DiscogsApiClient/actions/workflows/ci-library.yml/badge.svg?branch=main)](https://github.com/damidhagor/DiscogsApiClient/actions/workflows/ci-library.yml)
+[![CI - Demo](https://github.com/damidhagor/DiscogsApiClient/actions/workflows/ci-demo.yml/badge.svg?branch=main)](https://github.com/damidhagor/DiscogsApiClient/actions/workflows/ci-demo.yml)
 
 A C# library for accessing the [Discogs API v2.0](https://www.discogs.com/developers), targeting .NET 8, 9 and 10.
 
