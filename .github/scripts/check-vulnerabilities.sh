@@ -198,7 +198,8 @@ while IFS=$'\t' read -r severity id version projects advisories; do
     current_severity="$severity"
     append_summary_line "#### $severity"
     append_summary_line ""
-    append_summary_line "<table>"
+    append_summary_line "<table width=\"100%\">"
+    append_summary_line "<colgroup><col width=\"20%\"><col width=\"12%\"><col width=\"28%\"><col width=\"40%\"></colgroup>"
     append_summary_line "<tr><th>Package</th><th>Version</th><th>Projects</th><th>Advisories</th></tr>"
   fi
 
