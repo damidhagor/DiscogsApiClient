@@ -11,16 +11,6 @@
 		<PackageReference Include="TUnit" Version="1.65.31" />
 	</ItemGroup>
 
-	<!-- TEMPORARY: live-validate dependency-check.yml across all four severity levels (Low/Moderate/High/Critical). Remove after verifying the workflow run. -->
-	<PropertyGroup>
-		<NoWarn>$(NoWarn);NU1605</NoWarn>
-	</PropertyGroup>
-	<ItemGroup>
-		<PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-		<PackageReference Include="System.Text.Encodings.Web" Version="4.5.0" />
-		<PackageReference Include="Magick.NET-Q8-AnyCPU" Version="14.0.0" />
-	</ItemGroup>
-
 	<ItemGroup>
 		<ProjectReference Include="..\DiscogsApiClient\DiscogsApiClient.csproj" />
 	</ItemGroup>
