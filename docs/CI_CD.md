@@ -1,8 +1,7 @@
 # CI/CD
 
 This document describes the automated GitHub Actions workflows that run on this repository. See
-`docs/MODERNIZATION_PLAN.md` (Phase 7) for the design rationale behind these workflows. The NuGet
-publish workflow is a separate, later phase and is not covered here yet.
+`docs/MODERNIZATION_PLAN.md` (Phase 7) for the design rationale behind these workflows.
 
 ## Guiding Principle
 
@@ -143,6 +142,73 @@ consumed by end users, so vulnerable transitive dependencies there don't carry t
      deliberate because low-severity transitive-dependency findings are frequently not actionable
      on a short timeline and a hard fail there would block unrelated PRs too often.
   4. All findings (regardless of severity) are written as a markdown table to the job summary.
+
+## `.github/workflows/publish-nuget.yml`
+
+Packs and publishes the `DiscogsApiClient` library package. This is the workflow used for every actual
+release (see Phase 8 in `docs/MODERNIZATION_PLAN.md`). It deliberately does **not** build against a
+solution-wide gate or run tests — quality is already enforced per-PR by `ci-library.yml` before code
+ever reaches `main`, so this workflow's only job is to build, pack, and publish exactly what's already
+been validated.
+
+- **Trigger:** `workflow_dispatch` only — a release is always a deliberate, manually-initiated action,
+  never automatic on a tag or branch push.
+- **Input:** `publish_to_test_server` (boolean, default `false`). When `true`, the final push targets
+  the NuGet test server (`apiint.nugettest.org`) instead of production `nuget.org` — useful for
+  dry-running the whole pack/push pipeline without affecting the real package listing.
+- **Runner:** `ubuntu-latest`, with a single `10.0.x` SDK. No test execution happens in this workflow,
+  so unlike `ci-library.yml` there's no need for the `8.0.x`/`9.0.x` runtimes too — a single, current
+  SDK can compile all three of the library's target frameworks (`net8.0`/`net9.0`/`net10.0`) on its own.
+- **Steps:**
+  1. **Resolve the package version** — reads `PackageVersion` straight off
+     `src/DiscogsApiClient/DiscogsApiClient.csproj` via `dotnet msbuild -getProperty:PackageVersion`
+     (no separate version-bump tooling; see `docs/MODERNIZATION_PLAN.md` §7.3) and writes both the
+     version and the resolved push target (test server vs. production) to the job summary, so whoever
+     triggers the workflow can confirm what's about to be published before it happens.
+  2. **Build** — `dotnet build src/DiscogsApiClient/DiscogsApiClient.csproj -c Release`. Required
+     before packing: `DiscogsApiClient.csproj` has `GeneratePackageOnBuild=True`, which — somewhat
+     counter-intuitively — means `dotnet pack` run on its own does *not* build the project first
+     (confirmed locally: packing without a prior build fails with `NU5026`, "file to be packed was not
+     found on disk"), so an explicit build step is still needed even though pack normally implies one.
+  3. **Pack** — `dotnet pack src/DiscogsApiClient/DiscogsApiClient.csproj -c Release --no-build -o
+     ./nupkg -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg`. Only the library project is packed
+     (never the test or demo projects); `IncludeSymbols`/`SymbolPackageFormat=snupkg` are passed as
+     one-off pack properties rather than added permanently to the `.csproj`, so a plain local `dotnet
+     build`/`dotnet pack` (which already runs on every build via `GeneratePackageOnBuild=True`) doesn't
+     start producing a `.snupkg` as a side effect.
+  4. **Upload the package artifact** — happens immediately after packing and *before* the push step, so
+     the built `.nupkg`/`.snupkg` are always retrievable from the run as a workflow artifact even if the
+     push step below fails, is skipped, or the run is cancelled.
+  5. **NuGet login (OIDC)** — uses [`NuGet/login@v1`](https://github.com/NuGet/login) to exchange
+     GitHub's OIDC token for a short-lived (1 hour, single-use) NuGet API key, per
+     [NuGet Trusted Publishing](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing).
+     No long-lived API key secret is stored in the repo at all. Two mutually-exclusive login steps
+     (`login_prod`/`login_test`), gated by `if: ${{ !inputs.publish_to_test_server }}`/`if: ${{
+     inputs.publish_to_test_server }}`, cover the two targets: the production step uses the action's
+     defaults (`https://www.nuget.org/api/v2/token` token endpoint), the test-server step overrides
+     `token-service-url`/`audience` to `https://int.nugettest.org/...` — int.nugettest.org supports
+     trusted publishing the same way nuget.org does, just with its own separate policy. Both use the
+     same `secrets.NUGET_USER` (nuget.org **username**, not email) — trusted publishing policies for
+     both targets are expected to be registered under the same username.
+  6. **Push** — `dotnet nuget push "./nupkg/*.nupkg" --skip-duplicate` against the source resolved from
+     the `publish_to_test_server` input, using whichever login step's `NUGET_API_KEY` output actually
+     ran (`steps.login_prod.outputs.NUGET_API_KEY || steps.login_test.outputs.NUGET_API_KEY` — exactly
+     one of the two is ever populated). `dotnet nuget push` automatically also pushes the matching
+     `.snupkg` alongside each `.nupkg` it finds in the same push (only `--no-symbols` would suppress
+     that) — no separate push command is needed for the symbol package.
+- **Secrets required:** `NUGET_USER` — the nuget.org account **username** (not email), used for both
+  targets. No API key secrets are needed at all; trusted publishing replaces them with short-lived,
+  automatically-rotated tokens. No GitHub Environment protection/required-reviewer gate is used —
+  single-maintainer project, the manual `workflow_dispatch` trigger plus the explicit boolean switch
+  (defaulting to production `false`, i.e. real publish) is judged a sufficient safeguard.
+- **Trusted publishing policy setup (one-time, on nuget.org and int.nugettest.org):** on each site, go
+  to the account's Trusted Publishing page and add a policy with Repository Owner = `damidhagor`,
+  Repository = `DiscogsApiClient`, Workflow File = `publish-nuget.yml` (filename only, no path). No
+  Environment is set on either policy, since the workflow doesn't use a GitHub Environment.
+- **How to run it:** Actions tab → "Publish to NuGet" → "Run workflow" → leave
+  `publish_to_test_server` unchecked for a real release, or check it to dry-run against the test
+  server first. The resulting package is always available under the run's Artifacts section
+  regardless of outcome.
 
 ## Shared Scripts (`.github/scripts/`)
 
