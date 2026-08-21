@@ -36,8 +36,6 @@ public static partial class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configureOptions);
 
-        this is not valid C# syntax // TEMP: intentional CS error to validate CI build-error reporting
-
         services.AddOptions<DiscogsApiClientOptions>()
             .Configure<IServiceProvider>(static (options, serviceProvider) => serviceProvider.GetService<IConfiguration>()?
                 .GetSection(DiscogsApiClientOptions.SectionName)
