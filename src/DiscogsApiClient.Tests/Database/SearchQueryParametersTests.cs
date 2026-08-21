@@ -81,6 +81,17 @@ public sealed class SearchQueryParametersTests
         await Assert.That(query).IsEqualTo("?per_page=100");
     }
 
+    [Test]
+    public async Task SearchDatabase_ShouldPercentEncodeReservedCharacters_WhenValueContainsThem(CancellationToken cancellationToken)
+    {
+        var query = await CaptureQuery(
+            new() { Query = "Earth, Wind & Fire", Title = "Rock #1" },
+            null,
+            cancellationToken);
+
+        await Assert.That(query).IsEqualTo("?q=Earth%2C%20Wind%20%26%20Fire&title=Rock%20%231");
+    }
+
     private static async Task<string> CaptureQuery(
         SearchQueryParameters searchQueryParameters,
         PaginationQueryParameters? paginationQueryParameters,

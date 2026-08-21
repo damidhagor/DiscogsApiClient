@@ -529,7 +529,7 @@ public sealed class ApiClientSourceGeneratorTests
                             }
 
                             queryBuilder.Append("Name=");
-                            queryBuilder.Append(queryParams.Name);
+                            queryBuilder.Append(global::System.Uri.EscapeDataString(queryParams.Name));
                         }
                     }
                 }
@@ -540,8 +540,26 @@ public sealed class ApiClientSourceGeneratorTests
             {
                 public static int CalculateQuerySize(string? text)
                 {
-                    return text?.Length ?? 0;
+                    if (text is null)
+                    {
+                        return 0;
+                    }
+
+                    var size = 0;
+
+                    foreach (var c in text)
+                    {
+                        size += IsUnreservedQueryCharacter(c) ? 1 : 3;
+                    }
+
+                    return size;
                 }
+
+                private static bool IsUnreservedQueryCharacter(char c)
+                    => c is >= 'A' and <= 'Z'
+                        or >= 'a' and <= 'z'
+                        or >= '0' and <= '9'
+                        or '-' or '_' or '.' or '~';
             }
             """;
 

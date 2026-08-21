@@ -69,7 +69,7 @@ public sealed class QueryParameterGeneratorTests
                             }
 
                             queryBuilder.Append("name=");
-                            queryBuilder.Append(queryParams.Name);
+                            queryBuilder.Append(global::System.Uri.EscapeDataString(queryParams.Name));
                         }
                     }
                 }
@@ -80,8 +80,26 @@ public sealed class QueryParameterGeneratorTests
             {
                 public static int CalculateQuerySize(string? text)
                 {
-                    return text?.Length ?? 0;
+                    if (text is null)
+                    {
+                        return 0;
+                    }
+
+                    var size = 0;
+
+                    foreach (var c in text)
+                    {
+                        size += IsUnreservedQueryCharacter(c) ? 1 : 3;
+                    }
+
+                    return size;
                 }
+
+                private static bool IsUnreservedQueryCharacter(char c)
+                    => c is >= 'A' and <= 'Z'
+                        or >= 'a' and <= 'z'
+                        or >= '0' and <= '9'
+                        or '-' or '_' or '.' or '~';
             }
             """;
 
@@ -377,7 +395,7 @@ public sealed class QueryParameterGeneratorTests
                             }
 
                             queryBuilder.Append("name=");
-                            queryBuilder.Append(queryParams.Name);
+                            queryBuilder.Append(global::System.Uri.EscapeDataString(queryParams.Name));
                         }
 
                         if (queryParams.Page is not null)
@@ -415,8 +433,26 @@ public sealed class QueryParameterGeneratorTests
             {
                 public static int CalculateQuerySize(string? text)
                 {
-                    return text?.Length ?? 0;
+                    if (text is null)
+                    {
+                        return 0;
+                    }
+
+                    var size = 0;
+
+                    foreach (var c in text)
+                    {
+                        size += IsUnreservedQueryCharacter(c) ? 1 : 3;
+                    }
+
+                    return size;
                 }
+
+                private static bool IsUnreservedQueryCharacter(char c)
+                    => c is >= 'A' and <= 'Z'
+                        or >= 'a' and <= 'z'
+                        or >= '0' and <= '9'
+                        or '-' or '_' or '.' or '~';
 
                 public static int CalculateQuerySize(int? number)
                 {

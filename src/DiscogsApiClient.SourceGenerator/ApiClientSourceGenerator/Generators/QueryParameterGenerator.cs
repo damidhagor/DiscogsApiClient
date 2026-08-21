@@ -129,6 +129,13 @@ internal static class QueryParameterGenerator
                                         });
                         """);
                 }
+                else if (property.ParameterType == QueryParameterType.String)
+                {
+                    builder.AppendLine(
+                        $$"""
+                                        queryBuilder.Append(global::System.Uri.EscapeDataString({{parameter.TypeInfo.ParameterName}}.{{property.TypeInfo.ParameterName}}));
+                        """);
+                }
                 else
                 {
                     builder.AppendLine(
@@ -203,8 +210,26 @@ internal static class QueryParameterGenerator
                     """
                         public static int CalculateQuerySize(string? text)
                         {
-                            return text?.Length ?? 0;
+                            if (text is null)
+                            {
+                                return 0;
+                            }
+
+                            var size = 0;
+
+                            foreach (var c in text)
+                            {
+                                size += IsUnreservedQueryCharacter(c) ? 1 : 3;
+                            }
+
+                            return size;
                         }
+
+                        private static bool IsUnreservedQueryCharacter(char c)
+                            => c is >= 'A' and <= 'Z'
+                                or >= 'a' and <= 'z'
+                                or >= '0' and <= '9'
+                                or '-' or '_' or '.' or '~';
                     """);
                 break;
 
