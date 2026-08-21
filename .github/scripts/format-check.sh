@@ -76,10 +76,41 @@ if [[ "${#findings[@]}" -eq 0 ]]; then
   exit "$format_exit"
 fi
 
-append_summary_line "### Format check: $solution"
-append_summary_line ""
-append_summary_line "| Project | Location | Severity | Rule | Message |"
-append_summary_line "|---|---|---|---|---|"
+severity_rank() {
+  case "$1" in
+    error) echo 0 ;;
+    warning) echo 1 ;;
+    info) echo 2 ;;
+    *) echo 3 ;;
+  esac
+}
+
+declare -A group_severity
+declare -A group_rule
+declare -A group_message
+declare -A group_projects
+declare -A group_locations
+group_order=()
+
+add_finding() {
+  local severity="$1" rule_id="$2" message="$3" project_name="$4" location="$5"
+  local key="${severity}|${rule_id}|${message}"
+
+  if [[ -z "${group_severity[$key]+x}" ]]; then
+    group_severity[$key]="$severity"
+    group_rule[$key]="$rule_id"
+    group_message[$key]="$message"
+    group_projects[$key]=""
+    group_locations[$key]=""
+    group_order+=("$key")
+  fi
+
+  if [[ ",${group_projects[$key]}," != *",${project_name},"* ]]; then
+    group_projects[$key]+="${group_projects[$key]:+, }${project_name}"
+  fi
+
+  group_locations[$key]+="${group_locations[$key]:+<br>}${location}"
+}
 
 for line in "${findings[@]}"; do
   if [[ "$line" =~ $diagnostic_pattern ]]; then
@@ -99,13 +130,33 @@ for line in "${findings[@]}"; do
     esac
 
     emit_annotation "$level" "$rel_path" "$line_no" "$col_no" "$rule_id" "$message"
-    append_summary_line "| $(basename "$project") | ${rel_path}:${line_no} | $severity | $rule_id | $message |"
+    add_finding "$severity" "$rule_id" "$message" "$(basename "$project")" "${rel_path}:${line_no}"
   elif [[ "$line" =~ $reformat_pattern ]]; then
     rel_path="$(relative_path "${BASH_REMATCH[1]}")"
 
     emit_annotation warning "$rel_path" 1 1 "Formatting" "File is not formatted. Run 'dotnet format' locally to fix."
-    append_summary_line "| - | ${rel_path}:1 | warning | Formatting | File is not formatted. Run 'dotnet format' locally to fix. |"
+    add_finding warning Formatting "File is not formatted. Run 'dotnet format' locally to fix." "-" "${rel_path}:1"
   fi
 done
+
+sorted_keys=()
+while IFS= read -r key; do
+  sorted_keys+=("$key")
+done < <(
+  for key in "${group_order[@]}"; do
+    printf '%s\t%s\t%s\n' "$(severity_rank "${group_severity[$key]}")" "${group_rule[$key]}" "$key"
+  done | sort -t $'\t' -k1,1n -k2,2 | cut -f3-
+)
+
+append_summary_line "### Format check: $solution"
+append_summary_line ""
+append_summary_line "<table>"
+append_summary_line "<tr><th>Rule</th><th>Severity</th><th>Message</th><th>Projects</th><th>Locations</th></tr>"
+
+for key in "${sorted_keys[@]}"; do
+  append_summary_line "<tr><td valign=\"top\">${group_rule[$key]}</td><td valign=\"top\">${group_severity[$key]}</td><td valign=\"top\">${group_message[$key]}</td><td valign=\"top\">${group_projects[$key]}</td><td valign=\"top\">${group_locations[$key]}</td></tr>"
+done
+
+append_summary_line "</table>"
 
 exit "$format_exit"
