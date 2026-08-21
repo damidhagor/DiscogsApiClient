@@ -1,0 +1,92 @@
+name: Publish to NuGet
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish_to_test_server:
+        description: 'Publish to the NuGet test server (int.nugettest.org) instead of nuget.org'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    name: Pack & Publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Resolve package version
+        id: version
+        run: |
+          version="$(dotnet msbuild src/DiscogsApiClient/DiscogsApiClient.csproj -getProperty:PackageVersion)"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+          if [[ "${{ inputs.publish_to_test_server }}" == "true" ]]; then
+            target="NuGet test server (int.nugettest.org)"
+          else
+            target="nuget.org (production)"
+          fi
+
+          {
+            echo "### Publishing DiscogsApiClient v$version"
+            echo ""
+            echo "- **Version:** $version"
+            echo "- **Target:** $target"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Build library
+        run: dotnet build src/DiscogsApiClient/DiscogsApiClient.csproj -c Release
+
+      - name: Pack library
+        run: |
+          dotnet pack src/DiscogsApiClient/DiscogsApiClient.csproj -c Release --no-build \
+            -o ./nupkg -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+
+      - name: Upload package artifact
+        if: always() && hashFiles('nupkg/**') != ''
+        uses: actions/upload-artifact@v7
+        with:
+          name: discogsapiclient-nuget-package
+          path: nupkg/
+
+      - name: Determine push target
+        id: target
+        run: |
+          if [[ "${{ inputs.publish_to_test_server }}" == "true" ]]; then
+            echo "source=https://apiint.nugettest.org/v3/index.json" >> "$GITHUB_OUTPUT"
+          else
+            echo "source=https://api.nuget.org/v3/index.json" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: NuGet login (OIDC, nuget.org)
+        if: ${{ !inputs.publish_to_test_server }}
+        id: login_prod
+        uses: NuGet/login@v1
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      - name: NuGet login (OIDC, test server)
+        if: ${{ inputs.publish_to_test_server }}
+        id: login_test
+        uses: NuGet/login@v1
+        with:
+          user: ${{ secrets.NUGET_USER }}
+          token-service-url: https://int.nugettest.org/api/v2/token
+          audience: https://int.nugettest.org
+
+      - name: Push package
+        run: |
+          dotnet nuget push "./nupkg/*.nupkg" \
+            --api-key "${{ steps.login_prod.outputs.NUGET_API_KEY || steps.login_test.outputs.NUGET_API_KEY }}" \
+            --source "${{ steps.target.outputs.source }}" \
+            --skip-duplicate
