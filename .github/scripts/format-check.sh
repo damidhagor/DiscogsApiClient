@@ -65,6 +65,7 @@ reformat_pattern="^Formatted code file '(.+)' has changes\\.$"
 
 findings=()
 while IFS= read -r line; do
+  line="${line%$'\r'}"
   if [[ "$line" =~ $diagnostic_pattern ]] || [[ "$line" =~ $reformat_pattern ]]; then
     findings+=("$line")
   fi
