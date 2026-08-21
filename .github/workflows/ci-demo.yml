@@ -35,4 +35,4 @@ jobs:
       - name: Format check
         if: always()
         shell: bash
-        run: dotnet format demo/DiscogsApiClientDemo.slnx --verify-no-changes --severity info --no-restore
+        run: bash .github/scripts/format-check.sh demo/DiscogsApiClientDemo.slnx

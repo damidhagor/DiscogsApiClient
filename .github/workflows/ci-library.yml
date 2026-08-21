@@ -38,7 +38,7 @@ jobs:
 
       - name: Format check
         if: always()
-        run: dotnet format src/DiscogsApiClient.slnx --verify-no-changes --severity info --no-restore
+        run: bash .github/scripts/format-check.sh src/DiscogsApiClient.slnx
 
       - name: Test with coverage
         if: always()

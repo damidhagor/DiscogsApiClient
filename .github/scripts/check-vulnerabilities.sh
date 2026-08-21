@@ -117,15 +117,9 @@ if [[ -z "$findings" ]]; then
   exit 0
 fi
 
-append_summary_line "### Vulnerability scan: $solution"
-append_summary_line ""
-append_summary_line "| Project | Package | Version | Severity | Advisory |"
-append_summary_line "|---|---|---|---|---|"
-
 has_blocking=0
 while IFS=$'\t' read -r project id version severity advisory_url; do
   project_name=$(basename "$project")
-  append_summary_line "| $project_name | $id | $version | $severity | $advisory_url |"
 
   case "$severity" in
     High|Critical)
@@ -137,6 +131,63 @@ while IFS=$'\t' read -r project id version severity advisory_url; do
       ;;
   esac
 done <<< "$findings"
+
+if ! grouped=$("$jq_bin" -r '
+  def sevrank: if . == "Critical" then 0 elif . == "High" then 1 elif . == "Moderate" then 2 else 3 end;
+  [
+    .projects[]? | (.path | sub(".*[\\\\/]"; "")) as $project | (.frameworks // [])[] |
+    ((.topLevelPackages // []) + (.transitivePackages // []))[] |
+    .id as $id | .resolvedVersion as $version | .vulnerabilities[]? |
+    {
+      project: $project,
+      id: $id,
+      version: $version,
+      severity: .severity,
+      advisory: (.advisoryurl // .advisoryUrl // "n/a")
+    }
+  ]
+  | group_by([.severity, .id, .version])
+  | map({
+      severity: .[0].severity,
+      id: .[0].id,
+      version: .[0].version,
+      projects: ([.[].project] | unique),
+      advisories: ([.[].advisory] | unique)
+    })
+  | sort_by([(.severity | sevrank), .id, .version])
+  | .[]
+  | [.severity, .id, .version, (.projects | join("<br>")), (.advisories | join("<br>"))]
+  | @tsv
+' "$report_json" 2> "$jq_stderr"); then
+  emit_annotation error "Vulnerability scan failed" "Failed to group vulnerability findings for $solution. See step logs for details."
+  append_summary_line "### Vulnerability scan: $solution"
+  append_summary_line ""
+  append_summary_line "**The vulnerability scan failed while grouping findings for the summary table.**"
+
+  if [[ -s "$jq_stderr" ]]; then
+    cat "$jq_stderr" >&2
+  fi
+
+  exit 1
+fi
+
+grouped="${grouped//$'\r'/}"
+
+append_summary_line "### Vulnerability scan: $solution"
+
+current_severity=""
+while IFS=$'\t' read -r severity id version projects advisories; do
+  if [[ "$severity" != "$current_severity" ]]; then
+    current_severity="$severity"
+    append_summary_line ""
+    append_summary_line "#### $severity"
+    append_summary_line ""
+    append_summary_line "| Package | Version | Projects | Advisories |"
+    append_summary_line "|---|---|---|---|"
+  fi
+
+  append_summary_line "| $id | $version | $projects | $advisories |"
+done <<< "$grouped"
 
 if [[ "$has_blocking" -eq 1 ]]; then
   append_summary_line ""
