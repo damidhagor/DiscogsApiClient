@@ -12,6 +12,18 @@ at `--severity info` — the broadest threshold, so it also catches suggestion-l
 appear in build output), **test failures**, and **High/Critical severity vulnerabilities**. Only
 **Moderate/Low severity vulnerabilities** remain non-blocking (`::warning::` annotation only).
 
+**Exception:** `IDE0005` (unnecessary usings) and `IDE0060` (unused parameters) are excluded from the
+`dotnet format` check (`--exclude-diagnostics`, configurable via `FORMAT_CHECK_EXCLUDED_DIAGNOSTICS` in
+`format-check.sh`). `dotnet format` loads the solution via `MSBuildWorkspace`, which never resolves the
+analyzer-only `ProjectReference` to `DiscogsApiClient.SourceGenerator` and so never runs the source
+generator during analysis — causing systematic false positives on any rule reasoning about
+generator-emitted symbol usage. `IDE0060` is instead enforced correctly by the real `dotnet build`
+above (`.editorconfig`: `warning` severity + `EnforceCodeStyleInBuild` + `-warnaserror`, which does
+resolve the generator). `IDE0005` cannot be enforced by build at all (requires
+`GenerateDocumentationFile`, a separate, unrelated Roslyn limitation) and is left IDE-only — VS's own
+live analysis correctly resolves the generator (unlike `dotnet format`), so with "Background analysis
+scope" set to "Entire Solution" it reliably catches unused usings without false positives.
+
 This intentionally trades "warnings are fine, just don't get lost" for a much simpler and stricter rule.
 We first tried the opposite policy — non-failing annotations plus a job-summary table for warnings — but
 discovered GitHub has no supported way to surface a non-blocking signal at the PR's checks-list/merge-
@@ -24,7 +36,9 @@ independently-managed check run created via `actions/github-script` or similar. 
 complexity for what it buys. A failing job, by contrast, already does everything for free: it blocks
 merging, shows a red X in the compact checks list without any extra click, and both `dotnet build` and
 `dotnet format` already emit native `##[warning]`/`##[error]` GitHub Actions annotations for every
-diagnostic when run under `GITHUB_ACTIONS=true` — so no custom parsing/re-emission is needed at all.
+diagnostic when run under `GITHUB_ACTIONS=true` — so no custom re-emission of *those* diagnostics is
+needed. (`format-check.sh` still does its own parsing on top, to group `dotnet format`'s plain-text
+output into a deduplicated job-summary table — see Shared Scripts below.)
 
 > **Below-Warning build diagnostics:** `EnforceCodeStyleInBuild=true` only makes `dotnet build` report
 > IDE style rules that are configured at `warning` (or `error`) severity in `.editorconfig` — rules left
@@ -53,10 +67,15 @@ Validates the main library solution (`src/DiscogsApiClient.slnx`).
      Fails on compiler errors and on any Warning-severity analyzer/style diagnostic (promoted to an error
      by `-warnaserror`). Diagnostics are surfaced via the .NET SDK's own native GitHub Actions
      annotations — no custom parsing.
-  3. **Format check** — `dotnet format --verify-no-changes --severity info --no-restore`, run with
-     `if: always()` so it still executes (and reports its own findings) even if the Build step failed.
-     Fails on any formatting/style drift at `info` severity or above — i.e. everything, since `info` is
-     the lowest severity `dotnet format` recognizes.
+  3. **Format check** — runs `.github/scripts/format-check.sh <solution>`, which invokes `dotnet format
+     --verify-no-changes --severity info --no-restore --exclude-diagnostics IDE0005 IDE0060` (excluded
+     rule IDs configurable via `FORMAT_CHECK_EXCLUDED_DIAGNOSTICS`; see Guiding Principle above for why),
+     runs with `if: always()` so it still executes (and reports its own findings) even if the Build step
+     failed. Fails on any formatting/style drift at `info` severity or above (minus the two excluded
+     rules) — i.e. everything else, since `info` is the lowest severity `dotnet format` recognizes. The
+     script also converts `dotnet format`'s plain-text output into GitHub Actions `::error`/`::warning`
+     annotations and a deduplicated, grouped (by severity, rule, message) job-summary table (Rule |
+     Severity | Message | Locations), since `dotnet format` itself only prints plain text.
   4. **Test + coverage** — runs the TUnit test suite via `dotnet test -- --report-trx --coverage
      --coverage-output-format cobertura` (TRX + Cobertura output, auto-named per TargetFramework so the
      three parallel TFM runs don't race on the same output file). This step **does** fail on test
@@ -95,9 +114,9 @@ Validates the demo solution (`demo/DiscogsApiClientDemo.slnx`).
   there).
 - **SDK setup:** a single .NET 10 SDK — the demos don't multi-target and have no tests, so the
   8/9/10 array used by `ci-library.yml` isn't needed here.
-- **Steps:** restore → build (`-warnaserror`) → format check (`--severity info`, `if: always()`), same
-  fail-on-any-diagnostic policy as `ci-library.yml`. No test/coverage steps, since the demo projects have
-  no tests.
+- **Steps:** restore → build (`-warnaserror`) → format check (`.github/scripts/format-check.sh`,
+  `--severity info` minus the excluded IDE0005/IDE0060, `if: always()`), same fail-on-any-diagnostic
+  policy as `ci-library.yml`. No test/coverage steps, since the demo projects have no tests.
 
 ## `.github/workflows/dependency-check.yml`
 
@@ -127,6 +146,11 @@ consumed by end users, so vulnerable transitive dependencies there don't carry t
 
 ## Shared Scripts (`.github/scripts/`)
 
+- **`format-check.sh <solution-path>`** — runs `dotnet format --verify-no-changes` (excluding
+  `IDE0005`/`IDE0060` by default, see Guiding Principle above) and converts its plain-text diagnostic
+  output into GitHub Actions `::error`/`::warning` annotations plus a job-summary table, grouped by
+  `(severity, rule, message)` and sorted by severity then rule, with deduplicated file:line locations
+  (`dotnet format` doesn't emit annotations or a summary on its own).
 - **`check-vulnerabilities.sh <solution-path>`** — runs and parses `dotnet list package --vulnerable`
   for one solution, applying the High/Critical-fails vs. Moderate/Low-warns severity policy described
   above and writing a findings table to `$GITHUB_STEP_SUMMARY`.
@@ -140,3 +164,20 @@ installed alongside the project. This does **not** pin a specific SDK version; i
 runner. Confirmed the same restriction still applies against the installed `11.0.100-preview` SDK, so
 this setting will remain necessary when the repo eventually adopts .NET 11 — revisit at that point in
 case a newer TUnit/Microsoft.Testing.Platform release changes the story.
+
+## IDE Discoverability
+
+The workflow YAMLs and scripts (`.github/workflows/*.yml`, `.github/scripts/*.sh`, plus
+`copilot-instructions.md`) are surfaced under `/Solution Items/.github/` in `src/DiscogsApiClient.slnx`
+(mirroring the existing `docs/` folder pattern), so they're visible and editable directly from the IDE's
+Solution Explorer instead of only through a plain filesystem view.
+
+## Live Validation
+
+All four representative CI failure modes were manually validated end-to-end against PR #20 by pushing a
+temporary probe commit for each, confirming it failed at the expected step with a correct annotation,
+then reverting: a build warning (fails the `Build` step via `-warnaserror`), a build error (fails
+`Build`), a formatting/style violation (fails `Format check` only), and a failing unit test (fails
+`Test with coverage` + `Publish test results`). Note MSBuild logs each build diagnostic multiple times
+(once per multi-targeted TFM, and again in the end-of-build summary — see AGENTS.md's diagnostics-count
+caveat) — this is stock `dotnet build` behavior, not something the CI scripts introduce.

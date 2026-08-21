@@ -67,6 +67,17 @@ Notes for parsing results correctly:
   `CoreCompile` and again in the end-of-build summary — so raw line counts overstate real occurrences by
   roughly 6x. Deduplicate by stripping the trailing `[project::TargetFramework=X]` suffix and the
   `CoreCompile`-vs-summary duplication before treating a count as authoritative.
+- `dotnet format` loads the solution via `MSBuildWorkspace`, which does not resolve the analyzer-only
+  `ProjectReference` to `DiscogsApiClient.SourceGenerator` and therefore never runs the source generator
+  during analysis. This causes systematic **false positives** for any rule reasoning about generator-emitted
+  symbol usage — currently `IDE0060` (generator-implemented partial methods in `DiscogsApiClient.cs`) and
+  `IDE0005` (usings needed only for generator-emitted members, e.g. `AddGeneratedEnumJsonConverters()`).
+  Don't "fix" these by removing the flagged parameter/using — verify first via a revert-and-rebuild
+  (removal breaks the build with `CS0246`/unused-parameter mismatch). CI's `dotnet format` step excludes
+  both rule IDs for this reason (see `docs/CI_CD.md`); `IDE0060` is instead enforced by a real
+  `dotnet build -p:EnforceCodeStyleInBuild=true` (which correctly resolves the generator), while `IDE0005`
+  is left IDE-only (VS's own live analysis resolves the generator correctly, unlike `dotnet format` —
+  requires VS's "Background analysis scope" set to "Entire Solution" to check closed files too).
 
 Once both passes are run, **triage every finding with the user** per the policy above: fix, suppress with
 rationale (e.g. `.editorconfig` `dotnet_diagnostic.<CODE>.severity`), or explicitly accept as a known
@@ -154,6 +165,11 @@ tradeoff — but do not silently resolve or silently ignore any of them, regardl
 - Use `global using` in `Usings.cs` for namespaces used across many files.
 - **Never** re-declare a global using as a local using — this produces redundant imports.
 - Remove unused using directives.
+- **No automated check catches unused usings in this repo** (`IDE0005` cannot be enforced by
+  `dotnet build`, and CI's `dotnet format` step excludes it — see `docs/CI_CD.md`; only VS's own live
+  analysis with "Background analysis scope" = "Entire Solution" reliably surfaces it). Agents must
+  proactively double-check changed files for unused usings after editing — don't rely on any build/CI
+  output to catch them.
 
 ## Naming
 
