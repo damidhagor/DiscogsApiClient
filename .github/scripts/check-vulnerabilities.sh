@@ -187,28 +187,14 @@ if [[ "$has_blocking" -eq 1 ]]; then
   append_summary_line ""
 fi
 
-current_severity=""
+append_summary_line "<table>"
+append_summary_line "<tr><th>Severity</th><th>Package</th><th>Version</th><th>Projects</th><th>Advisories</th></tr>"
+
 while IFS=$'\t' read -r severity id version projects advisories; do
-  if [[ "$severity" != "$current_severity" ]]; then
-    if [[ -n "$current_severity" ]]; then
-      append_summary_line "</table>"
-      append_summary_line ""
-    fi
-
-    current_severity="$severity"
-    append_summary_line "#### $severity"
-    append_summary_line ""
-    append_summary_line "<table style=\"width:100%;table-layout:fixed\">"
-    append_summary_line "<colgroup><col style=\"width:20%\"><col style=\"width:12%\"><col style=\"width:28%\"><col style=\"width:40%\"></colgroup>"
-    append_summary_line "<tr><th>Package</th><th>Version</th><th>Projects</th><th>Advisories</th></tr>"
-  fi
-
-  append_summary_line "<tr><td valign=\"top\">$id</td><td valign=\"top\">$version</td><td valign=\"top\">$projects</td><td valign=\"top\">$advisories</td></tr>"
+  append_summary_line "<tr><td valign=\"top\">$severity</td><td valign=\"top\">$id</td><td valign=\"top\">$version</td><td valign=\"top\">$projects</td><td valign=\"top\">$advisories</td></tr>"
 done <<< "$grouped"
 
-if [[ -n "$current_severity" ]]; then
-  append_summary_line "</table>"
-fi
+append_summary_line "</table>"
 
 if [[ "$has_blocking" -eq 1 ]]; then
   exit 1
