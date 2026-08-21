@@ -156,7 +156,13 @@ if ! grouped=$("$jq_bin" -r '
     })
   | sort_by([(.severity | sevrank), .id, .version])
   | .[]
-  | [.severity, .id, .version, (.projects | join("<br>")), (.advisories | join("<br>"))]
+  | [
+      .severity,
+      .id,
+      .version,
+      (.projects | join("<br>")),
+      (.advisories | map("<a href=\"" + . + "\">" + (. | split("/") | last) + "</a>") | join("<br>"))
+    ]
   | @tsv
 ' "$report_json" 2> "$jq_stderr"); then
   emit_annotation error "Vulnerability scan failed" "Failed to group vulnerability findings for $solution. See step logs for details."
