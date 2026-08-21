@@ -24,7 +24,7 @@
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<AssemblyVersion>5.0.0</AssemblyVersion>
 		<FileVersion>5.0.0</FileVersion>
-		<PackageVersion>5.0.0-test2</PackageVersion>
+		<PackageVersion>5.0.0</PackageVersion>
 		<PackageReleaseNotes>v5.0.0 is an extensive modernization/rewrite of this library, including breaking changes.
 See the changelog: https://github.com/damidhagor/DiscogsApiClient/blob/main/docs/CHANGELOG.md
 and migration guide: https://github.com/damidhagor/DiscogsApiClient/blob/main/docs/MIGRATION_GUIDE.md</PackageReleaseNotes>
