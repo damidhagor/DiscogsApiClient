@@ -20,7 +20,7 @@ public sealed class EnumConverterTests
         var primaryValue = JsonSerializer.Deserialize<ImageType>("\"primary\"", _options);
         var secondaryValue = JsonSerializer.Deserialize<ImageType>("\"secondary\"", _options);
 
-        await Assert.That(primaryValue).IsEqualTo(ImageType.Primary);
+        await Assert.That(primaryValue).IsEqualTo(ImageType.Secondary); // TEMP: intentional failing assertion to validate CI test reporting
         await Assert.That(secondaryValue).IsEqualTo(ImageType.Secondary);
     }
 
