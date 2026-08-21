@@ -5,7 +5,6 @@ on:
     paths:
       - 'src/**'
       - '.github/workflows/ci-library.yml'
-      - '.github/scripts/annotate-diagnostics.sh'
       - 'global.json'
   push:
     branches: [main]
@@ -35,22 +34,11 @@ jobs:
         run: dotnet restore src/DiscogsApiClient.slnx
 
       - name: Build
-        run: |
-          set -o pipefail
-          dotnet build src/DiscogsApiClient.slnx -c Release --no-restore -p:EnforceCodeStyleInBuild=true | tee build.log
-
-      - name: Annotate build warnings (non-failing)
-        if: always()
-        run: bash .github/scripts/annotate-diagnostics.sh build.log
+        run: dotnet build src/DiscogsApiClient.slnx -c Release --no-restore -p:EnforceCodeStyleInBuild=true -warnaserror
 
       - name: Format check
         if: always()
-        run: |
-          dotnet format src/DiscogsApiClient.slnx --verify-no-changes --severity info --no-restore | tee format.log || true
-
-      - name: Annotate format diagnostics (non-failing)
-        if: always()
-        run: bash .github/scripts/annotate-diagnostics.sh format.log
+        run: dotnet format src/DiscogsApiClient.slnx --verify-no-changes --severity info --no-restore
 
       - name: Test with coverage
         run: |
