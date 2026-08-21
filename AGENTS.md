@@ -229,7 +229,7 @@ tradeoff — but do not silently resolve or silently ignore any of them, regardl
     3. Confirm `docs/MIGRATION_GUIDE.md` has a migration section covering every **Breaking** entry added
        for this version.
     4. Optionally do a dry-run of the NuGet publish workflow against the test server
-       (`publish_to_test_server = true`, see Phase 7 in `docs/MODERNIZATION_PLAN.md`) from the version
+       (`publish_to_test_server = true`) from the version
        branch, to validate packaging before opening the final PR.
     5. Open the big version PR: `<version-branch>` → `main`, with a comprehensive description
        summarizing all changes and linking to the relevant `docs/CHANGELOG.md`/`docs/MIGRATION_GUIDE.md`

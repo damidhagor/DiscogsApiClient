@@ -1,7 +1,6 @@
 # CI/CD
 
-This document describes the automated GitHub Actions workflows that run on this repository. See
-`docs/MODERNIZATION_PLAN.md` (Phase 7) for the design rationale behind these workflows.
+This document describes the automated GitHub Actions workflows that run on this repository.
 
 ## Guiding Principle
 
@@ -146,7 +145,7 @@ consumed by end users, so vulnerable transitive dependencies there don't carry t
 ## `.github/workflows/publish-nuget.yml`
 
 Packs and publishes the `DiscogsApiClient` library package. This is the workflow used for every actual
-release (see Phase 8 in `docs/MODERNIZATION_PLAN.md`). It deliberately does **not** build against a
+release. It deliberately does **not** build against a
 solution-wide gate or run tests — quality is already enforced per-PR by `ci-library.yml` before code
 ever reaches `main`, so this workflow's only job is to build, pack, and publish exactly what's already
 been validated.
@@ -162,7 +161,7 @@ been validated.
 - **Steps:**
   1. **Resolve the package version** — reads `PackageVersion` straight off
      `src/DiscogsApiClient/DiscogsApiClient.csproj` via `dotnet msbuild -getProperty:PackageVersion`
-     (no separate version-bump tooling; see `docs/MODERNIZATION_PLAN.md` §7.3) and writes both the
+     (no separate version-bump tooling) and writes both the
      version and the resolved push target (test server vs. production) to the job summary, so whoever
      triggers the workflow can confirm what's about to be published before it happens.
   2. **Build** — `dotnet build src/DiscogsApiClient/DiscogsApiClient.csproj -c Release`. Required
