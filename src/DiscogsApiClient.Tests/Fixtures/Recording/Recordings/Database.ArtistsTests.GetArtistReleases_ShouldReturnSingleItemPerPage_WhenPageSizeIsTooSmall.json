@@ -1,0 +1,85 @@
+[
+  {
+    "requestMethod": "GET",
+    "requestUrl": "https://api.discogs.com/artists/287459/releases?page=1\u0026per_page=1",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 200,
+    "responseHeaders": {
+      "Date": [
+        "Sat, 13 Jun 2026 22:49:04 GMT"
+      ],
+      "Transfer-Encoding": [
+        "chunked"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Access-Control-Allow-Headers": [
+        "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID"
+      ],
+      "Access-Control-Allow-Methods": [
+        "HEAD,OPTIONS,GET,OPTIONS"
+      ],
+      "Access-Control-Allow-Origin": [
+        "*"
+      ],
+      "Access-Control-Expose-Headers": [
+        "Location"
+      ],
+      "Cache-Control": [
+        "public, must-revalidate"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "Vary": [
+        "Accept-Encoding"
+      ],
+      "X-Content-Type-Options": [
+        "nosniff"
+      ],
+      "x-discogs-media-type": [
+        "discogs.v2"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "36"
+      ],
+      "x-discogs-ratelimit-used": [
+        "24"
+      ],
+      "X-Frame-Options": [
+        "SAMEORIGIN"
+      ],
+      "X-XSS-Protection": [
+        "1; mode=block"
+      ],
+      "Set-Cookie": [
+        "****"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a0b4a57c6a867065-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022pagination\u0022:{\u0022page\u0022:1,\u0022pages\u0022:438,\u0022per_page\u0022:1,\u0022items\u0022:438,\u0022urls\u0022:{\u0022last\u0022:\u0022https://api.discogs.com/artists/287459/releases?page=438\u0026per_page=1\u0022,\u0022next\u0022:\u0022https://api.discogs.com/artists/287459/releases?page=2\u0026per_page=1\u0022}},\u0022releases\u0022:[{\u0022id\u0022:388731,\u0022title\u0022:\u0022Glory To The Brave\u0022,\u0022type\u0022:\u0022master\u0022,\u0022main_release\u0022:4970915,\u0022artist\u0022:\u0022HammerFall\u0022,\u0022role\u0022:\u0022Main\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/masters/388731\u0022,\u0022year\u0022:1997,\u0022thumb\u0022:\u0022https://i.discogs.com/XyDi0BVk1hlzx7UfUcdoFPhM0bPva9rLVE8rCzXsZ1k/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ5NzA5/MTUtMTQzMjczMTc2/MC0zMjc1LmpwZWc.jpeg\u0022,\u0022stats\u0022:{\u0022community\u0022:{\u0022in_wantlist\u0022:34,\u0022in_collection\u0022:46},\u0022user\u0022:{\u0022in_wantlist\u0022:0,\u0022in_collection\u0022:0}}}]}"
+  }
+]

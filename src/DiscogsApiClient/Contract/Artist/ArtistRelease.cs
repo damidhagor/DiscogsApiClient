@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.Artist;
+namespace DiscogsApiClient.Contract.Artist;
 
 /// <summary>
 /// Information about a release of an artist.

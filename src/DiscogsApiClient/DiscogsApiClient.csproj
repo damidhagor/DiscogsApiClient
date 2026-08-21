@@ -1,11 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+		<TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<IsAotCompatible>true</IsAotCompatible>
+		<AnalysisMode>All</AnalysisMode>
+		<LangVersion>latest</LangVersion>
 		<JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
+		<EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -19,10 +22,12 @@
 		<PackageTags>discogs</PackageTags>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<AssemblyVersion>4.1.1</AssemblyVersion>
-		<FileVersion>4.1.1</FileVersion>
-		<PackageVersion>4.1.1</PackageVersion>
-		<PackageReleaseNotes>Fixed improper parsing of the ``instance_id`` property of collection folder releases.</PackageReleaseNotes>
+		<AssemblyVersion>5.0.0</AssemblyVersion>
+		<FileVersion>5.0.0</FileVersion>
+		<PackageVersion>5.0.0</PackageVersion>
+		<PackageReleaseNotes>v5.0.0 is an extensive modernization/rewrite of this library, including breaking changes.
+See the changelog: https://github.com/damidhagor/DiscogsApiClient/blob/main/docs/CHANGELOG.md
+and migration guide: https://github.com/damidhagor/DiscogsApiClient/blob/main/docs/MIGRATION_GUIDE.md</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -33,9 +38,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Diagnostics" Version="8.2.2" />
-		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
-		<PackageReference Include="System.Threading.RateLimiting" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Http" />
+		<PackageReference Include="Microsoft.Extensions.Options" />
 	</ItemGroup>
 
 	<ItemGroup>

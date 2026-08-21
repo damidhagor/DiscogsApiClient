@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.SourceGenerator.JsonSerialization.Attributes;
+namespace DiscogsApiClient.SourceGenerator.JsonSerialization.Attributes;
 
 internal static class GenerateJsonConverterAttribute
 {
@@ -8,11 +8,13 @@ internal static class GenerateJsonConverterAttribute
 
     public const string Source =
         $$"""
+        {{Constants.GeneratedFileHeader}}
         #nullable enable
 
         namespace {{Constants.JsonSerializationNamespace}};
 
+        {{Constants.GeneratedCodeAttribute}}
         [global::System.AttributeUsage(global::System.AttributeTargets.Enum)]
-        internal sealed class {{Name}} : global::System.Attribute { }
+        internal sealed class {{Name}} : global::System.Attribute;
         """;
 }

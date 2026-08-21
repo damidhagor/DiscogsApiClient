@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.SourceGenerator.Shared.Helpers;
+namespace DiscogsApiClient.SourceGenerator.Shared.Helpers;
 
 internal static class FileOutputDebugHelper
 {
@@ -9,7 +9,7 @@ internal static class FileOutputDebugHelper
                 Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
                 filename);
 
-        return new StreamWriter(fullFilename, append);
+        return new(fullFilename, append);
     }
 #pragma warning restore RS1035 // Do not use APIs banned for analyzers
 }

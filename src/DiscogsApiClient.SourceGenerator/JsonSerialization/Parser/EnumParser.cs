@@ -1,20 +1,25 @@
-﻿using DiscogsApiClient.SourceGenerator.JsonSerialization.Models;
+using DiscogsApiClient.SourceGenerator.Diagnostics;
+using DiscogsApiClient.SourceGenerator.JsonSerialization.Models;
 using DiscogsApiClient.SourceGenerator.Shared.Helpers;
 
 namespace DiscogsApiClient.SourceGenerator.JsonSerialization.Parser;
 
 internal static class EnumParser
 {
-    public static Enumeration? ParseEnum(this EnumDeclarationSyntax enumSyntax, Compilation compilation, CancellationToken cancellationToken)
+    public static GeneratorResult<Enumeration>? ParseEnum(GeneratorAttributeSyntaxContext context, CancellationToken cancellationToken)
     {
-        var enumModel = compilation.GetSemanticModel(enumSyntax.SyntaxTree);
-        if (enumModel.GetDeclaredSymbol(enumSyntax) is not INamedTypeSymbol enumSymbol)
+        if (context.TargetSymbol is not INamedTypeSymbol enumSymbol)
         {
             return null;
         }
 
-        var typeInfo = enumSymbol.GetSymbolTypeInfo();
+        cancellationToken.ThrowIfCancellationRequested();
 
-        return new(typeInfo);
+        var typeInfo = enumSymbol.GetSymbolTypeInfo();
+        var location = DiagnosticLocation.From(context.TargetNode.GetLocation());
+
+        return typeInfo.EnumMembers.Length == 0
+            ? GeneratorResult<Enumeration>.Failure([new(DiagnosticDescriptors.EmptyEnum, location, [enumSymbol.Name])])
+            : GeneratorResult<Enumeration>.Success(new(typeInfo));
     }
 }

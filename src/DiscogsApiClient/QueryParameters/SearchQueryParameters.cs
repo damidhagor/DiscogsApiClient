@@ -1,4 +1,4 @@
-﻿using DiscogsApiClient.SourceGenerator.Shared;
+using DiscogsApiClient.SourceGenerator.Shared;
 
 namespace DiscogsApiClient.QueryParameters;
 

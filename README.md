@@ -1,13 +1,79 @@
 # **DiscogsApiClient**
 
-This is a C# library for accessing the [Discogs API v2.0](https://www.discogs.com/developers)
-and is compatible with .Net 6, 7 & 8.
+[![NuGet](https://img.shields.io/nuget/v/DiscogsApiClient.svg)](https://www.nuget.org/packages/DiscogsApiClient/)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/DiscogsApiClient.svg)](https://www.nuget.org/packages/DiscogsApiClient/)
+[![.NET](https://img.shields.io/badge/.NET-8%2C%209%2C%2010-blueviolet)](https://dotnet.microsoft.com/)
+[![License](https://img.shields.io/github/license/damidhagor/DiscogsApiClient)](LICENSE)
+[![CI - Library](https://github.com/damidhagor/DiscogsApiClient/actions/workflows/ci-library.yml/badge.svg?branch=main)](https://github.com/damidhagor/DiscogsApiClient/actions/workflows/ci-library.yml)
+[![CI - Demo](https://github.com/damidhagor/DiscogsApiClient/actions/workflows/ci-demo.yml/badge.svg?branch=main)](https://github.com/damidhagor/DiscogsApiClient/actions/workflows/ci-demo.yml)
 
-It allows for accessing and modifying a user's collection and wantlist and querying the Discogs database.
+A C# library for accessing the [Discogs API v2.0](https://www.discogs.com/developers), targeting .NET 8, 9 and 10.
+
+It allows accessing and modifying a user's collection and wantlist and querying the Discogs database.
 Either personal access tokens or OAuth 1.0a can be chosen as authentication methods.
 
-**Disclaimer:** This is a private project and not all Api functions are implemented.
-I might however add more functionality by request if my time allows for it.
+**Disclaimer:** This is a private project and not all Api functions are implemented — see
+[docs/API_COVERAGE.md](docs/API_COVERAGE.md) for the current endpoint coverage.
+I might add more functionality by request if my time allows for it.
+
+Licensed under the [MIT License](LICENSE).
+
+## **Documentation**
+
+- [docs/CHANGELOG.md](docs/CHANGELOG.md) — full version history, including breaking changes per release
+- [docs/MIGRATION_GUIDE.md](docs/MIGRATION_GUIDE.md) — breaking-change migration steps with before/after examples
+- [docs/API_COVERAGE.md](docs/API_COVERAGE.md) — detailed endpoint-by-endpoint implementation status
+
+## **Getting Started**
+
+Download the [Nuget Package](https://www.nuget.org/packages/DiscogsApiClient/) or compile the library from source.
+
+### Register the client
+
+`AddDiscogsApiClient` registers the `IDiscogsApiClient`, unauthenticated by default. Chain `.WithPatAuthentication()` or
+`.WithOAuthAuthentication()` to opt into an authentication mechanism — without either, requests are sent without an
+`Authorization` header.
+
+```csharp
+services.AddDiscogsApiClient(options =>
+{
+    options.UserAgent = "AwesomeAppDemo/1.0.0";
+})
+.WithPatAuthentication();
+```
+
+`AddDiscogsApiClient` and `WithPatAuthentication`/`WithOAuthAuthentication` each have three overloads for configuring
+their options:
+
+- `Action<TOptions>` — configure options directly with a delegate (shown above).
+- `Action<IServiceProvider, TOptions>` — configure options with access to the `IServiceProvider`, e.g. to resolve a
+  secret store for the OAuth consumer key/secret.
+- `IConfiguration` — bind options directly from a configuration section, e.g. `configuration.GetSection("Discogs")`.
+
+`AddDiscogsApiClient` also accepts an optional `Action<IHttpClientBuilder>` to customize the underlying `HttpClient`
+(e.g. adding your own delegating handlers, which sit outermost in the pipeline, wrapping the client's error,
+authentication and rate-limit-state handlers).
+
+### Configuration via `appsettings.json`
+
+If an `IConfiguration` is registered in the service collection, the `"Discogs"` (`DiscogsApiClientOptions.SectionName`),
+`"Discogs:Pat"` (`DiscogsPatOptions.SectionName`) and `"Discogs:OAuth"` (`DiscogsOAuthOptions.SectionName`) sections are
+bound automatically before any `configureOptions` delegate is applied, so code-based configuration always overrides
+configuration values:
+
+```json
+{
+  "Discogs": {
+    "UserAgent": "AwesomeAppDemo/1.0.0"
+  },
+  "Discogs:Pat": {
+    "Token": "YourPersonalAccessToken"
+  }
+}
+```
+
+Invalid options (e.g. a missing `UserAgent`) throw an `OptionsValidationException` at application startup
+(`ValidateOnStart`), not when a request is made.
 
 ## **Authentication**
 
@@ -25,191 +91,131 @@ The final token and secret are permanently valid and should be stored so that th
 **Note:** The OAuth flow is implemented in the plain version without encrypting/hashing the tokens because the Discogs Api is only accessible over Https which ensures a secure connection.
 Doing it this way is even recommended by the Discogs documentation.
 
-## **Getting Started**
+### Personal access token authentication
 
-**Disclaimer: If you are upgrading from a version earlier than 3.0.0 please read further below about the breaking changes.**
-
-Download the [Nuget Package](https://www.nuget.org/packages/DiscogsApiClient/) or compile the library from source.
-
-Register and use the ```IDiscogsApiClient``` with either a personal access token
+A personal access token can be provided either via configuration (see [Configuration via `appsettings.json`](#configuration-via-appsettingsjson)
+above) or by calling `Authenticate` in code — no manual `Authenticate` call is needed if the token is already bound
+from configuration. Calling `Authenticate` again at any point (e.g. to swap to a different user's token) overrides
+the previously stored token.
 
 ```csharp
-// At startup register the DiscogsApiClient and the authentication provider
-// with the IServiceCollection.
+// At startup register the DiscogsApiClient and opt into
+// Personal Access Token authentication with the IServiceCollection.
+// If "Discogs:Pat:Token" is already set in configuration, the client is
+// immediately authenticated and no manual Authenticate call is required.
 
 services.AddDiscogsApiClient(options =>
 {
     options.UserAgent = "AwesomeAppDemo/1.0.0";
-});
+})
+.WithPatAuthentication();
 
-// Inject the IDiscogsAuthenticationService and IDiscogsApiClient
+// Otherwise, inject the IDiscogsPatAuthenticationProvider and IDiscogsApiClient
 // and authenticate with the personal access token before using the client.
+// Calling Authenticate again later overrides the previously stored token.
 
 public Foo(
     IDiscogsApiClient discogsApiClient,
-    IDiscogsAuthenticationService discogsAuthenticationService)
+    IDiscogsPatAuthenticationProvider authProvider)
 {
     _discogsApiClient = discogsApiClient;
-    _discogsAuthenticationService = discogsAuthenticationService;
+    _authProvider = authProvider;
 }
 
 public void Authenticate(string token)
 {
-    _discogsAuthenticationService.AuthenticateWithPersonalAccessToken(token);
+    _authProvider.Authenticate(token);
 }
 
 public async Task<string> GetUsername(CancellationToken cancellationToken)
 {
     var identity = await _discogsApiClient.GetIdentity(cancellationToken);
-    return identity.Username
+    return identity.Username;
 }
 ```
 
-or the OAuth flow:
+### OAuth authentication
+
+As with PAT authentication, calling `Authenticate`/`CompleteAuthentication` again at any point overrides the
+previously stored access token and secret.
+
+The access token and secret returned by `CompleteAuthentication` are not persisted by the library and are only
+valid for the lifetime of the process unless you store them yourself (e.g. secure storage, a database) and feed
+them back in via `Authenticate(accessToken, accessTokenSecret)` on a later run — this skips the interactive
+flow (`StartAuthentication`/`CompleteAuthentication`) entirely, similar to how a PAT is authenticated directly.
 
 ```csharp
-// At startup register the DiscogsApiClient and the authentication provider.
+// At startup register the DiscogsApiClient and opt into OAuth authentication.
 // Provide the Consumer Key & Secret & verifier callback url here.
 services.AddDiscogsApiClient(options =>
 {
     options.UserAgent = "AwesomeAppDemo/1.0.0";
+})
+.WithOAuthAuthentication(options =>
+{
     options.ConsumerKey = "YourConsumerKey";
     options.ConsumerSecret = "YourConsumerSecret";
     options.VerifierCallbackUrl = "http://localhost/verifier_token";
 });
 
-// Inject the IDiscogsAuthenticationService and IDiscogsApiClient
+// Inject the IDiscogsOAuthAuthenticationProvider and IDiscogsApiClient
 // and authenticate with the OAuth flow before using the client.
 
 public Foo(
     IDiscogsApiClient discogsApiClient,
-    IDiscogsAuthenticationService discogsAuthenticationService)
+    IDiscogsOAuthAuthenticationProvider authProvider)
 {
     _discogsApiClient = discogsApiClient;
-    _discogsAuthenticationService = discogsAuthenticationService;
+    _authProvider = authProvider;
 }
 
 // Authenticate with your consumer key & secret from your Discogs application settings.
-public async Task Authenticate(
-    string consumerKey,
-    string consumerSecret,
-    CancellationToken cancellationToken)
+public async Task Authenticate(CancellationToken cancellationToken)
 {
     // Start authentication.
-    var session = await _discogsAuthenticationService.StartOAuthAuthentication(cancellationToken);
+    var session = await _authProvider.StartAuthentication(cancellationToken);
 
     // Retrieve Verifier Token.
-    // 1) Open browser with session.AuthorizationUrl
+    // 1) Open browser with session.AuthorizeUrl
     // 2) Detect redirect to session.VerifierCallbackUrl
     // 3) Verifier Token will be appended to the url: http://localhost/verifier_token?oauth_token=TOKEN&oauth_verifier=VERIFIER
     // 4) Parse verifier from url and return it
+    var verifierToken = "...";
 
     // Complete authentication.
-    (AccessToken, AccessTokenSecret) = await _discogsAuthenticationService.CompleteOAuthAuthentication(session, verifierToken, cancellationToken);
+    var (accessToken, accessTokenSecret) = await _authProvider.CompleteAuthentication(session, verifierToken, cancellationToken);
 
-    // Save and reuse the retrieved access token and secret.
+    // Save the returned access token and secret yourself, e.g. in a database or secure storage,
+    // so they can be reused via Authenticate below on a later run.
+    await SaveTokenAsync(accessToken, accessTokenSecret, cancellationToken);
+}
+
+// On a later run, load the previously saved access token and secret and authenticate
+// directly with them, skipping the interactive StartAuthentication/CompleteAuthentication flow.
+public async Task AuthenticateWithStoredToken(CancellationToken cancellationToken)
+{
+    var (accessToken, accessTokenSecret) = await LoadTokenAsync(cancellationToken);
+    _authProvider.Authenticate(accessToken, accessTokenSecret);
 }
 ```
 
-## **Changelog**
+### Rate limit state
 
-- ### **1.0.0**
+The client no longer enforces rate limiting itself. Instead, the `x-discogs-ratelimit*` response headers are parsed
+after every request and exposed read-only through `IDiscogsRateLimitStateService`, so you can implement whatever
+throttling/backoff strategy suits your application:
 
-  - Initial release.
-  - Support for User Token & OAuth 1.0a authentication flows.
-  - Implementation of Api functions for user information, collection & wantlist and database queries.
+```csharp
+public Foo(IDiscogsRateLimitStateService rateLimitStateService)
+{
+    _rateLimitStateService = rateLimitStateService;
+}
 
-- ### **2.0.0**
-
-  - Refactored the library for Dependency Injection support:
-    - Added IServiceCollection extension methods to support easy dependency injection.
-    - Added ```IDiscogsApiClient``` interface for mocking and Dependency Injection.
-    - The DiscogsApiClient's HttpClient is now injectable via the constructor.
-    - If configured via the IServiceCollection the HttpClient will be injected via the IHttpClientFactory.
-    - Needed parameters for the ```IAuthenticationProviders``` are moved from their constructors into their ```IAuthenticationRequest``` implementations.
-  - Sealed all classes for performance.
-
-- ### **2.1.0**
-
-  - Added missing pagination parameter to ```GetCollectionFolderReleasesByFolderIdAsync``` method.
-
-- ### **2.1.1**
-
-  - Fixed URL not being formatted correctly for ```GetCollectionFolderReleasesByFolderIdAsync``` method.
-
-- ### **3.0.0**
-
-  - The client is now implemented with the [Refit](https://github.com/reactiveui/refit) library.
-  - The library now also targets .Net 7 and the .Net 8 preview.
-  - The client now supports rate limiting which is handled with middleware in the HttpClient.
-  - Dependency Injection registration is simplified to a single method call.
-  - Refactored the authentication flow:
-    - Authentication is outsourced into the new ```IDiscogsAuthenticationService```.
-    - The new service offers both authentication flows simultaneously and the flows no longer needs to be configured at startup.
-    - New HttpClient middleware handles authentication headers.
-  - Added demo projects to showcase how to get started.
-  - Improved test coverage.
-  - The contract classes are restructured into sub-namespaces and a few properties are renamed for clarity.
-  - The parameters for Api calls are now validated.
-  - New Discogs Api methods query parameters are supported now.
-- ### **3.0.1**
-  - Fixed ```Release.LowestPrice``` & ```MasterRelease.LowestPrice``` deserialization failing due tu ```null``` value being sent by Discogs.
-  - Fixed a typo in the ```ReleaseIdentifier``` class name.
-  - Added better exception handling to the OAuth flow. ```AuthenticationFailedDiscogsException``` now contains the underlying exception which caused the authentication to fail if one was thrown.
-- ### **3.1.0**
-  - Reusing previously obtained Access Tokens & Secret via OAuth was moved into its own method ```Authenticate``` method.
-  - Optional query parameters are now nullable and optional in the Api call.
-  - Some internal interfaces and implementations were made public.
-- ### **4.0.0**
-  - The [Refit](https://github.com/reactiveui/refit) library has been removed because it produces a client implementation which is not Aot compatible and won't be for the forseeable future.
-    - [Refit](https://github.com/reactiveui/refit) has been replaced by a custom Source Generator which creates a client implementation at compile time.
-    - The public Api of the ``IDiscogsApiClient`` has not been changed and updating will not break existing code.
-    - Json serialization has been replaced with a source generated ``DiscogsJsonSerializerContext``.
-    - The Refit ``ExceptionFactory`` implementation has been moved into a ``ErrorHandlingDelegatingHandler`` middleware.
-    - Added Demo project for an Aot publishable console application using the DiscogsApiClient.
-  - The authentication flow for OAuth has been changed.
-    - The single call to ``AuthenticateWithOAuth`` using the ``GetVerifierCallback`` has been removed.
-    - It's been replaced with the two calls ``StartOAuthAuthentication`` and ``CompleteOAuthAuthentication``.
-    - With this change the OAuth authentication can be handled more linearly instead of with a callback function.
-    - The ``HttpClient`` used by the ``OAuthAuthenticationProvider`` now also uses the ``ErrorHandlingDelegatingHandler`` middleware.
-- ### **4.1.0**
-  - Added ``ThumbnailUrl`` property to ``ReleaseArtist`` model.
-  - Fixed year/released property mappings in ``Release`` and ``MasterReleaseVersion`` models.
-  - **Breaking**:
-    - Renamed ``Release.YearFormatted`` → ``ReleasedFormatted``
-    - Renamed ``MasterReleaseVersion.Year`` → ``Released``
-- ### **4.1.1**
-  - Fixed improper parsing of the ``instance_id`` property of collection folder releases.
-
-
-## **Implemented Api Functions**
-
-The current implementation of the Api surface is focused on querying the database and accessing the user's collection and wantlist.
-
-### **User Resources (need authentication)**
-
-- User
-  - Get Identity
-  - Get User
-- Collection
-  - Get all collection folders
-  - Get, Create, Update, Delete collection folders
-  - Get, Add, Remove releases from a collection folder
-  - Get collection value
-- Wantlist
-  - Get releases on the wantlist
-  - Add, Delete releases to/from the wantlist
-
-### **Database Resources**
-
-- Get artist & artist's releases
-- Get label & label's releases
-- Get master release & master release versions
-- Get release, release's community rating & release's stats
-- Discogs database search
-- 
-
-## **Roadmap**
-
-- CI/CD
-- Logging
+public void LogRateLimit()
+{
+    if (_rateLimitStateService.TryGetCurrentState(out var state))
+    {
+        Console.WriteLine($"{state.Remaining}/{state.Limit} requests remaining (used: {state.Used})");
+    }
+}
+```

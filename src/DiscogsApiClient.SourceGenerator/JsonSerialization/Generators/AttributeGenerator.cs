@@ -1,4 +1,4 @@
-﻿using DiscogsApiClient.SourceGenerator.JsonSerialization.Attributes;
+using DiscogsApiClient.SourceGenerator.JsonSerialization.Attributes;
 
 namespace DiscogsApiClient.SourceGenerator.JsonSerialization.Generators;
 

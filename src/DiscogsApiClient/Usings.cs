@@ -1,5 +1,4 @@
-﻿global using System.Text.Json.Serialization;
-global using CommunityToolkit.Diagnostics;
+global using System.Text.Json.Serialization;
 global using DiscogsApiClient.Authentication;
 global using DiscogsApiClient.Contract;
 global using DiscogsApiClient.Contract.Artist;

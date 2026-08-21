@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.Release;
+namespace DiscogsApiClient.Contract.Release;
 
 /// <summary>
 /// A filter facet for a master release version request and its possible values
@@ -12,7 +12,7 @@ public sealed record MasterReleaseVersionFilterFacet(
     [property:JsonPropertyName("id")]
     string Id,
     [property:JsonPropertyName("values")]
-    List<MasterReleaseVersionFilterFacetValue> Values);
+    IReadOnlyList<MasterReleaseVersionFilterFacetValue> Values);
 
 
 /**

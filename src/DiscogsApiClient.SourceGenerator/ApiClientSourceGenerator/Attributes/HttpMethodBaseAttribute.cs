@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Attributes;
+namespace DiscogsApiClient.SourceGenerator.ApiClientSourceGenerator.Attributes;
 
 internal static class HttpMethodBaseAttribute
 {
@@ -8,19 +8,16 @@ internal static class HttpMethodBaseAttribute
 
     public const string Source =
         $$"""
+        {{Constants.GeneratedFileHeader}}
         #nullable enable
         
         namespace {{Constants.ApiClientNamespace}};
 
+        {{Constants.GeneratedCodeAttribute}}
         [global::System.AttributeUsage(global::System.AttributeTargets.Method)]
-        internal abstract class {{Name}} : global::System.Attribute
+        internal abstract class {{Name}}(string route) : global::System.Attribute
         {
-            public string Route { get; set; }
-        
-            public {{Name}}(string route)
-            {
-                Route = route;
-            }
+            public string Route { get; } = route;
         }
         """;
 }

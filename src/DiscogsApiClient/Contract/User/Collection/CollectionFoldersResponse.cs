@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.User.Collection;
+namespace DiscogsApiClient.Contract.User.Collection;
 
 /// <summary>
 /// Returns the list of folders in the user's collection
@@ -6,7 +6,7 @@
 /// <param name="Folders">List of folders</param>
 public sealed record CollectionFoldersResponse(
     [property:JsonPropertyName("folders")]
-    List<CollectionFolder> Folders);
+    IReadOnlyList<CollectionFolder> Folders);
 
 
 /**

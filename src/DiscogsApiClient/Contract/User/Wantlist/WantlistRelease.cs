@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.User.Wantlist;
+namespace DiscogsApiClient.Contract.User.Wantlist;
 
 /// <summary>
 /// Represents a release from the user's wantlist.

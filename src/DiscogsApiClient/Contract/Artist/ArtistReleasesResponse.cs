@@ -1,4 +1,4 @@
-﻿namespace DiscogsApiClient.Contract.Artist;
+namespace DiscogsApiClient.Contract.Artist;
 
 /// <summary>
 /// Returns a paginated list of releases from a specific artist
@@ -9,7 +9,7 @@ public sealed record ArtistReleasesResponse(
     [property:JsonPropertyName("pagination")]
     Pagination Pagination,
     [property:JsonPropertyName("releases")]
-    List<ArtistRelease> Releases);
+    IReadOnlyList<ArtistRelease> Releases);
 
 
 /*

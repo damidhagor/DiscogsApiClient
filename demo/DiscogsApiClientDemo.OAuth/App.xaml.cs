@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using DiscogsApiClient;
+using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -15,13 +14,12 @@ public partial class App : Application
             .ConfigureServices((context, services) =>
             {
                 // Add DiscogsApiClient with plain OAuth authentication to the services collection
-                services.AddDiscogsApiClient(options =>
+                services.AddDiscogsApiClient(options => options.UserAgent = "AwesomeAppDemo/1.0.0")
+                .WithOAuthAuthentication(options =>
                 {
-                    options.UserAgent = "AwesomeAppDemo/1.0.0";
                     options.ConsumerKey = "";
                     options.ConsumerSecret = "";
                     options.VerifierCallbackUrl = "http://localhost/verifier_token";
-                    options.UseRateLimiting = true;
                 });
                 services.AddSingleton<MainWindow>();
             })
