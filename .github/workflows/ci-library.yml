@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   validate-library:
-    name: Build, Test & Analyze
+    name: Build, Test & Analyze (Library)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -41,6 +41,7 @@ jobs:
         run: dotnet format src/DiscogsApiClient.slnx --verify-no-changes --severity info --no-restore
 
       - name: Test with coverage
+        if: always()
         run: |
           dotnet test src/DiscogsApiClient.slnx -c Release --no-build \
             --results-directory ./TestResults \
@@ -54,9 +55,10 @@ jobs:
           path: 'TestResults/*.trx'
           reporter: dotnet-trx
           fail-on-error: true
+          fail-on-empty: false
 
       - name: Generate coverage summary
-        if: always()
+        if: always() && hashFiles('TestResults/*.cobertura.xml') != ''
         uses: danielpalme/ReportGenerator-GitHub-Action@5
         with:
           reports: 'TestResults/*.cobertura.xml'
@@ -64,11 +66,11 @@ jobs:
           reporttypes: 'MarkdownSummaryGithub'
 
       - name: Add coverage to job summary
-        if: always()
+        if: always() && hashFiles('CoverageReport/SummaryGithub.md') != ''
         run: cat CoverageReport/SummaryGithub.md >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload coverage report artifact
-        if: always()
+        if: always() && hashFiles('CoverageReport/**') != ''
         uses: actions/upload-artifact@v4
         with:
           name: library-coverage-report

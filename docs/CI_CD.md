@@ -44,6 +44,9 @@ Validates the main library solution (`src/DiscogsApiClient.slnx`).
 - **Runner:** `ubuntu-latest`, with `actions/setup-dotnet@v4` installing `8.0.x`/`9.0.x`/`10.0.x`
   side-by-side (all three are needed so each multi-targeted TFM's tests run against a matching
   installed runtime, not just a build-time-compatible newer SDK).
+- **Job name:** `Build, Test & Analyze (Library)` — the `(Library)` suffix (added alongside the same
+  suffix pattern in `ci-demo.yml`) exists specifically so the job list on a GitHub Actions run page
+  (which shows job names, not workflow names) lets you tell the two workflows' jobs apart at a glance.
 - **Steps:**
   1. Restore.
   2. **Build** — `dotnet build -c Release --no-restore -p:EnforceCodeStyleInBuild=true -warnaserror`.
@@ -57,12 +60,20 @@ Validates the main library solution (`src/DiscogsApiClient.slnx`).
   4. **Test + coverage** — runs the TUnit test suite via `dotnet test -- --report-trx --coverage
      --coverage-output-format cobertura` (TRX + Cobertura output, auto-named per TargetFramework so the
      three parallel TFM runs don't race on the same output file). This step **does** fail on test
-     failures. It has no `if: always()`, so it's correctly skipped if the Build step already failed
-     (it depends on `--no-build` reusing that step's output).
-  5. **Reporting** — `dorny/test-reporter` publishes pass/fail results from the TRX files as PR check
-     annotations; `danielpalme/ReportGenerator-GitHub-Action` turns the Cobertura files into a markdown
-     coverage summary posted to the job summary, and the full HTML coverage report is uploaded as a
-     workflow artifact.
+     failures, but runs with `if: always()` so it still executes (and its results are still visible)
+     even if the Build step's diagnostics-only failure mode doesn't apply here — practically, this
+     matters when the earlier Format check step fails: Build itself already succeeded (binaries exist),
+     so `--no-build` can still run the full test suite even though the job is already red. If Build
+     itself genuinely fails (a compiler error), this step still attempts to run and fails fast with a
+     clear "not built" error, since `--no-build` has nothing to test against.
+  5. **Reporting** — each step only runs when its required input files actually exist (guarded via
+     `hashFiles(...)` in its `if:` condition, since a Build-step failure means no TRX/Cobertura files
+     were ever produced), so a real build failure no longer cascades into a wall of unrelated report-
+     generation failures: `dorny/test-reporter` publishes pass/fail results from the TRX files as PR
+     check annotations (`fail-on-empty: false` — running unconditionally would otherwise still fail if a
+     genuine build failure produced zero TRX files), `danielpalme/ReportGenerator-GitHub-Action` turns
+     the Cobertura files into a markdown coverage summary posted to the job summary, and the full HTML
+     coverage report is uploaded as a workflow artifact.
 
 > **Known limitation:** `dorny/test-reporter` needs a `GITHUB_TOKEN` with `checks: write`, which forked
 > `pull_request` runs don't receive (GitHub grants read-only tokens to PRs from forks). For a PR opened

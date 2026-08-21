@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   validate-demo:
-    name: Build & Analyze
+    name: Build & Analyze (Demo)
     runs-on: windows-latest
     steps:
       - name: Checkout
