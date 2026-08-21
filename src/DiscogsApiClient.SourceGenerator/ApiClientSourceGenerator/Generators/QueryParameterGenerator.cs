@@ -248,10 +248,17 @@ internal static class QueryParameterGenerator
                     $$"""
                         public static int CalculateQuerySize({{parameter.TypeInfo.FullTypeName}} enumValue)
                         {
-                            return enumValue.HasValue
-                                ? enumValue switch
-                                {
+                            return enumValue switch
+                            {
                     """);
+
+                if (parameter.TypeInfo.IsNullable)
+                {
+                    builder.AppendLine(
+                        """
+                                    null => 0,
+                        """);
+                }
 
                 foreach (var enumMember in parameter.TypeInfo.EnumMembers)
                 {
@@ -259,15 +266,14 @@ internal static class QueryParameterGenerator
 
                     builder.AppendLine(
                         $$"""
-                                        {{parameter.TypeInfo.GetFullTypeName(false)}}.{{enumMember.MemberName}} => {{enumMember.MemberNameAlias.Length}}, // {{enumMember.MemberNameAlias}}
+                                    {{parameter.TypeInfo.GetFullTypeName(false)}}.{{enumMember.MemberName}} => {{enumMember.MemberNameAlias.Length}}, // {{enumMember.MemberNameAlias}}
                         """);
                 }
 
                 builder.AppendLine(
                     """
-                                    _ => throw new global::System.ArgumentOutOfRangeException(nameof(enumValue))
-                                }
-                                : 0;
+                                _ => throw new global::System.ArgumentOutOfRangeException(nameof(enumValue))
+                            };
                         }
                     """);
                 break;

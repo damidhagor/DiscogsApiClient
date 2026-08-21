@@ -267,14 +267,13 @@ public sealed class QueryParameterGeneratorTests
             {
                 public static int CalculateQuerySize(global::TestNamespace.SortOrder? enumValue)
                 {
-                    return enumValue.HasValue
-                        ? enumValue switch
-                        {
-                            global::TestNamespace.SortOrder.Ascending => 3, // asc
-                            global::TestNamespace.SortOrder.Descending => 4, // desc
-                            _ => throw new global::System.ArgumentOutOfRangeException(nameof(enumValue))
-                        }
-                        : 0;
+                    return enumValue switch
+                    {
+                        null => 0,
+                        global::TestNamespace.SortOrder.Ascending => 3, // asc
+                        global::TestNamespace.SortOrder.Descending => 4, // desc
+                        _ => throw new global::System.ArgumentOutOfRangeException(nameof(enumValue))
+                    };
                 }
             }
             """;
@@ -461,14 +460,13 @@ public sealed class QueryParameterGeneratorTests
 
                 public static int CalculateQuerySize(global::TestNamespace.SortOrder? enumValue)
                 {
-                    return enumValue.HasValue
-                        ? enumValue switch
-                        {
-                            global::TestNamespace.SortOrder.Ascending => 3, // asc
-                            global::TestNamespace.SortOrder.Descending => 4, // desc
-                            _ => throw new global::System.ArgumentOutOfRangeException(nameof(enumValue))
-                        }
-                        : 0;
+                    return enumValue switch
+                    {
+                        null => 0,
+                        global::TestNamespace.SortOrder.Ascending => 3, // asc
+                        global::TestNamespace.SortOrder.Descending => 4, // desc
+                        _ => throw new global::System.ArgumentOutOfRangeException(nameof(enumValue))
+                    };
                 }
             }
             """;

@@ -115,7 +115,7 @@ public sealed class PlaybackFixture : IAsyncInitializer
 
         if (recording.RequestBody != body)
         {
-            _logger.WriteLine($"Request body mismatch. Expected: {recording.ResponseBody}, Actual: {body}");
+            _logger.WriteLine($"Request body mismatch. Expected: {recording.RequestBody}, Actual: {body}");
             return false;
         }
 

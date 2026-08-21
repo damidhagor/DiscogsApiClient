@@ -17,7 +17,7 @@ public static class RecordingHelper
         };
 
     private static HashSet<string> IgnoredHeaders { get; } = ["traceparent", "baggage"];
-    private static HashSet<string> SensitiveHeaders { get; } = ["Authorization"];
+    private static HashSet<string> SensitiveHeaders { get; } = ["Authorization", "Set-Cookie"];
 
     public static string GetRecordingKey()
     {

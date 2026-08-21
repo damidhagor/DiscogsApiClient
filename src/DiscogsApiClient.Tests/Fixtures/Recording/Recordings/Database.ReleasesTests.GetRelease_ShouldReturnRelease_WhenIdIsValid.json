@@ -23,7 +23,7 @@
         "keep-alive"
       ],
       "Set-Cookie": [
-        "__cf_bm=yR5YjlAdrtxrYCzgqus.hoGBNW0MFP2neO9qBcZJbhg-1781391025.840783-1.0.1.1-kXnHel5bGXJD_lSQZ_hGFE7vycMsdsUk07ze8IUwElGuLI1OLxzqfzNWNFUbry8njK1Z0h63aZ6l_gTY4DqsEez3xOXIPTU6nDMQv8TDrh46M1ijD2aNOIT9.IQ2HBPP; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Sat, 13 Jun 2026 23:20:26 GMT"
+        "****"
       ],
       "Strict-Transport-Security": [
         "max-age=15552000"

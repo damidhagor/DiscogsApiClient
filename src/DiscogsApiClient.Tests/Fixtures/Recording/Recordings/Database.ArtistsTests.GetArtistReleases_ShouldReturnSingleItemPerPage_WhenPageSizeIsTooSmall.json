@@ -65,7 +65,7 @@
         "1; mode=block"
       ],
       "Set-Cookie": [
-        "__cf_bm=6h.akx.HqbEXeoqGm3CWEmYkzVDTAGpCFMpEzDpmAzU-1781390944.7046425-1.0.1.1-T7r9ov9uQIzY9u9uESnBdfT7EMmwz2GAqdYtmJWL2y0_iW8iVgiWba2nmHOFTlFfxVYcl1HH0aXbnWxmWDDNZhrjRpwOhziqF.EuwOts4kmVr9ITBNYzBfpMYuQ9RJu.; HttpOnly; SameSite=None; Secure; Path=/; Domain=discogs.com; Expires=Sat, 13 Jun 2026 23:19:04 GMT"
+        "****"
       ],
       "cf-cache-status": [
         "DYNAMIC"
