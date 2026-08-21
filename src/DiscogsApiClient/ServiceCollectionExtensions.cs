@@ -34,7 +34,7 @@ public static partial class ServiceCollectionExtensions
         Action<IHttpClientBuilder>? configureClient = null)
     {
         ArgumentNullException.ThrowIfNull(services);
-            ArgumentNullException.ThrowIfNull(configureOptions);
+        ArgumentNullException.ThrowIfNull(configureOptions);
 
         services.AddOptions<DiscogsApiClientOptions>()
             .Configure<IServiceProvider>(static (options, serviceProvider) => serviceProvider.GetService<IConfiguration>()?
