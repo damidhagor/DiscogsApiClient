@@ -25,7 +25,7 @@
 		<AssemblyVersion>5.0.0</AssemblyVersion>
 		<FileVersion>5.0.0</FileVersion>
 		<PackageVersion>5.0.0</PackageVersion>
-		<PackageReleaseNotes>Fixed improper parsing of the ``instance_id`` property of collection folder releases.</PackageReleaseNotes>
+		<PackageReleaseNotes>v5.0.0: Dropped .NET 6/7 support (now targets .NET 8, 9 and 10). Rewrote the client implementation on a fully incremental (IIncrementalGenerator) source generator. Removed client-side rate limiting in favor of IDiscogsRateLimitStateService. Modernized DI registration (IOptions&lt;T&gt; with ValidateOnStart) and authentication provider registration (explicit opt-in via WithPatAuthentication/WithOAuthAuthentication). Contains multiple breaking changes -- see https://github.com/damidhagor/DiscogsApiClient/blob/main/docs/MIGRATION_GUIDE.md and https://github.com/damidhagor/DiscogsApiClient/blob/main/docs/CHANGELOG.md for full details.</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<ItemGroup>
