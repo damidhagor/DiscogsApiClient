@@ -174,24 +174,36 @@ fi
 grouped="${grouped//$'\r'/}"
 
 append_summary_line "### Vulnerability scan: $solution"
+append_summary_line ""
+
+if [[ "$has_blocking" -eq 1 ]]; then
+  append_summary_line "**High/Critical severity vulnerabilities were found — failing the job.**"
+  append_summary_line ""
+fi
 
 current_severity=""
 while IFS=$'\t' read -r severity id version projects advisories; do
   if [[ "$severity" != "$current_severity" ]]; then
+    if [[ -n "$current_severity" ]]; then
+      append_summary_line "</table>"
+      append_summary_line ""
+    fi
+
     current_severity="$severity"
-    append_summary_line ""
     append_summary_line "#### $severity"
     append_summary_line ""
-    append_summary_line "| Package | Version | Projects | Advisories |"
-    append_summary_line "|---|---|---|---|"
+    append_summary_line "<table>"
+    append_summary_line "<tr><th>Package</th><th>Version</th><th>Projects</th><th>Advisories</th></tr>"
   fi
 
-  append_summary_line "| $id | $version | $projects | $advisories |"
+  append_summary_line "<tr><td valign=\"top\">$id</td><td valign=\"top\">$version</td><td valign=\"top\">$projects</td><td valign=\"top\">$advisories</td></tr>"
 done <<< "$grouped"
 
+if [[ -n "$current_severity" ]]; then
+  append_summary_line "</table>"
+fi
+
 if [[ "$has_blocking" -eq 1 ]]; then
-  append_summary_line ""
-  append_summary_line "**High/Critical severity vulnerabilities were found — failing the job.**"
   exit 1
 fi
 
