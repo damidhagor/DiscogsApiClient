@@ -2,6 +2,9 @@ using DiscogsApiClient.SourceGenerator.ApiClient;
 
 namespace DiscogsApiClient;
 
+// CA1822: Mark members as static
+// CA1823: Avoid unused private fields
+#pragma warning disable CA1822, CA1823
 [ApiClient(typeof(DiscogsJsonSerializerContext))]
 internal sealed partial class DiscogsApiClient(HttpClient httpClient, DiscogsJsonSerializerContext jsonSerializerContext) : IDiscogsApiClient
 {
