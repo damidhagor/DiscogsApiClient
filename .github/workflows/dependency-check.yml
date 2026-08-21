@@ -9,6 +9,7 @@ on:
       - 'src/**'
       - '.github/workflows/dependency-check.yml'
       - '.github/scripts/check-vulnerabilities.sh'
+      - 'Directory.Packages.props'
   push:
     branches: [main]
 

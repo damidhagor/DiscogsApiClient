@@ -3,6 +3,7 @@
     <File Path="../README.md" />
     <File Path="../AGENTS.md" />
     <File Path="../.editorconfig" />
+    <File Path="../Directory.Packages.props" />
   </Folder>
   <Folder Name="/Solution Items/docs/">
     <File Path="../docs/API_COVERAGE.md" />
