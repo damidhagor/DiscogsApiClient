@@ -36,6 +36,8 @@ public static partial class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configureOptions);
 
+        var ciWarningTestProbe = 42; // TEMP: intentional CS0219 to validate CI build-warning reporting
+
         services.AddOptions<DiscogsApiClientOptions>()
             .Configure<IServiceProvider>(static (options, serviceProvider) => serviceProvider.GetService<IConfiguration>()?
                 .GetSection(DiscogsApiClientOptions.SectionName)
