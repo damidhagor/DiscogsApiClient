@@ -4,6 +4,11 @@
 # `dotnet format` does not emit annotations on its own -- it only prints plain text.
 # Any diagnostic at the configured --severity threshold fails the job (dotnet
 # format's own exit code is preserved).
+#
+# IDE0005/IDE0060 are excluded by default (see excluded_diagnostics below):
+# `dotnet format` uses MSBuildWorkspace, which never resolves the analyzer-only
+# reference to DiscogsApiClient.SourceGenerator, so it never runs the generator
+# and false-positives on generator-emitted symbol usage.
 # Usage: format-check.sh <solution-path>
 set -uo pipefail
 
@@ -44,6 +49,8 @@ relative_path() {
 solution="${1:-}"
 dotnet_bin="${DOTNET_BIN:-dotnet}"
 
+excluded_diagnostics="${FORMAT_CHECK_EXCLUDED_DIAGNOSTICS:-IDE0005 IDE0060}"
+
 if [[ -z "$solution" ]]; then
   echo "Usage: format-check.sh <solution-path>" >&2
   exit 2
@@ -54,7 +61,9 @@ output_file="$(mktemp)"
 trap 'rm -f "$output_file"' EXIT
 
 set +e
-"$dotnet_bin" format "$solution" --verify-no-changes --severity info --no-restore > "$output_file" 2>&1
+# shellcheck disable=SC2086 # excluded_diagnostics is an intentional word-split list
+"$dotnet_bin" format "$solution" --verify-no-changes --severity info --no-restore \
+  --exclude-diagnostics $excluded_diagnostics > "$output_file" 2>&1
 format_exit=$?
 set -e
 
