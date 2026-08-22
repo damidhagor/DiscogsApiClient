@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Each entry lists its own **Breaking** changes inline where applicable — see
 [docs/MIGRATION_GUIDE.md](MIGRATION_GUIDE.md) for detailed before/after migration steps.
 
+## [5.1.0] - Unreleased
+
 ## [5.0.0] - 2026-08-22
 
 - Dropped .NET 6 and .NET 7 support; the library now targets **.NET 8, 9 and 10**.
