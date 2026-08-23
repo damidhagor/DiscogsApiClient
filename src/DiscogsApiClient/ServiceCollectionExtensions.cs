@@ -337,7 +337,7 @@ public static partial class ServiceCollectionExtensions
         services.TryAddSingleton(static _ => new DiscogsJsonSerializerContext(
             new JsonSerializerOptions().AddGeneratedEnumJsonConverters()));
 
-        var clientBuilder = services.AddHttpClient<IDiscogsApiClient, global::DiscogsApiClient.DiscogsApiClient>()
+        var clientBuilder = services.AddHttpClient<IDiscogsApiClient, DiscogsApiClient.DiscogsApiClient>()
             .ConfigureHttpClient(static (serviceProvider, httpClient) =>
             {
                 var options = serviceProvider.GetRequiredService<IOptions<DiscogsApiClientOptions>>().Value;

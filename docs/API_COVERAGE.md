@@ -3,7 +3,7 @@
 This document tracks the implementation status of all Discogs API endpoints in this library.
 
 **Last Updated:** 2026-08-23 (verified against `src/DiscogsApiClient/DiscogsApiClient.cs`)
-**Total Coverage:** 31/59 endpoints (53%)
+**Total Coverage:** 33/59 endpoints (56%)
 
 ---
 
@@ -15,7 +15,7 @@ This document tracks the implementation status of all Discogs API endpoints in t
 | User Profile              | 2           | 2     | **100%** ✅ |
 | User Collection           | 13          | 13    | **100%** ✅ |
 | User Wantlist             | 3           | 3     | **100%** ✅ |
-| User Contributions        | 0           | 2     | 0%         |
+| User Contributions        | 2           | 2     | **100%** ✅ |
 | User Lists                | 0           | 2     | 0%         |
 | User Inventory            | 0           | 10    | 0%         |
 | Database - Artists        | 2           | 2     | **100%** ✅ |
@@ -79,12 +79,12 @@ This document tracks the implementation status of all Discogs API endpoints in t
 
 ---
 
-### User Contributions & Submissions
+### User Contributions & Submissions ✅ 100% Coverage
 
-| Status | Method | Endpoint                          | Description                       | Interface Method |
-| ------ | ------ | --------------------------------- | --------------------------------- | ---------------- |
-| ❌      | GET    | `/users/{username}/contributions` | Get user's database contributions | -                |
-| ❌      | GET    | `/users/{username}/submissions`   | Get user's pending submissions    | -                |
+| Status | Method | Endpoint                          | Description                       | Interface Method     |
+| ------ | ------ | --------------------------------- | --------------------------------- | -------------------- |
+| ✅      | GET    | `/users/{username}/contributions` | Get user's database contributions | `GetContributions()` |
+| ✅      | GET    | `/users/{username}/submissions`   | Get user's pending submissions    | `GetSubmissions()`   |
 
 ---
 

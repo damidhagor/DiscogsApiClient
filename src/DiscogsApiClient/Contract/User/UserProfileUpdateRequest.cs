@@ -12,7 +12,7 @@ namespace DiscogsApiClient.Contract.User;
 /// <param name="Profile">Biographical information about the user.</param>
 /// <param name="CurrencyAbbreviation">
 /// The three-letter currency abbreviation for marketplace data (e.g. "USD", "EUR"). An unsupported value
-/// causes the request to fail with a <see cref="Exceptions.ResourceNotFoundDiscogsException"/>.
+/// causes the request to fail with a <see cref="ResourceNotFoundDiscogsException"/>.
 /// </param>
 public sealed record UserProfileUpdateRequest(
     [property:JsonPropertyName("name")]
