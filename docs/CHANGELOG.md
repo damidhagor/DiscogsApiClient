@@ -19,6 +19,9 @@ Each entry lists its own **Breaking** changes inline where applicable — see
   - User Contributions & Submissions:
     - Get user's database contributions (`GetContributions()`).
     - Get user's submissions (`GetSubmissions()`).
+  - User Lists:
+    - Get user's lists (`GetUserLists()`).
+    - Get a list's details and items (`GetList()`).
   - Database - Releases:
     - Get user's rating for a release (`GetReleaseRating()`).
     - Set user's rating for a release (`UpdateReleaseRating()`).

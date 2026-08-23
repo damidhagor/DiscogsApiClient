@@ -3,7 +3,7 @@
 This document tracks the implementation status of all Discogs API endpoints in this library.
 
 **Last Updated:** 2026-08-23 (verified against `src/DiscogsApiClient/DiscogsApiClient.cs`)
-**Total Coverage:** 33/59 endpoints (56%)
+**Total Coverage:** 35/59 endpoints (59%)
 
 ---
 
@@ -16,7 +16,7 @@ This document tracks the implementation status of all Discogs API endpoints in t
 | User Collection           | 13          | 13    | **100%** ✅ |
 | User Wantlist             | 3           | 3     | **100%** ✅ |
 | User Contributions        | 2           | 2     | **100%** ✅ |
-| User Lists                | 0           | 2     | 0%         |
+| User Lists                | 2           | 2     | **100%** ✅ |
 | User Inventory            | 0           | 10    | 0%         |
 | Database - Artists        | 2           | 2     | **100%** ✅ |
 | Database - Labels         | 2           | 2     | **100%** ✅ |
@@ -92,8 +92,8 @@ This document tracks the implementation status of all Discogs API endpoints in t
 
 | Status | Method | Endpoint                  | Description               | Interface Method |
 | ------ | ------ | ------------------------- | ------------------------- | ---------------- |
-| ❌      | GET    | `/users/{username}/lists` | Get user's lists          | -                |
-| ❌      | GET    | `/lists/{list_id}`        | Get specific list details | -                |
+| ✅      | GET    | `/users/{username}/lists` | Get user's lists          | `GetUserLists()` |
+| ✅      | GET    | `/lists/{list_id}`        | Get specific list details | `GetList()`      |
 
 ---
 

@@ -1,0 +1,85 @@
+[
+  {
+    "requestMethod": "GET",
+    "requestUrl": "https://api.discogs.com/lists/1710463",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 200,
+    "responseHeaders": {
+      "Date": [
+        "Sun, 23 Aug 2026 20:51:05 GMT"
+      ],
+      "Transfer-Encoding": [
+        "chunked"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Access-Control-Allow-Headers": [
+        "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID"
+      ],
+      "Access-Control-Allow-Methods": [
+        "HEAD,OPTIONS,GET,OPTIONS"
+      ],
+      "Access-Control-Allow-Origin": [
+        "*"
+      ],
+      "Access-Control-Expose-Headers": [
+        "Location"
+      ],
+      "Cache-Control": [
+        "public, must-revalidate"
+      ],
+      "Set-Cookie": [
+        "****"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "Vary": [
+        "Accept-Encoding"
+      ],
+      "X-Content-Type-Options": [
+        "nosniff"
+      ],
+      "x-discogs-media-type": [
+        "discogs.v2"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "53"
+      ],
+      "x-discogs-ratelimit-used": [
+        "7"
+      ],
+      "X-Frame-Options": [
+        "SAMEORIGIN"
+      ],
+      "X-XSS-Protection": [
+        "1; mode=block"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a2fcfe464a32f968-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022id\u0022:1710463,\u0022user\u0022:{\u0022id\u0022:12579295,\u0022avatar_url\u0022:\u0022https://i.discogs.com/W0OR6Z5OewEwKpar3QyLVCuXbhw2_uNLIwahkmSKqNk/rs:fill/g:sm/q:40/h:500/w:500/czM6Ly9kaXNjb2dz/LXVzZXItYXZhdGFy/cy9VLTEyNTc5Mjk1/LTE2Mzk3ODM2MTIu/anBlZw.jpeg\u0022,\u0022username\u0022:\u0022DamIDhagor\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/users/DamIDhagor\u0022},\u0022name\u0022:\u0022API Test Private List\u0022,\u0022description\u0022:\u0022This is a private test list for the api client.\u0022,\u0022public\u0022:false,\u0022date_added\u0022:\u00222026-08-23T13:45:36-07:00\u0022,\u0022date_changed\u0022:\u00222026-08-23T13:47:00-07:00\u0022,\u0022uri\u0022:\u0022https://www.discogs.com/lists/API-Test-Private-List/1710463\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/lists/1710463\u0022,\u0022image_url\u0022:\u0022https://i.discogs.com/m4ct-1DE52L-y4QbkqKUXv9aoNVPTVYy0ZwjXH6qmH8/rs:fit/g:sm/q:40/h:100/w:100/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ5NDMy/OC0xNDI0Mzg1Nzgx/LTc1MDAuanBlZw.jpeg\u0022,\u0022items\u0022:[{\u0022type\u0022:\u0022release\u0022,\u0022id\u0022:494328,\u0022comment\u0022:\u0022This is a public test item for the api client.\u0022,\u0022uri\u0022:\u0022https://www.discogs.com/release/494328-HammerFall-Glory-To-The-Brave\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/releases/494328\u0022,\u0022image_url\u0022:\u0022https://i.discogs.com/PB6r5JRHbzF_-RE5sH4XerIj5NRA8T0lCLqCNQnaOkQ/rs:fit/g:sm/q:40/h:300/w:300/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ5NDMy/OC0xNDI0Mzg1Nzgx/LTc1MDAuanBlZw.jpeg\u0022,\u0022display_title\u0022:\u0022HammerFall - Glory To The Brave\u0022,\u0022stats\u0022:{\u0022community\u0022:{\u0022in_wantlist\u0022:99,\u0022in_collection\u0022:1538},\u0022user\u0022:{\u0022in_wantlist\u0022:0,\u0022in_collection\u0022:0}}},{\u0022type\u0022:\u0022master\u0022,\u0022id\u0022:156551,\u0022comment\u0022:\u0022This is a private test item for the api client.\u0022,\u0022uri\u0022:\u0022https://www.discogs.com/master/156551-HammerFall-Glory-To-The-Brave\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/masters/156551\u0022,\u0022image_url\u0022:\u0022https://i.discogs.com/PB6r5JRHbzF_-RE5sH4XerIj5NRA8T0lCLqCNQnaOkQ/rs:fit/g:sm/q:40/h:300/w:300/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQ5NDMy/OC0xNDI0Mzg1Nzgx/LTc1MDAuanBlZw.jpeg\u0022,\u0022display_title\u0022:\u0022HammerFall - Glory To The Brave\u0022,\u0022stats\u0022:{\u0022community\u0022:{\u0022in_wantlist\u0022:99,\u0022in_collection\u0022:1538},\u0022user\u0022:{\u0022in_wantlist\u0022:0,\u0022in_collection\u0022:0}}},{\u0022type\u0022:\u0022artist\u0022,\u0022id\u0022:287459,\u0022comment\u0022:\u0022This is a private test item for the api client.\u0022,\u0022uri\u0022:\u0022https://www.discogs.com/artist/287459-HammerFall\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/artists/287459\u0022,\u0022image_url\u0022:\u0022https://i.discogs.com/lhfg-uN3Jizy_8uPAj1cKLySxJJrmspWqZPm5hpAgVE/rs:fit/g:sm/q:40/h:300/w:300/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTI4NzQ1/OS0xNzI0NDI5MjMy/LTU5ODEuanBlZw.jpeg\u0022,\u0022display_title\u0022:\u0022HammerFall\u0022}]}"
+  }
+]

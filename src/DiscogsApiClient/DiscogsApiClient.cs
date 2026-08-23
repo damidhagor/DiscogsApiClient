@@ -244,6 +244,26 @@ internal sealed partial class DiscogsApiClient(HttpClient httpClient, DiscogsJso
     }
 
 
+    [HttpGet("/users/{username}/lists")]
+    private partial Task<UserListsResponse> GetUserListsInternal(string username, PaginationQueryParameters? paginationQueryParameters, CancellationToken cancellationToken);
+
+    public async Task<UserListsResponse> GetUserLists(string username, PaginationQueryParameters? paginationQueryParameters, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+        return await GetUserListsInternal(username, paginationQueryParameters, cancellationToken).ConfigureAwait(false);
+    }
+
+
+    [HttpGet("/lists/{listId}")]
+    private partial Task<ListDetails> GetListInternal(int listId, CancellationToken cancellationToken);
+
+    public async Task<ListDetails> GetList(int listId, CancellationToken cancellationToken)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(listId, 0);
+        return await GetListInternal(listId, cancellationToken).ConfigureAwait(false);
+    }
+
+
     [HttpGet("/artists/{artistId}")]
     private partial Task<Artist> GetArtistInternal(int artistId, CancellationToken cancellationToken);
 
