@@ -227,6 +227,34 @@ public interface IDiscogsApiClient
     Task<Release> GetRelease(int releaseId, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Gets a user's rating for a release from the Discogs database.
+    /// </summary>
+    /// <param name="releaseId">The release's id.</param>
+    /// <param name="username">The name of the user.</param>
+    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the release id is invalid.</exception>
+    Task<ReleaseRatingResponse> GetReleaseRating(int releaseId, string username, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Sets a user's rating for a release in the Discogs database. Authentication as that user is required.
+    /// </summary>
+    /// <param name="releaseId">The release's id.</param>
+    /// <param name="username">The name of the user.</param>
+    /// <param name="rating">The new rating between 1 and 5.</param>
+    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the release id is invalid or the rating is not between 1 and 5.</exception>
+    Task<ReleaseRatingResponse> UpdateReleaseRating(int releaseId, string username, int rating, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Deletes a user's rating for a release in the Discogs database. Authentication as that user is required.
+    /// </summary>
+    /// <param name="releaseId">The release's id.</param>
+    /// <param name="username">The name of the user.</param>
+    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the release id is invalid.</exception>
+    Task DeleteReleaseRating(int releaseId, string username, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Gets the community rating of a release from the Discogs database.
     /// </summary>
     /// <param name="releaseId">The release's id.</param>
