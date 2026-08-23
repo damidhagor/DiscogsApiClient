@@ -266,22 +266,27 @@ tradeoff — but do not silently resolve or silently ignore any of them, regardl
        version exactly — no leftover `-preview`/`-beta` suffix or mismatched value.
     3. Confirm `docs/MIGRATION_GUIDE.md` has a migration section covering every **Breaking** entry added
        for this version.
-    4. Optionally do a dry-run of the NuGet publish workflow against the test server
+    4. Update `<PackageReleaseNotes>` in `DiscogsApiClient.csproj` for this release: a short one- or
+       two-sentence summary of what the version adds/fixes, followed by a link to `docs/CHANGELOG.md` for
+       full details (e.g. "Adds X, Y and Z, plus several bugfixes. See the changelog for full details:
+       ..."). This field is expected to change every release — just keep it a brief summary, not a
+       duplicate of the changelog itself.
+    5. Optionally do a dry-run of the NuGet publish workflow against the test server
        (`publish_to_test_server = true`) from the version
        branch, to validate packaging before opening the final PR.
-    5. Open the big version PR: `<version-branch>` → `main`, with a comprehensive description
+    6. Open the big version PR: `<version-branch>` → `main`, with a comprehensive description
        summarizing all changes and linking to the relevant `docs/CHANGELOG.md`/`docs/MIGRATION_GUIDE.md`
        sections.
 - **Hotfix/patch releases** (e.g. a v5.0.1 bugfix with no new features) skip the version-branch/feature-
   branch accumulation step: branch a hotfix branch directly off `main`, make the fix, bump the version and
   add the changelog entry on that same branch, and PR straight back into `main`.
 - **After the version PR merges into `main`:**
-  1. Tag the merge commit (e.g. `v5.1.0`).
-  2. Trigger the Phase 7 NuGet publish workflow (`publish_to_test_server = false`) from that `main` commit
-     to push the real release to `nuget.org`.
-  3. Create a GitHub release for the tag, with release notes sourced from that version's
-     `docs/CHANGELOG.md` entry, linking to the relevant `docs/MIGRATION_GUIDE.md` section if the release
-     contains breaking changes.
+  1. Create the GitHub release (e.g. tag `v5.1.0`, targeting the merge commit) — this creates the tag
+     automatically. Source the release notes from that version's `docs/CHANGELOG.md` entry, linking to the
+     relevant `docs/MIGRATION_GUIDE.md` section if the release contains breaking changes.
+  2. Trigger the Phase 7 NuGet publish workflow (`publish_to_test_server = false`) against that release's
+     tag to push the real package to `nuget.org`.
+  3. Attach the built `.nupkg` (and `.snupkg`) from that workflow run as artifacts on the GitHub release.
 
 ## Project Structure
 
