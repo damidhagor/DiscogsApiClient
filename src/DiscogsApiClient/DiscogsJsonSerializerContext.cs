@@ -53,6 +53,8 @@ namespace DiscogsApiClient;
 [JsonSerializable(typeof(ReleaseFormat))]
 [JsonSerializable(typeof(ReleaseIdentifier))]
 [JsonSerializable(typeof(ReleaseLabel))]
+[JsonSerializable(typeof(ReleaseRatingResponse))]
+[JsonSerializable(typeof(ReleaseRatingUpdateRequest))]
 [JsonSerializable(typeof(ReleaseStats))]
 [JsonSerializable(typeof(ReleaseStatsResponse))]
 [JsonSerializable(typeof(ReleaseStatValues))]

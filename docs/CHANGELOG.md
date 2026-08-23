@@ -16,6 +16,10 @@ Each entry lists its own **Breaking** changes inline where applicable — see
     - Get collection release by release ID (`GetCollectionItemsByRelease()`).
     - Edit release instance notes/rating/folder (`UpdateCollectionFolderRelease()`).
     - Edit release instance custom field value (`UpdateCollectionFolderReleaseField()`).
+  - Database - Releases:
+    - Get user's rating for a release (`GetReleaseRating()`).
+    - Set user's rating for a release (`UpdateReleaseRating()`).
+    - Delete user's rating for a release (`DeleteReleaseRating()`).
 - Fixed: `User.HomePage` was mapped to the wrong JSON property name (`"homepage"` instead of `"home_page"`),
   so it never deserialized from Discogs API responses.
 - **Breaking:**

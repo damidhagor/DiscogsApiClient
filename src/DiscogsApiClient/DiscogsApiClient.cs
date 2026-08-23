@@ -294,6 +294,41 @@ internal sealed partial class DiscogsApiClient(HttpClient httpClient, DiscogsJso
     }
 
 
+    [HttpGet("/releases/{releaseId}/rating/{username}")]
+    private partial Task<ReleaseRatingResponse> GetReleaseRatingInternal(int releaseId, string username, CancellationToken cancellationToken);
+
+    public async Task<ReleaseRatingResponse> GetReleaseRating(int releaseId, string username, CancellationToken cancellationToken)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(releaseId, 0);
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+        return await GetReleaseRatingInternal(releaseId, username, cancellationToken).ConfigureAwait(false);
+    }
+
+
+    [HttpPut("/releases/{releaseId}/rating/{username}")]
+    private partial Task<ReleaseRatingResponse> UpdateReleaseRatingInternal(int releaseId, string username, [Body] ReleaseRatingUpdateRequest request, CancellationToken cancellationToken);
+
+    public async Task<ReleaseRatingResponse> UpdateReleaseRating(int releaseId, string username, int rating, CancellationToken cancellationToken)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(releaseId, 0);
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+        ArgumentOutOfRangeException.ThrowIfLessThan(rating, 1);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(rating, 5);
+        return await UpdateReleaseRatingInternal(releaseId, username, new(rating), cancellationToken).ConfigureAwait(false);
+    }
+
+
+    [HttpDelete("/releases/{releaseId}/rating/{username}")]
+    private partial Task DeleteReleaseRatingInternal(int releaseId, string username, CancellationToken cancellationToken);
+
+    public async Task DeleteReleaseRating(int releaseId, string username, CancellationToken cancellationToken)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(releaseId, 0);
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+        await DeleteReleaseRatingInternal(releaseId, username, cancellationToken).ConfigureAwait(false);
+    }
+
+
     [HttpGet("/releases/{releaseId}/rating")]
     private partial Task<ReleaseCommunityRatingResponse> GetReleaseCommunityRatingInternal(int releaseId, CancellationToken cancellationToken);
 
