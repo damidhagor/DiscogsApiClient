@@ -25,7 +25,7 @@ public sealed class CollectionValueTests(DiscogsApiClientFixture fixture)
     public async Task GetCollectionValue_ShouldThrowException_WhenUsernameIsInvalid(string? username, Type exceptionType, CancellationToken cancellationToken)
     {
         var exception = await Assert.That(async () => await _apiClient.GetCollectionValue(username!, cancellationToken))
-            .Throws<Exception>()
+            .Throws<ArgumentException>()
             .WithMessageContaining("username");
 
         await Assert.That(exception).IsOfType(exceptionType);
@@ -37,6 +37,7 @@ public sealed class CollectionValueTests(DiscogsApiClientFixture fixture)
         var username = "awrbaerhnqw54";
 
         await Assert.That(async () => await _apiClient.GetCollectionValue(username, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessage("User does not exist or may have been deleted.");
     }
 }

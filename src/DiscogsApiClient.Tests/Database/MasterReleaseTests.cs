@@ -79,8 +79,10 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
     [Arguments(0)]
     public async Task GetMasterRelease_ShouldThrowArgumentOutOfRangeException_WhenIdIsInvalid(int masterReleaseId, CancellationToken cancellationToken)
     {
-        await Assert.That(async () => await _apiClient.GetMasterRelease(masterReleaseId, cancellationToken))
+        var exception = await Assert.That(async () => await _apiClient.GetMasterRelease(masterReleaseId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
+
+        await Assert.That(exception!.ParamName).IsEqualTo("masterReleaseId");
     }
 
     [Test]
@@ -89,7 +91,8 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
         var masterReleaseId = int.MaxValue;
 
         await Assert.That(async () => await _apiClient.GetMasterRelease(masterReleaseId, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessage("That master release does not exist or may have been deleted.");
     }
 
 
@@ -106,8 +109,10 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
         await Assert.That(response.Pagination.TotalItems).IsGreaterThan(0);
         await Assert.That(response.Pagination.TotalPages).IsGreaterThan(0);
         await Assert.That(response.Pagination.Urls).IsNotNull();
-        await Assert.That(() => new Uri(response.Pagination.Urls.NextPageUrl)).ThrowsNothing();
-        await Assert.That(() => new Uri(response.Pagination.Urls.LastPageUrl)).ThrowsNothing();
+        var nextPageUrl = await Assert.That(response.Pagination.Urls.NextPageUrl).IsNotNull();
+        var lastPageUrl = await Assert.That(response.Pagination.Urls.LastPageUrl).IsNotNull();
+        await Assert.That(() => new Uri(nextPageUrl)).ThrowsNothing();
+        await Assert.That(() => new Uri(lastPageUrl)).ThrowsNothing();
 
         await Assert.That(response.ReleaseVersions).IsNotNull();
         await Assert.That(response.ReleaseVersions.Count).IsEqualTo(50);
@@ -145,8 +150,10 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
     [Arguments(0)]
     public async Task GetMasterReleaseVersions_ShouldThrowArgumentOutOfRangeException_WhenIdIsInvalid(int masterReleaseId, CancellationToken cancellationToken)
     {
-        await Assert.That(async () => await _apiClient.GetMasterReleaseVersions(masterReleaseId, null, null, cancellationToken))
+        var exception = await Assert.That(async () => await _apiClient.GetMasterReleaseVersions(masterReleaseId, null, null, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
+
+        await Assert.That(exception!.ParamName).IsEqualTo("masterReleaseId");
     }
 
     [Test]
@@ -172,8 +179,10 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
         await Assert.That(response.Pagination.TotalItems).IsGreaterThan(0);
         await Assert.That(response.Pagination.TotalPages).IsGreaterThan(0);
         await Assert.That(response.Pagination.Urls).IsNotNull();
-        await Assert.That(() => new Uri(response.Pagination.Urls.NextPageUrl)).ThrowsNothing();
-        await Assert.That(() => new Uri(response.Pagination.Urls.LastPageUrl)).ThrowsNothing();
+        var nextPageUrl = await Assert.That(response.Pagination.Urls.NextPageUrl).IsNotNull();
+        var lastPageUrl = await Assert.That(response.Pagination.Urls.LastPageUrl).IsNotNull();
+        await Assert.That(() => new Uri(nextPageUrl)).ThrowsNothing();
+        await Assert.That(() => new Uri(lastPageUrl)).ThrowsNothing();
 
         await Assert.That(response.ReleaseVersions).IsNotNull();
         await Assert.That(response.ReleaseVersions.Count).IsEqualTo(50);
@@ -187,7 +196,8 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
 
         // Should fail with 404 but Discord seems to enounter an internal error instead!
         var exception = await Assert.That(async () => await _apiClient.GetMasterReleaseVersions(masterReleaseId, paginationParams, null, cancellationToken))
-            .Throws<DiscogsException>();
+            .Throws<DiscogsException>()
+            .WithMessageContaining("An internal server error occurred");
 
         await Assert.That(exception).IsNotNull();
         await Assert.That(exception.Message).Contains("internal server error");
@@ -207,8 +217,10 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
         await Assert.That(response.Pagination.TotalItems).IsGreaterThan(0);
         await Assert.That(response.Pagination.TotalPages).IsGreaterThan(0);
         await Assert.That(response.Pagination.Urls).IsNotNull();
-        await Assert.That(() => new Uri(response.Pagination.Urls.NextPageUrl)).ThrowsNothing();
-        await Assert.That(() => new Uri(response.Pagination.Urls.LastPageUrl)).ThrowsNothing();
+        var nextPageUrl = await Assert.That(response.Pagination.Urls.NextPageUrl).IsNotNull();
+        var lastPageUrl = await Assert.That(response.Pagination.Urls.LastPageUrl).IsNotNull();
+        await Assert.That(() => new Uri(nextPageUrl)).ThrowsNothing();
+        await Assert.That(() => new Uri(lastPageUrl)).ThrowsNothing();
 
         await Assert.That(response.ReleaseVersions).IsNotNull();
         await Assert.That(response.ReleaseVersions.Count).IsEqualTo(1);

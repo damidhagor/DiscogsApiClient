@@ -6,6 +6,49 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Each entry lists its own **Breaking** changes inline where applicable — see
 [docs/MIGRATION_GUIDE.md](MIGRATION_GUIDE.md) for detailed before/after migration steps.
 
+## [5.1.0] - 2026-08-23
+
+- Added new `IDiscogsApiClient` endpoints:
+  - User Profile:
+    - Edit profile (`UpdateUser()`).
+  - User Collection:
+    - Get custom collection fields (`GetCollectionFields()`).
+    - Get collection release by release ID (`GetCollectionItemsByRelease()`).
+    - Edit release instance notes/rating/folder (`UpdateCollectionFolderRelease()`).
+    - Edit release instance custom field value (`UpdateCollectionFolderReleaseField()`).
+  - User Contributions & Submissions:
+    - Get user's database contributions (`GetContributions()`).
+    - Get user's submissions (`GetSubmissions()`).
+  - User Lists:
+    - Get user's lists (`GetUserLists()`).
+    - Get a list's details and items (`GetList()`).
+  - Database - Releases:
+    - Get user's rating for a release (`GetReleaseRating()`).
+    - Set user's rating for a release (`UpdateReleaseRating()`).
+    - Delete user's rating for a release (`DeleteReleaseRating()`).
+- Fixed: `User.HomePage` was mapped to the wrong JSON property name (`"homepage"` instead of `"home_page"`),
+  so it never deserialized from Discogs API responses.
+- Fixed several contract properties that Discogs sometimes omits or returns as `null`, but were declared as
+  non-nullable, causing `System.Text.Json` to silently deserialize a default value (or throw for value types)
+  instead of surfacing the missing data:
+  - `ListItemStats.User` — absent when the request is unauthenticated.
+  - `CollectionFolderRelease.ResourceUrl` — absent from collection list responses (only present when adding a release).
+  - `Pagination.PaginationUrls.NextPageUrl`/`LastPageUrl` — absent for the last/only page of results.
+  - `ArtistRelease.MainReleaseId`/`Year` — absent for some artist release credits.
+  - `User.NumCollection`/`NumWantlist`/`Email`/`NumUnread` — absent when the requester is not the profile owner.
+  - `Release.ExtraArtists` — absent when the release has no extra artists.
+  - `SearchResult.CatalogNumber`/`Year`/`Country`/`Format`/`Genres`/`Styles`/`Labels`/`Barcodes`/`CommunityStatistics`/`FormatCount`/`Formats`/`MasterReleaseUrl`
+    — absent (or `null`) depending on the result's `ResultType` (e.g. artist/label results omit most release-specific fields).
+- **Breaking:**
+  - Renamed `GetCollectionFolderReleases()` to `GetCollectionItemsByFolder()` to pair it with the new
+    `GetCollectionItemsByRelease()` endpoint and match the Discogs API documentation's endpoint name
+    ("Collection Items By Folder"). The signature is unchanged.
+  - The nullability fixes above change several property types to their nullable equivalents
+    (e.g. `int` → `int?`, `string` → `string?`, `IReadOnlyList<T>` → `IReadOnlyList<T>?`):
+    `ListItemStats.User`, `CollectionFolderRelease.ResourceUrl`, `PaginationUrls.NextPageUrl`/`LastPageUrl`,
+    `ArtistRelease.MainReleaseId`/`Year`, `User.NumCollection`/`NumWantlist`/`Email`/`NumUnread`,
+    `Release.ExtraArtists`, and the 12 `SearchResult` properties listed above.
+
 ## [5.0.0] - 2026-08-22
 
 - Dropped .NET 6 and .NET 7 support; the library now targets **.NET 8, 9 and 10**.

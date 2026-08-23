@@ -29,7 +29,7 @@ namespace DiscogsApiClient.Contract.Release;
 /// <param name="Genres">List of genres</param>
 /// <param name="Styles">List of styles</param>
 /// <param name="Tracklist">track IReadOnlyList</param>
-/// <param name="ExtraArtists"></param>
+/// <param name="ExtraArtists">Additional credited artists (e.g. remixers, producers). Absent when there are none.</param>
 /// <param name="Images">List of images for this release</param>
 /// <param name="ThumbnailUrl">Thumbnail image url</param>
 /// <param name="EstimatedWeight">The estimated weight</param>
@@ -89,7 +89,7 @@ public sealed record Release(
     [property:JsonPropertyName("tracklist")]
     IReadOnlyList<TracklistItem> Tracklist,
     [property:JsonPropertyName("extraartists")]
-    IReadOnlyList<ReleaseArtist> ExtraArtists,
+    IReadOnlyList<ReleaseArtist>? ExtraArtists,
     [property:JsonPropertyName("images")]
     IReadOnlyList<Image> Images,
     [property:JsonPropertyName("thumb")]

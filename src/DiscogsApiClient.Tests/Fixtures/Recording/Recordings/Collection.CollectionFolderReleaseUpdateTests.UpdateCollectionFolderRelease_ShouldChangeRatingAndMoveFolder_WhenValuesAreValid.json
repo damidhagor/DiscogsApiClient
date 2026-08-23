@@ -1,0 +1,384 @@
+[
+  {
+    "requestMethod": "POST",
+    "requestUrl": "https://api.discogs.com/users/DamIDhagor/collection/folders",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": "{\u0022name\u0022:\u0022UpdateCollectionFolderRelease_Source\u0022}",
+    "responseStatusCode": 201,
+    "responseHeaders": {
+      "Date": [
+        "Sun, 23 Aug 2026 17:02:32 GMT"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "9"
+      ],
+      "x-discogs-ratelimit-used": [
+        "51"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a2fbaf7c0977f962-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022id\u0022:9510198,\u0022name\u0022:\u0022UpdateCollectionFolderRelease_Source\u0022,\u0022count\u0022:0,\u0022resource_url\u0022:\u0022https://api.discogs.com/users/DamIDhagor/collection/folders/9510198\u0022}"
+  },
+  {
+    "requestMethod": "POST",
+    "requestUrl": "https://api.discogs.com/users/DamIDhagor/collection/folders",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": "{\u0022name\u0022:\u0022UpdateCollectionFolderRelease_Target\u0022}",
+    "responseStatusCode": 201,
+    "responseHeaders": {
+      "Date": [
+        "Sun, 23 Aug 2026 17:02:32 GMT"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "8"
+      ],
+      "x-discogs-ratelimit-used": [
+        "52"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a2fbaf7d7d52f962-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022id\u0022:9510199,\u0022name\u0022:\u0022UpdateCollectionFolderRelease_Target\u0022,\u0022count\u0022:0,\u0022resource_url\u0022:\u0022https://api.discogs.com/users/DamIDhagor/collection/folders/9510199\u0022}"
+  },
+  {
+    "requestMethod": "POST",
+    "requestUrl": "https://api.discogs.com/users/DamIDhagor/collection/folders/9510198/releases/5134861",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 201,
+    "responseHeaders": {
+      "Date": [
+        "Sun, 23 Aug 2026 17:02:33 GMT"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "7"
+      ],
+      "x-discogs-ratelimit-used": [
+        "53"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a2fbaf7f098bf962-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022basic_information\u0022:{\u0022artists\u0022:[{\u0022anv\u0022:\u0022\u0022,\u0022id\u0022:287459,\u0022join\u0022:\u0022\u0022,\u0022name\u0022:\u0022HammerFall\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/artists/287459\u0022,\u0022role\u0022:\u0022\u0022,\u0022tracks\u0022:\u0022\u0022}],\u0022cover_image\u0022:\u0022https://i.discogs.com/UETvnaefHj6HfXSgYx8R1pc-juBrScOdt79dOSeH3gk/rs:fit/g:sm/q:90/h:596/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny04MTkyLmpwZWc.jpeg\u0022,\u0022formats\u0022:[{\u0022descriptions\u0022:[\u0022Album\u0022,\u0022Promo\u0022],\u0022name\u0022:\u0022CD\u0022,\u0022qty\u0022:\u00221\u0022}],\u0022id\u0022:5134861,\u0022labels\u0022:[{\u0022catno\u0022:\u0022NB 265-2\u0022,\u0022entity_type\u0022:\u00221\u0022,\u0022entity_type_name\u0022:\u0022Label\u0022,\u0022id\u0022:11499,\u0022name\u0022:\u0022Nuclear Blast\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/11499\u0022}],\u0022master_id\u0022:156551,\u0022master_url\u0022:\u0022https://api.discogs.com/masters/156551\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/releases/5134861\u0022,\u0022thumb\u0022:\u0022https://i.discogs.com/z-WOVc6-4Jj7uQfLfZlcOLKmTR6Pdal_cBRJm5WoBKY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny04MTkyLmpwZWc.jpeg\u0022,\u0022title\u0022:\u0022Glory To The Brave\u0022,\u0022year\u0022:1997},\u0022date_added\u0022:\u00222026-08-23T10:02:33-07:00\u0022,\u0022folder_id\u0022:9510198,\u0022id\u0022:5134861,\u0022instance_id\u0022:2176916266,\u0022rating\u0022:4,\u0022resource_url\u0022:\u0022https://api.discogs.com/users/DamIDhagor/collection/folders/9510198/releases/5134861?instance_id=2176916266\u0022}"
+  },
+  {
+    "requestMethod": "POST",
+    "requestUrl": "https://api.discogs.com/users/DamIDhagor/collection/folders/9510198/releases/5134861/instances/2176916266",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": "{\u0022rating\u0022:4,\u0022folder_id\u0022:9510199}",
+    "responseStatusCode": 204,
+    "responseHeaders": {
+      "Date": [
+        "Sun, 23 Aug 2026 17:02:33 GMT"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "6"
+      ],
+      "x-discogs-ratelimit-used": [
+        "54"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a2fbaf817f7cf962-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": ""
+  },
+  {
+    "requestMethod": "GET",
+    "requestUrl": "https://api.discogs.com/users/DamIDhagor/collection/folders/9510199/releases",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 200,
+    "responseHeaders": {
+      "Date": [
+        "Sun, 23 Aug 2026 17:02:34 GMT"
+      ],
+      "Transfer-Encoding": [
+        "chunked"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "Vary": [
+        "Accept-Encoding"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "5"
+      ],
+      "x-discogs-ratelimit-used": [
+        "55"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a2fbaf84dffdf962-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022pagination\u0022:{\u0022page\u0022:1,\u0022pages\u0022:1,\u0022per_page\u0022:50,\u0022items\u0022:1,\u0022urls\u0022:{}},\u0022releases\u0022:[{\u0022id\u0022:5134861,\u0022instance_id\u0022:2176916266,\u0022date_added\u0022:\u00222026-08-23T10:02:33-07:00\u0022,\u0022rating\u0022:4,\u0022basic_information\u0022:{\u0022id\u0022:5134861,\u0022master_id\u0022:156551,\u0022master_url\u0022:\u0022https://api.discogs.com/masters/156551\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/releases/5134861\u0022,\u0022thumb\u0022:\u0022https://i.discogs.com/z-WOVc6-4Jj7uQfLfZlcOLKmTR6Pdal_cBRJm5WoBKY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny04MTkyLmpwZWc.jpeg\u0022,\u0022cover_image\u0022:\u0022https://i.discogs.com/UETvnaefHj6HfXSgYx8R1pc-juBrScOdt79dOSeH3gk/rs:fit/g:sm/q:90/h:596/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny04MTkyLmpwZWc.jpeg\u0022,\u0022title\u0022:\u0022Glory To The Brave\u0022,\u0022year\u0022:1997,\u0022formats\u0022:[{\u0022name\u0022:\u0022CD\u0022,\u0022qty\u0022:\u00221\u0022,\u0022descriptions\u0022:[\u0022Album\u0022,\u0022Promo\u0022]}],\u0022labels\u0022:[{\u0022name\u0022:\u0022Nuclear Blast\u0022,\u0022catno\u0022:\u0022NB 265-2\u0022,\u0022entity_type\u0022:\u00221\u0022,\u0022entity_type_name\u0022:\u0022Label\u0022,\u0022id\u0022:11499,\u0022resource_url\u0022:\u0022https://api.discogs.com/labels/11499\u0022}],\u0022artists\u0022:[{\u0022name\u0022:\u0022HammerFall\u0022,\u0022anv\u0022:\u0022\u0022,\u0022join\u0022:\u0022\u0022,\u0022role\u0022:\u0022\u0022,\u0022tracks\u0022:\u0022\u0022,\u0022id\u0022:287459,\u0022resource_url\u0022:\u0022https://api.discogs.com/artists/287459\u0022}],\u0022genres\u0022:[\u0022Rock\u0022],\u0022styles\u0022:[\u0022Heavy Metal\u0022]},\u0022folder_id\u0022:9510199}]}"
+  },
+  {
+    "requestMethod": "DELETE",
+    "requestUrl": "https://api.discogs.com/users/DamIDhagor/collection/folders/9510199/releases/5134861/instances/2176916266",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 204,
+    "responseHeaders": {
+      "Date": [
+        "Sun, 23 Aug 2026 17:02:34 GMT"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "4"
+      ],
+      "x-discogs-ratelimit-used": [
+        "56"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a2fbaf86fcc2f962-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": ""
+  },
+  {
+    "requestMethod": "DELETE",
+    "requestUrl": "https://api.discogs.com/users/DamIDhagor/collection/folders/9510198",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 204,
+    "responseHeaders": {
+      "Date": [
+        "Sun, 23 Aug 2026 17:02:34 GMT"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "3"
+      ],
+      "x-discogs-ratelimit-used": [
+        "57"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a2fbaf88c856f962-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": ""
+  },
+  {
+    "requestMethod": "DELETE",
+    "requestUrl": "https://api.discogs.com/users/DamIDhagor/collection/folders/9510199",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 204,
+    "responseHeaders": {
+      "Date": [
+        "Sun, 23 Aug 2026 17:02:35 GMT"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "2"
+      ],
+      "x-discogs-ratelimit-used": [
+        "58"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a2fbaf8b2d70f962-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": ""
+  }
+]

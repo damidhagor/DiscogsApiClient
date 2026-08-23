@@ -13,20 +13,20 @@ namespace DiscogsApiClient.Contract.Search;
 /// <param name="ResultType">The type of the result</param>
 /// <param name="Uri">Url to the Discogs page of the result</param>
 /// <param name="ThumbnailUrl">Thumbnail image url</param>
-/// <param name="CatalogNumber">Catalog number (if applicable)</param>
-/// <param name="Year">Release year (if applicable)</param>
-/// <param name="Country">Release country (if applicable)</param>
+/// <param name="CatalogNumber">Catalog number. Absent for <see cref="SearchResultType.Artist"/>/<see cref="SearchResultType.Label"/> results.</param>
+/// <param name="Year">Release year. Absent for <see cref="SearchResultType.Artist"/>/<see cref="SearchResultType.Label"/> results, and can be absent for <see cref="SearchResultType.Release"/>/<see cref="SearchResultType.Master"/> results too.</param>
+/// <param name="Country">Release country. Absent for <see cref="SearchResultType.Artist"/>/<see cref="SearchResultType.Label"/> results.</param>
 /// <param name="CoverImageUrl">Image url of the result</param>
-/// <param name="MasterReleaseId">Id of the master release (if applicable)</param>
-/// <param name="MasterReleaseUrl">The Api url of the master release (if applicable)</param>
-/// <param name="Format">Release format (if applicable)</param>
-/// <param name="Genres">Release Genres (if applicable)</param>
-/// <param name="Styles">release Styles (if applicable)</param>
-/// <param name="Labels">Release labels (if applicable)</param>
-/// <param name="Barcodes">Release identifying barcodes (if applicable)</param>
-/// <param name="FormatCount">Number of release formats (if applicable)</param>
-/// <param name="Formats">All release formats (if applicable)</param>
-/// <param name="CommunityStatistics">Release community statistics (if applicable)</param>
+/// <param name="MasterReleaseId">Id of the master release. Null for <see cref="SearchResultType.Artist"/>/<see cref="SearchResultType.Label"/> results.</param>
+/// <param name="MasterReleaseUrl">The Api url of the master release. Null for <see cref="SearchResultType.Artist"/>/<see cref="SearchResultType.Label"/> results.</param>
+/// <param name="Format">Release format. Absent for <see cref="SearchResultType.Artist"/>/<see cref="SearchResultType.Label"/> results.</param>
+/// <param name="Genres">Release Genres. Absent for <see cref="SearchResultType.Artist"/>/<see cref="SearchResultType.Label"/> results.</param>
+/// <param name="Styles">release Styles. Absent for <see cref="SearchResultType.Artist"/>/<see cref="SearchResultType.Label"/> results.</param>
+/// <param name="Labels">Release labels. Absent for <see cref="SearchResultType.Artist"/>/<see cref="SearchResultType.Label"/> results.</param>
+/// <param name="Barcodes">Release identifying barcodes. Absent for <see cref="SearchResultType.Artist"/>/<see cref="SearchResultType.Label"/> results.</param>
+/// <param name="FormatCount">Number of release formats. Only present for <see cref="SearchResultType.Release"/> results.</param>
+/// <param name="Formats">All release formats. Only present for <see cref="SearchResultType.Release"/> results.</param>
+/// <param name="CommunityStatistics">Release community statistics. Absent for <see cref="SearchResultType.Artist"/>/<see cref="SearchResultType.Label"/> results.</param>
 /// <param name="UserData"></param>
 public sealed record SearchResult(
     [property:JsonPropertyName("id")]
@@ -42,33 +42,33 @@ public sealed record SearchResult(
     [property:JsonPropertyName("thumb")]
     string ThumbnailUrl,
     [property:JsonPropertyName("catno")]
-    string CatalogNumber,
+    string? CatalogNumber,
     [property:JsonPropertyName("year")]
-    string Year,
+    string? Year,
     [property:JsonPropertyName("country")]
-    string Country,
+    string? Country,
     [property:JsonPropertyName("cover_image")]
     string CoverImageUrl,
     [property:JsonPropertyName("master_id")]
     int? MasterReleaseId,
     [property:JsonPropertyName("master_url")]
-    string MasterReleaseUrl,
+    string? MasterReleaseUrl,
     [property:JsonPropertyName("format")]
-    IReadOnlyList<string> Format,
+    IReadOnlyList<string>? Format,
     [property:JsonPropertyName("genre")]
-    IReadOnlyList<string> Genres,
+    IReadOnlyList<string>? Genres,
     [property:JsonPropertyName("style")]
-    IReadOnlyList<string> Styles,
+    IReadOnlyList<string>? Styles,
     [property:JsonPropertyName("label")]
-    IReadOnlyList<string> Labels,
+    IReadOnlyList<string>? Labels,
     [property:JsonPropertyName("barcode")]
-    IReadOnlyList<string> Barcodes,
+    IReadOnlyList<string>? Barcodes,
     [property:JsonPropertyName("format_quantity")]
-    int FormatCount,
+    int? FormatCount,
     [property:JsonPropertyName("formats")]
-    IReadOnlyList<ReleaseFormat> Formats,
+    IReadOnlyList<ReleaseFormat>? Formats,
     [property:JsonPropertyName("community")]
-    SearchResultCommunityStats CommunityStatistics,
+    SearchResultCommunityStats? CommunityStatistics,
     [property:JsonPropertyName("user_data")]
     SearchResultUserData UserData);
 

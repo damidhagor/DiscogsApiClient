@@ -17,6 +17,14 @@ public interface IDiscogsApiClient
     Task<User> GetUser(string username, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Updates the profile of a user. Authentication as that user is required.
+    /// </summary>
+    /// <param name="username">The name of the user.</param>
+    /// <param name="request">The profile fields to change. Omitted (<see langword="null"/>) properties are left unchanged.</param>
+    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    Task<User> UpdateUser(string username, UserProfileUpdateRequest request, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Gets the collection folders of the user.
     /// </summary>
     /// <param name="username">The name of the user.</param>
@@ -67,7 +75,17 @@ public interface IDiscogsApiClient
     /// <param name="paginationQueryParameters">Pagination parameters.</param>
     /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the folder id is invalid.</exception>
-    Task<CollectionFolderReleasesResponse> GetCollectionFolderReleases(string username, int folderId, PaginationQueryParameters? paginationQueryParameters, CollectionFolderReleaseSortQueryParameters? collectionFolderReleaseSortQueryParameters, CancellationToken cancellationToken);
+    Task<CollectionFolderReleasesResponse> GetCollectionItemsByFolder(string username, int folderId, PaginationQueryParameters? paginationQueryParameters, CollectionFolderReleaseSortQueryParameters? collectionFolderReleaseSortQueryParameters, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets the collection folders of the user which contain a specified release, along with information about each release instance.
+    /// </summary>
+    /// <param name="username">The name of the user.</param>
+    /// <param name="releaseId">The release's id.</param>
+    /// <param name="paginationQueryParameters">Pagination parameters.</param>
+    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the release id is invalid.</exception>
+    Task<CollectionFolderReleasesResponse> GetCollectionItemsByRelease(string username, int releaseId, PaginationQueryParameters? paginationQueryParameters, CancellationToken cancellationToken);
 
     /// <summary>
     /// Adds a release to the collection folder of the user.
@@ -98,6 +116,39 @@ public interface IDiscogsApiClient
     Task<CollectionValue> GetCollectionValue(string username, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Gets the user-defined custom collection fields. These fields are available on every release in the collection.
+    /// </summary>
+    /// <param name="username">The name of the user.</param>
+    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    Task<CollectionFieldsResponse> GetCollectionFields(string username, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Changes the rating and/or moves a release instance to another folder in the user's collection.
+    /// </summary>
+    /// <param name="username">The name of the user.</param>
+    /// <param name="folderId">The id of the folder the instance currently resides in.</param>
+    /// <param name="releaseId">The release's id.</param>
+    /// <param name="instanceId">The release's instance id in the folder.</param>
+    /// <param name="rating">The new rating of the instance. Omitted (<see langword="null"/>) leaves the rating unchanged.</param>
+    /// <param name="targetFolderId">The id of the folder to move the instance to. Omitted (<see langword="null"/>) leaves the instance in its current folder.</param>
+    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the folder, release, instance or target folder id is invalid.</exception>
+    Task UpdateCollectionFolderRelease(string username, int folderId, int releaseId, long instanceId, int? rating, int? targetFolderId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Changes the value of a custom collection field on a release instance in the user's collection.
+    /// </summary>
+    /// <param name="username">The name of the user.</param>
+    /// <param name="folderId">The id of the folder the instance currently resides in.</param>
+    /// <param name="releaseId">The release's id.</param>
+    /// <param name="instanceId">The release's instance id in the folder.</param>
+    /// <param name="fieldId">The id of the field to change.</param>
+    /// <param name="value">The new value of the field. If the field's type is dropdown, the value must match one of the field's options.</param>
+    /// <exception cref="ArgumentException">Fires this exception if no username or value is provided.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the folder, release, instance or field id is invalid.</exception>
+    Task UpdateCollectionFolderReleaseField(string username, int folderId, int releaseId, long instanceId, int fieldId, string value, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Gets the releases on the wantlist of the user.
     /// </summary>
     /// <param name="username">The name of the user.</param>
@@ -122,6 +173,38 @@ public interface IDiscogsApiClient
     /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the release id is invalid.</exception>
     Task DeleteReleaseFromWantlist(string username, int releaseId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets the submissions of the user.
+    /// </summary>
+    /// <param name="username">The name of the user.</param>
+    /// <param name="paginationQueryParameters">Pagination parameters for the results.</param>
+    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    Task<SubmissionsResponse> GetSubmissions(string username, PaginationQueryParameters? paginationQueryParameters, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets the contributions of the user.
+    /// </summary>
+    /// <param name="username">The name of the user.</param>
+    /// <param name="paginationQueryParameters">Pagination parameters for the results.</param>
+    /// <param name="contributionSortQueryParameters">Sorting parameters for the results.</param>
+    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    Task<ContributionsResponse> GetContributions(string username, PaginationQueryParameters? paginationQueryParameters, ContributionSortQueryParameters? contributionSortQueryParameters, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets the lists of the user.
+    /// </summary>
+    /// <param name="username">The name of the user.</param>
+    /// <param name="paginationQueryParameters">Pagination parameters for the results.</param>
+    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    Task<UserListsResponse> GetUserLists(string username, PaginationQueryParameters? paginationQueryParameters, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets the details and items of a list.
+    /// </summary>
+    /// <param name="listId">The list's id.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the list id is invalid.</exception>
+    Task<ListDetails> GetList(int listId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets an artist from the Discogs database.
@@ -174,6 +257,34 @@ public interface IDiscogsApiClient
     /// <param name="releaseId">The release's id.</param>
     /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the release id is invalid.</exception>
     Task<Release> GetRelease(int releaseId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets a user's rating for a release from the Discogs database.
+    /// </summary>
+    /// <param name="releaseId">The release's id.</param>
+    /// <param name="username">The name of the user.</param>
+    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the release id is invalid.</exception>
+    Task<ReleaseRatingResponse> GetReleaseRating(int releaseId, string username, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Sets a user's rating for a release in the Discogs database. Authentication as that user is required.
+    /// </summary>
+    /// <param name="releaseId">The release's id.</param>
+    /// <param name="username">The name of the user.</param>
+    /// <param name="rating">The new rating between 1 and 5.</param>
+    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the release id is invalid or the rating is not between 1 and 5.</exception>
+    Task<ReleaseRatingResponse> UpdateReleaseRating(int releaseId, string username, int rating, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Deletes a user's rating for a release in the Discogs database. Authentication as that user is required.
+    /// </summary>
+    /// <param name="releaseId">The release's id.</param>
+    /// <param name="username">The name of the user.</param>
+    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the release id is invalid.</exception>
+    Task DeleteReleaseRating(int releaseId, string username, CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets the community rating of a release from the Discogs database.

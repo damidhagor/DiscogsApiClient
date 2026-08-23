@@ -49,8 +49,10 @@ public sealed class LabelsTests(DiscogsApiClientFixture fixture)
     [Arguments(0)]
     public async Task GetLabel_ShouldThrowArgumentOutOfRangeException_WhenIdIsInvalid(int labelId, CancellationToken cancellationToken)
     {
-        await Assert.That(async () => await _apiClient.GetLabel(labelId, cancellationToken))
+        var exception = await Assert.That(async () => await _apiClient.GetLabel(labelId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
+
+        await Assert.That(exception!.ParamName).IsEqualTo("labelId");
     }
 
     [Test]
@@ -59,7 +61,8 @@ public sealed class LabelsTests(DiscogsApiClientFixture fixture)
         var labelId = int.MaxValue;
 
         await Assert.That(async () => await _apiClient.GetLabel(labelId, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessage("Label not found");
     }
 
 
@@ -76,8 +79,10 @@ public sealed class LabelsTests(DiscogsApiClientFixture fixture)
         await Assert.That(response.Pagination.TotalItems).IsGreaterThan(0);
         await Assert.That(response.Pagination.TotalPages).IsGreaterThan(0);
         await Assert.That(response.Pagination.Urls).IsNotNull();
-        await Assert.That(() => new Uri(response.Pagination.Urls.NextPageUrl)).ThrowsNothing();
-        await Assert.That(() => new Uri(response.Pagination.Urls.LastPageUrl)).ThrowsNothing();
+        var nextPageUrl = await Assert.That(response.Pagination.Urls.NextPageUrl).IsNotNull();
+        var lastPageUrl = await Assert.That(response.Pagination.Urls.LastPageUrl).IsNotNull();
+        await Assert.That(() => new Uri(nextPageUrl)).ThrowsNothing();
+        await Assert.That(() => new Uri(lastPageUrl)).ThrowsNothing();
 
         await Assert.That(response.Releases).IsNotNull();
         await Assert.That(response.Releases.Count).IsEqualTo(50);
@@ -106,7 +111,8 @@ public sealed class LabelsTests(DiscogsApiClientFixture fixture)
         var labelId = int.MaxValue;
 
         await Assert.That(async () => await _apiClient.GetLabelReleases(labelId, null, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessage("Label not found");
     }
 
     [Test]
@@ -114,8 +120,10 @@ public sealed class LabelsTests(DiscogsApiClientFixture fixture)
     [Arguments(0)]
     public async Task GetLabelReleases_ShouldThrowArgumentOutOfRangeException_WhenIdIsInvalid(int labelId, CancellationToken cancellationToken)
     {
-        await Assert.That(async () => await _apiClient.GetLabelReleases(labelId, null, cancellationToken))
+        var exception = await Assert.That(async () => await _apiClient.GetLabelReleases(labelId, null, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
+
+        await Assert.That(exception!.ParamName).IsEqualTo("labelId");
     }
 
     [Test]
@@ -146,7 +154,8 @@ public sealed class LabelsTests(DiscogsApiClientFixture fixture)
         var paginationParams = new PaginationQueryParameters { Page = int.MaxValue, PageSize = 50 };
 
         await Assert.That(async () => await _apiClient.GetLabelReleases(labelId, paginationParams, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessageContaining("is outside of valid range");
     }
 
     [Test]

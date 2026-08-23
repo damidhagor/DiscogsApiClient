@@ -4,6 +4,7 @@ This guide covers breaking changes and the steps needed to migrate between major
 `DiscogsApiClient`. For the full version history (including non-breaking changes), see
 [docs/CHANGELOG.md](CHANGELOG.md).
 
+- [Migrating from 5.0.0 to 5.1.0](#migrating-from-500-to-510)
 - [Migrating from 4.1.1 to 5.0.0](#migrating-from-411-to-500)
 - [Migrating from 4.0.0 to 4.1.0](#migrating-from-400-to-410)
 - [Migrating from 3.1.0 to 4.0.0](#migrating-from-310-to-400)
@@ -11,6 +12,41 @@ This guide covers breaking changes and the steps needed to migrate between major
 
 If you're jumping across multiple versions (e.g. 2.x straight to 5.0.0), work through each guide above in
 order, oldest first.
+
+## Migrating from 5.0.0 to 5.1.0
+
+### `GetCollectionFolderReleases` renamed to `GetCollectionItemsByFolder`
+
+Renamed to pair it with the new `GetCollectionItemsByRelease()` endpoint and to match the Discogs API
+documentation's endpoint name ("Collection Items By Folder"). The signature is unchanged.
+
+```diff
+- var releases = await client.GetCollectionFolderReleases(username, folderId, pagination, sort, cancellationToken);
++ var releases = await client.GetCollectionItemsByFolder(username, folderId, pagination, sort, cancellationToken);
+```
+
+### Several contract properties became nullable
+
+Discogs sometimes omits or nulls out these fields depending on the entity's state or the requesting user's
+authentication/ownership, which `System.Text.Json` was previously deserializing to a silent default (or throwing
+for non-nullable value types) instead of `null`. They are now correctly nullable:
+
+- `ListItemStats.User` — `null` when the request is unauthenticated.
+- `CollectionFolderRelease.ResourceUrl` — `null` in collection list responses (only populated when adding a release).
+- `Pagination.PaginationUrls.NextPageUrl`/`LastPageUrl` — `null` for the last/only page of results.
+- `ArtistRelease.MainReleaseId`/`Year` — `null` for some artist release credits.
+- `User.NumCollection`/`NumWantlist`/`Email`/`NumUnread` — `null` when the requester is not the profile owner.
+- `Release.ExtraArtists` — `null` when the release has no extra artists.
+- `SearchResult.CatalogNumber`/`Year`/`Country`/`Format`/`Genres`/`Styles`/`Labels`/`Barcodes`/`CommunityStatistics`/`FormatCount`/`Formats`/`MasterReleaseUrl`
+  — `null` depending on the result's `ResultType` (e.g. artist/label results omit most release-specific fields).
+
+If you were reading these properties directly (e.g. assigning `int`/`string` locals or passing them to
+non-nullable parameters), add null handling:
+
+```diff
+- int mainReleaseId = artistRelease.MainReleaseId;
++ int? mainReleaseId = artistRelease.MainReleaseId;
+```
 
 ## Migrating from 4.1.1 to 5.0.0
 

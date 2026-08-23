@@ -22,12 +22,10 @@
 		<PackageTags>discogs</PackageTags>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<AssemblyVersion>5.0.0</AssemblyVersion>
-		<FileVersion>5.0.0</FileVersion>
-		<PackageVersion>5.0.0</PackageVersion>
-		<PackageReleaseNotes>v5.0.0 is an extensive modernization/rewrite of this library, including breaking changes.
-See the changelog: https://github.com/damidhagor/DiscogsApiClient/blob/main/docs/CHANGELOG.md
-and migration guide: https://github.com/damidhagor/DiscogsApiClient/blob/main/docs/MIGRATION_GUIDE.md</PackageReleaseNotes>
+		<AssemblyVersion>5.1.0</AssemblyVersion>
+		<FileVersion>5.1.0</FileVersion>
+		<PackageVersion>5.1.0</PackageVersion>
+		<PackageReleaseNotes>Adds User Profile, Collection, Contributions/Submissions, Lists and Release Rating endpoints, plus several contract nullability fixes. See the changelog for full details: https://github.com/damidhagor/DiscogsApiClient/blob/main/docs/CHANGELOG.md</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<ItemGroup>

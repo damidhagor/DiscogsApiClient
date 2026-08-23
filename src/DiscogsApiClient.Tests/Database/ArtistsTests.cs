@@ -55,8 +55,10 @@ public sealed class ArtistsTests(DiscogsApiClientFixture fixture)
     [Arguments(0)]
     public async Task GetArtist_ShouldThrowArgumentOutOfRangeException_WhenIdIsInvalid(int artistId, CancellationToken cancellationToken)
     {
-        await Assert.That(async () => await _apiClient.GetArtist(artistId, cancellationToken))
+        var exception = await Assert.That(async () => await _apiClient.GetArtist(artistId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
+
+        await Assert.That(exception!.ParamName).IsEqualTo("artistId");
     }
 
     [Test]
@@ -65,7 +67,8 @@ public sealed class ArtistsTests(DiscogsApiClientFixture fixture)
         var artistId = int.MaxValue;
 
         await Assert.That(async () => await _apiClient.GetArtist(artistId, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessage("Artist not found.");
     }
 
 
@@ -95,10 +98,12 @@ public sealed class ArtistsTests(DiscogsApiClientFixture fixture)
         await Assert.That(() => new Uri(release.ThumbnailUrl)).ThrowsNothing();
         await Assert.That(release.Type).IsNotNullOrWhiteSpace();
         await Assert.That(release.Title).IsNotNullOrWhiteSpace();
-        await Assert.That(release.MainReleaseId).IsGreaterThan(0);
+        var mainReleaseId = await Assert.That(release.MainReleaseId).IsNotNull();
+        await Assert.That(mainReleaseId).IsGreaterThan(0);
         await Assert.That(release.Artist).IsNotNullOrWhiteSpace();
         await Assert.That(release.Role).IsNotNullOrWhiteSpace();
-        await Assert.That(release.Year).IsGreaterThan(0);
+        var year = await Assert.That(release.Year).IsNotNull();
+        await Assert.That(year).IsGreaterThan(0);
         await Assert.That(release.Statistics).IsNotNull();
         await Assert.That(release.Statistics.CommunityStatistics).IsNotNull();
         await Assert.That(release.Statistics.CommunityStatistics.ReleasesInWantlistCount).IsGreaterThan(0);
@@ -113,8 +118,10 @@ public sealed class ArtistsTests(DiscogsApiClientFixture fixture)
     [Arguments(0)]
     public async Task GetArtistReleases_ShouldThrowArgumentOutOfRangeException_WhenIdIsInvalid(int artistId, CancellationToken cancellationToken)
     {
-        await Assert.That(async () => await _apiClient.GetArtistReleases(artistId, null, null, cancellationToken))
+        var exception = await Assert.That(async () => await _apiClient.GetArtistReleases(artistId, null, null, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
+
+        await Assert.That(exception!.ParamName).IsEqualTo("artistId");
     }
 
     [Test]
@@ -123,7 +130,8 @@ public sealed class ArtistsTests(DiscogsApiClientFixture fixture)
         var artistId = int.MaxValue;
 
         await Assert.That(async () => await _apiClient.GetArtistReleases(artistId, null, null, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessage("Artist not found.");
     }
 
     [Test]
@@ -154,7 +162,8 @@ public sealed class ArtistsTests(DiscogsApiClientFixture fixture)
         var paginationParams = new PaginationQueryParameters { Page = int.MaxValue, PageSize = 50 };
 
         await Assert.That(async () => await _apiClient.GetArtistReleases(artistId, paginationParams, null, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessageContaining("is outside of valid range");
     }
 
     [Test]
@@ -197,6 +206,8 @@ public sealed class ArtistsTests(DiscogsApiClientFixture fixture)
 
         await Assert.That(response.Releases).IsNotNull();
         await Assert.That(response.Releases.Count).IsEqualTo(100);
+        await Assert.That(response.Releases.Select(r => r.MainReleaseId)).Contains((int?)null);
+        await Assert.That(response.Releases.Select(r => r.Year)).Contains((int?)null);
     }
 
     [Test]

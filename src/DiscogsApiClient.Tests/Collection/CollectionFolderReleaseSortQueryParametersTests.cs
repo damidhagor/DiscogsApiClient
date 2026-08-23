@@ -107,7 +107,7 @@ public sealed class CollectionFolderReleaseSortQueryParametersTests
 
         var apiClient = serviceProvider.GetRequiredService<IDiscogsApiClient>();
 
-        await apiClient.GetCollectionFolderReleases("tester", 1, paginationQueryParameters, sortQueryParameters, cancellationToken);
+        await apiClient.GetCollectionItemsByFolder("tester", 1, paginationQueryParameters, sortQueryParameters, cancellationToken);
 
         return capturedUri!.Query;
     }

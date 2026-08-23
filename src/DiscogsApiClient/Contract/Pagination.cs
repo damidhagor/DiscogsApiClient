@@ -23,13 +23,13 @@ public sealed record Pagination(
 /// <summary>
 /// Urls associated with a request page.
 /// </summary>
-/// <param name="NextPageUrl">Url to query the next page.</param>
-/// <param name="LastPageUrl">Url to query the last page.</param>
+/// <param name="NextPageUrl">Url to query the next page. Absent on the last page.</param>
+/// <param name="LastPageUrl">Url to query the last page. Absent for single-page results.</param>
 public sealed record PaginationUrls(
     [property:JsonPropertyName("next")]
-    string NextPageUrl,
+    string? NextPageUrl,
     [property:JsonPropertyName("last")]
-    string LastPageUrl);
+    string? LastPageUrl);
 
 
 /*

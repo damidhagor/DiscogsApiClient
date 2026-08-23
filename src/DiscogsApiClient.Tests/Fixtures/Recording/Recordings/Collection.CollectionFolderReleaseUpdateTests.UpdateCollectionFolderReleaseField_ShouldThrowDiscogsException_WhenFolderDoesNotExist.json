@@ -1,0 +1,52 @@
+[
+  {
+    "requestMethod": "POST",
+    "requestUrl": "https://api.discogs.com/users/DamIDhagor/collection/folders/999999999/releases/5134861/instances/1/fields/1",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": "{\u0022value\u0022:\u0022value\u0022}",
+    "responseStatusCode": 422,
+    "responseHeaders": {
+      "Date": [
+        "Sun, 23 Aug 2026 17:02:26 GMT"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "48"
+      ],
+      "x-discogs-ratelimit-used": [
+        "12"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Set-Cookie": [
+        "****"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a2fbaf564dff199a-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022detail\u0022:[{\u0022msg\u0022:\u0022Invalid folder_id: folder does not exist.\u0022,\u0022loc\u0022:[\u0022path\u0022,\u0022folder_id\u0022],\u0022type\u0022:\u0022value_error\u0022}],\u0022message\u0022:\u0022See \\\u0022detail\\\u0022 for validation errors.\u0022}"
+  }
+]

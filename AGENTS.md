@@ -60,6 +60,13 @@ Repeat both steps against `demo\DiscogsApiClientDemo.slnx` as well — it is a s
 the two commands above, so changes there (e.g. demo project modernization) are not diagnosed unless run
 explicitly against it too.
 
+**Run this procedure before every `git push`/PR creation on a branch with code changes, not just once at
+the end of a large task.** CI runs an equivalent format/analyzer check and will fail the build if this is
+skipped — treat "push" and "open/update a PR" as the trigger, the same as "task considered complete".
+If CI fails anyway (e.g. a diagnostic wasn't reproduced locally — different OS, stale local `obj`/`bin`,
+etc.), fetch and read the actual failing CI job log (e.g. `gh run view --job <id> --log-failed`) rather
+than only re-running the local procedure and assuming it will surface the same errors.
+
 Notes for parsing results correctly:
 - Redirect output to a file rather than reading the console directly — PowerShell's console width wraps
   long diagnostic lines and breaks line-based parsing; `Tee-Object` to a real console still wraps.
@@ -175,6 +182,13 @@ tradeoff — but do not silently resolve or silently ignore any of them, regardl
 
 - Diagnostics use the `DISCOGS` prefix with sequential numbering (e.g. `DISCOGS001`).
 - Source generator tracking names should be descriptive (e.g. `"ApiClientTransform"`, `"EnumCollect"`).
+- **Request-body parameters are always named `request`** across the interface and implementation — never
+  `updateRequest`, `createRequest`, or similarly qualified variants, even when a class has multiple
+  overloads/methods each taking a different request-body type. The parameter's own type already conveys
+  which kind of request it is.
+- When renaming a method/endpoint (e.g. `Edit` → `Update`), grep the whole solution (interface, impl, and
+  especially test file/class names like `...EditTests.cs`) for the old verb afterward — partial renames
+  that leave stale naming on test classes are easy to miss since they still compile and pass.
 
 ## Source Generator Specifics
 
@@ -193,11 +207,35 @@ tradeoff — but do not silently resolve or silently ignore any of them, regardl
 
 - Use TUnit as the test framework.
 - Keep test infrastructure similar to the existing patterns in the project.
+- **Exception assertions must be precise, not just type-checked.** Never assert a bare `.Throws<Exception>()`
+  or a supertype when a specific derived exception type is actually thrown — always assert the exact
+  concrete type (`ArgumentOutOfRangeException`, `ResourceNotFoundDiscogsException`, `DiscogsException`,
+  `UnauthenticatedDiscogsException`, etc.). Additionally:
+  - Always assert the exception's message via `.WithMessage(...)` (exact) or `.WithMessageContaining(...)`
+    (stable substring, only when the full message is dynamic/volatile, e.g. embeds a live page count or a
+    random error code).
+  - For `ArgumentException`/`ArgumentOutOfRangeException` (and other types exposing `ParamName`), always
+    assert `exception.ParamName` equals the exact validated parameter name — capture the exception from
+    `Throws<T>()` into a variable and add a follow-up assertion rather than relying on the type check alone.
+    Watch for guard clauses on nullable value parameters (e.g. `int?`) that validate the unwrapped `.Value`
+    — `ParamName` in that case is `"paramName.Value"`, not `"paramName"`.
+  - These precise assertions exist to document the real API's (error) behavior as regression protection —
+    a type-only check doesn't catch the API changing which argument it validates first, or changing/removing
+    a message.
+- **Tests must assert the actual returned data, not merely that a call succeeded.** A "happy path" test that
+  only checks a response was returned (with no assertions on its properties/contents) does not verify
+  correct behavior — assert the specific fields relevant to the scenario under test.
 
 ## Git Workflow
 
 - **NEVER commit changes without explicit user approval first.**
 - **NEVER push changes (e.g. `git push`) without explicit user approval first**, even if a commit was already approved earlier — pushing is a separate approval step.
+- **NEVER run `git add`/`git stage` (or any other staging/unstaging command) on your own initiative** — some
+  users keep the index deliberately curated for their own review and handle staging themselves. Only stage
+  files as the immediate, same-step precursor to a `git commit` that the user has already explicitly
+  approved (e.g. `git add -A; git commit ...`); never stage speculatively "for later" or to preview a diff,
+  and never unstage/reset the index either. If staged changes are already present when you arrive at a
+  commit step, assume the user staged them deliberately and leave that selection alone.
 - Always present changes to the user for review before running `git commit` or `git push`.
 - When presenting changes for review, **propose a suitable commit message** following conventional commit format.
 - The user must approve both the changes **and** the commit message before proceeding.
@@ -228,22 +266,27 @@ tradeoff — but do not silently resolve or silently ignore any of them, regardl
        version exactly — no leftover `-preview`/`-beta` suffix or mismatched value.
     3. Confirm `docs/MIGRATION_GUIDE.md` has a migration section covering every **Breaking** entry added
        for this version.
-    4. Optionally do a dry-run of the NuGet publish workflow against the test server
+    4. Update `<PackageReleaseNotes>` in `DiscogsApiClient.csproj` for this release: a short one- or
+       two-sentence summary of what the version adds/fixes, followed by a link to `docs/CHANGELOG.md` for
+       full details (e.g. "Adds X, Y and Z, plus several bugfixes. See the changelog for full details:
+       ..."). This field is expected to change every release — just keep it a brief summary, not a
+       duplicate of the changelog itself.
+    5. Optionally do a dry-run of the NuGet publish workflow against the test server
        (`publish_to_test_server = true`) from the version
        branch, to validate packaging before opening the final PR.
-    5. Open the big version PR: `<version-branch>` → `main`, with a comprehensive description
+    6. Open the big version PR: `<version-branch>` → `main`, with a comprehensive description
        summarizing all changes and linking to the relevant `docs/CHANGELOG.md`/`docs/MIGRATION_GUIDE.md`
        sections.
 - **Hotfix/patch releases** (e.g. a v5.0.1 bugfix with no new features) skip the version-branch/feature-
   branch accumulation step: branch a hotfix branch directly off `main`, make the fix, bump the version and
   add the changelog entry on that same branch, and PR straight back into `main`.
 - **After the version PR merges into `main`:**
-  1. Tag the merge commit (e.g. `v5.1.0`).
-  2. Trigger the Phase 7 NuGet publish workflow (`publish_to_test_server = false`) from that `main` commit
-     to push the real release to `nuget.org`.
-  3. Create a GitHub release for the tag, with release notes sourced from that version's
-     `docs/CHANGELOG.md` entry, linking to the relevant `docs/MIGRATION_GUIDE.md` section if the release
-     contains breaking changes.
+  1. Create the GitHub release (e.g. tag `v5.1.0`, targeting the merge commit) — this creates the tag
+     automatically. Source the release notes from that version's `docs/CHANGELOG.md` entry, linking to the
+     relevant `docs/MIGRATION_GUIDE.md` section if the release contains breaking changes.
+  2. Trigger the Phase 7 NuGet publish workflow (`publish_to_test_server = false`) against that release's
+     tag to push the real package to `nuget.org`.
+  3. Attach the built `.nupkg` (and `.snupkg`) from that workflow run as artifacts on the GitHub release.
 
 ## Project Structure
 

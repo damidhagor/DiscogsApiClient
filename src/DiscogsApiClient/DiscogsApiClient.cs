@@ -26,6 +26,17 @@ internal sealed partial class DiscogsApiClient(HttpClient httpClient, DiscogsJso
     }
 
 
+    [HttpPost("/users/{username}")]
+    private partial Task<User> UpdateUserInternal(string username, [Body] UserProfileUpdateRequest request, CancellationToken cancellationToken);
+
+    public async Task<User> UpdateUser(string username, UserProfileUpdateRequest request, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+        ArgumentNullException.ThrowIfNull(request);
+        return await UpdateUserInternal(username, request, cancellationToken).ConfigureAwait(false);
+    }
+
+
     [HttpGet("/users/{username}/collection/folders")]
     private partial Task<CollectionFoldersResponse> GetCollectionFoldersInternal(string username, CancellationToken cancellationToken);
 
@@ -59,7 +70,7 @@ internal sealed partial class DiscogsApiClient(HttpClient httpClient, DiscogsJso
 
 
     [HttpPost("/users/{username}/collection/folders/{folderId}")]
-    private partial Task<CollectionFolder> UpdateCollectionFolderInternal(string username, int folderId, [Body] CollectionFolderCreateRequest createRequest, CancellationToken cancellationToken);
+    private partial Task<CollectionFolder> UpdateCollectionFolderInternal(string username, int folderId, [Body] CollectionFolderUpdateRequest request, CancellationToken cancellationToken);
 
     public async Task<CollectionFolder> UpdateCollectionFolder(string username, int folderId, string folderName, CancellationToken cancellationToken)
     {
@@ -82,13 +93,24 @@ internal sealed partial class DiscogsApiClient(HttpClient httpClient, DiscogsJso
 
 
     [HttpGet("/users/{username}/collection/folders/{folderId}/releases")]
-    private partial Task<CollectionFolderReleasesResponse> GetCollectionFolderReleasesInternal(string username, int folderId, PaginationQueryParameters? paginationQueryParameters, CollectionFolderReleaseSortQueryParameters? collectionFolderReleaseSortQueryParameters, CancellationToken cancellationToken);
+    private partial Task<CollectionFolderReleasesResponse> GetCollectionItemsByFolderInternal(string username, int folderId, PaginationQueryParameters? paginationQueryParameters, CollectionFolderReleaseSortQueryParameters? collectionFolderReleaseSortQueryParameters, CancellationToken cancellationToken);
 
-    public async Task<CollectionFolderReleasesResponse> GetCollectionFolderReleases(string username, int folderId, PaginationQueryParameters? paginationQueryParameters, CollectionFolderReleaseSortQueryParameters? collectionFolderReleaseSortQueryParameters, CancellationToken cancellationToken)
+    public async Task<CollectionFolderReleasesResponse> GetCollectionItemsByFolder(string username, int folderId, PaginationQueryParameters? paginationQueryParameters, CollectionFolderReleaseSortQueryParameters? collectionFolderReleaseSortQueryParameters, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
         ArgumentOutOfRangeException.ThrowIfLessThan(folderId, 0);
-        return await GetCollectionFolderReleasesInternal(username, folderId, paginationQueryParameters, collectionFolderReleaseSortQueryParameters, cancellationToken).ConfigureAwait(false);
+        return await GetCollectionItemsByFolderInternal(username, folderId, paginationQueryParameters, collectionFolderReleaseSortQueryParameters, cancellationToken).ConfigureAwait(false);
+    }
+
+
+    [HttpGet("/users/{username}/collection/releases/{releaseId}")]
+    private partial Task<CollectionFolderReleasesResponse> GetCollectionItemsByReleaseInternal(string username, int releaseId, PaginationQueryParameters? paginationQueryParameters, CancellationToken cancellationToken);
+
+    public async Task<CollectionFolderReleasesResponse> GetCollectionItemsByRelease(string username, int releaseId, PaginationQueryParameters? paginationQueryParameters, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(releaseId, 0);
+        return await GetCollectionItemsByReleaseInternal(username, releaseId, paginationQueryParameters, cancellationToken).ConfigureAwait(false);
     }
 
 
@@ -127,6 +149,49 @@ internal sealed partial class DiscogsApiClient(HttpClient httpClient, DiscogsJso
     }
 
 
+    [HttpGet("/users/{username}/collection/fields")]
+    private partial Task<CollectionFieldsResponse> GetCollectionFieldsInternal(string username, CancellationToken cancellationToken);
+
+    public async Task<CollectionFieldsResponse> GetCollectionFields(string username, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+        return await GetCollectionFieldsInternal(username, cancellationToken).ConfigureAwait(false);
+    }
+
+
+    [HttpPost("/users/{username}/collection/folders/{folderId}/releases/{releaseId}/instances/{instanceId}")]
+    private partial Task UpdateCollectionFolderReleaseInternal(string username, int folderId, int releaseId, long instanceId, [Body] CollectionFolderReleaseUpdateRequest request, CancellationToken cancellationToken);
+
+    public async Task UpdateCollectionFolderRelease(string username, int folderId, int releaseId, long instanceId, int? rating, int? targetFolderId, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+        ArgumentOutOfRangeException.ThrowIfLessThan(folderId, 1);
+        ArgumentOutOfRangeException.ThrowIfLessThan(releaseId, 1);
+        ArgumentOutOfRangeException.ThrowIfLessThan(instanceId, 1);
+        if (targetFolderId is not null)
+        {
+            ArgumentOutOfRangeException.ThrowIfLessThan(targetFolderId.Value, 1);
+        }
+
+        await UpdateCollectionFolderReleaseInternal(username, folderId, releaseId, instanceId, new(rating, targetFolderId), cancellationToken).ConfigureAwait(false);
+    }
+
+
+    [HttpPost("/users/{username}/collection/folders/{folderId}/releases/{releaseId}/instances/{instanceId}/fields/{fieldId}")]
+    private partial Task UpdateCollectionFolderReleaseFieldInternal(string username, int folderId, int releaseId, long instanceId, int fieldId, [Body] CollectionFieldValueUpdateRequest request, CancellationToken cancellationToken);
+
+    public async Task UpdateCollectionFolderReleaseField(string username, int folderId, int releaseId, long instanceId, int fieldId, string value, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+        ArgumentException.ThrowIfNullOrWhiteSpace(value);
+        ArgumentOutOfRangeException.ThrowIfLessThan(folderId, 1);
+        ArgumentOutOfRangeException.ThrowIfLessThan(releaseId, 1);
+        ArgumentOutOfRangeException.ThrowIfLessThan(instanceId, 1);
+        ArgumentOutOfRangeException.ThrowIfLessThan(fieldId, 1);
+        await UpdateCollectionFolderReleaseFieldInternal(username, folderId, releaseId, instanceId, fieldId, new(value), cancellationToken).ConfigureAwait(false);
+    }
+
+
     [HttpGet("/users/{username}/wants")]
     private partial Task<WantlistReleasesResponse> GetWantlistReleasesInternal(string username, PaginationQueryParameters? paginationQueryParameters, CancellationToken cancellationToken);
 
@@ -156,6 +221,46 @@ internal sealed partial class DiscogsApiClient(HttpClient httpClient, DiscogsJso
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(releaseId, 0);
         await DeleteReleaseFromWantlistInternal(username, releaseId, cancellationToken).ConfigureAwait(false);
+    }
+
+
+    [HttpGet("/users/{username}/submissions")]
+    private partial Task<SubmissionsResponse> GetSubmissionsInternal(string username, PaginationQueryParameters? paginationQueryParameters, CancellationToken cancellationToken);
+
+    public async Task<SubmissionsResponse> GetSubmissions(string username, PaginationQueryParameters? paginationQueryParameters, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+        return await GetSubmissionsInternal(username, paginationQueryParameters, cancellationToken).ConfigureAwait(false);
+    }
+
+
+    [HttpGet("/users/{username}/contributions")]
+    private partial Task<ContributionsResponse> GetContributionsInternal(string username, PaginationQueryParameters? paginationQueryParameters, ContributionSortQueryParameters? contributionSortQueryParameters, CancellationToken cancellationToken);
+
+    public async Task<ContributionsResponse> GetContributions(string username, PaginationQueryParameters? paginationQueryParameters, ContributionSortQueryParameters? contributionSortQueryParameters, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+        return await GetContributionsInternal(username, paginationQueryParameters, contributionSortQueryParameters, cancellationToken).ConfigureAwait(false);
+    }
+
+
+    [HttpGet("/users/{username}/lists")]
+    private partial Task<UserListsResponse> GetUserListsInternal(string username, PaginationQueryParameters? paginationQueryParameters, CancellationToken cancellationToken);
+
+    public async Task<UserListsResponse> GetUserLists(string username, PaginationQueryParameters? paginationQueryParameters, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+        return await GetUserListsInternal(username, paginationQueryParameters, cancellationToken).ConfigureAwait(false);
+    }
+
+
+    [HttpGet("/lists/{listId}")]
+    private partial Task<ListDetails> GetListInternal(int listId, CancellationToken cancellationToken);
+
+    public async Task<ListDetails> GetList(int listId, CancellationToken cancellationToken)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(listId, 0);
+        return await GetListInternal(listId, cancellationToken).ConfigureAwait(false);
     }
 
 
@@ -226,6 +331,41 @@ internal sealed partial class DiscogsApiClient(HttpClient httpClient, DiscogsJso
     {
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(releaseId, 0);
         return await GetReleaseInternal(releaseId, cancellationToken).ConfigureAwait(false);
+    }
+
+
+    [HttpGet("/releases/{releaseId}/rating/{username}")]
+    private partial Task<ReleaseRatingResponse> GetReleaseRatingInternal(int releaseId, string username, CancellationToken cancellationToken);
+
+    public async Task<ReleaseRatingResponse> GetReleaseRating(int releaseId, string username, CancellationToken cancellationToken)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(releaseId, 0);
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+        return await GetReleaseRatingInternal(releaseId, username, cancellationToken).ConfigureAwait(false);
+    }
+
+
+    [HttpPut("/releases/{releaseId}/rating/{username}")]
+    private partial Task<ReleaseRatingResponse> UpdateReleaseRatingInternal(int releaseId, string username, [Body] ReleaseRatingUpdateRequest request, CancellationToken cancellationToken);
+
+    public async Task<ReleaseRatingResponse> UpdateReleaseRating(int releaseId, string username, int rating, CancellationToken cancellationToken)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(releaseId, 0);
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+        ArgumentOutOfRangeException.ThrowIfLessThan(rating, 1);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(rating, 5);
+        return await UpdateReleaseRatingInternal(releaseId, username, new(rating), cancellationToken).ConfigureAwait(false);
+    }
+
+
+    [HttpDelete("/releases/{releaseId}/rating/{username}")]
+    private partial Task DeleteReleaseRatingInternal(int releaseId, string username, CancellationToken cancellationToken);
+
+    public async Task DeleteReleaseRating(int releaseId, string username, CancellationToken cancellationToken)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(releaseId, 0);
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+        await DeleteReleaseRatingInternal(releaseId, username, cancellationToken).ConfigureAwait(false);
     }
 
 
