@@ -25,6 +25,8 @@ public sealed class CollectionItemsByReleaseTests(DiscogsApiClientFixture fixtur
             await Assert.That(response.Releases).IsNotEmpty();
             await Assert.That(response.Releases.Select(r => r.Id)).Contains(releaseId);
             await Assert.That(response.Releases.Select(r => r.FolderId)).Contains(collectionFolder.Id);
+            await Assert.That(addedRelease.ResourceUrl).IsNotNullOrWhiteSpace();
+            await Assert.That(response.Releases[0].ResourceUrl).IsNull();
 
             await _apiClient.DeleteReleaseFromCollectionFolder(username, collectionFolder.Id, releaseId, addedRelease.InstanceId, cancellationToken);
         }

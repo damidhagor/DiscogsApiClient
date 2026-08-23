@@ -7,7 +7,7 @@ namespace DiscogsApiClient.Contract.User.Collection;
 /// <param name="InstanceId">Id of the instance of the release in the collection folder</param>
 /// <param name="AddedAt">When the release was added to the folder</param>
 /// <param name="Rating">Rating of the release</param>
-/// <param name="ResourceUrl">The Api url to this release</param>
+/// <param name="ResourceUrl">The Api url to this release. Only present when returned from adding a release to a folder; absent when listing folder releases.</param>
 /// <param name="Release">Information about the release</param>
 /// <param name="FolderId">The id of the folder contaiing the release</param>
 /// <param name="Notes">The values of the user-defined custom collection fields set on this release instance.</param>
@@ -21,7 +21,7 @@ public sealed record CollectionFolderRelease(
     [property:JsonPropertyName("rating")]
     int Rating,
     [property:JsonPropertyName("resource_url")]
-    string ResourceUrl,
+    string? ResourceUrl,
     [property:JsonPropertyName("basic_information")]
     UserListReleaseInformation Release,
     [property:JsonPropertyName("folder_id")]

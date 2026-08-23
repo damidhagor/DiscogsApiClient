@@ -8,10 +8,10 @@ namespace DiscogsApiClient.Contract.Artist;
 /// <param name="ThumbnailUrl">Thumbnail url for the cover image</param>
 /// <param name="Type">The type of the release (e.g. master or normal release)</param>
 /// <param name="Title">Release title</param>
-/// <param name="MainReleaseId">Id of the main release</param>
+/// <param name="MainReleaseId">Id of the main release (if applicable)</param>
 /// <param name="Artist">Artist name</param>
 /// <param name="Role">The contributing role of the artist on this release</param>
-/// <param name="Year">Release year</param>
+/// <param name="Year">Release year (if known)</param>
 /// <param name="Statistics">Statistics for this release</param>
 public sealed record ArtistRelease(
     [property:JsonPropertyName("id")]
@@ -25,13 +25,13 @@ public sealed record ArtistRelease(
     [property:JsonPropertyName("title")]
     string Title,
     [property:JsonPropertyName("main_release")]
-    int MainReleaseId,
+    int? MainReleaseId,
     [property:JsonPropertyName("artist")]
     string Artist,
     [property:JsonPropertyName("role")]
     string Role,
     [property:JsonPropertyName("year")]
-    int Year,
+    int? Year,
     [property:JsonPropertyName("stats")]
     ReleaseStats Statistics);
 

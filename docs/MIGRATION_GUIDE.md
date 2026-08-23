@@ -25,6 +25,29 @@ documentation's endpoint name ("Collection Items By Folder"). The signature is u
 + var releases = await client.GetCollectionItemsByFolder(username, folderId, pagination, sort, cancellationToken);
 ```
 
+### Several contract properties became nullable
+
+Discogs sometimes omits or nulls out these fields depending on the entity's state or the requesting user's
+authentication/ownership, which `System.Text.Json` was previously deserializing to a silent default (or throwing
+for non-nullable value types) instead of `null`. They are now correctly nullable:
+
+- `ListItemStats.User` — `null` when the request is unauthenticated.
+- `CollectionFolderRelease.ResourceUrl` — `null` in collection list responses (only populated when adding a release).
+- `Pagination.PaginationUrls.NextPageUrl`/`LastPageUrl` — `null` for the last/only page of results.
+- `ArtistRelease.MainReleaseId`/`Year` — `null` for some artist release credits.
+- `User.NumCollection`/`NumWantlist`/`Email`/`NumUnread` — `null` when the requester is not the profile owner.
+- `Release.ExtraArtists` — `null` when the release has no extra artists.
+- `SearchResult.CatalogNumber`/`Year`/`Country`/`Format`/`Genres`/`Styles`/`Labels`/`Barcodes`/`CommunityStatistics`/`FormatCount`/`Formats`/`MasterReleaseUrl`
+  — `null` depending on the result's `ResultType` (e.g. artist/label results omit most release-specific fields).
+
+If you were reading these properties directly (e.g. assigning `int`/`string` locals or passing them to
+non-nullable parameters), add null handling:
+
+```diff
+- int mainReleaseId = artistRelease.MainReleaseId;
++ int? mainReleaseId = artistRelease.MainReleaseId;
+```
+
 ## Migrating from 4.1.1 to 5.0.0
 
 ### Framework targets

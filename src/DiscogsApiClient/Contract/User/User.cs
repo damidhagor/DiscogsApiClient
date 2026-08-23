@@ -35,10 +35,10 @@ namespace DiscogsApiClient.Contract.User;
 /// <param name="SellerRatingStars">The rating of the user as a seller in stars</param>
 /// <param name="SellerNumRatings">How many times the user was rated as a seller</param>
 /// <param name="IsStaff">If the user belongs to the Discogs staff</param>
-/// <param name="NumCollection">How many releases are in the user's collection</param>
-/// <param name="NumWantlist">How many releases are on the user's wantlist</param>
-/// <param name="Email">User's email address</param>
-/// <param name="NumUnread"></param>
+/// <param name="NumCollection">How many releases are in the user's collection. Absent when the requester is not the profile owner.</param>
+/// <param name="NumWantlist">How many releases are on the user's wantlist. Absent when the requester is not the profile owner.</param>
+/// <param name="Email">User's email address. Absent when the requester is not the profile owner.</param>
+/// <param name="NumUnread">Absent when the requester is not the profile owner.</param>
 public sealed record User(
     [property:JsonPropertyName("id")]
     int Id,
@@ -105,13 +105,13 @@ public sealed record User(
     [property:JsonPropertyName("is_staff")]
     bool IsStaff,
     [property:JsonPropertyName("num_collection")]
-    int NumCollection,
+    int? NumCollection,
     [property:JsonPropertyName("num_wantlist")]
-    int NumWantlist,
+    int? NumWantlist,
     [property:JsonPropertyName("email")]
-    string Email,
+    string? Email,
     [property:JsonPropertyName("num_unread")]
-    int NumUnread);
+    int? NumUnread);
 
 
 /**

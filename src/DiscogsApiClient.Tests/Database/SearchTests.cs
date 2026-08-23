@@ -53,6 +53,19 @@ public sealed class SearchTests(DiscogsApiClientFixture fixture)
         await Assert.That(response).IsNotNull();
         await Assert.That(response.Results.Count).IsGreaterThan(0);
         await Assert.That(response.Results.All(r => r.ResultType == SearchResultType.Artist)).IsTrue();
+        await Assert.That(response.Results.All(r => r.CatalogNumber is null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.Year is null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.Country is null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.Format is null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.Genres is null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.Styles is null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.Labels is null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.Barcodes is null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.CommunityStatistics is null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.FormatCount is null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.Formats is null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.MasterReleaseId is null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.MasterReleaseUrl is null)).IsTrue();
 
         // Master
         searchParams = new SearchQueryParameters { Query = "hammerfall", Type = "master" };
@@ -61,6 +74,11 @@ public sealed class SearchTests(DiscogsApiClientFixture fixture)
         await Assert.That(response).IsNotNull();
         await Assert.That(response.Results.Count).IsGreaterThan(0);
         await Assert.That(response.Results.All(r => r.ResultType == SearchResultType.Master)).IsTrue();
+        await Assert.That(response.Results.All(r => r.CatalogNumber is not null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.Country is not null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.CommunityStatistics is not null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.FormatCount is null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.Formats is null)).IsTrue();
 
         // Release
         searchParams = new SearchQueryParameters { Query = "hammerfall", Type = "release" };
@@ -69,6 +87,16 @@ public sealed class SearchTests(DiscogsApiClientFixture fixture)
         await Assert.That(response).IsNotNull();
         await Assert.That(response.Results.Count).IsGreaterThan(0);
         await Assert.That(response.Results.All(r => r.ResultType == SearchResultType.Release)).IsTrue();
+        await Assert.That(response.Results.All(r => r.CatalogNumber is not null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.Country is not null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.Format is not null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.Genres is not null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.Styles is not null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.Labels is not null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.Barcodes is not null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.CommunityStatistics is not null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.FormatCount is not null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.Formats is not null)).IsTrue();
 
         // Label
         searchParams = new SearchQueryParameters { Query = "hammerfall", Type = "label" };
@@ -77,6 +105,19 @@ public sealed class SearchTests(DiscogsApiClientFixture fixture)
         await Assert.That(response).IsNotNull();
         await Assert.That(response.Results.Count).IsGreaterThan(0);
         await Assert.That(response.Results.All(r => r.ResultType == SearchResultType.Label)).IsTrue();
+        await Assert.That(response.Results.All(r => r.CatalogNumber is null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.Year is null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.Country is null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.Format is null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.Genres is null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.Styles is null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.Labels is null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.Barcodes is null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.CommunityStatistics is null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.FormatCount is null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.Formats is null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.MasterReleaseId is null)).IsTrue();
+        await Assert.That(response.Results.All(r => r.MasterReleaseUrl is null)).IsTrue();
     }
 
 

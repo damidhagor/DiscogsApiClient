@@ -39,6 +39,8 @@ public sealed class ContributionsTests(DiscogsApiClientFixture fixture)
 
         await Assert.That(response).IsNotNull();
         await Assert.That(response.Pagination.TotalItems).IsEqualTo(0);
+        await Assert.That(response.Pagination.Urls.NextPageUrl).IsNull();
+        await Assert.That(response.Pagination.Urls.LastPageUrl).IsNull();
         await Assert.That(response.Contributions).IsEmpty();
     }
 

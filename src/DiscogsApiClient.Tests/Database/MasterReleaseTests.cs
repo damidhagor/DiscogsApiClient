@@ -109,8 +109,10 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
         await Assert.That(response.Pagination.TotalItems).IsGreaterThan(0);
         await Assert.That(response.Pagination.TotalPages).IsGreaterThan(0);
         await Assert.That(response.Pagination.Urls).IsNotNull();
-        await Assert.That(() => new Uri(response.Pagination.Urls.NextPageUrl)).ThrowsNothing();
-        await Assert.That(() => new Uri(response.Pagination.Urls.LastPageUrl)).ThrowsNothing();
+        var nextPageUrl = await Assert.That(response.Pagination.Urls.NextPageUrl).IsNotNull();
+        var lastPageUrl = await Assert.That(response.Pagination.Urls.LastPageUrl).IsNotNull();
+        await Assert.That(() => new Uri(nextPageUrl)).ThrowsNothing();
+        await Assert.That(() => new Uri(lastPageUrl)).ThrowsNothing();
 
         await Assert.That(response.ReleaseVersions).IsNotNull();
         await Assert.That(response.ReleaseVersions.Count).IsEqualTo(50);
@@ -177,8 +179,10 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
         await Assert.That(response.Pagination.TotalItems).IsGreaterThan(0);
         await Assert.That(response.Pagination.TotalPages).IsGreaterThan(0);
         await Assert.That(response.Pagination.Urls).IsNotNull();
-        await Assert.That(() => new Uri(response.Pagination.Urls.NextPageUrl)).ThrowsNothing();
-        await Assert.That(() => new Uri(response.Pagination.Urls.LastPageUrl)).ThrowsNothing();
+        var nextPageUrl = await Assert.That(response.Pagination.Urls.NextPageUrl).IsNotNull();
+        var lastPageUrl = await Assert.That(response.Pagination.Urls.LastPageUrl).IsNotNull();
+        await Assert.That(() => new Uri(nextPageUrl)).ThrowsNothing();
+        await Assert.That(() => new Uri(lastPageUrl)).ThrowsNothing();
 
         await Assert.That(response.ReleaseVersions).IsNotNull();
         await Assert.That(response.ReleaseVersions.Count).IsEqualTo(50);
@@ -213,8 +217,10 @@ public sealed class MasterReleaseTests(DiscogsApiClientFixture fixture)
         await Assert.That(response.Pagination.TotalItems).IsGreaterThan(0);
         await Assert.That(response.Pagination.TotalPages).IsGreaterThan(0);
         await Assert.That(response.Pagination.Urls).IsNotNull();
-        await Assert.That(() => new Uri(response.Pagination.Urls.NextPageUrl)).ThrowsNothing();
-        await Assert.That(() => new Uri(response.Pagination.Urls.LastPageUrl)).ThrowsNothing();
+        var nextPageUrl = await Assert.That(response.Pagination.Urls.NextPageUrl).IsNotNull();
+        var lastPageUrl = await Assert.That(response.Pagination.Urls.LastPageUrl).IsNotNull();
+        await Assert.That(() => new Uri(nextPageUrl)).ThrowsNothing();
+        await Assert.That(() => new Uri(lastPageUrl)).ThrowsNothing();
 
         await Assert.That(response.ReleaseVersions).IsNotNull();
         await Assert.That(response.ReleaseVersions.Count).IsEqualTo(1);

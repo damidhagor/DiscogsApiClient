@@ -393,8 +393,10 @@ public sealed class CollectionFolderReleasesTests(DiscogsApiClientFixture fixtur
 
         await Assert.That(collectionFolderRelease).IsNotNull();
         await Assert.That(collectionFolderRelease.Id).IsEqualTo(releaseId);
+        await Assert.That(collectionFolderRelease.ResourceUrl).IsNotNullOrWhiteSpace();
         await Assert.That(collectionFolderReleaseResponse).IsNotNull();
         await Assert.That(collectionFolderReleaseResponse.Pagination.TotalItems).IsEqualTo(1);
         await Assert.That(collectionFolderReleaseResponse.Releases[0].Id).IsEqualTo(releaseId);
+        await Assert.That(collectionFolderReleaseResponse.Releases[0].ResourceUrl).IsNull();
     }
 }

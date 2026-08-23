@@ -19,6 +19,9 @@ public sealed class UserTests(DiscogsApiClientFixture fixture)
         await Assert.That(user.Id).IsEqualTo(12579295);
         await Assert.That(user.Username).IsEqualTo("DamIDhagor");
         await Assert.That(user.Email).IsEqualTo("alexander.jurk@outlook.com");
+        await Assert.That(user.NumCollection).IsNotNull();
+        await Assert.That(user.NumWantlist).IsNotNull();
+        await Assert.That(user.NumUnread).IsNotNull();
         await Assert.That(user.ResourceUrl).IsEqualTo("https://api.discogs.com/users/DamIDhagor");
         await Assert.That(user.IsActivated).IsTrue();
         await Assert.That(user.AvatarUrl).IsNotNullOrWhiteSpace();
@@ -35,6 +38,9 @@ public sealed class UserTests(DiscogsApiClientFixture fixture)
         await Assert.That(user.Id).IsEqualTo(12579295);
         await Assert.That(user.Username).IsEqualTo("DamIDhagor");
         await Assert.That(user.Email).IsNull();
+        await Assert.That(user.NumCollection).IsNull();
+        await Assert.That(user.NumWantlist).IsNull();
+        await Assert.That(user.NumUnread).IsNull();
         await Assert.That(user.ResourceUrl).IsEqualTo("https://api.discogs.com/users/DamIDhagor");
         await Assert.That(user.IsActivated).IsTrue();
         await Assert.That(user.AvatarUrl).IsNotNullOrWhiteSpace();
