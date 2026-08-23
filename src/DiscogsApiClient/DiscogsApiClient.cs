@@ -26,6 +26,17 @@ internal sealed partial class DiscogsApiClient(HttpClient httpClient, DiscogsJso
     }
 
 
+    [HttpPost("/users/{username}")]
+    private partial Task<User> UpdateUserInternal(string username, [Body] UserProfileEditRequest editUserProfileRequest, CancellationToken cancellationToken);
+
+    public async Task<User> UpdateUser(string username, UserProfileEditRequest editUserProfileRequest, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+        ArgumentNullException.ThrowIfNull(editUserProfileRequest);
+        return await UpdateUserInternal(username, editUserProfileRequest, cancellationToken).ConfigureAwait(false);
+    }
+
+
     [HttpGet("/users/{username}/collection/folders")]
     private partial Task<CollectionFoldersResponse> GetCollectionFoldersInternal(string username, CancellationToken cancellationToken);
 

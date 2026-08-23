@@ -3,6 +3,8 @@ namespace DiscogsApiClient.Tests.User;
 [ClassDataSource<DiscogsApiClientFixture>(Shared = SharedType.PerTestSession)]
 public sealed class UserTests(DiscogsApiClientFixture fixture)
 {
+    private const string ProfileMutationConstraint = "UserProfileMutation";
+
     private readonly IDiscogsApiClient _apiClient = fixture.GetAuthenticatedClient();
     private readonly IDiscogsApiClient _unauthenticatedApiClient = fixture.GetUnauthenticatedClient();
 
@@ -44,7 +46,10 @@ public sealed class UserTests(DiscogsApiClientFixture fixture)
     {
         var username = "";
 
-        await Assert.That(async () => await _apiClient.GetUser(username, cancellationToken)).Throws<ArgumentException>();
+        var exception = await Assert.That(async () => await _apiClient.GetUser(username, cancellationToken))
+            .Throws<ArgumentException>();
+
+        await Assert.That(exception!.ParamName).IsEqualTo("username");
     }
 
     [Test]
@@ -52,6 +57,181 @@ public sealed class UserTests(DiscogsApiClientFixture fixture)
     {
         var username = "awrbaerhnqw54";
 
-        await Assert.That(async () => await _apiClient.GetUser(username, cancellationToken)).Throws<ResourceNotFoundDiscogsException>();
+        await Assert.That(async () => await _apiClient.GetUser(username, cancellationToken))
+            .Throws<ResourceNotFoundDiscogsException>();
+    }
+
+    [Test]
+    [Arguments(null, typeof(ArgumentNullException))]
+    [Arguments("", typeof(ArgumentException))]
+    [Arguments("  ", typeof(ArgumentException))]
+    public async Task UpdateUser_ShouldThrowException_WhenUsernameIsInvalid(string? username, Type expectedException, CancellationToken cancellationToken)
+    {
+        var request = new UserProfileEditRequest();
+
+        var exception = await Assert.That(async () => await _apiClient.UpdateUser(username!, request, cancellationToken))
+            .Throws<ArgumentException>()
+            .WithMessageContaining("username");
+
+        await Assert.That(exception).IsOfType(expectedException);
+        await Assert.That(exception!.ParamName).IsEqualTo("username");
+    }
+
+    [Test]
+    public async Task UpdateUser_ShouldThrowArgumentNullException_WhenRequestIsNull(CancellationToken cancellationToken)
+    {
+        var username = "DamIDhagor";
+
+        var exception = await Assert.That(async () => await _apiClient.UpdateUser(username, null!, cancellationToken))
+            .Throws<ArgumentNullException>();
+
+        await Assert.That(exception!.ParamName).IsEqualTo("editUserProfileRequest");
+    }
+
+    [Test]
+    public async Task UpdateUser_ShouldThrowResourceNotFoundException_WhenUsernameDoesNotExist(CancellationToken cancellationToken)
+    {
+        var username = "awrbaerhnqw54";
+        var request = new UserProfileEditRequest();
+
+        await Assert.That(async () => await _apiClient.UpdateUser(username, request, cancellationToken))
+            .Throws<ResourceNotFoundDiscogsException>();
+    }
+
+    [Test]
+    public async Task UpdateUser_ShouldThrowUnauthenticatedDiscogsException_WhenUnauthenticated(CancellationToken cancellationToken)
+    {
+        var username = "DamIDhagor";
+        var request = new UserProfileEditRequest();
+
+        await Assert.That(async () => await _unauthenticatedApiClient.UpdateUser(username, request, cancellationToken))
+            .Throws<UnauthenticatedDiscogsException>();
+    }
+
+    [Test]
+    [NotInParallel(ProfileMutationConstraint)]
+    public async Task UpdateUser_ShouldUpdateAllProperties_WhenValuesAreValid(CancellationToken cancellationToken)
+    {
+        var username = "DamIDhagor";
+        var originalUser = await _apiClient.GetUser(username, cancellationToken);
+
+        try
+        {
+            var testRequest = new UserProfileEditRequest(
+                Name: "API_TEST_NAME",
+                HomePage: "https://example.com/api-test",
+                Location: "API_TEST_LOCATION",
+                Profile: "API_TEST_PROFILE",
+                CurrencyAbbreviation: "USD");
+
+            var updatedUser = await _apiClient.UpdateUser(username, testRequest, cancellationToken);
+
+            await Assert.That(updatedUser).IsNotNull();
+            await Assert.That(updatedUser.Name).IsEqualTo(testRequest.Name);
+            await Assert.That(updatedUser.HomePage).IsEqualTo(testRequest.HomePage);
+            await Assert.That(updatedUser.Location).IsEqualTo(testRequest.Location);
+            await Assert.That(updatedUser.Profile).IsEqualTo(testRequest.Profile);
+            await Assert.That(updatedUser.CurrencyAbbreviation).IsEqualTo(testRequest.CurrencyAbbreviation);
+        }
+        finally
+        {
+            var restoreRequest = new UserProfileEditRequest(
+                Name: originalUser.Name,
+                HomePage: originalUser.HomePage,
+                Location: originalUser.Location,
+                Profile: originalUser.Profile,
+                CurrencyAbbreviation: originalUser.CurrencyAbbreviation);
+
+            await _apiClient.UpdateUser(username, restoreRequest, cancellationToken);
+        }
+    }
+
+    [Test]
+    [NotInParallel(ProfileMutationConstraint)]
+    public async Task UpdateUser_ShouldIgnoreAllProperties_WhenValuesAreNull(CancellationToken cancellationToken)
+    {
+        var username = "DamIDhagor";
+        var originalUser = await _apiClient.GetUser(username, cancellationToken);
+
+        try
+        {
+            var testRequest = new UserProfileEditRequest(
+                Name: null,
+                HomePage: null,
+                Location: null,
+                Profile: null,
+                CurrencyAbbreviation: null);
+
+            var updatedUser = await _apiClient.UpdateUser(username, testRequest, cancellationToken);
+
+            await Assert.That(updatedUser).IsNotNull();
+            await Assert.That(updatedUser.Name).IsEqualTo(originalUser.Name);
+            await Assert.That(updatedUser.HomePage).IsEqualTo(originalUser.HomePage);
+            await Assert.That(updatedUser.Location).IsEqualTo(originalUser.Location);
+            await Assert.That(updatedUser.Profile).IsEqualTo(originalUser.Profile);
+            await Assert.That(updatedUser.CurrencyAbbreviation).IsEqualTo(originalUser.CurrencyAbbreviation);
+        }
+        finally
+        {
+            var restoreRequest = new UserProfileEditRequest(
+                Name: originalUser.Name,
+                HomePage: originalUser.HomePage,
+                Location: originalUser.Location,
+                Profile: originalUser.Profile,
+                CurrencyAbbreviation: originalUser.CurrencyAbbreviation);
+
+            await _apiClient.UpdateUser(username, restoreRequest, cancellationToken);
+        }
+    }
+
+    [Test]
+    [NotInParallel(ProfileMutationConstraint)]
+    public async Task UpdateUser_ShouldClearPropertiesExceptCurrencyAbbreviation_WhenValuesAreEmpty(CancellationToken cancellationToken)
+    {
+        var username = "DamIDhagor";
+        var originalUser = await _apiClient.GetUser(username, cancellationToken);
+
+        try
+        {
+            var testRequest = new UserProfileEditRequest(
+                Name: "",
+                HomePage: "",
+                Location: "",
+                Profile: "",
+                CurrencyAbbreviation: "");
+
+            var updatedUser = await _apiClient.UpdateUser(username, testRequest, cancellationToken);
+
+            await Assert.That(updatedUser).IsNotNull();
+            await Assert.That(updatedUser.Name).IsEqualTo("");
+            await Assert.That(updatedUser.HomePage).IsEqualTo("");
+            await Assert.That(updatedUser.Location).IsEqualTo("");
+            await Assert.That(updatedUser.Profile).IsEqualTo("");
+
+            // Unlike the other profile fields, an empty CurrencyAbbreviation does not clear the value - Discogs leaves it unchanged.
+            await Assert.That(updatedUser.CurrencyAbbreviation).IsEqualTo(originalUser.CurrencyAbbreviation);
+        }
+        finally
+        {
+            var restoreRequest = new UserProfileEditRequest(
+                Name: originalUser.Name,
+                HomePage: originalUser.HomePage,
+                Location: originalUser.Location,
+                Profile: originalUser.Profile,
+                CurrencyAbbreviation: originalUser.CurrencyAbbreviation);
+
+            await _apiClient.UpdateUser(username, restoreRequest, cancellationToken);
+        }
+    }
+
+    [Test]
+    public async Task UpdateUser_ShouldThrowResourceNotFoundException_WhenCurrencyAbbreviationIsInvalid(CancellationToken cancellationToken)
+    {
+        var username = "DamIDhagor";
+        var request = new UserProfileEditRequest(CurrencyAbbreviation: "XXX");
+
+        await Assert.That(async () => await _apiClient.UpdateUser(username, request, cancellationToken))
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessageContaining("currency");
     }
 }

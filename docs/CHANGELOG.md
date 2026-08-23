@@ -8,6 +8,11 @@ Each entry lists its own **Breaking** changes inline where applicable — see
 
 ## [5.1.0] - Unreleased
 
+- Added new `IDiscogsApiClient` endpoints:
+  - User Profile: edit profile (`UpdateUser()`).
+- Fixed: `User.HomePage` was mapped to the wrong JSON property name (`"homepage"` instead of `"home_page"`),
+  so it never deserialized from Discogs API responses.
+
 ## [5.0.0] - 2026-08-22
 
 - Dropped .NET 6 and .NET 7 support; the library now targets **.NET 8, 9 and 10**.

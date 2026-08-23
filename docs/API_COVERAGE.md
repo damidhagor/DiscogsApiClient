@@ -12,7 +12,7 @@ This document tracks the implementation status of all Discogs API endpoints in t
 | Category | Implemented | Total | Coverage |
 |----------|-------------|-------|----------|
 | Authentication & Identity | 1 | 2 | 50% |
-| User Profile | 1 | 2 | 50% |
+| User Profile | 2 | 2 | **100%** ✅ |
 | User Collection | 9 | 13 | 69% |
 | User Wantlist | 3 | 3 | **100%** ✅ |
 | User Contributions | 0 | 2 | 0% |
@@ -40,12 +40,12 @@ This document tracks the implementation status of all Discogs API endpoints in t
 
 ---
 
-### User Profile
+### User Profile ✅ 100% Coverage
 
 | Status | Method | Endpoint | Description | Interface Method |
 |--------|--------|----------|-------------|------------------|
 | ✅ | GET | `/users/{username}` | Get user profile | `GetUser()` |
-| ❌ | POST | `/users/{username}` | Edit user profile | - |
+| ✅ | POST | `/users/{username}` | Edit user profile | `UpdateUser()` |
 
 ---
 
