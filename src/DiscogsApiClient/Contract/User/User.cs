@@ -50,7 +50,7 @@ public sealed record User(
     string Username,
     [property:JsonPropertyName("name")]
     string Name,
-    [property:JsonPropertyName("homepage")]
+    [property:JsonPropertyName("home_page")]
     string HomePage,
     [property:JsonPropertyName("location")]
     string Location,

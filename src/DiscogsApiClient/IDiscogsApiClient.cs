@@ -17,6 +17,14 @@ public interface IDiscogsApiClient
     Task<User> GetUser(string username, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Edits the profile of a user. Authentication as that user is required.
+    /// </summary>
+    /// <param name="username">The name of the user.</param>
+    /// <param name="editUserProfileRequest">The profile fields to change. Omitted (<see langword="null"/>) properties are left unchanged.</param>
+    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    Task<User> UpdateUser(string username, UserProfileEditRequest editUserProfileRequest, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Gets the collection folders of the user.
     /// </summary>
     /// <param name="username">The name of the user.</param>

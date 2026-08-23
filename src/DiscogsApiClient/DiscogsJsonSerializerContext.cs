@@ -5,6 +5,7 @@ namespace DiscogsApiClient;
 [JsonSerializable(typeof(Image))]
 [JsonSerializable(typeof(Pagination))]
 // User
+[JsonSerializable(typeof(UserProfileEditRequest))]
 [JsonSerializable(typeof(Identity))]
 [JsonSerializable(typeof(User))]
 [JsonSerializable(typeof(UserListReleaseInformation))]
