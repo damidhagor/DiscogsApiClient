@@ -192,6 +192,21 @@ public interface IDiscogsApiClient
     Task<ContributionsResponse> GetContributions(string username, PaginationQueryParameters? paginationQueryParameters, ContributionSortQueryParameters? contributionSortQueryParameters, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Gets the lists of the user.
+    /// </summary>
+    /// <param name="username">The name of the user.</param>
+    /// <param name="paginationQueryParameters">Pagination parameters for the results.</param>
+    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    Task<UserListsResponse> GetUserLists(string username, PaginationQueryParameters? paginationQueryParameters, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets the details and items of a list.
+    /// </summary>
+    /// <param name="listId">The list's id.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the list id is invalid.</exception>
+    Task<ListDetails> GetList(int listId, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Gets an artist from the Discogs database.
     /// </summary>
     /// <param name="artistId">The artist's id.</param>
