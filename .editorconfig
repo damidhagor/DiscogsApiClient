@@ -27,6 +27,9 @@ dotnet_separate_import_directive_groups = false
 dotnet_sort_system_directives_first = true
 file_header_template = unset
 
+# IDE0001: Simplify name
+dotnet_diagnostic.IDE0001.severity = suggestion
+
 # IDE0005: Using directive is unnecessary
 dotnet_diagnostic.IDE0005.severity = suggestion
 

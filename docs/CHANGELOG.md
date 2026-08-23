@@ -16,6 +16,9 @@ Each entry lists its own **Breaking** changes inline where applicable — see
     - Get collection release by release ID (`GetCollectionItemsByRelease()`).
     - Edit release instance notes/rating/folder (`UpdateCollectionFolderRelease()`).
     - Edit release instance custom field value (`UpdateCollectionFolderReleaseField()`).
+  - User Contributions & Submissions:
+    - Get user's database contributions (`GetContributions()`).
+    - Get user's pending submissions (`GetSubmissions()`).
   - Database - Releases:
     - Get user's rating for a release (`GetReleaseRating()`).
     - Set user's rating for a release (`UpdateReleaseRating()`).

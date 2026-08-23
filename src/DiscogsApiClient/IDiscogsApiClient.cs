@@ -175,6 +175,23 @@ public interface IDiscogsApiClient
     Task DeleteReleaseFromWantlist(string username, int releaseId, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Gets the submissions of the user.
+    /// </summary>
+    /// <param name="username">The name of the user.</param>
+    /// <param name="paginationQueryParameters">Pagination parameters for the results.</param>
+    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    Task<SubmissionsResponse> GetSubmissions(string username, PaginationQueryParameters? paginationQueryParameters, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets the contributions of the user.
+    /// </summary>
+    /// <param name="username">The name of the user.</param>
+    /// <param name="paginationQueryParameters">Pagination parameters for the results.</param>
+    /// <param name="contributionSortQueryParameters">Sorting parameters for the results.</param>
+    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    Task<ContributionsResponse> GetContributions(string username, PaginationQueryParameters? paginationQueryParameters, ContributionSortQueryParameters? contributionSortQueryParameters, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Gets an artist from the Discogs database.
     /// </summary>
     /// <param name="artistId">The artist's id.</param>

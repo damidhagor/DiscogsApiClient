@@ -26,6 +26,19 @@ namespace DiscogsApiClient;
 // Wantlist
 [JsonSerializable(typeof(WantlistRelease))]
 [JsonSerializable(typeof(WantlistReleasesResponse))]
+// Submissions
+[JsonSerializable(typeof(Submissions))]
+[JsonSerializable(typeof(SubmissionsResponse))]
+[JsonSerializable(typeof(SubmissionArtist))]
+[JsonSerializable(typeof(SubmissionLabel))]
+[JsonSerializable(typeof(SubmissionRelease))]
+[JsonSerializable(typeof(SubmissionReleaseArtist))]
+[JsonSerializable(typeof(SubmissionReleaseLabel))]
+// Contributions
+[JsonSerializable(typeof(ContributionsResponse))]
+[JsonSerializable(typeof(ContributionRelease))]
+[JsonSerializable(typeof(ContributionReleaseArtist))]
+[JsonSerializable(typeof(ContributionReleaseLabel))]
 // Artist
 [JsonSerializable(typeof(Artist))]
 [JsonSerializable(typeof(ArtistMember))]

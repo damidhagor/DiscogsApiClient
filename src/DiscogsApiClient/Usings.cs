@@ -7,6 +7,8 @@ global using DiscogsApiClient.Contract.Release;
 global using DiscogsApiClient.Contract.Search;
 global using DiscogsApiClient.Contract.User;
 global using DiscogsApiClient.Contract.User.Collection;
+global using DiscogsApiClient.Contract.User.Contribution;
+global using DiscogsApiClient.Contract.User.Submission;
 global using DiscogsApiClient.Contract.User.Wantlist;
 global using DiscogsApiClient.Exceptions;
 global using DiscogsApiClient.QueryParameters;
