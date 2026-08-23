@@ -58,7 +58,8 @@ public sealed class UserTests(DiscogsApiClientFixture fixture)
         var username = "awrbaerhnqw54";
 
         await Assert.That(async () => await _apiClient.GetUser(username, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessage("User does not exist or may have been deleted.");
     }
 
     [Test]
@@ -67,7 +68,7 @@ public sealed class UserTests(DiscogsApiClientFixture fixture)
     [Arguments("  ", typeof(ArgumentException))]
     public async Task UpdateUser_ShouldThrowException_WhenUsernameIsInvalid(string? username, Type expectedException, CancellationToken cancellationToken)
     {
-        var request = new UserProfileEditRequest();
+        var request = new UserProfileUpdateRequest();
 
         var exception = await Assert.That(async () => await _apiClient.UpdateUser(username!, request, cancellationToken))
             .Throws<ArgumentException>()
@@ -85,24 +86,25 @@ public sealed class UserTests(DiscogsApiClientFixture fixture)
         var exception = await Assert.That(async () => await _apiClient.UpdateUser(username, null!, cancellationToken))
             .Throws<ArgumentNullException>();
 
-        await Assert.That(exception!.ParamName).IsEqualTo("editUserProfileRequest");
+        await Assert.That(exception!.ParamName).IsEqualTo("request");
     }
 
     [Test]
     public async Task UpdateUser_ShouldThrowResourceNotFoundException_WhenUsernameDoesNotExist(CancellationToken cancellationToken)
     {
         var username = "awrbaerhnqw54";
-        var request = new UserProfileEditRequest();
+        var request = new UserProfileUpdateRequest();
 
         await Assert.That(async () => await _apiClient.UpdateUser(username, request, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessage("User does not exist or may have been deleted.");
     }
 
     [Test]
     public async Task UpdateUser_ShouldThrowUnauthenticatedDiscogsException_WhenUnauthenticated(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
-        var request = new UserProfileEditRequest();
+        var request = new UserProfileUpdateRequest();
 
         await Assert.That(async () => await _unauthenticatedApiClient.UpdateUser(username, request, cancellationToken))
             .Throws<UnauthenticatedDiscogsException>();
@@ -117,7 +119,7 @@ public sealed class UserTests(DiscogsApiClientFixture fixture)
 
         try
         {
-            var testRequest = new UserProfileEditRequest(
+            var testRequest = new UserProfileUpdateRequest(
                 Name: "API_TEST_NAME",
                 HomePage: "https://example.com/api-test",
                 Location: "API_TEST_LOCATION",
@@ -135,7 +137,7 @@ public sealed class UserTests(DiscogsApiClientFixture fixture)
         }
         finally
         {
-            var restoreRequest = new UserProfileEditRequest(
+            var restoreRequest = new UserProfileUpdateRequest(
                 Name: originalUser.Name,
                 HomePage: originalUser.HomePage,
                 Location: originalUser.Location,
@@ -155,7 +157,7 @@ public sealed class UserTests(DiscogsApiClientFixture fixture)
 
         try
         {
-            var testRequest = new UserProfileEditRequest(
+            var testRequest = new UserProfileUpdateRequest(
                 Name: null,
                 HomePage: null,
                 Location: null,
@@ -173,7 +175,7 @@ public sealed class UserTests(DiscogsApiClientFixture fixture)
         }
         finally
         {
-            var restoreRequest = new UserProfileEditRequest(
+            var restoreRequest = new UserProfileUpdateRequest(
                 Name: originalUser.Name,
                 HomePage: originalUser.HomePage,
                 Location: originalUser.Location,
@@ -193,7 +195,7 @@ public sealed class UserTests(DiscogsApiClientFixture fixture)
 
         try
         {
-            var testRequest = new UserProfileEditRequest(
+            var testRequest = new UserProfileUpdateRequest(
                 Name: "",
                 HomePage: "",
                 Location: "",
@@ -213,7 +215,7 @@ public sealed class UserTests(DiscogsApiClientFixture fixture)
         }
         finally
         {
-            var restoreRequest = new UserProfileEditRequest(
+            var restoreRequest = new UserProfileUpdateRequest(
                 Name: originalUser.Name,
                 HomePage: originalUser.HomePage,
                 Location: originalUser.Location,
@@ -228,10 +230,10 @@ public sealed class UserTests(DiscogsApiClientFixture fixture)
     public async Task UpdateUser_ShouldThrowResourceNotFoundException_WhenCurrencyAbbreviationIsInvalid(CancellationToken cancellationToken)
     {
         var username = "DamIDhagor";
-        var request = new UserProfileEditRequest(CurrencyAbbreviation: "XXX");
+        var request = new UserProfileUpdateRequest(CurrencyAbbreviation: "XXX");
 
         await Assert.That(async () => await _apiClient.UpdateUser(username, request, cancellationToken))
             .Throws<ResourceNotFoundDiscogsException>()
-            .WithMessageContaining("currency");
+            .WithMessage("Invalid currency abbreviation.");
     }
 }

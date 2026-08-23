@@ -1,0 +1,58 @@
+[
+  {
+    "requestMethod": "GET",
+    "requestUrl": "https://api.discogs.com/users/DamIDhagor/collection/fields",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 200,
+    "responseHeaders": {
+      "Date": [
+        "Sun, 23 Aug 2026 16:13:32 GMT"
+      ],
+      "Transfer-Encoding": [
+        "chunked"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Set-Cookie": [
+        "****"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "Vary": [
+        "Accept-Encoding"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "59"
+      ],
+      "x-discogs-ratelimit-used": [
+        "1"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a2fb67b30f62519f-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022fields\u0022:[{\u0022id\u0022:2,\u0022name\u0022:\u0022API_TEST_TEXTAREA_FIELD\u0022,\u0022type\u0022:\u0022textarea\u0022,\u0022position\u0022:1,\u0022public\u0022:false,\u0022lines\u0022:1},{\u0022id\u0022:1,\u0022name\u0022:\u0022API_TEST_DROPDOWN_FIELD\u0022,\u0022type\u0022:\u0022dropdown\u0022,\u0022position\u0022:2,\u0022public\u0022:false,\u0022options\u0022:[\u0022API_TEST_OPTION_A\u0022,\u0022API_TEST_OPTION_B\u0022]}]}"
+  }
+]

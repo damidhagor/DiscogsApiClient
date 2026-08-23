@@ -34,10 +34,11 @@ public sealed class WantlistTests(DiscogsApiClientFixture fixture)
     public async Task GetWantlistReleases_ShouldThrowException_WhenUsernameIsInvalid(string? username, Type expectedException, CancellationToken cancellationToken)
     {
         var exception = await Assert.That(async () => await _apiClient.GetWantlistReleases(username!, null, cancellationToken))
-            .Throws<Exception>()
+            .Throws<ArgumentException>()
             .WithMessageContaining("username");
 
         await Assert.That(exception).IsOfType(expectedException);
+        await Assert.That(exception!.ParamName).IsEqualTo("username");
     }
 
     [Test]
@@ -46,7 +47,8 @@ public sealed class WantlistTests(DiscogsApiClientFixture fixture)
         var username = "awrbaerhnqw54";
 
         await Assert.That(async () => await _apiClient.GetWantlistReleases(username, null, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessage("User does not exist or may have been deleted.");
     }
 
 
@@ -59,10 +61,11 @@ public sealed class WantlistTests(DiscogsApiClientFixture fixture)
         var releaseId = 5134861;
 
         var exception = await Assert.That(async () => await _apiClient.AddReleaseToWantlist(username!, releaseId, cancellationToken))
-            .Throws<Exception>()
+            .Throws<ArgumentException>()
             .WithMessageContaining("username");
 
         await Assert.That(exception).IsOfType(expectedException);
+        await Assert.That(exception!.ParamName).IsEqualTo("username");
     }
 
     [Test]
@@ -72,7 +75,8 @@ public sealed class WantlistTests(DiscogsApiClientFixture fixture)
         var releaseId = 5134861;
 
         await Assert.That(async () => await _apiClient.AddReleaseToWantlist(username, releaseId, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessage("User does not exist or may have been deleted.");
     }
 
     [Test]
@@ -82,8 +86,10 @@ public sealed class WantlistTests(DiscogsApiClientFixture fixture)
     {
         var username = "DamIDhagor";
 
-        await Assert.That(async () => await _apiClient.AddReleaseToWantlist(username, releaseId, cancellationToken))
+        var exception = await Assert.That(async () => await _apiClient.AddReleaseToWantlist(username, releaseId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
+
+        await Assert.That(exception!.ParamName).IsEqualTo("releaseId");
     }
 
     [Test]
@@ -93,7 +99,8 @@ public sealed class WantlistTests(DiscogsApiClientFixture fixture)
         var releaseId = int.MaxValue;
 
         await Assert.That(async () => await _apiClient.AddReleaseToWantlist(username, releaseId, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessage("That release does not exist in the user's wantlist.");
     }
 
     [Test]
@@ -116,10 +123,11 @@ public sealed class WantlistTests(DiscogsApiClientFixture fixture)
         var releaseId = 5134861;
 
         var exception = await Assert.That(async () => await _apiClient.DeleteReleaseFromWantlist(username!, releaseId, cancellationToken))
-            .Throws<Exception>()
+            .Throws<ArgumentException>()
             .WithMessageContaining("username");
 
         await Assert.That(exception).IsOfType(expectedException);
+        await Assert.That(exception!.ParamName).IsEqualTo("username");
     }
 
     [Test]
@@ -129,7 +137,8 @@ public sealed class WantlistTests(DiscogsApiClientFixture fixture)
         var releaseId = 5134861;
 
         await Assert.That(async () => await _apiClient.DeleteReleaseFromWantlist(username, releaseId, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessage("User does not exist or may have been deleted.");
     }
 
     [Test]
@@ -139,8 +148,10 @@ public sealed class WantlistTests(DiscogsApiClientFixture fixture)
     {
         var username = "DamIDhagor";
 
-        await Assert.That(async () => await _apiClient.DeleteReleaseFromWantlist(username, releaseId, cancellationToken))
+        var exception = await Assert.That(async () => await _apiClient.DeleteReleaseFromWantlist(username, releaseId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
+
+        await Assert.That(exception!.ParamName).IsEqualTo("releaseId");
     }
 
     [Test]

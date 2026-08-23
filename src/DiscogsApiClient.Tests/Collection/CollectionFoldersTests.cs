@@ -46,10 +46,11 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     public async Task GetCollectionFolders_ShouldThrowException_WhenUsernameIsInvalid(string? username, Type expectedException, CancellationToken cancellationToken)
     {
         var exception = await Assert.That(async () => await _apiClient.GetCollectionFolders(username!, cancellationToken))
-            .Throws<Exception>()
+            .Throws<ArgumentException>()
             .WithMessageContaining("username");
 
         await Assert.That(exception).IsOfType(expectedException);
+        await Assert.That(exception!.ParamName).IsEqualTo("username");
     }
 
     [Test]
@@ -58,7 +59,8 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
         var username = "awrbaerhnqw54";
 
         await Assert.That(async () => await _apiClient.GetCollectionFolders(username, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessage("User does not exist or may have been deleted.");
     }
 
 
@@ -94,10 +96,11 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
         var folderId = 0;
 
         var exception = await Assert.That(async () => await _apiClient.GetCollectionFolder(username!, folderId, cancellationToken))
-            .Throws<Exception>()
+            .Throws<ArgumentException>()
             .WithMessageContaining("username");
 
         await Assert.That(exception).IsOfType(expectedException);
+        await Assert.That(exception!.ParamName).IsEqualTo("username");
     }
 
     [Test]
@@ -107,7 +110,8 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
         var folderId = 0;
 
         await Assert.That(async () => await _apiClient.GetCollectionFolder(username, folderId, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessage("User does not exist or may have been deleted.");
     }
 
     [Test]
@@ -116,8 +120,10 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
         var username = "DamIDhagor";
         var folderId = -1;
 
-        await Assert.That(async () => await _apiClient.GetCollectionFolder(username, folderId, cancellationToken))
+        var exception = await Assert.That(async () => await _apiClient.GetCollectionFolder(username, folderId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
+
+        await Assert.That(exception!.ParamName).IsEqualTo("folderId");
     }
 
     [Test]
@@ -127,7 +133,8 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
         var folderId = 42;
 
         await Assert.That(async () => await _apiClient.GetCollectionFolder(username, folderId, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessage("The requested folder does not exist.");
     }
 
 
@@ -140,10 +147,11 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
         var folderName = "API_TEST_CREATE_EMPTY_USERNAME";
 
         var exception = await Assert.That(async () => await _apiClient.CreateCollectionFolder(username!, folderName, cancellationToken))
-            .Throws<Exception>()
+            .Throws<ArgumentException>()
             .WithMessageContaining("username");
 
         await Assert.That(exception).IsOfType(expectedException);
+        await Assert.That(exception!.ParamName).IsEqualTo("username");
     }
 
     [Test]
@@ -153,7 +161,8 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
         var folderName = "API_TEST_CREATE_INVALID_USERNAME";
 
         await Assert.That(async () => await _apiClient.CreateCollectionFolder(username, folderName, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessage("User does not exist or may have been deleted.");
     }
 
     [Test]
@@ -165,10 +174,11 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
         var username = "DamIDhagor";
 
         var exception = await Assert.That(async () => await _apiClient.CreateCollectionFolder(username, folderName!, cancellationToken))
-            .Throws<Exception>()
+            .Throws<ArgumentException>()
             .WithMessageContaining("folderName");
 
         await Assert.That(exception).IsOfType(expectedException);
+        await Assert.That(exception!.ParamName).IsEqualTo("folderName");
     }
 
     [Test]
@@ -191,10 +201,11 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
         var folderName = "API_TEST_UPDATE_EMPTY_USERNAME";
 
         var exception = await Assert.That(async () => await _apiClient.UpdateCollectionFolder(username!, folderId, folderName, cancellationToken))
-            .Throws<Exception>()
+            .Throws<ArgumentException>()
             .WithMessageContaining("username");
 
         await Assert.That(exception).IsOfType(expectedException);
+        await Assert.That(exception!.ParamName).IsEqualTo("username");
     }
 
     [Test]
@@ -205,7 +216,8 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
         var folderName = "API_TEST_UPDATE_INVALID_USERNAME";
 
         await Assert.That(async () => await _apiClient.UpdateCollectionFolder(username, folderId, folderName, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessage("User does not exist or may have been deleted.");
     }
 
     [Test]
@@ -218,10 +230,11 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
         var folderId = 999;
 
         var exception = await Assert.That(async () => await _apiClient.UpdateCollectionFolder(username, folderId, folderName!, cancellationToken))
-            .Throws<Exception>()
+            .Throws<ArgumentException>()
             .WithMessageContaining("folderName");
 
         await Assert.That(exception).IsOfType(expectedException);
+        await Assert.That(exception!.ParamName).IsEqualTo("folderName");
     }
 
     [Test]
@@ -233,8 +246,10 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
         var username = "DamIDhagor";
         var folderName = "API_TEST_UPDATE_INVALID_ID";
 
-        await Assert.That(async () => await _apiClient.UpdateCollectionFolder(username, folderId, folderName, cancellationToken))
+        var exception = await Assert.That(async () => await _apiClient.UpdateCollectionFolder(username, folderId, folderName, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
+
+        await Assert.That(exception!.ParamName).IsEqualTo("folderId");
     }
 
     [Test]
@@ -245,7 +260,8 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
         var folderName = "API_TEST_UPDATE_NOT_EXISTING_ID";
 
         await Assert.That(async () => await _apiClient.UpdateCollectionFolder(username, folderId, folderName, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessage("The requested folder does not exist.");
     }
 
     [Test]
@@ -269,10 +285,11 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
         var folderId = -1;
 
         var exception = await Assert.That(async () => await _apiClient.DeleteCollectionFolder(username!, folderId, cancellationToken))
-            .Throws<Exception>()
+            .Throws<ArgumentException>()
             .WithMessageContaining("username");
 
         await Assert.That(exception).IsOfType(expectedException);
+        await Assert.That(exception!.ParamName).IsEqualTo("username");
     }
 
     [Test]
@@ -282,7 +299,8 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
         var folderId = 999;
 
         await Assert.That(async () => await _apiClient.DeleteCollectionFolder(username, folderId, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessage("User does not exist or may have been deleted.");
     }
 
     [Test]
@@ -293,8 +311,10 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
     {
         var username = "DamIDhagor";
 
-        await Assert.That(async () => await _apiClient.DeleteCollectionFolder(username, folderId, cancellationToken))
+        var exception = await Assert.That(async () => await _apiClient.DeleteCollectionFolder(username, folderId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
+
+        await Assert.That(exception!.ParamName).IsEqualTo("folderId");
     }
 
     [Test]
@@ -304,7 +324,8 @@ public sealed class CollectionFoldersTests(DiscogsApiClientFixture fixture)
         var folderId = 999;
 
         await Assert.That(async () => await _apiClient.DeleteCollectionFolder(username, folderId, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessage("The requested folder does not exist.");
     }
 
     [Test]

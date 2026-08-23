@@ -108,8 +108,10 @@ public sealed class ReleasesTests(DiscogsApiClientFixture fixture)
     [Arguments(0)]
     public async Task GetRelease_ShouldThrowArgumentOutOfRangeException_WhenIdIsInvalid(int releaseId, CancellationToken cancellationToken)
     {
-        await Assert.That(async () => await _apiClient.GetRelease(releaseId, cancellationToken))
+        var exception = await Assert.That(async () => await _apiClient.GetRelease(releaseId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
+
+        await Assert.That(exception!.ParamName).IsEqualTo("releaseId");
     }
 
     [Test]
@@ -118,7 +120,8 @@ public sealed class ReleasesTests(DiscogsApiClientFixture fixture)
         var releaseId = int.MaxValue;
 
         await Assert.That(async () => await _apiClient.GetRelease(releaseId, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessage("That release does not exist or may have been deleted.");
     }
 
 
@@ -141,8 +144,10 @@ public sealed class ReleasesTests(DiscogsApiClientFixture fixture)
     [Arguments(0)]
     public async Task GetReleaseCommunityRating_ShouldThrowArgumentOutOfRangeException_WhenIdIsInvalid(int releaseId, CancellationToken cancellationToken)
     {
-        await Assert.That(async () => await _apiClient.GetReleaseCommunityRating(releaseId, cancellationToken))
+        var exception = await Assert.That(async () => await _apiClient.GetReleaseCommunityRating(releaseId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
+
+        await Assert.That(exception!.ParamName).IsEqualTo("releaseId");
     }
 
     [Test]
@@ -151,7 +156,8 @@ public sealed class ReleasesTests(DiscogsApiClientFixture fixture)
         var releaseId = int.MaxValue;
 
         await Assert.That(async () => await _apiClient.GetReleaseCommunityRating(releaseId, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessage("Release does not exist or may have been deleted.");
     }
 
 
@@ -170,8 +176,10 @@ public sealed class ReleasesTests(DiscogsApiClientFixture fixture)
     [Arguments(0)]
     public async Task GetReleaseStats_ShouldThrowArgumentOutOfRangeException_WhenIdIsInvalid(int releaseId, CancellationToken cancellationToken)
     {
-        await Assert.That(async () => await _apiClient.GetReleaseStats(releaseId, cancellationToken))
+        var exception = await Assert.That(async () => await _apiClient.GetReleaseStats(releaseId, cancellationToken))
             .Throws<ArgumentOutOfRangeException>();
+
+        await Assert.That(exception!.ParamName).IsEqualTo("releaseId");
     }
 
     [Test]
@@ -180,6 +188,7 @@ public sealed class ReleasesTests(DiscogsApiClientFixture fixture)
         var releaseId = int.MaxValue;
 
         await Assert.That(async () => await _apiClient.GetReleaseStats(releaseId, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessage("Release does not exist or may have been deleted.");
     }
 }

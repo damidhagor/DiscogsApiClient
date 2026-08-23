@@ -4,6 +4,7 @@ This guide covers breaking changes and the steps needed to migrate between major
 `DiscogsApiClient`. For the full version history (including non-breaking changes), see
 [docs/CHANGELOG.md](CHANGELOG.md).
 
+- [Migrating from 5.0.0 to 5.1.0](#migrating-from-500-to-510)
 - [Migrating from 4.1.1 to 5.0.0](#migrating-from-411-to-500)
 - [Migrating from 4.0.0 to 4.1.0](#migrating-from-400-to-410)
 - [Migrating from 3.1.0 to 4.0.0](#migrating-from-310-to-400)
@@ -11,6 +12,18 @@ This guide covers breaking changes and the steps needed to migrate between major
 
 If you're jumping across multiple versions (e.g. 2.x straight to 5.0.0), work through each guide above in
 order, oldest first.
+
+## Migrating from 5.0.0 to 5.1.0
+
+### `GetCollectionFolderReleases` renamed to `GetCollectionItemsByFolder`
+
+Renamed to pair it with the new `GetCollectionItemsByRelease()` endpoint and to match the Discogs API
+documentation's endpoint name ("Collection Items By Folder"). The signature is unchanged.
+
+```diff
+- var releases = await client.GetCollectionFolderReleases(username, folderId, pagination, sort, cancellationToken);
++ var releases = await client.GetCollectionItemsByFolder(username, folderId, pagination, sort, cancellationToken);
+```
 
 ## Migrating from 4.1.1 to 5.0.0
 

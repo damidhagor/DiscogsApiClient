@@ -36,10 +36,11 @@ public sealed class DiscogsPatAuthenticationProviderTests
     {
         var authProvider = new DiscogsPatAuthenticationProvider(Options.Create(new DiscogsPatOptions()));
 
-        var exception = await Assert.That(() => authProvider.Authenticate(token!)).Throws<Exception>();
+        var exception = await Assert.That(() => authProvider.Authenticate(token!)).Throws<ArgumentException>();
 
         await Assert.That(exception).IsNotNull();
         await Assert.That(exception).IsOfType(expectedException);
+        await Assert.That(exception!.ParamName).IsEqualTo("token");
 
         await Assert.That(authProvider.IsAuthenticated).IsFalse();
         await Assert.That(() => authProvider.CreateAuthenticationHeader()).Throws<UnauthenticatedDiscogsException>();
