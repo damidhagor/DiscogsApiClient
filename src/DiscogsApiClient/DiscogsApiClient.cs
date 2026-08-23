@@ -172,6 +172,7 @@ internal sealed partial class DiscogsApiClient(HttpClient httpClient, DiscogsJso
         {
             ArgumentOutOfRangeException.ThrowIfLessThan(targetFolderId.Value, 1);
         }
+
         await UpdateCollectionFolderReleaseInternal(username, folderId, releaseId, instanceId, new(rating, targetFolderId), cancellationToken).ConfigureAwait(false);
     }
 

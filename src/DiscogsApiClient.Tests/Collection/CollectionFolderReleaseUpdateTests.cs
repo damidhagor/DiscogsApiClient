@@ -375,7 +375,7 @@ public sealed class CollectionFolderReleaseUpdateTests(DiscogsApiClientFixture f
 
         var fieldsResponse = await _apiClient.GetCollectionFields(username, cancellationToken);
         var field = fieldsResponse.Fields.First(f => f.Name == "API_TEST_DROPDOWN_FIELD");
-        var testValue = field.Options!.First();
+        var testValue = field.Options![0];
 
         var collectionFolder = await _apiClient.CreateCollectionFolder(username, folderName, cancellationToken);
 
