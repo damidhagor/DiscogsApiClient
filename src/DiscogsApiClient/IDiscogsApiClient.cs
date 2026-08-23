@@ -17,12 +17,12 @@ public interface IDiscogsApiClient
     Task<User> GetUser(string username, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Edits the profile of a user. Authentication as that user is required.
+    /// Updates the profile of a user. Authentication as that user is required.
     /// </summary>
     /// <param name="username">The name of the user.</param>
-    /// <param name="editUserProfileRequest">The profile fields to change. Omitted (<see langword="null"/>) properties are left unchanged.</param>
+    /// <param name="request">The profile fields to change. Omitted (<see langword="null"/>) properties are left unchanged.</param>
     /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
-    Task<User> UpdateUser(string username, UserProfileEditRequest editUserProfileRequest, CancellationToken cancellationToken);
+    Task<User> UpdateUser(string username, UserProfileUpdateRequest request, CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets the collection folders of the user.
@@ -75,7 +75,17 @@ public interface IDiscogsApiClient
     /// <param name="paginationQueryParameters">Pagination parameters.</param>
     /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the folder id is invalid.</exception>
-    Task<CollectionFolderReleasesResponse> GetCollectionFolderReleases(string username, int folderId, PaginationQueryParameters? paginationQueryParameters, CollectionFolderReleaseSortQueryParameters? collectionFolderReleaseSortQueryParameters, CancellationToken cancellationToken);
+    Task<CollectionFolderReleasesResponse> GetCollectionItemsByFolder(string username, int folderId, PaginationQueryParameters? paginationQueryParameters, CollectionFolderReleaseSortQueryParameters? collectionFolderReleaseSortQueryParameters, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets the collection folders of the user which contain a specified release, along with information about each release instance.
+    /// </summary>
+    /// <param name="username">The name of the user.</param>
+    /// <param name="releaseId">The release's id.</param>
+    /// <param name="paginationQueryParameters">Pagination parameters.</param>
+    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the release id is invalid.</exception>
+    Task<CollectionFolderReleasesResponse> GetCollectionItemsByRelease(string username, int releaseId, PaginationQueryParameters? paginationQueryParameters, CancellationToken cancellationToken);
 
     /// <summary>
     /// Adds a release to the collection folder of the user.
@@ -104,6 +114,39 @@ public interface IDiscogsApiClient
     /// <param name="username">The name of the user.</param>
     /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
     Task<CollectionValue> GetCollectionValue(string username, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets the user-defined custom collection fields. These fields are available on every release in the collection.
+    /// </summary>
+    /// <param name="username">The name of the user.</param>
+    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    Task<CollectionFieldsResponse> GetCollectionFields(string username, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Changes the rating and/or moves a release instance to another folder in the user's collection.
+    /// </summary>
+    /// <param name="username">The name of the user.</param>
+    /// <param name="folderId">The id of the folder the instance currently resides in.</param>
+    /// <param name="releaseId">The release's id.</param>
+    /// <param name="instanceId">The release's instance id in the folder.</param>
+    /// <param name="rating">The new rating of the instance. Omitted (<see langword="null"/>) leaves the rating unchanged.</param>
+    /// <param name="targetFolderId">The id of the folder to move the instance to. Omitted (<see langword="null"/>) leaves the instance in its current folder.</param>
+    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the folder, release, instance or target folder id is invalid.</exception>
+    Task UpdateCollectionFolderRelease(string username, int folderId, int releaseId, long instanceId, int? rating, int? targetFolderId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Changes the value of a custom collection field on a release instance in the user's collection.
+    /// </summary>
+    /// <param name="username">The name of the user.</param>
+    /// <param name="folderId">The id of the folder the instance currently resides in.</param>
+    /// <param name="releaseId">The release's id.</param>
+    /// <param name="instanceId">The release's instance id in the folder.</param>
+    /// <param name="fieldId">The id of the field to change.</param>
+    /// <param name="value">The new value of the field. If the field's type is dropdown, the value must match one of the field's options.</param>
+    /// <exception cref="ArgumentException">Fires this exception if no username or value is provided.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the folder, release, instance or field id is invalid.</exception>
+    Task UpdateCollectionFolderReleaseField(string username, int folderId, int releaseId, long instanceId, int fieldId, string value, CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets the releases on the wantlist of the user.

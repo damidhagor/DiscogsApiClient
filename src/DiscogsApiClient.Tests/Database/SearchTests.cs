@@ -107,7 +107,8 @@ public sealed class SearchTests(DiscogsApiClientFixture fixture)
 
         // Should fail with 404 but Discord seems to enounter an internal error instead!
         await Assert.That(async () => await _apiClient.SearchDatabase(queryParams, paginationParams, cancellationToken))
-            .Throws<ResourceNotFoundDiscogsException>();
+            .Throws<ResourceNotFoundDiscogsException>()
+            .WithMessageContaining("is outside of valid range");
     }
 
     [Test]

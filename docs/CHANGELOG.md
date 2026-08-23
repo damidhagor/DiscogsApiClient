@@ -9,9 +9,19 @@ Each entry lists its own **Breaking** changes inline where applicable — see
 ## [5.1.0] - Unreleased
 
 - Added new `IDiscogsApiClient` endpoints:
-  - User Profile: edit profile (`UpdateUser()`).
+  - User Profile:
+    - Edit profile (`UpdateUser()`).
+  - User Collection:
+    - Get custom collection fields (`GetCollectionFields()`).
+    - Get collection release by release ID (`GetCollectionItemsByRelease()`).
+    - Edit release instance notes/rating/folder (`UpdateCollectionFolderRelease()`).
+    - Edit release instance custom field value (`UpdateCollectionFolderReleaseField()`).
 - Fixed: `User.HomePage` was mapped to the wrong JSON property name (`"homepage"` instead of `"home_page"`),
   so it never deserialized from Discogs API responses.
+- **Breaking:**
+  - Renamed `GetCollectionFolderReleases()` to `GetCollectionItemsByFolder()` to pair it with the new
+    `GetCollectionItemsByRelease()` endpoint and match the Discogs API documentation's endpoint name
+    ("Collection Items By Folder"). The signature is unchanged.
 
 ## [5.0.0] - 2026-08-22
 

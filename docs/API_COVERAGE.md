@@ -2,8 +2,8 @@
 
 This document tracks the implementation status of all Discogs API endpoints in this library.
 
-**Last Updated:** 2026-08-19 (verified against `src/DiscogsApiClient/DiscogsApiClient.cs`)
-**Total Coverage:** 24/59 endpoints (41%)
+**Last Updated:** 2026-08-23 (verified against `src/DiscogsApiClient/DiscogsApiClient.cs`)
+**Total Coverage:** 28/59 endpoints (47%)
 
 ---
 
@@ -13,7 +13,7 @@ This document tracks the implementation status of all Discogs API endpoints in t
 |----------|-------------|-------|----------|
 | Authentication & Identity | 1 | 2 | 50% |
 | User Profile | 2 | 2 | **100%** ✅ |
-| User Collection | 9 | 13 | 69% |
+| User Collection | 13 | 13 | **100%** ✅ |
 | User Wantlist | 3 | 3 | **100%** ✅ |
 | User Contributions | 0 | 2 | 0% |
 | User Lists | 0 | 2 | 0% |
@@ -49,7 +49,7 @@ This document tracks the implementation status of all Discogs API endpoints in t
 
 ---
 
-### User Collection
+### User Collection ✅ 100% Coverage
 
 | Status | Method | Endpoint | Description | Interface Method |
 |--------|--------|----------|-------------|------------------|
@@ -58,14 +58,14 @@ This document tracks the implementation status of all Discogs API endpoints in t
 | ✅ | POST | `/users/{username}/collection/folders` | Create folder | `CreateCollectionFolder()` |
 | ✅ | POST | `/users/{username}/collection/folders/{folder_id}` | Update folder name | `UpdateCollectionFolder()` |
 | ✅ | DELETE | `/users/{username}/collection/folders/{folder_id}` | Delete folder | `DeleteCollectionFolder()` |
-| ✅ | GET | `/users/{username}/collection/folders/{folder_id}/releases` | List releases in folder | `GetCollectionFolderReleases()` |
+| ✅ | GET | `/users/{username}/collection/folders/{folder_id}/releases` | List releases in folder | `GetCollectionItemsByFolder()` |
 | ✅ | POST | `/users/{username}/collection/folders/{folder_id}/releases/{release_id}` | Add release to folder | `AddReleaseToCollectionFolder()` |
 | ✅ | DELETE | `/users/{username}/collection/folders/{folder_id}/releases/{release_id}/instances/{instance_id}` | Remove release instance | `DeleteReleaseFromCollectionFolder()` |
 | ✅ | GET | `/users/{username}/collection/value` | Get collection value | `GetCollectionValue()` |
-| ❌ | GET | `/users/{username}/collection/fields` | Get custom collection fields | - |
-| ❌ | GET | `/users/{username}/collection/releases/{release_id}` | Get collection release by release ID | - |
-| ❌ | POST | `/users/{username}/collection/folders/{folder_id}/releases/{release_id}/instances/{instance_id}` | Edit release instance (notes, rating) | - |
-| ❌ | POST | `/users/{username}/collection/folders/{folder_id}/releases/{release_id}/instances/{instance_id}/fields/{field_id}` | Edit custom field value | - |
+| ✅ | GET | `/users/{username}/collection/fields` | Get custom collection fields | `GetCollectionFields()` |
+| ✅ | GET | `/users/{username}/collection/releases/{release_id}` | Get collection release by release ID | `GetCollectionItemsByRelease()` |
+| ✅ | POST | `/users/{username}/collection/folders/{folder_id}/releases/{release_id}/instances/{instance_id}` | Edit release instance (notes, rating) | `UpdateCollectionFolderRelease()` |
+| ✅ | POST | `/users/{username}/collection/folders/{folder_id}/releases/{release_id}/instances/{instance_id}/fields/{field_id}` | Edit custom field value | `UpdateCollectionFolderReleaseField()` |
 
 ---
 

@@ -1,0 +1,58 @@
+[
+  {
+    "requestMethod": "GET",
+    "requestUrl": "https://api.discogs.com/users/DamIDhagor/collection/releases/2147483647",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 200,
+    "responseHeaders": {
+      "Date": [
+        "Sun, 23 Aug 2026 16:14:50 GMT"
+      ],
+      "Transfer-Encoding": [
+        "chunked"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Set-Cookie": [
+        "****"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "Vary": [
+        "Accept-Encoding"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "56"
+      ],
+      "x-discogs-ratelimit-used": [
+        "4"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a2fb69980a38c809-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022pagination\u0022:{\u0022page\u0022:1,\u0022pages\u0022:1,\u0022per_page\u0022:50,\u0022items\u0022:0,\u0022urls\u0022:{}},\u0022releases\u0022:[]}"
+  }
+]
