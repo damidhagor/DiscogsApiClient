@@ -112,7 +112,26 @@ internal static class EnumJsonConverterGenerator
                         {{enumeration.TypeInfo.FullTypeName}} value,
                         global::System.Text.Json.JsonSerializerOptions options)
                     {
-                        throw new global::System.NotImplementedException($"Serializing to Json is not supported for '{typeof({{enumeration.TypeInfo.GetFullTypeName(false)}}).FullName}'.");
+                        var stringValue = value switch
+                        {
+            """);
+
+        for (var i = 0; i < enumeration.TypeInfo.EnumMembers.Length; i++)
+        {
+            var enumMember = enumeration.TypeInfo.EnumMembers[i];
+
+            builder.AppendLine(
+                $$"""
+                            {{enumeration.TypeInfo.GetFullTypeName(false)}}.{{enumMember.MemberName}} => "{{enumMember.MemberNameAlias}}",
+            """);
+        }
+
+        builder.AppendLine(
+            $$"""
+                            _ => throw new global::System.ArgumentOutOfRangeException(nameof(value), value, $"Value '{value}' can not be serialized as '{typeof({{enumeration.TypeInfo.GetFullTypeName(false)}}).FullName}'.")
+                        };
+
+                        writer.WriteStringValue(stringValue);
                     }
                 }
             """);
