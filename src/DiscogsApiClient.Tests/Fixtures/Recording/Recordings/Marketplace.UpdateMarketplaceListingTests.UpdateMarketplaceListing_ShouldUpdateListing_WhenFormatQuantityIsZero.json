@@ -1,0 +1,307 @@
+[
+  {
+    "requestMethod": "POST",
+    "requestUrl": "https://api.discogs.com/marketplace/listings",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": "{\u0022release_id\u0022:5134861,\u0022condition\u0022:\u0022Near Mint (NM or M-)\u0022,\u0022price\u0022:100,\u0022status\u0022:\u0022Draft\u0022,\u0022sleeve_condition\u0022:\u0022Near Mint (NM or M-)\u0022,\u0022comments\u0022:\u0022API_TEST_UPDATE_MARKETPLACE_LISTING_ZERO_FORMAT_QUANTITY\u0022,\u0022allow_offers\u0022:false,\u0022external_id\u0022:\u0022API_TEST_EXTERNAL_ID\u0022,\u0022location\u0022:\u0022API_TEST_LOCATION\u0022,\u0022weight\u0022:100,\u0022format_quantity\u0022:1}",
+    "responseStatusCode": 201,
+    "responseHeaders": {
+      "Date": [
+        "Mon, 24 Aug 2026 14:27:47 GMT"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Access-Control-Allow-Headers": [
+        "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID"
+      ],
+      "Access-Control-Allow-Methods": [
+        "HEAD,OPTIONS,OPTIONS,POST"
+      ],
+      "Access-Control-Allow-Origin": [
+        "*"
+      ],
+      "Access-Control-Expose-Headers": [
+        "Location"
+      ],
+      "Cache-Control": [
+        "public, must-revalidate"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "X-Content-Type-Options": [
+        "nosniff"
+      ],
+      "x-discogs-media-type": [
+        "discogs.v2"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "52"
+      ],
+      "x-discogs-ratelimit-used": [
+        "8"
+      ],
+      "X-Frame-Options": [
+        "SAMEORIGIN"
+      ],
+      "X-XSS-Protection": [
+        "1; mode=block"
+      ],
+      "Set-Cookie": [
+        "****"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a3030a2ddeedcf59-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022listing_id\u0022:4330902798,\u0022resource_url\u0022:\u0022https://api.discogs.com/marketplace/listings/4330902798\u0022}"
+  },
+  {
+    "requestMethod": "POST",
+    "requestUrl": "https://api.discogs.com/marketplace/listings/4330902798",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": "{\u0022release_id\u0022:5134861,\u0022condition\u0022:\u0022Near Mint (NM or M-)\u0022,\u0022price\u0022:100,\u0022status\u0022:\u0022Draft\u0022,\u0022sleeve_condition\u0022:\u0022Near Mint (NM or M-)\u0022,\u0022comments\u0022:\u0022API_TEST_UPDATE_MARKETPLACE_LISTING_ZERO_FORMAT_QUANTITY\u0022,\u0022allow_offers\u0022:false,\u0022external_id\u0022:\u0022API_TEST_EXTERNAL_ID\u0022,\u0022location\u0022:\u0022API_TEST_LOCATION\u0022,\u0022weight\u0022:100,\u0022format_quantity\u0022:0}",
+    "responseStatusCode": 204,
+    "responseHeaders": {
+      "Date": [
+        "Mon, 24 Aug 2026 14:27:48 GMT"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Access-Control-Allow-Headers": [
+        "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID"
+      ],
+      "Access-Control-Allow-Methods": [
+        "HEAD,OPTIONS,DELETE,GET,OPTIONS,PATCH,POST"
+      ],
+      "Access-Control-Allow-Origin": [
+        "*"
+      ],
+      "Access-Control-Expose-Headers": [
+        "Location"
+      ],
+      "Cache-Control": [
+        "public, must-revalidate"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "X-Content-Type-Options": [
+        "nosniff"
+      ],
+      "x-discogs-media-type": [
+        "discogs.v2"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "38"
+      ],
+      "x-discogs-ratelimit-used": [
+        "22"
+      ],
+      "X-Frame-Options": [
+        "SAMEORIGIN"
+      ],
+      "X-XSS-Protection": [
+        "1; mode=block"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a3030a2f7ae3cf59-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": ""
+  },
+  {
+    "requestMethod": "GET",
+    "requestUrl": "https://api.discogs.com/marketplace/listings/4330902798",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 200,
+    "responseHeaders": {
+      "Date": [
+        "Mon, 24 Aug 2026 14:27:48 GMT"
+      ],
+      "Transfer-Encoding": [
+        "chunked"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Access-Control-Allow-Headers": [
+        "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID"
+      ],
+      "Access-Control-Allow-Methods": [
+        "HEAD,OPTIONS,DELETE,GET,OPTIONS,PATCH,POST"
+      ],
+      "Access-Control-Allow-Origin": [
+        "*"
+      ],
+      "Access-Control-Expose-Headers": [
+        "Location"
+      ],
+      "Cache-Control": [
+        "public, must-revalidate"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "Vary": [
+        "Accept-Encoding"
+      ],
+      "X-Content-Type-Options": [
+        "nosniff"
+      ],
+      "x-discogs-media-type": [
+        "discogs.v2"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "30"
+      ],
+      "x-discogs-ratelimit-used": [
+        "30"
+      ],
+      "X-Frame-Options": [
+        "SAMEORIGIN"
+      ],
+      "X-XSS-Protection": [
+        "1; mode=block"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a3030a32ea90cf59-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022id\u0022:4330902798,\u0022resource_url\u0022:\u0022https://api.discogs.com/marketplace/listings/4330902798\u0022,\u0022uri\u0022:\u0022https://www.discogs.com/sell/item/4330902798\u0022,\u0022status\u0022:\u0022Draft\u0022,\u0022condition\u0022:\u0022Near Mint (NM or M-)\u0022,\u0022sleeve_condition\u0022:\u0022Near Mint (NM or M-)\u0022,\u0022comments\u0022:\u0022API_TEST_UPDATE_MARKETPLACE_LISTING_ZERO_FORMAT_QUANTITY\u0022,\u0022ships_from\u0022:\u0022Germany\u0022,\u0022posted\u0022:\u00222026-08-24T07:27:48-07:00\u0022,\u0022allow_offers\u0022:false,\u0022offer_submitted\u0022:false,\u0022audio\u0022:false,\u0022price\u0022:{\u0022value\u0022:100.0,\u0022currency\u0022:\u0022EUR\u0022},\u0022original_price\u0022:{\u0022curr_abbr\u0022:\u0022EUR\u0022,\u0022curr_id\u0022:3,\u0022formatted\u0022:\u0022\u20AC100.00\u0022,\u0022value\u0022:100.0},\u0022shipping_price\u0022:{},\u0022original_shipping_price\u0022:{},\u0022seller\u0022:{\u0022id\u0022:12579295,\u0022username\u0022:\u0022DamIDhagor\u0022,\u0022avatar_url\u0022:\u0022https://i.discogs.com/W0OR6Z5OewEwKpar3QyLVCuXbhw2_uNLIwahkmSKqNk/rs:fill/g:sm/q:40/h:500/w:500/czM6Ly9kaXNjb2dz/LXVzZXItYXZhdGFy/cy9VLTEyNTc5Mjk1/LTE2Mzk3ODM2MTIu/anBlZw.jpeg\u0022,\u0022stats\u0022:{\u0022rating\u0022:\u00220.0\u0022,\u0022stars\u0022:0.0,\u0022total\u0022:0},\u0022min_order_total\u0022:0.0,\u0022html_url\u0022:\u0022https://www.discogs.com/user/DamIDhagor\u0022,\u0022uid\u0022:12579295,\u0022url\u0022:\u0022https://api.discogs.com/users/DamIDhagor\u0022,\u0022payment\u0022:\u0022PayPal Commerce\u0022,\u0022shipping\u0022:\u0022Shipping\\r\\nOrders are shipped within 4 business days of receiving cleared payment. All items are securely packed to protect against damage in transit.\\r\\n\\r\\nReturns \u0026 Refunds\\r\\nI accept returns within 7 days of receipt if the item is not as described, damaged, or defective. Please contact me before returning any item. If the return is due to my error (wrong item, inaccurate grading, or damage in transit), I will cover the return shipping cost. Refunds are issued once the returned item is received in its original condition.\\r\\n\\r\\nSeller Status\\r\\nI am a private/occasional seller selling items from my own collection, not operating as a business. As such, no VAT is charged on my sales.\\r\\n\\r\\nGeneral\\r\\nFeel free to contact me with any questions before ordering.\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/users/DamIDhagor\u0022},\u0022release\u0022:{\u0022thumbnail\u0022:\u0022https://i.discogs.com/z-WOVc6-4Jj7uQfLfZlcOLKmTR6Pdal_cBRJm5WoBKY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny04MTkyLmpwZWc.jpeg\u0022,\u0022description\u0022:\u0022HammerFall - Glory To The Brave (CD, Album, Promo)\u0022,\u0022images\u0022:[{\u0022type\u0022:\u0022primary\u0022,\u0022uri\u0022:\u0022https://i.discogs.com/UETvnaefHj6HfXSgYx8R1pc-juBrScOdt79dOSeH3gk/rs:fit/g:sm/q:90/h:596/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny04MTkyLmpwZWc.jpeg\u0022,\u0022resource_url\u0022:\u0022https://i.discogs.com/UETvnaefHj6HfXSgYx8R1pc-juBrScOdt79dOSeH3gk/rs:fit/g:sm/q:90/h:596/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny04MTkyLmpwZWc.jpeg\u0022,\u0022uri150\u0022:\u0022https://i.discogs.com/z-WOVc6-4Jj7uQfLfZlcOLKmTR6Pdal_cBRJm5WoBKY/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny04MTkyLmpwZWc.jpeg\u0022,\u0022width\u0022:600,\u0022height\u0022:596},{\u0022type\u0022:\u0022secondary\u0022,\u0022uri\u0022:\u0022https://i.discogs.com/1b3kMvA0st-DAqrnqBqsFrSe4ZvabCMd0DYe6v16P9c/rs:fit/g:sm/q:90/h:588/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny0yODUxLmpwZWc.jpeg\u0022,\u0022resource_url\u0022:\u0022https://i.discogs.com/1b3kMvA0st-DAqrnqBqsFrSe4ZvabCMd0DYe6v16P9c/rs:fit/g:sm/q:90/h:588/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny0yODUxLmpwZWc.jpeg\u0022,\u0022uri150\u0022:\u0022https://i.discogs.com/KW3nH3jSVjAPP3m1WPlfb8RMIZ3RWX1be5mIWLfWvNI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny0yODUxLmpwZWc.jpeg\u0022,\u0022width\u0022:600,\u0022height\u0022:588},{\u0022type\u0022:\u0022secondary\u0022,\u0022uri\u0022:\u0022https://i.discogs.com/OpS402sG3McMd-M_EMah9klpxKh_eN8m9ef4Wm90UQU/rs:fit/g:sm/q:90/h:595/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny0zMDIxLmpwZWc.jpeg\u0022,\u0022resource_url\u0022:\u0022https://i.discogs.com/OpS402sG3McMd-M_EMah9klpxKh_eN8m9ef4Wm90UQU/rs:fit/g:sm/q:90/h:595/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny0zMDIxLmpwZWc.jpeg\u0022,\u0022uri150\u0022:\u0022https://i.discogs.com/f1vyTJ1vpQUPi_q4lHbrnXQxXuQJVuiI5gH4odUrKDw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcyMzk4OTE5/Ny0zMDIxLmpwZWc.jpeg\u0022,\u0022width\u0022:600,\u0022height\u0022:595},{\u0022type\u0022:\u0022secondary\u0022,\u0022uri\u0022:\u0022https://i.discogs.com/nAo9UrKFpC3nxLJVz2lcn3ed_yRz-U5LuPbMy3fQRZs/rs:fit/g:sm/q:90/h:500/w:500/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTM4NTQzNTQ0/Ny0yNjU5LmpwZWc.jpeg\u0022,\u0022resource_url\u0022:\u0022https://i.discogs.com/nAo9UrKFpC3nxLJVz2lcn3ed_yRz-U5LuPbMy3fQRZs/rs:fit/g:sm/q:90/h:500/w:500/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTM4NTQzNTQ0/Ny0yNjU5LmpwZWc.jpeg\u0022,\u0022uri150\u0022:\u0022https://i.discogs.com/_Pf2rdQKautGW5sCYFQhJNuuCY6dp0dwqrdGaJSW2zk/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTM4NTQzNTQ0/Ny0yNjU5LmpwZWc.jpeg\u0022,\u0022width\u0022:500,\u0022height\u0022:500},{\u0022type\u0022:\u0022secondary\u0022,\u0022uri\u0022:\u0022https://i.discogs.com/BlvNyfyW95VQsYv2Umv-Ax7sgwtPD-Ygw6MU0wqpoBs/rs:fit/g:sm/q:90/h:600/w:595/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTM4NTQzNTQz/Ni03ODc1LmpwZWc.jpeg\u0022,\u0022resource_url\u0022:\u0022https://i.discogs.com/BlvNyfyW95VQsYv2Umv-Ax7sgwtPD-Ygw6MU0wqpoBs/rs:fit/g:sm/q:90/h:600/w:595/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTM4NTQzNTQz/Ni03ODc1LmpwZWc.jpeg\u0022,\u0022uri150\u0022:\u0022https://i.discogs.com/rW3Cj8C8ow8bdVoktodUT-0WePjcCCkZYF56cm7pzJ8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTM4NTQzNTQz/Ni03ODc1LmpwZWc.jpeg\u0022,\u0022width\u0022:595,\u0022height\u0022:600},{\u0022type\u0022:\u0022secondary\u0022,\u0022uri\u0022:\u0022https://i.discogs.com/qJq5m5FB0NlEG9JwkWul_BrKOXMIJRB0XTF7n2V_viA/rs:fit/g:sm/q:90/h:612/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcxOTY2NDQ3/Ny00NTkzLmpwZWc.jpeg\u0022,\u0022resource_url\u0022:\u0022https://i.discogs.com/qJq5m5FB0NlEG9JwkWul_BrKOXMIJRB0XTF7n2V_viA/rs:fit/g:sm/q:90/h:612/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcxOTY2NDQ3/Ny00NTkzLmpwZWc.jpeg\u0022,\u0022uri150\u0022:\u0022https://i.discogs.com/pMct_YAwnpNqr7hk9vzgglUK6okvVbjh85UuUoDLYXQ/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTUxMzQ4/NjEtMTcxOTY2NDQ3/Ny00NTkzLmpwZWc.jpeg\u0022,\u0022width\u0022:600,\u0022height\u0022:612}],\u0022artist\u0022:\u0022HammerFall\u0022,\u0022format\u0022:\u0022CD, Album, Promo\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/releases/5134861\u0022,\u0022title\u0022:\u0022Glory To The Brave\u0022,\u0022year\u0022:1997,\u0022id\u0022:5134861,\u0022label\u0022:\u0022Nuclear Blast\u0022,\u0022catalog_number\u0022:\u0022NB 265-2\u0022,\u0022stats\u0022:{\u0022community\u0022:{\u0022in_wantlist\u0022:41,\u0022in_collection\u0022:403},\u0022user\u0022:{\u0022in_wantlist\u0022:0,\u0022in_collection\u0022:0}}},\u0022in_cart\u0022:false,\u0022shipping_is_blocked\u0022:true,\u0022weight\u0022:100.0,\u0022estimated_weight\u0022:85,\u0022format_quantity\u0022:1,\u0022external_id\u0022:\u0022API_TEST_EXTERNAL_ID\u0022,\u0022location\u0022:\u0022API_TEST_LOCATION\u0022,\u0022quantity\u0022:1}"
+  },
+  {
+    "requestMethod": "DELETE",
+    "requestUrl": "https://api.discogs.com/marketplace/listings/4330902798",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 204,
+    "responseHeaders": {
+      "Date": [
+        "Mon, 24 Aug 2026 14:27:48 GMT"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Access-Control-Allow-Headers": [
+        "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID"
+      ],
+      "Access-Control-Allow-Methods": [
+        "HEAD,OPTIONS,DELETE,GET,OPTIONS,PATCH,POST"
+      ],
+      "Access-Control-Allow-Origin": [
+        "*"
+      ],
+      "Access-Control-Expose-Headers": [
+        "Location"
+      ],
+      "Cache-Control": [
+        "public, must-revalidate"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "X-Content-Type-Options": [
+        "nosniff"
+      ],
+      "x-discogs-media-type": [
+        "discogs.v2"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "19"
+      ],
+      "x-discogs-ratelimit-used": [
+        "41"
+      ],
+      "X-Frame-Options": [
+        "SAMEORIGIN"
+      ],
+      "X-XSS-Protection": [
+        "1; mode=block"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a3030a34be72cf59-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": ""
+  }
+]

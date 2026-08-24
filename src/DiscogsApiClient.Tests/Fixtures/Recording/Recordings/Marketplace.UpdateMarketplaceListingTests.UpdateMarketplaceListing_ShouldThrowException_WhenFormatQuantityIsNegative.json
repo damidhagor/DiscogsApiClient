@@ -1,0 +1,224 @@
+[
+  {
+    "requestMethod": "POST",
+    "requestUrl": "https://api.discogs.com/marketplace/listings",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": "{\u0022release_id\u0022:5134861,\u0022condition\u0022:\u0022Near Mint (NM or M-)\u0022,\u0022price\u0022:100,\u0022status\u0022:\u0022Draft\u0022,\u0022sleeve_condition\u0022:\u0022Near Mint (NM or M-)\u0022,\u0022comments\u0022:\u0022API_TEST_UPDATE_MARKETPLACE_LISTING_NEGATIVE_FORMAT_QUANTITY\u0022,\u0022allow_offers\u0022:false,\u0022external_id\u0022:\u0022API_TEST_EXTERNAL_ID\u0022,\u0022location\u0022:\u0022API_TEST_LOCATION\u0022,\u0022weight\u0022:100,\u0022format_quantity\u0022:1}",
+    "responseStatusCode": 201,
+    "responseHeaders": {
+      "Date": [
+        "Mon, 24 Aug 2026 14:27:48 GMT"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Access-Control-Allow-Headers": [
+        "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID"
+      ],
+      "Access-Control-Allow-Methods": [
+        "HEAD,OPTIONS,OPTIONS,POST"
+      ],
+      "Access-Control-Allow-Origin": [
+        "*"
+      ],
+      "Access-Control-Expose-Headers": [
+        "Location"
+      ],
+      "Cache-Control": [
+        "public, must-revalidate"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "X-Content-Type-Options": [
+        "nosniff"
+      ],
+      "x-discogs-media-type": [
+        "discogs.v2"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "41"
+      ],
+      "x-discogs-ratelimit-used": [
+        "19"
+      ],
+      "X-Frame-Options": [
+        "SAMEORIGIN"
+      ],
+      "X-XSS-Protection": [
+        "1; mode=block"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Set-Cookie": [
+        "****"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a3030a2dca79f803-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022listing_id\u0022:4330902810,\u0022resource_url\u0022:\u0022https://api.discogs.com/marketplace/listings/4330902810\u0022}"
+  },
+  {
+    "requestMethod": "POST",
+    "requestUrl": "https://api.discogs.com/marketplace/listings/4330902810",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": "{\u0022release_id\u0022:5134861,\u0022condition\u0022:\u0022Near Mint (NM or M-)\u0022,\u0022price\u0022:100,\u0022status\u0022:\u0022Draft\u0022,\u0022sleeve_condition\u0022:\u0022Near Mint (NM or M-)\u0022,\u0022comments\u0022:\u0022API_TEST_UPDATE_MARKETPLACE_LISTING_NEGATIVE_FORMAT_QUANTITY\u0022,\u0022allow_offers\u0022:false,\u0022external_id\u0022:\u0022API_TEST_EXTERNAL_ID\u0022,\u0022location\u0022:\u0022API_TEST_LOCATION\u0022,\u0022weight\u0022:100,\u0022format_quantity\u0022:-1}",
+    "responseStatusCode": 400,
+    "responseHeaders": {
+      "Date": [
+        "Mon, 24 Aug 2026 14:27:48 GMT"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Access-Control-Allow-Headers": [
+        "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID"
+      ],
+      "Access-Control-Allow-Methods": [
+        "HEAD,OPTIONS,DELETE,GET,OPTIONS,PATCH,POST"
+      ],
+      "Access-Control-Allow-Origin": [
+        "*"
+      ],
+      "Access-Control-Expose-Headers": [
+        "Location"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "X-Content-Type-Options": [
+        "nosniff"
+      ],
+      "x-discogs-media-type": [
+        "discogs.v2"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "32"
+      ],
+      "x-discogs-ratelimit-used": [
+        "28"
+      ],
+      "X-Frame-Options": [
+        "SAMEORIGIN"
+      ],
+      "X-XSS-Protection": [
+        "1; mode=block"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a3030a3179f1f803-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022message\u0022:\u0022Format quantity cannot be negative\u0022}"
+  },
+  {
+    "requestMethod": "DELETE",
+    "requestUrl": "https://api.discogs.com/marketplace/listings/4330902810",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 204,
+    "responseHeaders": {
+      "Date": [
+        "Mon, 24 Aug 2026 14:27:48 GMT"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Access-Control-Allow-Headers": [
+        "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID"
+      ],
+      "Access-Control-Allow-Methods": [
+        "HEAD,OPTIONS,DELETE,GET,OPTIONS,PATCH,POST"
+      ],
+      "Access-Control-Allow-Origin": [
+        "*"
+      ],
+      "Access-Control-Expose-Headers": [
+        "Location"
+      ],
+      "Cache-Control": [
+        "public, must-revalidate"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "X-Content-Type-Options": [
+        "nosniff"
+      ],
+      "x-discogs-media-type": [
+        "discogs.v2"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "29"
+      ],
+      "x-discogs-ratelimit-used": [
+        "31"
+      ],
+      "X-Frame-Options": [
+        "SAMEORIGIN"
+      ],
+      "X-XSS-Protection": [
+        "1; mode=block"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a3030a32fd1ff803-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": ""
+  }
+]

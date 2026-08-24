@@ -1,0 +1,76 @@
+[
+  {
+    "requestMethod": "POST",
+    "requestUrl": "https://api.discogs.com/marketplace/listings",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": "{\u0022release_id\u0022:0,\u0022condition\u0022:\u0022Near Mint (NM or M-)\u0022,\u0022price\u0022:100,\u0022status\u0022:\u0022Draft\u0022,\u0022sleeve_condition\u0022:\u0022Near Mint (NM or M-)\u0022,\u0022comments\u0022:\u0022API_TEST_CREATE_MARKETPLACE_LISTING_ZERO_RELEASE_ID\u0022,\u0022allow_offers\u0022:false,\u0022external_id\u0022:\u0022API_TEST_EXTERNAL_ID\u0022,\u0022location\u0022:\u0022API_TEST_LOCATION\u0022,\u0022weight\u0022:100,\u0022format_quantity\u0022:1}",
+    "responseStatusCode": 422,
+    "responseHeaders": {
+      "Date": [
+        "Mon, 24 Aug 2026 11:50:04 GMT"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Access-Control-Allow-Headers": [
+        "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID"
+      ],
+      "Access-Control-Allow-Methods": [
+        "HEAD,OPTIONS,OPTIONS,POST"
+      ],
+      "Access-Control-Allow-Origin": [
+        "*"
+      ],
+      "Access-Control-Expose-Headers": [
+        "Location"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "X-Content-Type-Options": [
+        "nosniff"
+      ],
+      "x-discogs-media-type": [
+        "discogs.v2"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "56"
+      ],
+      "x-discogs-ratelimit-used": [
+        "4"
+      ],
+      "X-Frame-Options": [
+        "SAMEORIGIN"
+      ],
+      "X-XSS-Protection": [
+        "1; mode=block"
+      ],
+      "Set-Cookie": [
+        "****"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a3022321abff5d7d-FRA"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022message\u0022:\u0022Invalid release_id: release not found.\u0022}"
+  }
+]
