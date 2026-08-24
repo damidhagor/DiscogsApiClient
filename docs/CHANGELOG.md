@@ -8,6 +8,12 @@ Each entry lists its own **Breaking** changes inline where applicable — see
 
 ## [5.2.0] - Unreleased
 
+- Added new `IDiscogsApiClient` endpoints for Marketplace Listings:
+  - Get a listing (`GetMarketplaceListing()`).
+  - Create a listing (`CreateMarketplaceListing()`).
+  - Update a listing (`UpdateMarketplaceListing()`).
+  - Delete a listing (`DeleteMarketplaceListing()`).
+  - Get a seller's inventory (`GetInventory()`).
 - Fixed: `docs/API_COVERAGE.md` incorrectly listed `/oauth/access_token` as an unimplemented gap; it is
   already handled internally by the OAuth authentication flow and is not a public client endpoint.
 

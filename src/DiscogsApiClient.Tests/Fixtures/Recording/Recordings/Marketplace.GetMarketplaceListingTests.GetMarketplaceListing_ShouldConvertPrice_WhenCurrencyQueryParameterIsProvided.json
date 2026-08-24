@@ -1,0 +1,82 @@
+[
+  {
+    "requestMethod": "GET",
+    "requestUrl": "https://api.discogs.com/marketplace/listings/4075375078?curr_abbr=EUR",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 200,
+    "responseHeaders": {
+      "Date": [
+        "Mon, 24 Aug 2026 09:28:38 GMT"
+      ],
+      "Transfer-Encoding": [
+        "chunked"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Access-Control-Allow-Headers": [
+        "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID"
+      ],
+      "Access-Control-Allow-Methods": [
+        "HEAD,OPTIONS,DELETE,GET,OPTIONS,PATCH,POST"
+      ],
+      "Access-Control-Allow-Origin": [
+        "*"
+      ],
+      "Access-Control-Expose-Headers": [
+        "Location"
+      ],
+      "Cache-Control": [
+        "public, must-revalidate"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "Vary": [
+        "Accept-Encoding"
+      ],
+      "X-Content-Type-Options": [
+        "nosniff"
+      ],
+      "x-discogs-media-type": [
+        "discogs.v2"
+      ],
+      "x-discogs-ratelimit": [
+        "25"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "23"
+      ],
+      "x-discogs-ratelimit-used": [
+        "2"
+      ],
+      "X-Frame-Options": [
+        "SAMEORIGIN"
+      ],
+      "X-XSS-Protection": [
+        "1; mode=block"
+      ],
+      "Set-Cookie": [
+        "****"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a30153f8ffb81c6d-FRA"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022id\u0022:4075375078,\u0022resource_url\u0022:\u0022https://api.discogs.com/marketplace/listings/4075375078\u0022,\u0022uri\u0022:\u0022https://www.discogs.com/sell/item/4075375078\u0022,\u0022status\u0022:\u0022For Sale\u0022,\u0022condition\u0022:\u0022Near Mint (NM or M-)\u0022,\u0022sleeve_condition\u0022:\u0022Very Good (VG)\u0022,\u0022comments\u0022:\u0022centre pushed out\u0022,\u0022ships_from\u0022:\u0022United Kingdom\u0022,\u0022posted\u0022:\u00222026-03-17T07:41:55-07:00\u0022,\u0022allow_offers\u0022:false,\u0022offer_submitted\u0022:false,\u0022audio\u0022:false,\u0022price\u0022:{\u0022value\u0022:2.2030136986301367,\u0022currency\u0022:\u0022EUR\u0022},\u0022original_price\u0022:{\u0022curr_abbr\u0022:\u0022GBP\u0022,\u0022curr_id\u0022:2,\u0022formatted\u0022:\u0022\u00A31.87\u0022,\u0022value\u0022:1.87},\u0022shipping_price\u0022:{},\u0022original_shipping_price\u0022:{},\u0022seller\u0022:{\u0022id\u0022:5052808,\u0022username\u0022:\u0022STIFFBEGGER\u0022,\u0022avatar_url\u0022:\u0022https://gravatar.com/avatar/fa85fe4ebc72ee015d4f144f9713550248d3b3552041923707563d0822388cab?s=500\u0026r=pg\u0026d=mm\u0022,\u0022stats\u0022:{\u0022rating\u0022:\u002299.5\u0022,\u0022stars\u0022:4.5,\u0022total\u0022:4042},\u0022min_order_total\u0022:1.0,\u0022html_url\u0022:\u0022https://www.discogs.com/user/STIFFBEGGER\u0022,\u0022uid\u0022:5052808,\u0022url\u0022:\u0022https://api.discogs.com/users/STIFFBEGGER\u0022,\u0022payment\u0022:\u0022PayPal Commerce\u0022,\u0022shipping\u0022:\u0022The EU charges a \u20AC3 customs duty per item type shipped to the EU. \u00A32.64 has been added for this shipment (1 item type). Sending different types of items will increase this amount. This is separate from any VAT your marketplace collects via IOSS\\r\\nAll Vinyl sent in a sturdy mailer.\\r\\nRoyal Mail Parcel Service track and trace\\r\\nSingle Albums \u00A34.60\\r\\nDouble Albums \u00A35.00\\r\\nAll prices include packaging\\r\\nPostal costs are the responsibility of the buyer.\\r\\nPlease note Orders from the Channel Islands will incur extra post and invoice will be adjusted\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/users/STIFFBEGGER\u0022},\u0022release\u0022:{\u0022thumbnail\u0022:\u0022https://i.discogs.com/HG2xChKN-rIHHSfgL53W9z2vJWeFknfevpOMwSHtIaM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0OTUw/NC0xMzM0NTkyMjEy/LmpwZWc.jpeg\u0022,\u0022description\u0022:\u0022Rick Astley - Never Gonna Give You Up (7\\\u0022, Single)\u0022,\u0022images\u0022:[{\u0022type\u0022:\u0022primary\u0022,\u0022uri\u0022:\u0022https://i.discogs.com/-DPFA5hKT8i91jnjn4rLB1zSiuUBFTrGWspu1TpLV30/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0OTUw/NC0xMzM0NTkyMjEy/LmpwZWc.jpeg\u0022,\u0022resource_url\u0022:\u0022https://i.discogs.com/-DPFA5hKT8i91jnjn4rLB1zSiuUBFTrGWspu1TpLV30/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0OTUw/NC0xMzM0NTkyMjEy/LmpwZWc.jpeg\u0022,\u0022uri150\u0022:\u0022https://i.discogs.com/HG2xChKN-rIHHSfgL53W9z2vJWeFknfevpOMwSHtIaM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0OTUw/NC0xMzM0NTkyMjEy/LmpwZWc.jpeg\u0022,\u0022width\u0022:600,\u0022height\u0022:600},{\u0022type\u0022:\u0022secondary\u0022,\u0022uri\u0022:\u0022https://i.discogs.com/OWpTvsxMTH_LKyKfVm9VwnejWED-PDaweQLLpP85sw0/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0OTUw/NC0xMzM0NTkyMjI4/LmpwZWc.jpeg\u0022,\u0022resource_url\u0022:\u0022https://i.discogs.com/OWpTvsxMTH_LKyKfVm9VwnejWED-PDaweQLLpP85sw0/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0OTUw/NC0xMzM0NTkyMjI4/LmpwZWc.jpeg\u0022,\u0022uri150\u0022:\u0022https://i.discogs.com/tAcGENSjy6SkScrHuPEu3rdOb_9S2zR-ubeaHj5dxRI/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0OTUw/NC0xMzM0NTkyMjI4/LmpwZWc.jpeg\u0022,\u0022width\u0022:600,\u0022height\u0022:600},{\u0022type\u0022:\u0022secondary\u0022,\u0022uri\u0022:\u0022https://i.discogs.com/GQJ67saFtqGZWcuPGvRldpsQ8QdiSDcob9yeLnyvfzo/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0OTUw/NC0xMzM0NTkyMjMz/LmpwZWc.jpeg\u0022,\u0022resource_url\u0022:\u0022https://i.discogs.com/GQJ67saFtqGZWcuPGvRldpsQ8QdiSDcob9yeLnyvfzo/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0OTUw/NC0xMzM0NTkyMjMz/LmpwZWc.jpeg\u0022,\u0022uri150\u0022:\u0022https://i.discogs.com/2Bas-uaVWd9S3JTUhGREpiYSG-MCNc0ntgi_oPjJXds/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0OTUw/NC0xMzM0NTkyMjMz/LmpwZWc.jpeg\u0022,\u0022width\u0022:600,\u0022height\u0022:600},{\u0022type\u0022:\u0022secondary\u0022,\u0022uri\u0022:\u0022https://i.discogs.com/cMqrTKVAQriVfa4UGEXjTFD9pdCo_isHBs1KANNc6KE/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0OTUw/NC0xMzM0NTkyMjM4/LmpwZWc.jpeg\u0022,\u0022resource_url\u0022:\u0022https://i.discogs.com/cMqrTKVAQriVfa4UGEXjTFD9pdCo_isHBs1KANNc6KE/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0OTUw/NC0xMzM0NTkyMjM4/LmpwZWc.jpeg\u0022,\u0022uri150\u0022:\u0022https://i.discogs.com/Ai9QPh87GFSS2DNSJ3JRdKaLXtxT4NrnN1LyrMX3Qi0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0OTUw/NC0xMzM0NTkyMjM4/LmpwZWc.jpeg\u0022,\u0022width\u0022:600,\u0022height\u0022:600}],\u0022artist\u0022:\u0022Rick Astley\u0022,\u0022format\u0022:\u00227\\\u0022, Single\u0022,\u0022resource_url\u0022:\u0022https://api.discogs.com/releases/249504\u0022,\u0022title\u0022:\u0022Never Gonna Give You Up\u0022,\u0022year\u0022:1987,\u0022id\u0022:249504,\u0022label\u0022:\u0022RCA\u0022,\u0022catalog_number\u0022:\u0022PB 41447\u0022,\u0022stats\u0022:{\u0022community\u0022:{\u0022in_wantlist\u0022:584,\u0022in_collection\u0022:4102}}},\u0022shipping_is_blocked\u0022:true}"
+  }
+]

@@ -391,4 +391,55 @@ internal sealed partial class DiscogsApiClient(HttpClient httpClient, DiscogsJso
 
     [HttpGet("/database/search")]
     public partial Task<SearchResultsResponse> SearchDatabase(SearchQueryParameters searchQueryParameters, PaginationQueryParameters? paginationQueryParameters, CancellationToken cancellationToken);
+
+
+    [HttpGet("/marketplace/listings/{listingId}")]
+    private partial Task<MarketplaceListing> GetMarketplaceListingInternal(long listingId, MarketplaceCurrencyQueryParameters? currencyQueryParameters, CancellationToken cancellationToken);
+
+    public async Task<MarketplaceListing> GetMarketplaceListing(long listingId, MarketplaceCurrencyQueryParameters? currencyQueryParameters, CancellationToken cancellationToken)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(listingId, 0);
+        return await GetMarketplaceListingInternal(listingId, currencyQueryParameters, cancellationToken).ConfigureAwait(false);
+    }
+
+
+    [HttpPost("/marketplace/listings")]
+    private partial Task<MarketplaceListingCreateResponse> CreateMarketplaceListingInternal([Body] MarketplaceListingCreateRequest request, CancellationToken cancellationToken);
+
+    public async Task<MarketplaceListingCreateResponse> CreateMarketplaceListing(MarketplaceListingCreateRequest request, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        return await CreateMarketplaceListingInternal(request, cancellationToken).ConfigureAwait(false);
+    }
+
+
+    [HttpPost("/marketplace/listings/{listingId}")]
+    private partial Task UpdateMarketplaceListingInternal(long listingId, [Body] MarketplaceListingUpdateRequest request, CancellationToken cancellationToken);
+
+    public async Task UpdateMarketplaceListing(long listingId, MarketplaceListingUpdateRequest request, CancellationToken cancellationToken)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(listingId, 0);
+        ArgumentNullException.ThrowIfNull(request);
+        await UpdateMarketplaceListingInternal(listingId, request, cancellationToken).ConfigureAwait(false);
+    }
+
+
+    [HttpDelete("/marketplace/listings/{listingId}")]
+    private partial Task DeleteMarketplaceListingInternal(long listingId, CancellationToken cancellationToken);
+
+    public async Task DeleteMarketplaceListing(long listingId, CancellationToken cancellationToken)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(listingId, 0);
+        await DeleteMarketplaceListingInternal(listingId, cancellationToken).ConfigureAwait(false);
+    }
+
+
+    [HttpGet("/users/{username}/inventory")]
+    private partial Task<MarketplaceInventoryResponse> GetInventoryInternal(string username, PaginationQueryParameters? paginationQueryParameters, MarketplaceInventoryQueryParameters? inventoryQueryParameters, CancellationToken cancellationToken);
+
+    public async Task<MarketplaceInventoryResponse> GetInventory(string username, PaginationQueryParameters? paginationQueryParameters, MarketplaceInventoryQueryParameters? inventoryQueryParameters, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+        return await GetInventoryInternal(username, paginationQueryParameters, inventoryQueryParameters, cancellationToken).ConfigureAwait(false);
+    }
 }

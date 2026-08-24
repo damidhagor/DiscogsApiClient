@@ -306,4 +306,44 @@ public interface IDiscogsApiClient
     /// <param name="searchQueryParameters">The search parameters to query for.</param>
     /// <param name="paginationQueryParameters">Pagination parameters.</param>
     Task<SearchResultsResponse> SearchDatabase(SearchQueryParameters searchQueryParameters, PaginationQueryParameters? paginationQueryParameters, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets a Marketplace listing.
+    /// </summary>
+    /// <param name="listingId">The listing's id.</param>
+    /// <param name="currencyQueryParameters">Currency parameters for the listing's price fields.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the listing id is invalid.</exception>
+    Task<MarketplaceListing> GetMarketplaceListing(long listingId, MarketplaceCurrencyQueryParameters? currencyQueryParameters, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Creates a new Marketplace listing. The listing is added to the authenticated user's inventory. Authentication is required.
+    /// </summary>
+    /// <param name="request">The listing to create.</param>
+    /// <exception cref="ArgumentNullException">Fires this exception if no request is provided.</exception>
+    Task<MarketplaceListingCreateResponse> CreateMarketplaceListing(MarketplaceListingCreateRequest request, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Updates an existing Marketplace listing. Authentication as the listing owner is required.
+    /// </summary>
+    /// <param name="listingId">The listing's id.</param>
+    /// <param name="request">The updated listing data.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the listing id is invalid.</exception>
+    /// <exception cref="ArgumentNullException">Fires this exception if no request is provided.</exception>
+    Task UpdateMarketplaceListing(long listingId, MarketplaceListingUpdateRequest request, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Permanently deletes a Marketplace listing. Authentication as the listing owner is required.
+    /// </summary>
+    /// <param name="listingId">The listing's id.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the listing id is invalid.</exception>
+    Task DeleteMarketplaceListing(long listingId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets a seller's Marketplace inventory. If the caller is not authenticated as the inventory owner, only listings with a status of "For Sale" are returned.
+    /// </summary>
+    /// <param name="username">The name of the user whose inventory is being fetched.</param>
+    /// <param name="paginationQueryParameters">Pagination parameters.</param>
+    /// <param name="inventoryQueryParameters">Filtering and sorting parameters for the inventory listings.</param>
+    /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
+    Task<MarketplaceInventoryResponse> GetInventory(string username, PaginationQueryParameters? paginationQueryParameters, MarketplaceInventoryQueryParameters? inventoryQueryParameters, CancellationToken cancellationToken);
 }

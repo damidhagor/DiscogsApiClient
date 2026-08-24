@@ -3,6 +3,7 @@ global using DiscogsApiClient.Authentication;
 global using DiscogsApiClient.Contract;
 global using DiscogsApiClient.Contract.Artist;
 global using DiscogsApiClient.Contract.Label;
+global using DiscogsApiClient.Contract.Marketplace;
 global using DiscogsApiClient.Contract.Release;
 global using DiscogsApiClient.Contract.Search;
 global using DiscogsApiClient.Contract.User;

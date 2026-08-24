@@ -3,7 +3,7 @@
 This document tracks the implementation status of all Discogs API endpoints in this library.
 
 **Last Updated:** 2026-08-24 (verified against `src/DiscogsApiClient/DiscogsApiClient.cs`)
-**Total Coverage:** 35/58 endpoints (60%)
+**Total Coverage:** 40/58 endpoints (69%)
 
 ---
 
@@ -17,13 +17,13 @@ This document tracks the implementation status of all Discogs API endpoints in t
 | User Wantlist             | 3           | 3     | **100%** ✅ |
 | User Contributions        | 2           | 2     | **100%** ✅ |
 | User Lists                | 2           | 2     | **100%** ✅ |
-| User Inventory            | 0           | 10    | 0%         |
+| User Inventory            | 1           | 10    | 10%        |
 | Database - Artists        | 2           | 2     | **100%** ✅ |
 | Database - Labels         | 2           | 2     | **100%** ✅ |
 | Database - Masters        | 2           | 2     | **100%** ✅ |
 | Database - Releases       | 6           | 6     | **100%** ✅ |
 | Database - Search         | 1           | 1     | **100%** ✅ |
-| Marketplace - Listings    | 0           | 4     | 0%         |
+| Marketplace - Listings    | 4           | 4     | **100%** ✅ |
 | Marketplace - Orders      | 0           | 5     | 0%         |
 | Marketplace - Pricing     | 0           | 3     | 0%         |
 
@@ -100,7 +100,7 @@ This document tracks the implementation status of all Discogs API endpoints in t
 
 | Status | Method | Endpoint                          | Description                      | Interface Method |
 | ------ | ------ | --------------------------------- | -------------------------------- | ---------------- |
-| ❌      | GET    | `/users/{username}/inventory`     | Get user's marketplace inventory | -                |
+| ✅      | GET    | `/users/{username}/inventory`     | Get user's marketplace inventory | `GetInventory()`  |
 | ❌      | GET    | `/inventory/export`               | Get inventory exports            | -                |
 | ❌      | GET    | `/inventory/export/{id}`          | Get specific export              | -                |
 | ❌      | GET    | `/inventory/export/{id}/download` | Download export file             | -                |
@@ -163,12 +163,12 @@ This document tracks the implementation status of all Discogs API endpoints in t
 
 ### Marketplace - Listings
 
-| Status | Method | Endpoint                             | Description             | Interface Method |
-| ------ | ------ | ------------------------------------ | ----------------------- | ---------------- |
-| ❌      | GET    | `/marketplace/listings/{listing_id}` | Get marketplace listing | -                |
-| ❌      | POST   | `/marketplace/listings`              | Create new listing      | -                |
-| ❌      | POST   | `/marketplace/listings/{listing_id}` | Edit listing            | -                |
-| ❌      | DELETE | `/marketplace/listings/{listing_id}` | Delete listing          | -                |
+| Status | Method | Endpoint                             | Description             | Interface Method            |
+| ------ | ------ | ------------------------------------ | ----------------------- | ---------------------------- |
+| ✅      | GET    | `/marketplace/listings/{listing_id}` | Get marketplace listing | `GetMarketplaceListing()`    |
+| ✅      | POST   | `/marketplace/listings`              | Create new listing      | `CreateMarketplaceListing()` |
+| ✅      | POST   | `/marketplace/listings/{listing_id}` | Edit listing            | `UpdateMarketplaceListing()` |
+| ✅      | DELETE | `/marketplace/listings/{listing_id}` | Delete listing          | `DeleteMarketplaceListing()` |
 
 ---
 

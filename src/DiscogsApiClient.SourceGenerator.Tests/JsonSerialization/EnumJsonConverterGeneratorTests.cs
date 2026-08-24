@@ -70,7 +70,15 @@ public sealed class EnumJsonConverterGeneratorTests
                         global::TestNamespace.TestStatus value,
                         global::System.Text.Json.JsonSerializerOptions options)
                     {
-                        throw new global::System.NotImplementedException($"Serializing to Json is not supported for '{typeof(global::TestNamespace.TestStatus).FullName}'.");
+                        var stringValue = value switch
+                        {
+                            global::TestNamespace.TestStatus.Active => "Active",
+                            global::TestNamespace.TestStatus.Inactive => "Inactive",
+                            global::TestNamespace.TestStatus.Pending => "Pending",
+                            _ => throw new global::System.ArgumentOutOfRangeException(nameof(value), value, $"Value '{value}' can not be serialized as '{typeof(global::TestNamespace.TestStatus).FullName}'.")
+                        };
+
+                        writer.WriteStringValue(stringValue);
                     }
                 }
             }
@@ -141,7 +149,14 @@ public sealed class EnumJsonConverterGeneratorTests
                         global::TestNamespace.SortOrder value,
                         global::System.Text.Json.JsonSerializerOptions options)
                     {
-                        throw new global::System.NotImplementedException($"Serializing to Json is not supported for '{typeof(global::TestNamespace.SortOrder).FullName}'.");
+                        var stringValue = value switch
+                        {
+                            global::TestNamespace.SortOrder.Ascending => "Ascending",
+                            global::TestNamespace.SortOrder.Descending => "Descending",
+                            _ => throw new global::System.ArgumentOutOfRangeException(nameof(value), value, $"Value '{value}' can not be serialized as '{typeof(global::TestNamespace.SortOrder).FullName}'.")
+                        };
+
+                        writer.WriteStringValue(stringValue);
                     }
                 }
             }
@@ -213,7 +228,14 @@ public sealed class EnumJsonConverterGeneratorTests
                         global::TestNamespace.SortOrder value,
                         global::System.Text.Json.JsonSerializerOptions options)
                     {
-                        throw new global::System.NotImplementedException($"Serializing to Json is not supported for '{typeof(global::TestNamespace.SortOrder).FullName}'.");
+                        var stringValue = value switch
+                        {
+                            global::TestNamespace.SortOrder.Ascending => "asc",
+                            global::TestNamespace.SortOrder.Descending => "desc",
+                            _ => throw new global::System.ArgumentOutOfRangeException(nameof(value), value, $"Value '{value}' can not be serialized as '{typeof(global::TestNamespace.SortOrder).FullName}'.")
+                        };
+
+                        writer.WriteStringValue(stringValue);
                     }
                 }
             }
