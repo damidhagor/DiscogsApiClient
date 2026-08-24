@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.Text.Json;
 using DiscogsApiClient.SourceGenerator.ApiClient;
 
 namespace DiscogsApiClient;
@@ -441,5 +443,52 @@ internal sealed partial class DiscogsApiClient(HttpClient httpClient, DiscogsJso
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
         return await GetInventoryInternal(username, paginationQueryParameters, inventoryQueryParameters, cancellationToken).ConfigureAwait(false);
+    }
+
+
+    [HttpGet("/marketplace/fee/{price}")]
+    private partial Task<MarketplacePrice> GetMarketplaceFeeInternal(string price, CancellationToken cancellationToken);
+
+    public async Task<MarketplacePrice> GetMarketplaceFee(decimal price, CancellationToken cancellationToken)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(price, 0m);
+
+        var priceValue = price.ToString("F2", CultureInfo.InvariantCulture);
+
+        return await GetMarketplaceFeeInternal(priceValue, cancellationToken).ConfigureAwait(false);
+    }
+
+
+    [HttpGet("/marketplace/fee/{price}/{currency}")]
+    private partial Task<MarketplacePrice> GetMarketplaceFeeInternal(string price, string currency, CancellationToken cancellationToken);
+
+    public async Task<MarketplacePrice> GetMarketplaceFee(decimal price, MarketplaceCurrency currency, CancellationToken cancellationToken)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(price, 0m);
+
+        var priceValue = price.ToString("F2", CultureInfo.InvariantCulture);
+        var currencyValue = JsonSerializer.Serialize(currency, _jsonSerializerContext.MarketplaceCurrency).Trim('"');
+
+        return await GetMarketplaceFeeInternal(priceValue, currencyValue, cancellationToken).ConfigureAwait(false);
+    }
+
+
+    [HttpGet("/marketplace/price_suggestions/{releaseId}")]
+    private partial Task<MarketplacePriceSuggestionsResponse> GetPriceSuggestionsInternal(int releaseId, CancellationToken cancellationToken);
+
+    public async Task<IReadOnlyDictionary<string, MarketplacePrice>> GetPriceSuggestions(int releaseId, CancellationToken cancellationToken)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(releaseId, 0);
+        return await GetPriceSuggestionsInternal(releaseId, cancellationToken).ConfigureAwait(false);
+    }
+
+
+    [HttpGet("/marketplace/stats/{releaseId}")]
+    private partial Task<MarketplaceStatsResponse> GetMarketplaceStatsInternal(int releaseId, MarketplaceCurrencyQueryParameters? currencyQueryParameters, CancellationToken cancellationToken);
+
+    public async Task<MarketplaceStatsResponse> GetMarketplaceStats(int releaseId, MarketplaceCurrencyQueryParameters? currencyQueryParameters, CancellationToken cancellationToken)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(releaseId, 0);
+        return await GetMarketplaceStatsInternal(releaseId, currencyQueryParameters, cancellationToken).ConfigureAwait(false);
     }
 }

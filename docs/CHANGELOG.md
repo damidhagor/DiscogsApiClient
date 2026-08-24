@@ -14,6 +14,12 @@ Each entry lists its own **Breaking** changes inline where applicable — see
   - Update a listing (`UpdateMarketplaceListing()`).
   - Delete a listing (`DeleteMarketplaceListing()`).
   - Get a seller's inventory (`GetInventory()`).
+  - Calculate the marketplace fee for a price (`GetMarketplaceFee()` overload for `/marketplace/fee/{price}`).
+  - Calculate the marketplace fee for a price in a specific currency (`GetMarketplaceFee()` overload for
+    `/marketplace/fee/{price}/{currency}`).
+  - Get price suggestions for a release, keyed by condition (`GetPriceSuggestions()`, returns
+    `IReadOnlyDictionary<string, MarketplacePrice>`).
+  - Get marketplace statistics for a release (`GetMarketplaceStats()`).
 - Fixed: `docs/API_COVERAGE.md` incorrectly listed `/oauth/access_token` as an unimplemented gap; it is
   already handled internally by the OAuth authentication flow and is not a public client endpoint.
 

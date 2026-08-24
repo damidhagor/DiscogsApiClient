@@ -3,7 +3,7 @@
 This document tracks the implementation status of all Discogs API endpoints in this library.
 
 **Last Updated:** 2026-08-24 (verified against `src/DiscogsApiClient/DiscogsApiClient.cs`)
-**Total Coverage:** 40/58 endpoints (69%)
+**Total Coverage:** 44/59 endpoints (75%)
 
 ---
 
@@ -25,7 +25,7 @@ This document tracks the implementation status of all Discogs API endpoints in t
 | Database - Search         | 1           | 1     | **100%** ✅ |
 | Marketplace - Listings    | 4           | 4     | **100%** ✅ |
 | Marketplace - Orders      | 0           | 5     | 0%         |
-| Marketplace - Pricing     | 0           | 3     | 0%         |
+| Marketplace - Pricing     | 4           | 4     | **100%** ✅ |
 
 ---
 
@@ -188,9 +188,10 @@ This document tracks the implementation status of all Discogs API endpoints in t
 
 | Status | Method | Endpoint                                      | Description                | Interface Method |
 | ------ | ------ | --------------------------------------------- | -------------------------- | ---------------- |
-| ❌      | GET    | `/marketplace/fee/{price}`                    | Calculate marketplace fee  | -                |
-| ❌      | GET    | `/marketplace/price_suggestions/{release_id}` | Get price suggestions      | -                |
-| ❌      | GET    | `/marketplace/stats/{release_id}`             | Get marketplace statistics | -                |
+| ✅      | GET    | `/marketplace/fee/{price}`                    | Calculate marketplace fee  | `GetMarketplaceFee()` |
+| ✅      | GET    | `/marketplace/fee/{price}/{currency}`         | Calculate marketplace fee in a specific currency | `GetMarketplaceFee()` |
+| ✅      | GET    | `/marketplace/price_suggestions/{release_id}` | Get price suggestions      | `GetPriceSuggestions()` |
+| ✅      | GET    | `/marketplace/stats/{release_id}`             | Get marketplace statistics | `GetMarketplaceStats()` |
 
 ---
 
