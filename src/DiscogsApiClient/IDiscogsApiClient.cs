@@ -346,4 +346,39 @@ public interface IDiscogsApiClient
     /// <param name="inventoryQueryParameters">Filtering and sorting parameters for the inventory listings.</param>
     /// <exception cref="ArgumentException">Fires this exception if no username is provided.</exception>
     Task<MarketplaceInventoryResponse> GetInventory(string username, PaginationQueryParameters? paginationQueryParameters, MarketplaceInventoryQueryParameters? inventoryQueryParameters, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Calculates the Marketplace fee for selling an item at the given price, in the Marketplace's default
+    /// currency (USD).
+    /// </summary>
+    /// <param name="price">The price to calculate a fee from.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the price is not positive.</exception>
+    Task<MarketplacePrice> GetMarketplaceFee(decimal price, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Calculates the Marketplace fee for selling an item at the given price, converted into the given currency.
+    /// </summary>
+    /// <param name="price">The price to calculate a fee from.</param>
+    /// <param name="currency">The currency to calculate the fee in.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the price is not positive.</exception>
+    Task<MarketplacePrice> GetMarketplaceFee(decimal price, MarketplaceCurrency currency, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets price suggestions for a release, keyed by <see cref="MarketplaceListingCondition"/> display name
+    /// (e.g. <c>"Mint (M)"</c>). Empty if no suggestions are available for the release. Authentication is required,
+    /// and the authenticated user needs to have filled out their seller settings. Suggested prices are denominated
+    /// in the user's selling currency.
+    /// </summary>
+    /// <param name="releaseId">The release's id to calculate price suggestions from.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the release id is invalid.</exception>
+    Task<IReadOnlyDictionary<string, MarketplacePrice>> GetPriceSuggestions(int releaseId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets current Marketplace statistics for a release: the number of items currently for sale, the lowest listed
+    /// price of any item for sale, and whether the release is blocked for sale in the marketplace.
+    /// </summary>
+    /// <param name="releaseId">The release's id whose statistics are desired.</param>
+    /// <param name="currencyQueryParameters">Currency parameters for the lowest price field.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Fires this exception if the release id is invalid.</exception>
+    Task<MarketplaceStatsResponse> GetMarketplaceStats(int releaseId, MarketplaceCurrencyQueryParameters? currencyQueryParameters, CancellationToken cancellationToken);
 }
