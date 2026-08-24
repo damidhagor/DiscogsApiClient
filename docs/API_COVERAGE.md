@@ -2,8 +2,8 @@
 
 This document tracks the implementation status of all Discogs API endpoints in this library.
 
-**Last Updated:** 2026-08-23 (verified against `src/DiscogsApiClient/DiscogsApiClient.cs`)
-**Total Coverage:** 35/59 endpoints (59%)
+**Last Updated:** 2026-08-24 (verified against `src/DiscogsApiClient/DiscogsApiClient.cs`)
+**Total Coverage:** 35/58 endpoints (60%)
 
 ---
 
@@ -11,7 +11,7 @@ This document tracks the implementation status of all Discogs API endpoints in t
 
 | Category                  | Implemented | Total | Coverage   |
 | ------------------------- | ----------- | ----- | ---------- |
-| Authentication & Identity | 1           | 2     | 50%        |
+| Authentication & Identity | 1           | 1     | **100%** ✅ |
 | User Profile              | 2           | 2     | **100%** ✅ |
 | User Collection           | 13          | 13    | **100%** ✅ |
 | User Wantlist             | 3           | 3     | **100%** ✅ |
@@ -36,7 +36,6 @@ This document tracks the implementation status of all Discogs API endpoints in t
 | Status | Method | Endpoint              | Description                     | Interface Method |
 | ------ | ------ | --------------------- | ------------------------------- | ---------------- |
 | ✅      | GET    | `/oauth/identity`     | Get authenticated user identity | `GetIdentity()`  |
-| ❌      | POST   | `/oauth/access_token` | Get OAuth access token          | -                |
 
 ---
 

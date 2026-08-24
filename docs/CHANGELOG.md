@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Each entry lists its own **Breaking** changes inline where applicable — see
 [docs/MIGRATION_GUIDE.md](MIGRATION_GUIDE.md) for detailed before/after migration steps.
 
+## [5.2.0] - Unreleased
+
+- Fixed: `docs/API_COVERAGE.md` incorrectly listed `/oauth/access_token` as an unimplemented gap; it is
+  already handled internally by the OAuth authentication flow and is not a public client endpoint.
+
 ## [5.1.0] - 2026-08-23
 
 - Added new `IDiscogsApiClient` endpoints:

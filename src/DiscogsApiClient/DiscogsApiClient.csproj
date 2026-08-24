@@ -22,10 +22,10 @@
 		<PackageTags>discogs</PackageTags>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<AssemblyVersion>5.1.0</AssemblyVersion>
-		<FileVersion>5.1.0</FileVersion>
-		<PackageVersion>5.1.0</PackageVersion>
-		<PackageReleaseNotes>Adds User Profile, Collection, Contributions/Submissions, Lists and Release Rating endpoints, plus several contract nullability fixes. See the changelog for full details: https://github.com/damidhagor/DiscogsApiClient/blob/main/docs/CHANGELOG.md</PackageReleaseNotes>
+		<AssemblyVersion>5.2.0</AssemblyVersion>
+		<FileVersion>5.2.0</FileVersion>
+		<PackageVersion>5.2.0</PackageVersion>
+		<PackageReleaseNotes>TODO: summarize v5.2.0 changes before release. See the changelog for full details: https://github.com/damidhagor/DiscogsApiClient/blob/main/docs/CHANGELOG.md</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<ItemGroup>
