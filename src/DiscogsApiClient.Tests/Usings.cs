@@ -1,5 +1,6 @@
 global using DiscogsApiClient.Authentication;
 global using DiscogsApiClient.Contract;
+global using DiscogsApiClient.Contract.Inventory;
 global using DiscogsApiClient.Contract.Marketplace;
 global using DiscogsApiClient.Contract.User;
 global using DiscogsApiClient.Contract.User.List;

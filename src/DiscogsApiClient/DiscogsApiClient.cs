@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using DiscogsApiClient.SourceGenerator.ApiClient;
 
@@ -490,5 +491,170 @@ internal sealed partial class DiscogsApiClient(HttpClient httpClient, DiscogsJso
     {
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(releaseId, 0);
         return await GetMarketplaceStatsInternal(releaseId, currencyQueryParameters, cancellationToken).ConfigureAwait(false);
+    }
+
+
+    public async Task<long> CreateInventoryExport(CancellationToken cancellationToken)
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Post, "/inventory/export");
+        using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        response.EnsureSuccessStatusCode();
+
+        return response.ParseIdFromLocationHeader();
+    }
+
+    [HttpGet("/inventory/export")]
+    public partial Task<InventoryExportListResponse> GetInventoryExports(PaginationQueryParameters? paginationQueryParameters, CancellationToken cancellationToken);
+
+    [HttpGet("/inventory/export/{exportId}")]
+    private partial Task<InventoryExport> GetInventoryExportInternal(long exportId, CancellationToken cancellationToken);
+
+    public async Task<InventoryExport> GetInventoryExport(long exportId, CancellationToken cancellationToken)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(exportId, 0);
+        return await GetInventoryExportInternal(exportId, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<Stream> DownloadInventoryExportAsStream(long exportId, CancellationToken cancellationToken)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(exportId, 0);
+
+        using var request = new HttpRequestMessage(HttpMethod.Get, $"/inventory/export/{exportId}/download");
+
+        var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+        response.EnsureSuccessStatusCode();
+
+        return await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<byte[]> DownloadInventoryExportAsBytes(long exportId, CancellationToken cancellationToken)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(exportId, 0);
+
+        using var request = new HttpRequestMessage(HttpMethod.Get, $"/inventory/export/{exportId}/download");
+        using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        response.EnsureSuccessStatusCode();
+
+        return await response.Content.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    [HttpGet("/inventory/upload")]
+    public partial Task<InventoryUploadListResponse> GetInventoryUploads(PaginationQueryParameters? paginationQueryParameters, CancellationToken cancellationToken);
+
+    [HttpGet("/inventory/upload/{uploadId}")]
+    private partial Task<InventoryUpload> GetInventoryUploadInternal(long uploadId, CancellationToken cancellationToken);
+
+    public async Task<InventoryUpload> GetInventoryUpload(long uploadId, CancellationToken cancellationToken)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(uploadId, 0);
+        return await GetInventoryUploadInternal(uploadId, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<long> DeleteInventoryListings(byte[] csvContent, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(csvContent);
+
+        using var fileContent = new ByteArrayContent(csvContent);
+        fileContent.Headers.ContentType = new MediaTypeHeaderValue("text/csv");
+
+        return await DeleteInventoryListingsInternal(fileContent, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<long> DeleteInventoryListings(Stream csvContent, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(csvContent);
+
+        using var fileContent = new StreamContent(csvContent);
+        fileContent.Headers.ContentType = new MediaTypeHeaderValue("text/csv");
+
+        return await DeleteInventoryListingsInternal(fileContent, cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task<long> DeleteInventoryListingsInternal(HttpContent fileContent, CancellationToken cancellationToken)
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Post, "/inventory/upload/delete")
+        {
+            Content = new MultipartFormDataContent
+            {
+                { fileContent, "upload", "upload.csv" },
+            },
+        };
+
+        using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        response.EnsureSuccessStatusCode();
+
+        return response.ParseIdFromLocationHeader();
+    }
+
+    public async Task<long> AddInventoryListings(byte[] csvContent, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(csvContent);
+
+        using var fileContent = new ByteArrayContent(csvContent);
+        fileContent.Headers.ContentType = new MediaTypeHeaderValue("text/csv");
+
+        return await AddInventoryListingsInternal(fileContent, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<long> AddInventoryListings(Stream csvContent, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(csvContent);
+
+        using var fileContent = new StreamContent(csvContent);
+        fileContent.Headers.ContentType = new MediaTypeHeaderValue("text/csv");
+
+        return await AddInventoryListingsInternal(fileContent, cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task<long> AddInventoryListingsInternal(HttpContent fileContent, CancellationToken cancellationToken)
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Post, "/inventory/upload/add")
+        {
+            Content = new MultipartFormDataContent
+            {
+                { fileContent, "upload", "upload.csv" },
+            },
+        };
+
+        using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        response.EnsureSuccessStatusCode();
+
+        return response.ParseIdFromLocationHeader();
+    }
+
+    public async Task<long> ChangeInventoryListings(byte[] csvContent, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(csvContent);
+
+        using var fileContent = new ByteArrayContent(csvContent);
+        fileContent.Headers.ContentType = new MediaTypeHeaderValue("text/csv");
+
+        return await ChangeInventoryListingsInternal(fileContent, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<long> ChangeInventoryListings(Stream csvContent, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(csvContent);
+
+        using var fileContent = new StreamContent(csvContent);
+        fileContent.Headers.ContentType = new MediaTypeHeaderValue("text/csv");
+
+        return await ChangeInventoryListingsInternal(fileContent, cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task<long> ChangeInventoryListingsInternal(HttpContent fileContent, CancellationToken cancellationToken)
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Post, "/inventory/upload/change")
+        {
+            Content = new MultipartFormDataContent
+            {
+                { fileContent, "upload", "upload.csv" },
+            },
+        };
+
+        using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        response.EnsureSuccessStatusCode();
+
+        return response.ParseIdFromLocationHeader();
     }
 }

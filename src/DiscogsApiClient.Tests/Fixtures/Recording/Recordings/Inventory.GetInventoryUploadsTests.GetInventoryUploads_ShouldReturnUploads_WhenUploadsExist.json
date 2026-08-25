@@ -1,0 +1,85 @@
+[
+  {
+    "requestMethod": "GET",
+    "requestUrl": "https://api.discogs.com/inventory/upload",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ],
+      "Authorization": [
+        "****"
+      ]
+    },
+    "requestBody": null,
+    "responseStatusCode": 200,
+    "responseHeaders": {
+      "Date": [
+        "Tue, 25 Aug 2026 13:08:21 GMT"
+      ],
+      "Transfer-Encoding": [
+        "chunked"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Access-Control-Allow-Headers": [
+        "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID"
+      ],
+      "Access-Control-Allow-Methods": [
+        "HEAD,OPTIONS,GET,OPTIONS"
+      ],
+      "Access-Control-Allow-Origin": [
+        "*"
+      ],
+      "Access-Control-Expose-Headers": [
+        "Location"
+      ],
+      "Cache-Control": [
+        "public, must-revalidate"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "Vary": [
+        "Accept-Encoding"
+      ],
+      "X-Content-Type-Options": [
+        "nosniff"
+      ],
+      "x-discogs-media-type": [
+        "discogs.v2"
+      ],
+      "x-discogs-ratelimit": [
+        "60"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "60"
+      ],
+      "x-discogs-ratelimit-used": [
+        "0"
+      ],
+      "X-Frame-Options": [
+        "SAMEORIGIN"
+      ],
+      "X-XSS-Protection": [
+        "1; mode=block"
+      ],
+      "Set-Cookie": [
+        "****"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a30ad3336c78c185-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022pagination\u0022:{\u0022page\u0022:1,\u0022pages\u0022:1,\u0022per_page\u0022:50,\u0022items\u0022:39,\u0022urls\u0022:{}},\u0022items\u0022:[{\u0022created_ts\u0022:\u00222026-08-25T05:07:53\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:07:53\u0022,\u0022results\u0022:\u0022CSV file contains 1 records.\u003Cp\u003ESkipped row 2 because ERROR: -1 is an invalid listing_id\u003Cp\u003EProcessed 0 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572151,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:07:53\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:07:53\u0022,\u0022results\u0022:\u0022CSV file contains 1 records.\u003Cp\u003ESkipped row 2 because ERROR: 999999999 is an invalid listing_id\u003Cp\u003EProcessed 0 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572157,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:07:53\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:07:53\u0022,\u0022results\u0022:\u0022CSV file contains 1 records.\u003Cp\u003ESkipped row 2 because ERROR: 0 is an invalid listing_id\u003Cp\u003EProcessed 0 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572160,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:07:53\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:07:53\u0022,\u0022results\u0022:\u0022CSV file contains 1 records.\u003Cp\u003ESkipped row 2 because ERROR: listing_id is a required field and not in this row.\u003Cp\u003EProcessed 0 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572163,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:07:53\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:07:53\u0022,\u0022results\u0022:\u0022CSV file contains 0 records.\u003Cp\u003EProcessed 0 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572166,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:14:33\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:14:33\u0022,\u0022results\u0022:\u0022CSV file contains 0 records.\u003Cp\u003EProcessed 0 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572178,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:14:33\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:14:33\u0022,\u0022results\u0022:\u0022CSV file contains 1 records.\u003Cp\u003ESkipped row 2 because ERROR: 0 is an invalid listing_id\u003Cp\u003EProcessed 0 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572181,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:14:33\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:14:33\u0022,\u0022results\u0022:\u0022CSV file contains 1 records.\u003Cp\u003ESkipped row 2 because ERROR: listing_id is a required field and not in this row.\u003Cp\u003EProcessed 0 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572187,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:14:33\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:14:36\u0022,\u0022results\u0022:\u0022CSV file contains 1 records.\u003Cp\u003ESkipped row 2 because ERROR: 999999999 is an invalid listing_id\u003Cp\u003EProcessed 0 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572190,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:14:33\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:14:33\u0022,\u0022results\u0022:\u0022CSV file contains 1 records.\u003Cp\u003ESkipped row 2 because ERROR: -1 is an invalid listing_id\u003Cp\u003EProcessed 0 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572193,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:17:05\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:17:05\u0022,\u0022results\u0022:\u0022CSV file contains 1 records.\u003Cp\u003ESkipped row 2 because ERROR: 999999999 is an invalid listing_id\u003Cp\u003EProcessed 0 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572202,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:17:05\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:17:05\u0022,\u0022results\u0022:\u0022CSV file contains 1 records.\u003Cp\u003ESkipped row 2 because ERROR: -1 is an invalid listing_id\u003Cp\u003EProcessed 0 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572205,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:17:05\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:17:05\u0022,\u0022results\u0022:\u0022CSV file contains 0 records.\u003Cp\u003EProcessed 0 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572208,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:17:05\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:17:05\u0022,\u0022results\u0022:\u0022CSV file contains 1 records.\u003Cp\u003ESkipped row 2 because ERROR: 0 is an invalid listing_id\u003Cp\u003EProcessed 0 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572211,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:17:05\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:17:05\u0022,\u0022results\u0022:\u0022CSV file contains 1 records.\u003Cp\u003ESkipped row 2 because ERROR: listing_id is a required field and not in this row.\u003Cp\u003EProcessed 0 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572214,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:18:49\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:18:49\u0022,\u0022results\u0022:\u0022CSV file contains 0 records.\u003Cp\u003EProcessed 0 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572220,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:18:50\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:18:50\u0022,\u0022results\u0022:\u0022CSV file contains 1 records.\u003Cp\u003ESkipped row 2 because ERROR: listing_id is a required field and not in this row.\u003Cp\u003EProcessed 0 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572223,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:18:51\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:18:51\u0022,\u0022results\u0022:\u0022CSV file contains 1 records.\u003Cp\u003ESkipped row 2 because ERROR: -1 is an invalid listing_id\u003Cp\u003EProcessed 0 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572226,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:18:52\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:18:52\u0022,\u0022results\u0022:\u0022CSV file contains 1 records.\u003Cp\u003ESkipped row 2 because ERROR: 0 is an invalid listing_id\u003Cp\u003EProcessed 0 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572229,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:18:53\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:18:53\u0022,\u0022results\u0022:\u0022CSV file contains 1 records.\u003Cp\u003ESkipped row 2 because ERROR: 999999999 is an invalid listing_id\u003Cp\u003EProcessed 0 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572232,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:18:56\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:18:56\u0022,\u0022results\u0022:\u0022CSV file contains 0 records.\u003Cp\u003EProcessed 0 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572238,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:18:57\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:18:57\u0022,\u0022results\u0022:\u0022CSV file contains 1 records.\u003Cp\u003ESkipped row 2 because ERROR: listing_id is a required field and not in this row.\u003Cp\u003EProcessed 0 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572241,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:18:58\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:18:58\u0022,\u0022results\u0022:\u0022CSV file contains 1 records.\u003Cp\u003ESkipped row 2 because ERROR: -1 is an invalid listing_id\u003Cp\u003EProcessed 0 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572244,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:18:59\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:18:59\u0022,\u0022results\u0022:\u0022CSV file contains 1 records.\u003Cp\u003ESkipped row 2 because ERROR: 0 is an invalid listing_id\u003Cp\u003EProcessed 0 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572247,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:19:00\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:19:01\u0022,\u0022results\u0022:\u0022CSV file contains 1 records.\u003Cp\u003ESkipped row 2 because ERROR: 999999999 is an invalid listing_id\u003Cp\u003EProcessed 0 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572250,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:40:56\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:40:56\u0022,\u0022results\u0022:\u0022CSV file contains 1 records.\u003Cp\u003EProcessed 1 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572301,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:40:58\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:40:58\u0022,\u0022results\u0022:\u0022CSV file contains 2 records.\u003Cp\u003ESkipped row 3 because ERROR: -1 is an invalid listing_id\u003Cp\u003EProcessed 1 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572304,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:41:00\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:41:00\u0022,\u0022results\u0022:\u0022CSV file contains 1 records.\u003Cp\u003EProcessed 1 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572307,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:41:02\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u00222026-08-25T05:41:02\u0022,\u0022results\u0022:\u0022CSV file contains 2 records.\u003Cp\u003ESkipped row 3 because ERROR: -1 is an invalid listing_id\u003Cp\u003EProcessed 1 records.\u0022,\u0022status\u0022:\u0022success\u0022,\u0022id\u0022:3572310,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T04:56:50\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u0022\u0022,\u0022results\u0022:\u0022ERROR: You have not updated your selling preferences. Please do this before sending uploads.\u0022,\u0022status\u0022:\u0022failed\u0022,\u0022id\u0022:3572106,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T04:56:50\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u0022\u0022,\u0022results\u0022:\u0022ERROR: You have not updated your selling preferences. Please do this before sending uploads.\u0022,\u0022status\u0022:\u0022failed\u0022,\u0022id\u0022:3572109,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T04:56:50\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u0022\u0022,\u0022results\u0022:\u0022ERROR: You have not updated your selling preferences. Please do this before sending uploads.\u0022,\u0022status\u0022:\u0022failed\u0022,\u0022id\u0022:3572112,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T04:56:50\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u0022\u0022,\u0022results\u0022:\u0022ERROR: You have not updated your selling preferences. Please do this before sending uploads.\u0022,\u0022status\u0022:\u0022failed\u0022,\u0022id\u0022:3572115,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T04:56:50\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u0022\u0022,\u0022results\u0022:\u0022ERROR: You have not updated your selling preferences. Please do this before sending uploads.\u0022,\u0022status\u0022:\u0022failed\u0022,\u0022id\u0022:3572118,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T04:56:50\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u0022\u0022,\u0022results\u0022:\u0022ERROR: You have not updated your selling preferences. Please do this before sending uploads.\u0022,\u0022status\u0022:\u0022failed\u0022,\u0022id\u0022:3572121,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:07:53\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u0022\u0022,\u0022results\u0022:\u0022ERROR: Uploaded file no longer exists.\u0022,\u0022status\u0022:\u0022failed\u0022,\u0022id\u0022:3572154,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:14:33\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u0022\u0022,\u0022results\u0022:\u0022ERROR: Uploaded file no longer exists.\u0022,\u0022status\u0022:\u0022failed\u0022,\u0022id\u0022:3572184,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:18:47\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u0022\u0022,\u0022results\u0022:\u0022ERROR: Uploaded file no longer exists.\u0022,\u0022status\u0022:\u0022failed\u0022,\u0022id\u0022:3572217,\u0022type\u0022:\u0022delete\u0022},{\u0022created_ts\u0022:\u00222026-08-25T05:18:54\u0022,\u0022filename\u0022:\u0022upload.csv\u0022,\u0022finished_ts\u0022:\u0022\u0022,\u0022results\u0022:\u0022ERROR: Uploaded file no longer exists.\u0022,\u0022status\u0022:\u0022failed\u0022,\u0022id\u0022:3572235,\u0022type\u0022:\u0022delete\u0022}]}"
+  }
+]
