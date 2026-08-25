@@ -1,0 +1,73 @@
+[
+  {
+    "requestMethod": "POST",
+    "requestUrl": "https://api.discogs.com/inventory/upload/delete",
+    "requestHeaders": {
+      "User-Agent": [
+        "DiscogsApiClientTests/1.0"
+      ]
+    },
+    "requestBody": "--59756dbe-a04f-49bf-92b4-3ff8fa2af3b7\r\nContent-Type: text/csv\r\nContent-Disposition: form-data; name=upload; filename=upload.csv; filename*=utf-8\u0027\u0027upload.csv\r\n\r\nlisting_id\n1\r\n--59756dbe-a04f-49bf-92b4-3ff8fa2af3b7--\r\n",
+    "responseStatusCode": 401,
+    "responseHeaders": {
+      "Date": [
+        "Tue, 25 Aug 2026 12:18:47 GMT"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+      "Access-Control-Allow-Headers": [
+        "Content-Type, authorization, User-Agent, Private-Auth-Secret, Discogs-UID"
+      ],
+      "Access-Control-Allow-Methods": [
+        "HEAD,OPTIONS,OPTIONS,POST"
+      ],
+      "Access-Control-Allow-Origin": [
+        "*"
+      ],
+      "Access-Control-Expose-Headers": [
+        "Location"
+      ],
+      "Strict-Transport-Security": [
+        "max-age=15552000"
+      ],
+      "X-Content-Type-Options": [
+        "nosniff"
+      ],
+      "x-discogs-media-type": [
+        "discogs.v2"
+      ],
+      "x-discogs-ratelimit": [
+        "25"
+      ],
+      "x-discogs-ratelimit-remaining": [
+        "22"
+      ],
+      "x-discogs-ratelimit-used": [
+        "3"
+      ],
+      "X-Frame-Options": [
+        "SAMEORIGIN"
+      ],
+      "X-XSS-Protection": [
+        "1; mode=block"
+      ],
+      "Set-Cookie": [
+        "****"
+      ],
+      "cf-cache-status": [
+        "DYNAMIC"
+      ],
+      "Server": [
+        "cloudflare"
+      ],
+      "CF-RAY": [
+        "a30a8a95cefc7527-DUS"
+      ],
+      "Alt-Svc": [
+        "h3=\u0022:443\u0022"
+      ]
+    },
+    "responseBody": "{\u0022message\u0022:\u0022You must authenticate to access this resource.\u0022}"
+  }
+]

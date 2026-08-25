@@ -1,10 +1,11 @@
 using System.Net;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using TUnit.Core.Interfaces;
 
 namespace DiscogsApiClient.Tests.Fixtures.Recording;
 
-public sealed class PlaybackFixture : IAsyncInitializer
+public sealed partial class PlaybackFixture : IAsyncInitializer
 {
     private TextWriter _logger = null!;
     private readonly Dictionary<string, Playback> _recordings = [];
@@ -113,7 +114,7 @@ public sealed class PlaybackFixture : IAsyncInitializer
 
         var body = request.Content is not null ? await request.Content.ReadAsStringAsync(cancellationToken) : null;
 
-        if (recording.RequestBody != body)
+        if (NormalizeMultipartBoundary(recording.RequestBody) != NormalizeMultipartBoundary(body))
         {
             _logger.WriteLine($"Request body mismatch. Expected: {recording.RequestBody}, Actual: {body}");
             return false;
@@ -121,4 +122,12 @@ public sealed class PlaybackFixture : IAsyncInitializer
 
         return true;
     }
+
+    // MultipartFormDataContent generates a random GUID boundary per request instance, so cassette bodies
+    // and live request bodies are normalized to a fixed placeholder before comparison.
+    private static string? NormalizeMultipartBoundary(string? body)
+        => body is null ? null : MultipartBoundaryRegex().Replace(body, "00000000-0000-0000-0000-000000000000");
+
+    [GeneratedRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")]
+    private static partial Regex MultipartBoundaryRegex();
 }

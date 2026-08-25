@@ -225,6 +225,15 @@ tradeoff — but do not silently resolve or silently ignore any of them, regardl
 - **Tests must assert the actual returned data, not merely that a call succeeded.** A "happy path" test that
   only checks a response was returned (with no assertions on its properties/contents) does not verify
   correct behavior — assert the specific fields relevant to the scenario under test.
+- **Assert every field of a returned record, and assert against concrete/exact values wherever possible** —
+  not just a subset of "interesting" fields, and not loose checks like `IsNotNullOrEmpty()`/
+  `IsGreaterThan(DateTime.MinValue)` when the real recorded value is known. After recording a test live,
+  read the actual cassette response body and copy the exact field values into the assertions (mirroring
+  how exception message assertions must be exact — see above). Only fall back to a loose/structural
+  assertion (non-null, non-empty, `IsGreaterThan(...)`) for genuinely non-deterministic fields (e.g. a
+  freshly-generated timestamp with no fixed expected value, or an id that varies but must merely be
+  positive) — never as a shortcut to avoid checking a concrete value that is otherwise knowable from the
+  recording. Apply this to every field on the model, not only the ones the test's name calls out.
 
 ## Git Workflow
 

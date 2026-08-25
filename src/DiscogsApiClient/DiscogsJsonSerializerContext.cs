@@ -106,4 +106,9 @@ namespace DiscogsApiClient;
 [JsonSerializable(typeof(MarketplaceSeller))]
 [JsonSerializable(typeof(MarketplaceSellerStats))]
 [JsonSerializable(typeof(MarketplaceStatsResponse))]
+// Inventory
+[JsonSerializable(typeof(InventoryExport))]
+[JsonSerializable(typeof(InventoryExportListResponse))]
+[JsonSerializable(typeof(InventoryUpload))]
+[JsonSerializable(typeof(InventoryUploadListResponse))]
 internal partial class DiscogsJsonSerializerContext : JsonSerializerContext;
